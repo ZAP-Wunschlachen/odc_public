@@ -207,3 +207,12 @@ cancels before changing the original object or prior ribbon and releases tempora
 mesh data. Conversion and extrusion finish before scene changes are committed.
 Complex anatomical boundaries, linked collections, parented/edit-mode cases and
 interactive marking/refinement still require additional coverage.
+
+## Refine Margin operator
+
+`tests/test_refine_margin.py` executes Refine Margin repeatedly with a translated
+curve and synthetic preparation sphere. It verifies mesh conversion, preserved
+world-space plane, edit mode, current face snapping/proportional editing settings
+and a single reused shrinkwrap constraint. The refine-to-accept transition creates
+the ribbon and returns to object mode. Interactive dragging, snapping behavior,
+complex scans and parented/linked collection cases remain unverified.

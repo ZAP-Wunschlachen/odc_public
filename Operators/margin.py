@@ -524,71 +524,56 @@ class OPENDENTAL_OT_refine_margin(bpy.types.Operator):
         return condition_1
     
     def execute(self, context):
-        
         tooth = odcutils.tooth_selection(context)[0]
-        sce=bpy.context.scene
-        
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
-        
-        prep = tooth.prep_model
-        Prep = bpy.data.objects.get(prep)
-        
-        margin = tooth.margin
-        if margin not in bpy.data.objects:
-            self.report({'ERROR'},'No Margin to Refine!  Please mark margin first')
-        if not Prep:
-            self.report({'WARNING'},'No Prep to snap margin to!')
-            
-        Margin = bpy.data.objects[margin]
-        Margin.dupli_type = 'NONE'
-        
-        if bpy.context.mode != 'OBJECT':
+        margin = context.scene.objects.get(tooth.margin)
+        prep = context.scene.objects.get(tooth.prep_model)
+        if margin is None:
+            self.report({'WARNING'}, 'Mark a margin first')
+            return {'CANCELLED'}
+        if margin.type != 'MESH':
+            try:
+                mesh = odcutils.bezier_to_mesh(margin, tooth.margin, n_points=200)
+            except (ValueError, RuntimeError) as error:
+                self.report({'WARNING'}, str(error))
+                return {'CANCELLED'}
+            replacement = bpy.data.objects.new(margin.name + '_Refined', mesh)
+            replacement.parent = margin.parent
+            replacement.matrix_parent_inverse = margin.matrix_parent_inverse.copy()
+            replacement.matrix_world = margin.matrix_world.copy()
+            for collection in margin.users_collection:
+                collection.objects.link(replacement)
+            old_name = margin.name
+            if context.mode != 'OBJECT':
+                bpy.ops.object.mode_set(mode='OBJECT')
+            bpy.data.objects.remove(margin, do_unlink=True)
+            replacement.name = old_name
+            tooth.margin = replacement.name
+            margin = replacement
+        if context.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode='OBJECT')
-            
         bpy.ops.object.select_all(action='DESELECT')
-        
-        bpy.context.tool_settings.use_snap = True
-        bpy.context.tool_settings.snap_target= 'ACTIVE'
-        bpy.context.tool_settings.snap_element = 'FACE'
-        
-        if Margin.type != 'MESH':  
-            me_data = odcutils.bezier_to_mesh(Margin,  tooth.margin, n_points = 200)
-            mx = Margin.matrix_world  
-            context.scene.objects.unlink(Margin)
-            bpy.data.objects.remove(Margin)
-            new_obj = bpy.data.objects.new(tooth.margin, me_data)
-            new_obj.matrix_world = mx
-            context.scene.objects.link(new_obj)
-            tooth.margin = new_obj.name #just in case of name collisions
-            Margin = new_obj
-        
-        Margin.select = True
-        sce.objects.active = Margin
+        margin.hide_set(False)
+        margin.select_set(True)
+        context.view_layer.objects.active = margin
         bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
-        
-        if Prep and 'SHRINKWRAP' not in Margin.modifiers:
-            i = len(Margin.modifiers)
-            bpy.ops.object.modifier_add(type='SHRINKWRAP')
-            mod = Margin.modifiers[i]
-            mod.target=Prep
+        if prep is not None and prep.type == 'MESH' and prep != margin:
+            mod = next((m for m in margin.modifiers if m.type == 'SHRINKWRAP' and m.target == prep), None)
+            if mod is None:
+                mod = margin.modifiers.new(name='Margin Surface', type='SHRINKWRAP')
+                mod.target = prep
             mod.show_on_cage = True
-
-        bpy.context.tool_settings.use_snap = True
-        bpy.context.tool_settings.snap_target= 'ACTIVE'
-        bpy.context.tool_settings.snap_element = 'FACE'
-        bpy.context.tool_settings.proportional_edit = 'ENABLED'
-        bpy.context.tool_settings.proportional_size=1
-        
-        bpy.ops.object.editmode_toggle()
-        
-        
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
-        context.scene.layers[4] = True
-        
+        else:
+            self.report({'WARNING'}, 'No preparation surface assigned; refining without surface constraint')
+        settings = context.tool_settings
+        settings.use_snap = True
+        settings.snap_target = 'ACTIVE'
+        settings.snap_elements = {'FACE'}
+        settings.use_proportional_edit = True
+        settings.proportional_size = 1
+        odcutils.layer_management([tooth])
+        bpy.ops.object.mode_set(mode='EDIT')
         return {'FINISHED'}
-    
+
 class OPENDENTAL_OT_accept_margin(bpy.types.Operator):
     '''Confirm the marked margin'''
     bl_idname = 'opendental.accept_margin'
