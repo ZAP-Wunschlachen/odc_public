@@ -441,3 +441,17 @@ omitted from duplication and joining. The parametrized integration test accepts
 passes the same finite-coordinate, nonempty-face and manifold-edge checks on the
 synthetic fixture. Self-intersections and repeated-build cleanup remain pending.
 The existing small shutdown allocation warning remains.
+
+## Reproducible headless regression suite
+
+Run `python3 tests/run_headless.py --blender /path/to/blender` to execute all
+headless test scripts in separate factory-startup Blender processes, including
+both solid-restoration methods. The runner records per-case logs and JSON under
+`tests/artifacts/headless`, rejects nonzero exits, tracebacks and timeouts, and
+records shutdown allocation warnings separately. Four foreground GPU/modal tests
+are explicitly excluded and still require their separate commands.
+
+On Blender 5.1.2, all 26 cases passed after the merge-method port; seven cases
+reported the known shutdown allocation warning. This verifies existing test
+coverage only. It does not establish compatibility of the entire operator
+inventory; unported functions and untested UI paths remain outstanding.
