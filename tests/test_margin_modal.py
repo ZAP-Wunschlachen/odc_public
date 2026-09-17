@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 phase = 0
 window = area = region = None
+original_point = None
 
 def send(kind, dx=0, dy=0):
     window.event_simulate(type='MOUSEMOVE', value='NOTHING', x=region.x+region.width//2+dx, y=region.y+region.height//2+dy)
@@ -20,7 +21,7 @@ def running():
     return any(op.bl_idname == 'OPENDENTAL_OT_mark_crown_margin' for op in window.modal_operators)
 
 def run():
-    global phase, window, area, region
+    global phase, window, area, region, original_point
     try:
         if phase == 0:
             assert addon_utils.enable(ROOT.name, default_set=True)
@@ -66,8 +67,20 @@ def run():
             curve = bpy.data.objects[bpy.context.scene.odc_teeth[0].margin]
             assert len(curve.data.splines[0].bezier_points) == 3
             assert curve.data.splines[0].use_cyclic_u
-            send('RET')
+            original_point = curve.data.splines[0].bezier_points[0].co.copy()
+            send('S')
         elif phase == 8:
+            window.event_simulate(type='MOUSEMOVE', value='NOTHING', x=region.x+region.width//2+30, y=region.y+region.height//2+20)
+        elif phase == 9:
+            curve = bpy.data.objects[bpy.context.scene.odc_teeth[0].margin]
+            assert (curve.data.splines[0].bezier_points[0].co-original_point).length > .001
+            send('ESC')
+        elif phase == 10:
+            assert running(), 'Slice cancellation exited the entire tool'
+            curve = bpy.data.objects[bpy.context.scene.odc_teeth[0].margin]
+            assert (curve.data.splines[0].bezier_points[0].co-original_point).length < 1e-5
+            send('RET')
+        elif phase == 11:
             assert not running(), 'Finish left modal handler active'
             assert bpy.context.scene.odc_teeth[0].margin in bpy.data.objects
             print('ODC_MARGIN_MODAL_PASSED', flush=True)

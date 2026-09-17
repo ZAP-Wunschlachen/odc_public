@@ -264,3 +264,12 @@ transformed twice. The shared seeded-section function transforms plane normals
 with the model matrix transpose. Slice points lie on the expected world plane,
 and the 2D plot fits its intended bounds. Empty selection does not enter slice
 mode. Interactive slice movement/drawing and irregular meshes remain pending.
+
+## Interactive slice cancellation
+
+The real-window margin-modal test now enters slice mode with S after closing its
+three-point contour, moves the first point using a queued mouse-move event and
+checks its coordinate changed. Escape restores the point while the marking tool
+remains active; Enter then completes it. The run log was inspected and has no
+Python/drawing exceptions. This confirms event integration on the cube fixture,
+not visual quality or robustness across irregular preparation scans.
