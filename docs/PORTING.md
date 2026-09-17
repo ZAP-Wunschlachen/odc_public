@@ -755,3 +755,11 @@ modifiers and object count, and that successful assembly introduces no new unuse
 mesh data-blocks. The manifold-result check still passes. Multi-unit assembly and
 mid-operation failure rollback remain outstanding; the known native shutdown
 allocation warning is separate from unused mesh data-block accounting.
+
+## Keep Arch Plan
+
+The helper uses current view-layer updates and identifies FOLLOW_PATH constraints
+by type and target instead of their display name. Blender 5.1.2 passes a public
+operator test with a renamed path constraint, translated/rotated parent, world
+matrix preservation and repeat invocation. Other remaining constraint stacks,
+animated transforms and multi-object arch generation still require testing.

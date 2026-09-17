@@ -744,24 +744,20 @@ def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = Fa
         tooth_objects[i+14].matrix_world = wrld_mx1
         
         
-def keep_arch_plan(context, curve, debug = False):
-    '''
-    context = bpy.context
-    curve = Blender Curve Objectc
-    '''
-    
-    for ob in bpy.data.objects:
-        if len(ob.constraints):
-            if 'Follow Path' in ob.constraints:
-                if ob.constraints['Follow Path'].target == curve:
-                    mx = ob.matrix_world.copy()
-                    ob.constraints.remove(ob.constraints['Follow Path'])
-                    ob.matrix_world = mx
-                    ob.update_tag()
-                    
-    context.scene.update()
-    
-        
+def keep_arch_plan(context, curve, debug=False):
+    """Bake matching path constraints while preserving current world placement."""
+    context.view_layer.update()
+    for obj in context.scene.objects:
+        constraints = [constraint for constraint in obj.constraints
+                       if constraint.type == 'FOLLOW_PATH' and constraint.target == curve]
+        if constraints:
+            matrix = obj.matrix_world.copy()
+            for constraint in constraints:
+                obj.constraints.remove(constraint)
+            obj.matrix_world = matrix
+    context.view_layer.update()
+
+
 def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
     '''
     notes:
