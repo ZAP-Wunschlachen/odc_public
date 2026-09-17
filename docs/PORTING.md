@@ -273,3 +273,12 @@ checks its coordinate changed. Escape restores the point while the marking tool
 remains active; Enter then completes it. The run log was inspected and has no
 Python/drawing exceptions. This confirms event integration on the cube fixture,
 not visual quality or robustness across irregular preparation scans.
+
+## Bounding-box control lattice
+
+`tests/test_control_lattice.py` verifies local/world bounding-box centers and the
+3x3x3 control lattice on an offset mesh with translation, rotation and nonuniform
+scale. The padded lattice encloses every source vertex, its undeformed evaluated
+result preserves geometry, and moving its control plane changes the evaluated
+mesh. Legacy layers, scene linking and scene update calls are removed. Sheared
+transforms and the complete crown seating workflow remain unverified.

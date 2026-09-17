@@ -399,48 +399,27 @@ def get_bbox_center(ob, world = True):
         
     box = Vector((0,0,0))
     for v in ob.bound_box:
-        box += mx * Vector(v)
+        box += mx @ Vector(v)
     box *= 1/8
     
     return box
 
 def bbox_to_lattice(scene, ob):
-    
-    mx = ob.matrix_world
-    loc = get_bbox_center(ob, world=True)
-    size = Vector((ob.dimensions[0], ob.dimensions[1], ob.dimensions[2]))
-    
-    lat_data = bpy.data.lattices.new(ob.name[0:2] + "_control")
-    
-    
-    lat = bpy.data.objects.new(lat_data.name, lat_data)
-    
-    
-    lat.location = loc
-    lat.scale = 1.05*size
-    lat.layers[1] = True
-    lat.layers[0] = True
-    
-    
-    if lat.rotation_mode != 'QUATERNION':
-        lat.rotation_mode = 'QUATERNION'
-        
-    
-    lat.rotation_quaternion = mx.to_quaternion()
-    
-    lat.update_tag()
-    scene.objects.link(lat)
-    
-    scene.update()
-    lat.data.points_u = 3
-    lat.data.points_v = 3
-    lat.data.points_w = 3
-    
-    
-    lat_mod = ob.modifiers.new('Lattice','LATTICE')
-    
-    lat_mod.object = lat
-    return lat  #in case you want to delete it after youe apply it.
+    """Fit an undeformed 3x3x3 control lattice around the local bounding box."""
+    center = get_bbox_center(ob, world=False)
+    bounds = [Vector(point) for point in ob.bound_box]
+    size = Vector(tuple(max(v[i] for v in bounds)-min(v[i] for v in bounds) for i in range(3)))
+    if min(size) <= 1e-10:
+        raise ValueError("A control lattice requires a three-dimensional bounding box")
+    data = bpy.data.lattices.new(ob.name[:2] + '_control')
+    data.points_u = data.points_v = data.points_w = 3
+    lattice = bpy.data.objects.new(data.name, data)
+    scene.collection.objects.link(lattice)
+    lattice.matrix_world = ob.matrix_world @ Matrix.Translation(center) @ Matrix.Diagonal((* (size * 1.05), 1))
+    modifier = ob.modifiers.new(name='Lattice', type='LATTICE')
+    modifier.object = lattice
+    return lattice
+
 
 def box_feature_locations(ob, specify):
     '''
