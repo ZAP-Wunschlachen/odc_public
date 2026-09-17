@@ -557,9 +557,9 @@ def bridge_loop(context, ob, group1, group2, segments, twist, cubic, group3 = No
         start = time.time()
     bpy.ops.object.select_all(action='DESELECT')    
     if context.object != ob:
-        context.scene.objects.active = ob
-    ob.hide = False
-    ob.select = True
+        context.view_layer.objects.active = ob
+    ob.hide_set(False)
+    ob.select_set(True)
         
     if context.mode != 'EDIT':
         bpy.ops.object.mode_set(mode='EDIT')
@@ -582,7 +582,7 @@ def bridge_loop(context, ob, group1, group2, segments, twist, cubic, group3 = No
             bpy.ops.object.vertex_group_set_active(group = group)
             bpy.ops.object.vertex_group_select()
             #bpy.ops.mesh.looptools_circle(custom_radius=False, fit='inside', flatten=True, influence=20, radius=1, regular=True)
-            bpy.ops.mesh.looptools_relax(input='selected', interpolation='cubic', iterations='3', regular=True)
+            relax_selected(ob.data, iterations=3)
             
         #bpy.ops.object.mode_set(mode='OBJECT')
         #return
@@ -616,7 +616,9 @@ def bridge_loop(context, ob, group1, group2, segments, twist, cubic, group3 = No
     bpy.ops.mesh.select_loose()
     bpy.ops.mesh.delete()
     bpy.ops.mesh.select_all(action='SELECT')
-    #bpy.ops.mesh.normals_make_consistent()
+    bm = bmesh.from_edit_mesh(ob.data)
+    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+    bmesh.update_edit_mesh(ob.data)
     
     if context.mode != 'OBJECT':
         bpy.ops.object.mode_set(mode='OBJECT')

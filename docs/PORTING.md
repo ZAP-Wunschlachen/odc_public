@@ -772,3 +772,12 @@ the resulting mesh has manifold edges and a single connected component. Modal
 Bridge Individual interaction, anatomical connector groups, parameter mapping
 (segments/twist/cubic currently follow upstream behavior) and repeat edits remain
 unverified. This establishes the helper path, not the complete connector workflow.
+
+## Connector path actually used by Bridge Individual
+
+Call-site review confirmed that Bridge Individual invokes `bridge_loop`, not
+`bridge_loop_2`. That SURFACE-interpolation path now also uses current selection
+APIs, bundled relax and BMesh normal recalculation. Its separate Blender 5.1.2
+test passes manifold edges and a single connected component on the two-box fixture.
+The earlier test covered only the alternate PATH helper. Modal interaction and
+parameter mapping remain outstanding for the actual user workflow.
