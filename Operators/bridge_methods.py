@@ -355,26 +355,18 @@ def make_pre_bridge(context, odc_bridge, debug = False):
         ob.hide_set(False)
         ob.select_set(True)
         
-        #test out deleting the fake user...
-        me = ob.data
-        if me.use_fake_user:
-            me.use_fake_user = False               
-        
-        #Change this later since it resets the active objects len(bridge) times
-        #but it ends with one of the teeth as the active object, so...
         context.view_layer.objects.active = ob
-        bpy.ops.object.multires_base_apply(modifier = 'Multires')
-        
-        if 'Dynamic Margin' in ob.modifiers:
-            bpy.ops.object.modifier_apply(modifier = 'Dynamic Margin')
-            bpy.ops.object.multires_base_apply()
+
+    current_objects = list(bpy.data.objects)
+    bpy.ops.object.duplicate()
+    # Bake only the copies. Original crowns remain available for later edits.
+    for ob in list(context.selected_objects):
+        context.view_layer.objects.active = ob
+        bpy.ops.object.multires_base_apply(modifier='Multires')
         for mod in list(ob.modifiers):
             if mod.name != 'Multires':
-                bpy.ops.object.modifier_apply(modifier = mod.name)
-    
-    
-    current_objects=list(bpy.data.objects)                
-    bpy.ops.object.duplicate()
+                bpy.ops.object.modifier_move_to_index(modifier=mod.name, index=0)
+                bpy.ops.object.modifier_apply(modifier=mod.name)
 
     #rename their vertex groups
     for tooth in bpy.context.selected_objects:

@@ -29,6 +29,8 @@ for index, name in enumerate(('24','25')):
 bridge = scene.odc_bridges.add()
 bridge.name = '24x25'
 bridge.tooth_string = '24:25'
+source_coordinates = [[v.co.copy() for v in obj.data.vertices] for obj in sources]
+source_modifiers = [[(m.name, m.type) for m in obj.modifiers] for obj in sources]
 assert bpy.ops.opendental.make_prebridge() == {'FINISHED'}
 result = bpy.data.objects[bridge.bridge]
 assert result not in sources
@@ -36,6 +38,9 @@ assert len(result.data.vertices) == sum(len(obj.data.vertices) for obj in source
 assert result.vertex_groups.get('Bridge Margin') and result.vertex_groups.get('Connectors')
 assert result.modifiers.get('Smooth Connectors')
 assert all(obj.name in scene.objects for obj in sources)
+for obj, coordinates, modifiers in zip(sources, source_coordinates, source_modifiers):
+    assert [(m.name,m.type) for m in obj.modifiers] == modifiers
+    assert all((v.co-co).length < 1e-6 for v,co in zip(obj.data.vertices,coordinates))
 combined_margin = bpy.data.objects[bridge.margin]
 assert len(combined_margin.data.vertices) == sum(len(m.data.vertices) for m in margins)
 assert result.modifiers['Bridge Margin'].target == combined_margin

@@ -658,3 +658,13 @@ the bridge shrinkwrap target. The run reports that applied modifiers were not fi
 in the stack; source/evaluated geometry preservation must be reviewed before this
 path can be considered fully validated. The known shutdown allocation warning also
 appears. These tests establish margin assembly, not final bridge quality.
+
+## Pre-bridge source preservation
+
+Pre-bridge modifier baking now happens after duplication and only on the copies.
+Each non-Multires modifier is moved to the first stack position before application,
+removing the non-first-modifier warning in the seated-margin fixture. Blender 5.1.2
+passes the expanded test asserting unchanged source vertex coordinates and modifier
+names/types, in addition to the previous combined mesh/margin checks. Detailed
+evaluated-surface equivalence and all possible modifier stacks remain unverified;
+the known small shutdown allocation warning persists.
