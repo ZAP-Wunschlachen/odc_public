@@ -843,3 +843,7 @@ Reuses an existing Follow Path constraint targeting the selected arch and remove
 Ported the public occlusal scheme operator away from scene layers and legacy selection. The helper uses evaluated mesh extraction, current BMesh dependency-graph arguments, matrix products, collection linking and actual returned library objects. Its temporary curve mesh is released, replacement mesh deletion respects users, and contact-group checks require both groups.
 
 Validation: `test_occlusal_scheme.py` executes the public operator with the bundled tooth library and a semicircular arch under Blender 5.1.2. It produces 28 teeth with finite transforms and positive scales, including execution of anterior cross-section measurement. This is initial execution coverage only: anatomical intercuspation, linked/repeated placement, mirror/reverse options and exact geometry remain unverified. Small shutdown allocation warning persists.
+
+### Occlusal scheme Link option
+
+The public operator now forwards its Link setting and requires Object mode. The helper reuses a valid contour and imports/assigns a replacement for empty or stale contour references. Extended `test_occlusal_scheme.py` passes in Blender 5.1.2 with an existing posterior contour, an empty anterior reference and a missing lower-arch reference in one invocation. It verifies retained object identity, valid resulting references, finite transforms and 28 planned objects. Repeat geometric stability and transformed anterior cross-sections remain unverified.

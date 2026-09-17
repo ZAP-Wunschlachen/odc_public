@@ -27,4 +27,18 @@ assert len(objects) == 28, len(objects)
 for obj in objects:
     assert all(math.isfinite(value) for row in obj.matrix_world for value in row)
     assert min(obj.scale) > 0
+# Exercise an existing contour, an empty assignment and a stale assignment together.
+existing = bpy.data.objects['17_ArchPlanned']
+for number, contour in (('17', existing.name), ('21', ''), ('31', 'Missing contour')):
+    tooth = bpy.context.scene.odc_teeth.add()
+    tooth.name = number
+    tooth.contour = contour
+bpy.context.view_layer.objects.active = arch
+assert bpy.ops.opendental.occlusal_scheme(link=True) == {'FINISHED'}
+assert bpy.data.objects[bpy.context.scene.odc_teeth['17'].contour] == existing
+for tooth in bpy.context.scene.odc_teeth:
+    obj = bpy.data.objects.get(tooth.contour)
+    assert obj is not None and obj.type == 'MESH'
+    assert all(math.isfinite(value) for row in obj.matrix_world for value in row)
+assert len([o for o in bpy.context.scene.objects if '_ArchPlanned' in o.name]) == 28
 print('ODC_OCCLUSAL_SCHEME_PASSED', bpy.app.version_string)

@@ -1543,7 +1543,7 @@ class OPENDENTAL_OT_occlusal_scheme_to_curve(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         #restoration exists and is in scene
-        return context.object is not None and context.object.type == 'CURVE'
+        return context.object is not None and context.object.type == 'CURVE' and context.mode == 'OBJECT'
     
     def invoke(self,context,event):
         
@@ -1559,7 +1559,7 @@ class OPENDENTAL_OT_occlusal_scheme_to_curve(bpy.types.Operator):
                                                    ob, 
                                                    settings.tooth_lib, 
                                                    teeth = [], 
-                                                   link = False, 
+                                                   link = self.link, 
                                                    flip = False, 
                                                    reorient = True)
         

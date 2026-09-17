@@ -465,10 +465,10 @@ def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = Fa
     for i, planned_tooth in enumerate(max_teeth + mand_teeth):
         #this will be a one item list
         tooth_in_scene = [tooth for tooth in context.scene.odc_teeth if tooth.name.startswith(planned_tooth)]
-        if link and len(tooth_in_scene):
-            #check if the restoration is already there...if so, use it
-            if tooth_in_scene[0].contour:
-                tooth_objects[i] = bpy.data.objects[tooth_in_scene[0].contour]
+        existing = (bpy.data.objects.get(tooth_in_scene[0].contour)
+                    if link and tooth_in_scene else None)
+        if existing is not None:
+            tooth_objects[i] = existing
         
         #if it's not there, add it in, and associate it with ODCTooth Object
         else:
