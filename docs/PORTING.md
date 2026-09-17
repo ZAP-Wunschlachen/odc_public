@@ -913,3 +913,7 @@ Replaced legacy scene linking/screen scene assignment with tagged object copies,
 ### Forcefield API port — simulation cycle still open
 
 Ported forcefield object linking/selection/activation. Tagged fields are reused per parent tooth and cleaned with simulation copies on rebuild. The expanded physics-scene test passes field count, parent-relative world position, FORCE type, strength and radius checks across repeated setup. However Blender reports a dependency cycle: a field parented to a simulated rigid body affects that same simulation. Thus the API/setup test passes but forcefield dynamics are not validated; the inherited simulation design still needs correction. Do not treat this as a completed physics workflow.
+
+### Physics movement controls — basic API coverage
+
+Ported quaternion-vector products in movement limits and removed obsolete dialog height arguments in limit/unlimit. `test_physics_limits.py` passes on Blender 5.1.2: repeated setup retains one constraint, an unrotated object is clamped to expected XYZ limits, removing the limit restores its unconstrained transform, and lock/unlock changes all location locks. This does not verify rotated tooth axes or constraint enforcement during rigid-body dynamics. The forcefield dependency cycle remains open.

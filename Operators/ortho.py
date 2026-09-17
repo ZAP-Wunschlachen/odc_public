@@ -964,7 +964,7 @@ class OPENDENTAL_OT_limit_movements(bpy.types.Operator):
         else:
             return False
     def invoke(self,context,event):
-        return context.window_manager.invoke_props_dialog(self, width=300, height=20)
+        return context.window_manager.invoke_props_dialog(self, width=300)
         
     
     def execute(self, context):
@@ -988,9 +988,9 @@ class OPENDENTAL_OT_limit_movements(bpy.types.Operator):
             world_loc = ob.matrix_world.to_translation()
             rot = ob.matrix_world.to_quaternion()
             
-            X = world_loc.dot(rot * Vector((1,0,0)))
-            Y = world_loc.dot(rot * Vector((0,1,0)))
-            Z = world_loc.dot(rot * Vector((0,0,1)))
+            X = world_loc.dot(rot @ Vector((1,0,0)))
+            Y = world_loc.dot(rot @ Vector((0,1,0)))
+            Z = world_loc.dot(rot @ Vector((0,0,1)))
             
             limit.use_min_x = True
             limit.use_min_y = True
@@ -1023,7 +1023,7 @@ class OPENDENTAL_OT_unlimit_movements(bpy.types.Operator):
         else:
             return False
     def invoke(self,context,event):
-        return context.window_manager.invoke_props_dialog(self, width=300, height=20)
+        return context.window_manager.invoke_props_dialog(self, width=300)
         
     
     def execute(self, context):
