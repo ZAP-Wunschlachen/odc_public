@@ -917,3 +917,9 @@ Ported forcefield object linking/selection/activation. Tagged fields are reused 
 ### Physics movement controls — basic API coverage
 
 Ported quaternion-vector products in movement limits and removed obsolete dialog height arguments in limit/unlimit. `test_physics_limits.py` passes on Blender 5.1.2: repeated setup retains one constraint, an unrotated object is clamped to expected XYZ limits, removing the limit restores its unconstrained transform, and lock/unlock changes all location locks. This does not verify rotated tooth axes or constraint enforcement during rigid-body dynamics. The forcefield dependency cycle remains open.
+
+### Rotated tooth movement axes
+
+Movement limits now use a fixed, unit-scale custom reference at the initial tooth world pose. This replaces incorrectly mixed local coordinates and rotated world projections. Repeated configuration reuses the reference; unlimit removes it when no non-scene/collection references remain. References are tagged for simulation rebuild cleanup.
+
+The extended physics limits test passes both unrotated and 90-degree-rotated objects, no initial position jump, expected clamped world position and reference cleanup. These remain transform-constraint tests, not proof of rigid-body dynamics enforcement; the forcefield cycle remains unresolved.

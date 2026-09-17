@@ -952,11 +952,11 @@ class OPENDENTAL_OT_limit_movements(bpy.types.Operator):
     bl_idname = "opendental.limit_physics_movements"
     bl_label = "Limit Physics Movements"
     bl_options = {'REGISTER','UNDO'}
-    
+
     buc_ling: bpy.props.FloatProperty(name = 'Facial/Lingual', default = 2)
     mes_dis: bpy.props.FloatProperty(name = 'Mesial/Distal', default = 2)
     occlusal: bpy.props.FloatProperty(name = 'Occluso/Gingival', default = 0)
-    
+
     @classmethod
     def poll(self,context):
         if context.scene.name == 'Physics Sim':
@@ -965,33 +965,33 @@ class OPENDENTAL_OT_limit_movements(bpy.types.Operator):
             return False
     def invoke(self,context,event):
         return context.window_manager.invoke_props_dialog(self, width=300)
-        
-    
+
+
     def execute(self, context):
-        
+
         context.scene.frame_set(0)
         obs = [ob for ob in context.selected_objects]
 
         #bpy.ops.object.select_all(action = 'DESELECT')
-        
+
         for ob in obs:
             if ob.type != 'MESH': continue
-            
-            if 'Limit Location' not in ob.constraints:
+
+            limit = ob.constraints.get('Limit Location')
+            if limit is None:
                 limit = ob.constraints.new('LIMIT_LOCATION')
-            else:
-                limit = ob.constraints['Limit Location']
-                ob.constraints.remove(limit)
-                limit = ob.constraints.new('LIMIT_LOCATION')
-            
-            imx = ob.matrix_world.inverted()
-            world_loc = ob.matrix_world.to_translation()
-            rot = ob.matrix_world.to_quaternion()
-            
-            X = world_loc.dot(rot @ Vector((1,0,0)))
-            Y = world_loc.dot(rot @ Vector((0,1,0)))
-            Z = world_loc.dot(rot @ Vector((0,0,1)))
-            
+            reference = limit.space_object if limit.owner_space == 'CUSTOM' else None
+            if reference is None or not reference.get('odc_movement_reference'):
+                world = ob.matrix_world.copy()
+                reference = bpy.data.objects.new(ob.name + ' Movement Axes', None)
+                reference['odc_movement_reference'] = True
+                reference['odc_physics_copy'] = True
+                context.scene.collection.objects.link(reference)
+                reference.matrix_world = Matrix.LocRotScale(world.translation, world.to_quaternion(), Vector((1,1,1)))
+                reference.hide_render = True
+                reference.hide_set(True)
+            limit.space_object = reference
+
             limit.use_min_x = True
             limit.use_min_y = True
             limit.use_min_z = True
@@ -999,11 +999,11 @@ class OPENDENTAL_OT_limit_movements(bpy.types.Operator):
             limit.use_max_y = True
             limit.use_max_z = True
             limit.use_transform_limit = False
-            
-            limit.owner_space = 'LOCAL'
-            limit.min_x, limit.max_x = X-self.mes_dis, X+self.mes_dis
-            limit.min_y, limit.max_y = Y-self.buc_ling, Y+self.buc_ling
-            limit.min_z, limit.max_z = Z-self.occlusal, Z+self.occlusal    
+
+            limit.owner_space = 'CUSTOM'
+            limit.min_x, limit.max_x = -self.mes_dis, self.mes_dis
+            limit.min_y, limit.max_y = -self.buc_ling, self.buc_ling
+            limit.min_z, limit.max_z = -self.occlusal, self.occlusal
         return {'FINISHED'}
 
 class OPENDENTAL_OT_unlimit_movements(bpy.types.Operator):
@@ -1011,11 +1011,11 @@ class OPENDENTAL_OT_unlimit_movements(bpy.types.Operator):
     bl_idname = "opendental.unlimit_physics_movements"
     bl_label = "Unlimit Physics Movements"
     bl_options = {'REGISTER','UNDO'}
-    
+
     buc_ling: bpy.props.FloatProperty(name = 'Facial/Lingual', default = 2)
     mes_dis: bpy.props.FloatProperty(name = 'Mesial/Distal', default = 2)
     occlusal: bpy.props.FloatProperty(name = 'Occluso/Gingival', default = 0)
-    
+
     @classmethod
     def poll(self,context):
         if context.scene.name == 'Physics Sim':
@@ -1024,24 +1024,29 @@ class OPENDENTAL_OT_unlimit_movements(bpy.types.Operator):
             return False
     def invoke(self,context,event):
         return context.window_manager.invoke_props_dialog(self, width=300)
-        
-    
+
+
     def execute(self, context):
-        
+
         context.scene.frame_set(0)
         obs = [ob for ob in context.selected_objects]
 
         #bpy.ops.object.select_all(action = 'DESELECT')
-        
+
         for ob in obs:
-            
+
             if ob.type != 'MESH': continue
-            
+
             if 'Limit Location' in ob.constraints:
                 limit = ob.constraints['Limit Location']
-                ob.constraints.remove(limit)   
+                reference = limit.space_object
+                ob.constraints.remove(limit)
+                if reference and reference.get('odc_movement_reference'):
+                    users = bpy.data.user_map(subset={reference}).get(reference, set())
+                    if all(isinstance(user, (bpy.types.Collection, bpy.types.Scene)) for user in users):
+                        bpy.data.objects.remove(reference, do_unlink=True)
         return {'FINISHED'}
-       
+
 class OPENDENTAL_OT_lock_movements(bpy.types.Operator):
     '''Prevent Selected Teeth from moving in any direction '''
     bl_idname = "opendental.lock_physics_movements"

@@ -21,4 +21,20 @@ assert bpy.ops.opendental.lock_physics_movements() == {'FINISHED'}
 assert all(obj.lock_location)
 assert bpy.ops.opendental.unlock_physics_movements() == {'FINISHED'}
 assert not any(obj.lock_location)
+import math
+from mathutils import Vector
+obj.location = (3,4,5)
+obj.rotation_euler.z = math.pi/2
+bpy.context.view_layer.update()
+before = obj.matrix_world.copy()
+count = len(bpy.data.objects)
+assert bpy.ops.opendental.limit_physics_movements(mes_dis=2,buc_ling=1,occlusal=.5) == {'FINISHED'}
+bpy.context.view_layer.update()
+assert (obj.matrix_world.translation-before.translation).length < 1e-5
+obj.location = before.translation + before.to_quaternion() @ Vector((8,8,8))
+bpy.context.view_layer.update()
+expected = before.translation + before.to_quaternion() @ Vector((2,1,.5))
+assert (obj.matrix_world.translation-expected).length < 1e-5
+assert bpy.ops.opendental.unlimit_physics_movements() == {'FINISHED'}
+assert len(bpy.data.objects) == count
 print('ODC_PHYSICS_LIMITS_PASSED', bpy.app.version_string)
