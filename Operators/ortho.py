@@ -805,50 +805,53 @@ class OPENDENTAL_OT_left_view(bpy.types.Operator):
         return {'FINISHED'}
 
 class OPENDENTAL_OT_physics_scene(bpy.types.Operator):
-    '''Take selected objects into a separate scene for physics simulation'''
+    """Copy selected meshes into a separate physics scene."""
     bl_idname = "opendental.add_physics_scene"
     bl_label = "Physics Scene for Simulation"
-    bl_options = {'REGISTER','UNDO'}
-    
+    bl_options = {'REGISTER', 'UNDO'}
+
     @classmethod
-    def poll(self,context):
-        if context.scene.name == "Physics Sim":
-            return False
-        else:
-            return True
+    def poll(cls, context):
+        return (context.window is not None and context.mode == 'OBJECT'
+                and context.scene.name != 'Physics Sim'
+                and any(obj.type == 'MESH' for obj in context.selected_objects))
+
     def execute(self, context):
-        obs = [ob for ob in context.selected_objects]
-        
-        if "Physics Sim" not in bpy.data.scenes:
-            pscene = bpy.data.scenes.new("Physics Sim")
-        else:
-            pscene = bpy.data.scenes["Physics Sim"]
-                
-        #TODO Clear existing objects and any physics cache
-        for ob in pscene.objects:
-            pscene.objects.unlink(ob)
-            ob.user_clear()
-            bpy.data.objects.remove(ob)
-        
-        context.screen.scene = pscene
-        context.scene.frame_set(0)
-        
-        for ob in obs:    
-            #new_ob = bpy.data.objects.new(ob.name[0:2]+'_p', ob.data)
-            pscene.objects.link(ob)
-            ob.select = True
-            
-        bpy.ops.object.make_single_user(type='SELECTED_OBJECTS', object = True, obdata = False)             
-        bpy.ops.object.visual_transform_apply()
-        
+        sources = [(obj, obj.matrix_world.copy()) for obj in context.selected_objects if obj.type == 'MESH']
+        scene = bpy.data.scenes.get('Physics Sim') or bpy.data.scenes.new('Physics Sim')
+        # Remove only our previous copies; unrelated scene objects are preserved.
+        for obj in list(scene.objects):
+            if obj.get('odc_physics_copy'):
+                for collection in list(obj.users_collection):
+                    if collection == scene.collection or collection in scene.collection.children_recursive:
+                        collection.objects.unlink(obj)
+                if obj.users == 0:
+                    bpy.data.objects.remove(obj)
+        copies = []
+        for source, world in sources:
+            obj = source.copy()
+            obj['odc_physics_copy'] = True
+            obj.parent = None
+            obj.constraints.clear()
+            obj.animation_data_clear()
+            obj.matrix_world = world
+            scene.collection.objects.link(obj)
+            copies.append(obj)
+        context.window.scene = scene
+        scene.frame_set(0)
+        bpy.ops.object.select_all(action='DESELECT')
+        for obj in copies:
+            obj.hide_set(False)
+            obj.select_set(True)
+        context.view_layer.objects.active = copies[0]
         return {'FINISHED'}
-    
+
 class OPENDENTAL_OT_physics_setup(bpy.types.Operator):
     '''Make objects rigid bodies for physics simulation'''
     bl_idname = "opendental.physics_sim_setup"
     bl_label = "Setup Physics for Simulation"
     bl_options = {'REGISTER','UNDO'}
-    
+
     @classmethod
     def poll(self,context):
         if context.scene.name == 'Physics Sim':
@@ -864,33 +867,33 @@ class OPENDENTAL_OT_physics_setup(bpy.types.Operator):
             bpy.ops.rigidbody.world_add()
         else:
             bpy.ops.rigidbody.world_add()
-            
-        #potentially adjust these values    
+
+        #potentially adjust these values
         rbw = context.scene.rigidbody_world
         rbw.solver_iterations = 15
         rbw.point_cache.frame_end = 500 #more time for sim.
         context.scene.frame_end = 500
         context.scene.frame_set(0)
-        
-        obs = [ob for ob in context.selected_objects]
+
+        obs = [ob for ob in context.selected_objects if ob.type == 'MESH']
         bpy.ops.object.select_all(action = 'DESELECT')
-        
+
         for ob in obs:
-            context.scene.objects.active = ob
-            ob.select = True
+            context.view_layer.objects.active = ob
+            ob.select_set(True)
             if not ob.rigid_body:
                 bpy.ops.rigidbody.object_add()
             else:
                 bpy.ops.rigidbody.object_remove()
                 bpy.ops.rigidbody.object_add()
-            
-            
+
+
             ob.lock_rotations_4d = True
             ob.lock_rotation[0] = True
             ob.lock_rotation[1] = True
             ob.lock_rotation[2] = True
             ob.lock_rotation_w = True
-                
+
             rb = ob.rigid_body
             rb.friction = .1
             rb.use_margin = True
@@ -900,10 +903,10 @@ class OPENDENTAL_OT_physics_setup(bpy.types.Operator):
             rb.linear_damping = 1
             rb.angular_damping = .9
             rb.mass = 3
-            ob.select = False          
-        
+            ob.select_set(False)
+
         return {'FINISHED'}
-    
+
 class OPENDENTAL_OT_add_forcefields(bpy.types.Operator):
     '''Add forcefields to selected objects'''
     bl_idname = "opendental.add_forcefields"

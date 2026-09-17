@@ -903,3 +903,9 @@ Extended `test_root_parenting.py` through `link_to_cast=True` with an UpperJaw m
 ### Simple orthodontic base
 
 The base operator now searches boundary edges and chooses the largest closed loop, cancels cleanly when no suitable loop exists, and explicitly updates mesh data. `test_ortho_base.py` passes on Blender 5.1.2: a closed cube cancels without coordinate changes; removing its bottom and adding a -2 base produces a manifold volume-16 solid with expected Z bounds [-3, 1]. Multiple boundaries, curved casts and nonuniform transforms remain unverified.
+
+### Physics scene and rigid-body setup
+
+Replaced legacy scene linking/screen scene assignment with tagged object copies, collection linking and window scene switching. Copies retain world placement with parent/constraints/animation cleared; mesh data remains shared as in the original single-user-object workflow. Rebuild removes only tagged copies from simulation collections and deletes them only if unused. Rigid-body setup uses current active/selection APIs and filters meshes.
+
+`test_physics_scene.py` passes on Blender 5.1.2 for initial and repeated setup: one independent object copy, same mesh and world matrix, intact source scene object, rigid-body settings on the copy only, and disabled gravity. Actual simulation dynamics, forcefields and animated/deformed sources remain unverified.
