@@ -384,3 +384,13 @@ vertex positions and parent identity while adopting the requested world rotation
 shared mesh data is copied before modification. Curve control points also retain
 world positions. Constraints and evaluated modifier preservation remain untested,
 and the complete alternative intaglio path is still pending.
+
+## Alternative intaglio first integration
+
+`tests/test_alternate_intaglio.py` invokes Calculate Intaglio with
+`no_undercuts=False` on the same seated-tooth/sphere fixture. Current selection,
+hiding, normal recalculation and shrinkwrap settings replace removed APIs. Mesh
+references are refreshed after modifier application before filling. The run
+produces faces and zone groups with finite evaluated coordinates and the requested
+gap setting. Exact clearance, repeated generation, cleanup and anatomical quality
+remain unverified for this alternative path.

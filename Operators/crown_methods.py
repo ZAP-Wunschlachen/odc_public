@@ -499,14 +499,14 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     
     #we wil use these to control our translations
     axis_quat = Axis.matrix_world.to_quaternion()
-    axis_z = axis_quat * Vector((0,0,1))
+    axis_z = axis_quat @ Vector((0,0,1))
     
     #take control of the scene TODO:consider overriding context
     bpy.ops.object.select_all(action='DESELECT')
     current_objects=list(bpy.data.objects)
-    Restoration.hide = False
-    sce.objects.active=Restoration
-    Restoration.select = True
+    Restoration.hide_set(False)
+    context.view_layer.objects.active=Restoration
+    Restoration.select_set(True)
     
     #we want to make a temporary copy of the resoration so that
     #we can apply all the dynamic modifiers but still have the option
@@ -517,12 +517,13 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     for o in bpy.data.objects:
         if o not in current_objects:
             o.name=intaglio
-            o.parent= sce.objects[master]
+            if master in sce.objects:
+                odcutils.parent_in_place(o, sce.objects[master])
             
     bpy.ops.object.select_all(action='DESELECT')
     Intaglio = bpy.data.objects[intaglio] 
-    sce.objects.active=Intaglio
-    Intaglio.select = True
+    context.view_layer.objects.active=Intaglio
+    Intaglio.select_set(True)
     
     bpy.ops.object.multires_base_apply(modifier="Multires")
     
@@ -543,9 +544,9 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     #clean out the vertex groups
     bpy.ops.object.vertex_group_remove(all = True)
  
-    sce.objects.active=Intaglio
-    Intaglio.select=True
-    Restoration.hide=False
+    context.view_layer.objects.active=Intaglio
+    Intaglio.select_set(True)
+    Restoration.hide_set(False)
     
     #Keep just the free edge of the of resoration to use as a starting ppint
     bpy.ops.object.mode_set(mode='EDIT')
@@ -594,8 +595,8 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     
     bpy.ops.object.modifier_apply(modifier = mod.name)        
     
-    bpy.ops.object.editmode_toggle()  #this is to update the selected vertices 
-
+    bpy.ops.object.mode_set(mode='OBJECT')
+    me = Intaglio.data
     sel_edges=[e for e in me.edges if e.select == True]
     
     odcutils.fill_loop_scale(Intaglio, sel_edges, .3 , debug = debug)  #is this a good scale??.3^3 = 1/27mm
@@ -609,7 +610,9 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     #Make normals consistent, very important for projections
     #and upcoming modifiers
     bpy.ops.mesh.select_all(action = 'SELECT')
-    bpy.ops.mesh.normals_make_consistent()      
+    edit_bm = bmesh.from_edit_mesh(Intaglio.data)
+    bmesh.ops.recalc_face_normals(edit_bm, faces=list(edit_bm.faces))
+    bmesh.update_edit_mesh(Intaglio.data)      
     bpy.ops.object.mode_set(mode='OBJECT')
     
     #Project down and then lift off the intaglio
@@ -697,7 +700,7 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     mod.name = 'HZ Seal'
     mod.vertex_group = 'Holy Zone'
     mod.wrap_method='NEAREST_SURFACEPOINT'
-    mod.use_keep_above_surface = True                
+    mod.wrap_mode = 'ABOVE_SURFACE'                
     mod.target=Prep
     
     #Establish the Cement Gap
@@ -709,14 +712,14 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     mod.offset = gap                
     mod.vertex_group = 'filled_hole'
     mod.wrap_method = 'NEAREST_SURFACEPOINT'
-    mod.use_keep_above_surface = True
+    mod.wrap_mode = 'ABOVE_SURFACE'
     mod.target = Prep
     
     #Apply the "final seat" modifier because it is direction dependent
     #and we do not want further rotations to affect it.
     bpy.ops.object.modifier_apply(modifier="Final Seat")
     
-    Restoration.hide = True
+    Restoration.hide_set(True)
     tooth.intaglio = intaglio
 
     
@@ -729,7 +732,7 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
                 
     if tooth.bubble:
         Bubble = sce.objects[tooth.bubble]
-        Bubble.hide = True  
+        Bubble.hide_set(True)  
         
     if debug:
         print("calced intaglio in %f seconds" % (time.time() - start))  

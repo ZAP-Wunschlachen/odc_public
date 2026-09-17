@@ -795,7 +795,7 @@ def extrude_edges_in(me, edges, mx, axis, res, debug = False):
     imx.invert()
     irot = imx.to_quaternion()
     iscl = imx.to_scale() 
-    z = irot*axis
+    z = irot @ axis
     
     verts_in_order = edge_loops_from_edges(me,edges)
     verts_in_order = verts_in_order[0]
