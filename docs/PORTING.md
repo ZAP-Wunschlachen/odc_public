@@ -314,3 +314,12 @@ evaluated finite-coordinate checks as 25. These remain circular synthetic margin
 All three runs report small unfreed memory blocks during Blender shutdown (about
 4–5 KB); the source of that shutdown report still needs investigation. The test
 assertions pass, but this is not evidence of leak-free operation or anatomical fit.
+
+## Seating diagnostic follow-up
+
+Loading tooth 16 directly from its blend library without enabling the add-on
+produced no shutdown memory report. The complete seating fixture still reports
+16 small unfreed blocks. Its copied projection modifier is now moved to the start
+of the stack before application, removing Blender's non-first-modifier warning.
+The tooth 16 repeated alignment/evaluated geometry assertions still pass; the
+shutdown allocation source remains unresolved.

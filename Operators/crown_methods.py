@@ -1095,7 +1095,9 @@ def seat_to_margin_improved(context, sce, tooth, influence, debug = False):
     current_mods = [mod.name for mod in Restoration.modifiers]
     bpy.ops.object.modifier_copy(modifier = margin)
     new_mod = [mod.name for mod in Restoration.modifiers if mod.name not in current_mods]
-    bpy.ops.object.modifier_apply(modifier=new_mod[0])
+    copied = Restoration.modifiers.get(new_mod[0])
+    Restoration.modifiers.move(Restoration.modifiers.find(copied.name), 0)
+    bpy.ops.object.modifier_apply(modifier=copied.name)
 
     bpy.ops.object.editmode_toggle()
     bpy.ops.object.editmode_toggle()
