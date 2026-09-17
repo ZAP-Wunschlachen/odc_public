@@ -41,4 +41,22 @@ for arch_type in ('0', '1'):
     bpy.data.objects.remove(obj, do_unlink=True)
     if not data.users:
         bpy.data.meshes.remove(data)
+# Linked restorations must retain identity without accumulating path constraints.
+for number in ('11', '21'):
+    tooth = bpy.context.scene.odc_teeth.add()
+    tooth.name = number
+linked_objects = None
+for attempt in range(2):
+    bpy.context.view_layer.objects.active = arch
+    arch.select_set(True)
+    assert bpy.ops.opendental.teeth_to_arch(arch_type='0', shift='2', link=True, limit=True) == {'FINISHED'}
+    current = [bpy.data.objects[t.contour] for t in bpy.context.scene.odc_teeth]
+    if linked_objects is not None:
+        assert current == linked_objects
+    linked_objects = current
+    for obj in current:
+        paths = [c for c in obj.constraints if c.type == 'FOLLOW_PATH' and c.target == arch]
+        assert len(paths) == 1, len(paths)
+    all_planned = [o for o in bpy.context.scene.objects if any(c.type == 'FOLLOW_PATH' and c.target == arch for c in o.constraints)]
+    assert set(all_planned) == set(current)
 print('ODC_TEETH_TO_CURVE_PASSED', bpy.app.version_string)

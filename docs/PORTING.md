@@ -833,3 +833,7 @@ Validation: `test_teeth_to_curve.py` passes on Blender 5.1.2 using the bundled 1
 ### Public Teeth to Arch operator
 
 Removed obsolete scene-layer access and ported active-object/selection restoration in `opendental.teeth_to_arch`; polling now requires Object mode. The arch placement test now invokes the public operator for both MAX and MAND, each with BODY, BUCCAL and FOSSA alignment. All six executions pass under Blender 5.1.2, including repeated replacement and restoring the curve as active object. This covers operator execution, not the properties dialog or anatomical correctness. Shutdown allocation warning persists (64 blocks in this expanded run).
+
+### Linked arch placement repetition
+
+Reuses an existing Follow Path constraint targeting the selected arch and removes duplicate constraints for that same arch, preserving unrelated constraints. Extended the public operator test with two working teeth (11/21), `link=True, limit=True`, and repeated execution. Blender 5.1.2 passes object identity, contour references, exactly one path per retained tooth and absence of unrequested planned teeth. This does not establish repeated geometric invariance, which remains to be checked.

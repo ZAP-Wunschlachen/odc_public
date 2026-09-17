@@ -295,7 +295,12 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
         ob.select_set(True)
         ob.hide_set(False)
 
-        path_constraint = ob.constraints.new('FOLLOW_PATH')
+        # Reuse this arch's constraint when placing linked restorations again.
+        matching_paths = [c for c in ob.constraints
+                          if c.type == 'FOLLOW_PATH' and c.target == arch]
+        path_constraint = matching_paths[0] if matching_paths else ob.constraints.new('FOLLOW_PATH')
+        for duplicate in matching_paths[1:]:
+            ob.constraints.remove(duplicate)
         path_constraint.target = arch
         path_constraint.use_curve_follow = True
         #find out if we cross the midline
