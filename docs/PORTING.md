@@ -21,6 +21,19 @@ release. Loading successfully is only the first verification gate.
   dependent proximity modifiers. Original-mesh weights on topology-changing
   sources still need further verification.
 
+## Shared helpers verified with bundled assets
+
+- Object append and link use Blender 5.1 keyword arguments and return the actual
+  loaded datablock, including when Blender renames duplicate imports.
+- Material enumeration returns material names; material append returns the actual
+  loaded material and supports duplicate imports.
+- Missing asset names raise an explicit error. Appended objects remain unlinked
+  until their caller links them to a collection.
+- Shared preferences and selection-button lookup use current APIs; mesh and
+  BMesh centroids apply translated, nonuniformly scaled matrices correctly.
+- These helper checks do not yet verify their crown/implant callers. Those still
+  need migration from name-based lookup and legacy scene APIs.
+
 ## Implemented, not yet verified visually
 
 A package-local GPU adapter replaces legacy immediate-mode drawing. Image
@@ -46,6 +59,7 @@ Run from this repository with Blender 5.1:
 ```
 blender --background --factory-startup --python-exit-code 1 --python tests/test_registration.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_model_workflows.py
+blender --background --factory-startup --python-exit-code 1 --python tests/test_library_helpers.py
 ```
 
 Tests use synthetic geometry. The port tests do not validate a patient-specific

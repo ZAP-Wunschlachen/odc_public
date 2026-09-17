@@ -55,7 +55,9 @@ class AddonLocator(object):
         print("Addon path has been registered into system path for this session")
 
 def selection_mouse():
-    select_type = bpy.context.user_preferences.inputs.select_mouse
+    keyconfig = bpy.context.window_manager.keyconfigs.active
+    preferences = keyconfig.preferences if keyconfig else None
+    select_type = getattr(preferences, "select_mouse", "LEFT")
     select_mouse = []
     if select_type == 'RIGHT':
         select_mouse.append('RIGHTMOUSE')
@@ -67,16 +69,9 @@ def selection_mouse():
     return select_mouse
 
 def get_settings():
-    addons = bpy.context.user_preferences.addons
-    stack = inspect.stack()
-    for entry in stack:
-        folderpath = os.path.dirname(entry[1])
-        foldername = os.path.basename(folderpath)
-        if foldername not in {'lib','addons'} and foldername in addons: break
-    else:
-        assert False, 'could not find non-"lib" folder'
-    settings = addons[foldername].preferences
-    return settings
+    from .odcutils import get_settings as addon_settings
+    return addon_settings()
+
 
 def dprint(s, l=2):
     settings = get_settings()

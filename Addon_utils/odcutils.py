@@ -226,7 +226,7 @@ def get_com(me,verts,mx):
     l = len(verts)
     for v in verts:
         COM = COM + me.vertices[v].co  
-    COM = mx  * (COM/l)
+    COM = mx @ (COM/l)
 
     return COM
 
@@ -244,7 +244,7 @@ def get_com_bme(bme,vert_inds,mx):
     l = len(vert_inds)
     for v in vert_inds:
         COM = COM + bme.verts[v].co  
-    COM = mx  * (COM/l)
+    COM = mx @ (COM/l)
 
     return COM
 
@@ -1570,28 +1570,14 @@ def obj_from_lib(libpath, name, link = False, rel = False):
     obpath = libpath + '\\Object\\'
     bpy.ops.wm.link_append(directory = obpath, filename = name, link = True, relative_path = True )
     '''
-    with bpy.data.libraries.load(libpath, link, rel) as (data_from, data_to):
-        ind = data_from.objects.index(name)
-        data_to.objects = [data_from.objects[ind]]
-        
-        #if len(data_to.objects[0].children):
-            #print('found a child')
-    for ob in data_to.objects:
-        #attributes = dir(ob)
-        #print(attributes)
-        if hasattr(ob, 'children'):
-            if len(getattr(ob, 'children')):
-                print(ob.children)
-            else:
-               print('has no children')
-        else:
-            print('has no children')
-           
-    if link:
-        print(name + " linked.")
-    else:
-        print(name + " appended.")
-          
+    with bpy.data.libraries.load(bpy.path.abspath(libpath), link=link, relative=rel) as (data_from, data_to):
+        if name not in data_from.objects:
+            raise ValueError(f"Object {name!r} is not in library {libpath!r}")
+        data_to.objects = [name]
+    # Return the actual datablock: Blender may suffix its name on collision.
+    # Linking to a scene remains the caller's responsibility.
+    return data_to.objects[0]
+
 def obj_list_from_lib(libpath, include = None, exclude = None, debug = False):
     '''
     get's a list of object names from a lend file
@@ -1638,15 +1624,14 @@ def mat_list_from_lib(libpath):
         for mat in data_from.materials:
             mat_list.append(mat)
 
-    return list
+    return mat_list
     
 def mat_from_lib(libpath, name, link = False, rel = False):    
-    with bpy.data.libraries.load(libpath, link, rel) as (data_from, data_to):
+    with bpy.data.libraries.load(bpy.path.abspath(libpath), link=link, relative=rel) as (data_from, data_to):
+        if name not in data_from.materials:
+            raise ValueError(f"Material {name!r} is not in library {libpath!r}")
         data_to.materials = [name]
-        if link:
-            print(name + " linked.")
-        else:
-            print(name + " appended.")
+    return data_to.materials[0]
 
 
 def max_alt(verts):
