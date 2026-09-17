@@ -567,3 +567,13 @@ when creating a new object. World placement now updates on every invocation usin
 the implant world orientation and requested axial offset. The same test passes in
 Blender 5.1.2, including orientation, geometry dimensions and stable object count.
 Scaled/parented implants and projection to splint geometry remain outstanding.
+
+## Guide-cylinder wedge verification
+
+The public outer-cylinder test now exercises quarter, 65-percent and 90-percent
+wedges and the full-circle fallback. Blender 5.1.2 passes manifold edges, finite
+coordinates, complete upper-cap group, stable object count and volume compared
+with the analytic volume of the existing 64-segment polygonal sector. No additional
+API change was needed. Fractions below 0.1 still use the upstream full-circle
+fallback; whether that UI behavior should change requires separate review.
+Splint projection remains untested.
