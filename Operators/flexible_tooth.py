@@ -271,47 +271,47 @@ class OPENDENTAL_OT_keep_hook(bpy.types.Operator):
         return condition0 and condition1
     
     def execute(self, context):
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
-        
-        to_delete = []
-        for ob in context.selected_objects:
-            mods = [mod.type for mod in ob.modifiers]
-            if 'HOOK' not in mods:
-                self.report({'WARNING'}, 'There are no hook modifiers in' + ob.name +'.  Please run flexttooth first or remove them') 
+        selected = list(context.selected_objects)
+        active = context.view_layer.objects.active
+        active_name = active.name if active else None
+        selected_names = [obj.name for obj in selected]
+        controls = set()
+        changed = False
+        for obj in selected:
+            modifiers = [mod for mod in obj.modifiers if mod.type in {'HOOK', 'LAPLACIANDEFORM'}]
+            if not modifiers:
                 continue
-            
-                    
-                    
-            bpy.ops.object.select_all(action = 'DESELECT')
-            context.scene.objects.active = ob
-            ob.select = True
-            ob.lock_location = [False, False, False]
-            #ob.hide_select = False    
-            
-            for mod in ob.modifiers:
-                if mod.type in {'HOOK','LAPLACIANDEFORM'}:
-                    ob.hide = False
-                    bpy.ops.object.modifier_apply(modifier = mod.name)
-                    
-                    if mod.type =='HOOK':
-                        to_delete.append(mod.object)
-                        if mod.object.parent and mod.object.parent not in to_delete:
-                            to_delete.append(mod.object.parent)
-                
-        bpy.ops.object.select_all(action='DESELECT')        
-        for ob in to_delete:
-            ob.select = True
-            context.scene.objects.active = ob
-            bpy.ops.object.delete(use_global = True)
-            #lat = ob.data
-            #ob.user_clear()
-            #bpy.data.objects.remove(ob)
-            #bpy.data.lattices.remove(lat)
-            
-        
+            bpy.ops.object.select_all(action='DESELECT')
+            obj.hide_set(False)
+            obj.select_set(True)
+            context.view_layer.objects.active = obj
+            obj.lock_location = (False, False, False)
+            for modifier in modifiers:
+                control = modifier.object if modifier.type == 'HOOK' else None
+                if control:
+                    controls.add(control)
+                    if control.parent:
+                        controls.add(control.parent)
+                bpy.ops.object.modifier_apply(modifier=modifier.name)
+                changed = True
+        # Children first, retaining controls still referenced by other objects.
+        for control in sorted(controls, key=lambda obj: len(obj.children_recursive)):
+            users = bpy.data.user_map(subset={control}).get(control, set())
+            if not control.use_fake_user and all(isinstance(user, (bpy.types.Collection, bpy.types.Scene)) for user in users):
+                bpy.data.objects.remove(control, do_unlink=True)
+        bpy.ops.object.select_all(action='DESELECT')
+        for name in selected_names:
+            obj = context.view_layer.objects.get(name)
+            if obj is not None:
+                obj.select_set(True)
+        if active_name and active_name in context.view_layer.objects:
+            context.view_layer.objects.active = context.view_layer.objects[active_name]
+        if not changed:
+            self.report({'WARNING'}, 'No Hook or Laplacian Deform modifiers were found')
+            return {'CANCELLED'}
         return {'FINISHED'}
-    
+
+
 def register():
     bpy.utils.register_class(OPENDENTAL_OT_hook_deform)
     bpy.utils.register_class(OPENDENTAL_OT_keep_hook)

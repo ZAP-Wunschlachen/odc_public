@@ -961,3 +961,9 @@ Fast labeling now rejects a number already used by another object before changin
 ### Label modal cancellation
 
 Fast labeling snapshots touched object names/show-name flags and restores them on Escape, freeing temporary labels before restoring original names. Origin centering is deferred until Enter, so cancellation does not perform that mesh/transform operation. The real-window test passes collision handling, label/cancel restoration, restart and successful commit. Shared-mesh origin handling and world-coordinate preservation for off-center geometry remain unverified.
+
+### FlexiTooth Keep and expanded regression
+
+Ported FlexiTooth Keep away from legacy layers/selection. Captures Hook controls before modifier application invalidates modifier RNA, applies a modifier snapshot, and removes controls children-first only when no non-scene/collection references remain. Restores surviving selection/active object by name. `test_flexitooth_keep.py` passes geometry equality with the evaluated Hook result and preservation/removal of a shared control across two objects. Laplacian binding and upstream FlexiTooth creation remain unported/unverified.
+
+The separately started full headless regression completed with 61/61 cases passing (before the new FlexiTooth test was discovered). The new FlexiTooth case passes separately. Physics dependency-cycle warnings persist and are not failure conditions in the current runner; these results do not establish a complete plugin port.
