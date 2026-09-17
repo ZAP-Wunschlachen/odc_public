@@ -32,4 +32,16 @@ for finalize in (False, True):
             assert (ball.co-vertex.co).length < 1e-6
             assert abs(ball.radius-2.5) < 1e-6
 assert [tuple(v.co) for v in source.data.vertices] == original
+for finalize in (False, True):
+    before = set(bpy.data.objects)
+    assert bpy.ops.opendental.meta_custom_tray(tray_thickness=2, tray_offset=1.5, finalize=finalize) == {'FINISHED'}
+    added = set(bpy.data.objects)-before
+    assert len(added) == 1
+    result = added.pop()
+    if finalize:
+        assert result.type == 'MESH' and len(result.data.polygons) > 0
+    else:
+        assert result.type == 'META'
+        assert len(result.data.elements) == len(scaffold.data.vertices)
+        assert all(abs(ball.radius-3.5) < 1e-6 for ball in result.data.elements)
 print('ODC_META_SURFACE_PASSED', bpy.app.version_string)

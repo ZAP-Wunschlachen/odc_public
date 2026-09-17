@@ -325,72 +325,25 @@ class OPENDENTAL_OT_meta_custom_tray(bpy.types.Operator):
     n_verts: IntProperty(default = 5000)
     @classmethod
     def poll(cls, context):
-        if context.mode == "OBJECT" and context.object != None:
+        if context.mode == "OBJECT" and context.object is not None and context.object.type == 'MESH':
             return True
         else:
             return False
         
     def execute(self, context):
-        
-        ob = context.object
-        mx = ob.matrix_world
-        
-        meta_data = bpy.data.metaballs.new('Meta Mesh')
-        meta_obj = bpy.data.objects.new('Meta Surface', meta_data)
-        meta_data.resolution = .8
-        meta_data.render_resolution = .8
-        context.scene.objects.link(meta_obj)
-        
-        
-        # Copy Material if any
-        if ob.data.materials:
-            mat = ob.data.materials[0]
-            meta_obj.data.materials.append(mat)
-            
-            
-        for v in self.bme.verts:
-            
-            #outer shell
-            mb = meta_data.elements.new(type = 'BALL')
-            mb.radius = self.tray_thickness + self.tray_offset
-            mb.co = v.co
-            
-            
-            #inner spacer
-            #mb2 = meta_data2.elements.new(type = 'BALL')
-            #mb2.radius = self.tray_offset
-            #mb2.co = v.co
-            
-            #bridge them?
-            
-            
-        meta_obj.matrix_world = mx
-        
-        if self.finalize:
-            context.scene.update()
-            me = meta_obj.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
-            new_ob = bpy.data.objects.new('MetaSurfaceMesh', me)
-            context.scene.objects.link(new_ob)
-            new_ob.matrix_world = mx
-            if meta_obj.data.materials:
-                new_ob.data.materials.append(mat)
-                
-            context.scene.objects.unlink(meta_obj)
-            bpy.data.objects.remove(meta_obj)
-            bpy.data.metaballs.remove(meta_data)
-        
-        self.bme.free()    
-        return {'FINISHED'}
-    
+        # This legacy tool generates the outer envelope. The intaglio is
+        # created separately with the Boolean Intaglio operator.
+        return bpy.ops.opendental.meta_offset_surface(
+            radius=self.tray_thickness + self.tray_offset,
+            resolution=.8, finalize=self.finalize)
+
     def invoke(self, context, event):
-        self.bme = bmesh.new()
-        self.bme.from_object(context.object, context.scene)
-        self.bme.verts.ensure_lookup_table()
-        
-        self.n_verts = len(self.bme.verts)
-        
+        bme = bmesh.new()
+        bme.from_object(context.object, context.evaluated_depsgraph_get())
+        self.n_verts = len(bme.verts)
+        bme.free()
         return context.window_manager.invoke_props_dialog(self)
-    
+
     def draw(self,context):
         
         layout = self.layout

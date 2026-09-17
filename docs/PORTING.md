@@ -859,3 +859,7 @@ Ran `python3 tests/run_headless.py --blender /Applications/Blender.app/Contents/
 Ported scaffold and meta-surface dependency graphs, mesh extraction, collection linking and deletion. Polls require meshes; scaffold rejects empty-edge meshes or nonpositive radius. Meta surface now builds its BMesh in execute, freeing dialog preview data immediately. Distinct metaball family names prevent subsequent surfaces from evaluating as empty family members.
 
 `test_meta_surface.py` passes on Blender 5.1.2: reduced scaffold vertex count, world-transform preservation within tolerance, nonfinalized ball positions/radii, finalized nonempty mesh while an earlier meta surface exists, and unchanged source mesh coordinates. No shutdown warning in this test. Tray/rim and further denture workflows remain unported.
+
+### Custom tray outer envelope
+
+The custom tray operator now delegates its identical outer-envelope generation to the ported meta-surface operator using radius = thickness + offset. This preserves the original outer-only behavior; the original inner-spacer block was commented out. Dialog BMesh data is released immediately and polling requires a mesh. Extended `test_meta_surface.py` passes both META and finalized MESH outputs, configured ball radius, element count and nonempty polygon output with other meta surfaces already present. Exact physical spacer/wall thickness and the separate Boolean Intaglio workflow remain unverified.
