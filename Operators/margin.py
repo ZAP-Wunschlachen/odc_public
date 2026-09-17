@@ -64,9 +64,9 @@ class MarginSlicer(object):
         N = len(self.crv_dat.b_pts)
         i = self.crv_dat.selected
         i_m1 = (i-1) % N
-        self.cut_no = crv_mx * self.crv_dat.b_pts[i] - crv_mx*self.crv_dat.b_pts[i_m1]
+        self.cut_no = self.crv_dat.b_pts[i] - self.crv_dat.b_pts[i_m1]
         self.cut_no.normalize()
-        self.cut_pt = crv_mx * self.crv_dat.b_pts[i]
+        self.cut_pt = self.crv_dat.b_pts[i].copy()
         
     def slice(self):
         self.slice_points = []
@@ -79,17 +79,20 @@ class MarginSlicer(object):
         mx = self.snap_ob.matrix_world
         imx = mx.inverted()
         if bversion() < '002.077.000':
-            pt, no, seed, dist = self.bvh.find(imx * self.cut_pt)
+            pt, no, seed, dist = self.bvh.find(imx @ self.cut_pt)
         else:
-            pt, no, seed, dist = self.bvh.find_nearest(imx * self.cut_pt)
+            pt, no, seed, dist = self.bvh.find_nearest(imx @ self.cut_pt)
         
         
-        verts, eds = cross_section_seed_ver1(self.bme, mx, self.cut_pt, self.cut_no, seed, max_tests = 40)
+        verts, eds = cross_section_seed_ver1(self.bme, mx, self.cut_pt, self.cut_no, seed, max_tests = len(self.bme.faces) + 1, debug=False)
         
         #put them in world space
-        self.slice_points = [mx*v for v in verts]
+        self.slice_points = [mx @ v for v in verts] if verts else []
     
     def make_points_2D(self):
+        self.points_2d = []
+        if not self.slice_points:
+            return
         
         X = self.cut_no.cross(self.Z)
         X.normalize()
@@ -101,16 +104,18 @@ class MarginSlicer(object):
         
         points_2d = [Vector((v.dot(X), v.dot(Y))) for v in points_centered]
         bounds = bound_box(points_2d)
-        x_factor = 200/(bounds[0][1] - bounds[0][0])
-        y_factor = 200/(bounds[1][1] - bounds[1][0])
+        x_factor = 200/max(bounds[0][1] - bounds[0][0], 1e-8)
+        y_factor = 200/max(bounds[1][1] - bounds[1][0], 1e-8)
         screen_factor = min(x_factor, y_factor)
         self.points_2d = [screen_factor*(v - Vector((bounds[0][0], bounds[1][0]))) for v in points_2d]
         self.active_pt2d = screen_factor*(active_pt_2d - Vector((bounds[0][0], bounds[1][0])))
         
     def prepare_slice(self):
-        self.crv_dat.grab_initiate()
+        if len(self.crv_dat.b_pts) < 2 or not self.crv_dat.grab_initiate():
+            return False
         self.slice()
-        return
+        self.make_points_2D()
+        return bool(self.slice_points)
         
     def slice_mouse_move(self, context, x, y):
         self.crv_dat.grab_mouse_move(context, x, y)
@@ -959,8 +964,7 @@ class OPENDENTAL_OT_mark_crown_margin(bpy.types.Operator):
             return 'main'
         
         if event.type == 'S' and event.value == 'PRESS' and self.margin_manager:
-            self.margin_manager.prepare_slice()
-            return 'slice'
+            return 'slice' if self.margin_manager.prepare_slice() else 'main'
             
         if event.type == 'RET' and event.value == 'PRESS':
             if len(self.crv.b_pts) < 3 or not self.crv.crv_data.splines[0].use_cyclic_u:

@@ -255,3 +255,12 @@ contour by clicking the first point and confirms it through the real event queue
 The operator requires at least three points and a cyclic curve before acceptance.
 The help text now correctly identifies the first point as the closure target.
 Slice interaction and more complex point editing still need verification.
+
+## Margin slice geometry
+
+`tests/test_margin_slice.py` verifies slice preparation on a translated, nonuniformly
+scaled cube with a separately translated curve. Cached world points are no longer
+transformed twice. The shared seeded-section function transforms plane normals
+with the model matrix transpose. Slice points lie on the expected world plane,
+and the 2D plot fits its intended bounds. Empty selection does not enter slice
+mode. Interactive slice movement/drawing and irregular meshes remain pending.

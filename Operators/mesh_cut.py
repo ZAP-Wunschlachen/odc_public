@@ -3194,8 +3194,8 @@ def cross_section_seed_ver1(bme, mx,
     
     #convert plane defn (point and normal) into local coords
     imx = mx.inverted()
-    pt  = imx * point
-    no  = (imx.to_3x3() * normal).normalized()
+    pt  = imx @ point
+    no  = (mx.to_3x3().transposed() @ normal).normalized()
 
     # get blender version
     bver = '%03d.%03d.%03d' % (bpy.app.version[0],bpy.app.version[1],bpy.app.version[2])
