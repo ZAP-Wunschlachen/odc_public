@@ -28,5 +28,17 @@ for names in (('24','25'), ('14','15'), ('11','21')):
     assert bm.faces and all(e.is_manifold for e in bm.edges)
     assert abs(abs(bm.calc_volume())-12) < 1e-5
     bm.free()
+    old_name = obj.name
+    old_mesh = obj.data.name
+    object_count = len(bpy.data.objects)
+    assert bpy.ops.opendental.bridge_boolean() == {'FINISHED'}
+    assert len(bpy.data.objects) == object_count
+    assert old_name not in bpy.data.objects
+    assert old_mesh not in bpy.data.meshes
+    rebuilt = bpy.data.objects[bridge.bridge]
+    bm = bmesh.new()
+    bm.from_mesh(rebuilt.data)
+    assert abs(abs(bm.calc_volume())-12) < 1e-5
+    bm.free()
 addon_utils.disable(ROOT.name, default_set=True)
 print('ODC_BOOLEAN_BRIDGE_PASSED', bpy.app.version_string)

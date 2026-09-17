@@ -84,19 +84,15 @@ class OPENDENTAL_OT_bridge_boolean(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        #restoration exists and is in scene
-        if bridge_methods.active_spanning_restoration(context) != [None]:
-            bridge = bridge_methods.active_spanning_restoration(context)[0]#TODO:...make this poll work for all selected teeth...
-            if bridge:
-                return True
-            else:
-                return False
-        else:
-            return False
+        bridges = bridge_methods.active_spanning_restoration(context)
+        return context.mode == 'OBJECT' and bool(bridges and bridges[0])
+
     def execute(self,context):
         settings = get_settings()
         dbg = settings.debug
         odc_bridge = bridge_methods.active_spanning_restoration(context)[0]
+
+        previous = bpy.data.objects.get(odc_bridge.bridge)
 
         def evaluated_mesh(obj):
             context.view_layer.update()
@@ -202,6 +198,12 @@ class OPENDENTAL_OT_bridge_boolean(bpy.types.Operator):
                 bpy.data.meshes.remove(right_data)
 
             odc_bridge.bridge = left_bridge_ob.name
+        result = bpy.data.objects[odc_bridge.bridge]
+        if previous is not None and previous != result and previous not in contour_obs:
+            data = previous.data if previous.type == 'MESH' else None
+            bpy.data.objects.remove(previous, do_unlink=True)
+            if data is not None and data.users == 0:
+                bpy.data.meshes.remove(data)
         return {'FINISHED'}
 
 class OPENDENTAL_OT_solid_bridge(bpy.types.Operator):

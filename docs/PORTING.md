@@ -726,3 +726,12 @@ left-only, right-only and midline-spanning fixtures with overlapping cubes,
 verifying manifold edges and the analytic union volume of 12. Anatomical open
 crowns, repeated-build replacement, missing input handling and final restoration
 assembly remain unverified.
+
+## Boolean bridge regeneration
+
+After successful assembly, the previous bridge object and its unused mesh are
+removed unless the object is also an input contour. The operator poll now handles
+an empty bridge selection without indexing it. Blender 5.1.2 passes repeated builds
+for left, right and midline fixtures, verifying stable object counts, old mesh/object
+removal and unchanged analytic union volume. Partial evaluation failure rollback
+and anatomical mesh behavior still require verification.
