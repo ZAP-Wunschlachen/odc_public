@@ -945,3 +945,7 @@ Axis helper creation now occurs only after a successful ray hit on the selected 
 ### Root modal cancellation
 
 Added session snapshots of existing bone names and axis transforms/display settings. Escape removes newly added bones or a newly created armature and restores existing axis state/removes new axes. The window test now places an axis, cancels, verifies removal of new armature/helper, then restarts, places and commits successfully. Existing-armature cancellation, selection/viewport restoration and shared armature data remain unverified.
+
+### Existing-root cancellation coverage
+
+Extended the real-window root modal test with an existing 11root bone, a preexisting axis with distinct transform/display settings, and a second tooth requiring a new 21root bone. After mouse replacement of the axis and Escape, Blender 5.1.2 preserves the original bone endpoints, removes the newly added bone, restores the axis matrix/display type/size and exits the modal handler. Viewport/selection restoration and shared armature data remain unverified.
