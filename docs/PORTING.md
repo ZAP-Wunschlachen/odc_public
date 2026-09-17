@@ -687,3 +687,12 @@ collection/scene membership alone does not. If the deleted control was active,
 the processed mesh becomes active. Blender 5.1.2 passes the expanded shared-lattice,
 constraint-target and active-control tests. Scene-level custom references and
 other specialized data-block ownership cases remain unverified.
+
+## Break Contact slice path
+
+The slice path uses current quaternion multiplication, display, collection linking
+and modifier positioning. An overlapping-cube test exposed that positive shrinkwrap
+offsets retained overlap; offsets now cross the separator plane, giving the requested
+per-side clearance. Blender 5.1.2 passes a measured 0.4 gap for sep=0.2 and unchanged
+outer faces. DEFORM, the Apply option, rotated/nonconvex geometry and repeated use
+remain pending. This test establishes the slice path only.

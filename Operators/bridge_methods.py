@@ -92,8 +92,8 @@ def break_contact_slice(context, ob1, ob2, space, before_multires = True, debug 
     #dot each of the x,y,z coords (transformed to workd dir) with the vector between
     #the two bounding box centers.
     
-    dirs1 = [(quat_1 * x).dot(diff)**2, (quat_1 * y).dot(diff)**2, (quat_1 * z).dot(diff)**2]
-    dirs2 = [(quat_2 * x).dot(diff)**2, (quat_2 * y).dot(diff)**2, (quat_2 * z).dot(diff)**2]
+    dirs1 = [(quat_1 @ x).dot(diff)**2, (quat_1 @ y).dot(diff)**2, (quat_1 @ z).dot(diff)**2]
+    dirs2 = [(quat_2 @ x).dot(diff)**2, (quat_2 @ y).dot(diff)**2, (quat_2 @ z).dot(diff)**2]
     
     #find the maximium dot product
     #this is the dirction which is most parallel
@@ -104,8 +104,8 @@ def break_contact_slice(context, ob1, ob2, space, before_multires = True, debug 
     #don't get confused because we will negate again
     #when we put the shrinwrap mod on.  This is determinging
     #whether +x or -x points at the othe robject
-    neg1 = 1 + -2 * ((quat_1 * vecs[dir1]).dot(diff) < 0)
-    neg2 = 1 + -2 * ((quat_2 * vecs[dir2]).dot(diff) > 0)
+    neg1 = 1 + -2 * ((quat_1 @ vecs[dir1]).dot(diff) < 0)
+    neg2 = 1 + -2 * ((quat_2 @ vecs[dir2]).dot(diff) > 0)
     
     vec1 = neg1 * vecs[dir1]
     vec2 = neg2 * vecs[dir2]
@@ -134,8 +134,8 @@ def break_contact_slice(context, ob1, ob2, space, before_multires = True, debug 
     new_plane_ob.rotation_quaternion = odcutils.rot_between_vecs(Vector((0,0,1)), diff)
     new_plane_ob.location = midpoint
     new_plane_ob.scale = .5 * (ob1.dimensions + ob2.dimensions)
-    new_plane_ob.draw_type = 'WIRE'
-    context.scene.objects.link(new_plane_ob)
+    new_plane_ob.display_type = 'WIRE'
+    context.collection.objects.link(new_plane_ob)
     
     mod1 = ob1.modifiers.new('Contact', 'SHRINKWRAP')
     mod2 = ob2.modifiers.new('Contact', 'SHRINKWRAP')
@@ -175,18 +175,17 @@ def break_contact_slice(context, ob1, ob2, space, before_multires = True, debug 
     mod1.target = new_plane_ob
     mod2.target = new_plane_ob
     
-    mod1.offset =  space
-    mod2.offset =  space  
+    mod1.offset = -space
+    mod2.offset = -space
     print('broken!')
         
     #move it to top?
     if before_multires:
         for ob in [ob1,ob2]:
-            context.scene.objects.active = ob
-            n = n = len(ob.modifiers)
-            mod = ob.modifiers[n-1]
-            for i in range(0,n):
-                bpy.ops.object.modifier_move_up(modifier=mod.name)
+            context.view_layer.objects.active = ob
+            modifier = mod1 if ob == ob1 else mod2
+            bpy.ops.object.modifier_move_to_index(modifier=modifier.name, index=0)
+
     
     
     
