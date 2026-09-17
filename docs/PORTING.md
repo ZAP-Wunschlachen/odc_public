@@ -243,3 +243,13 @@ closing edge of a cyclic U-shaped fixture. The same edge is not selectable while
 the curve is open. Hover ignores unprojectable points, clears stale state and
 chooses the closest qualifying edge. Inserted Blender points agree with cached
 world coordinates. Full margin-marking modal dispatch remains pending.
+
+## Margin-marking modal lifecycle
+
+`tests/test_margin_modal.py` uses actual foreground window events to start marking,
+place a point, cancel, restart and finish. Cancellation restores the previous
+margin reference; exit restores object visibility and frees the slicer's BMesh.
+The drawing log is clean after removing an invalid GL_POINTS capability disable.
+This is only a lifecycle check: it currently finishes a single-point outline.
+Closed-loop validation, multi-point editing and slice interaction still need
+implementation/verification before this workflow is complete.

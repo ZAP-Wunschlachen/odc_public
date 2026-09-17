@@ -43,7 +43,7 @@ class MarginSlicer(object):
         self.crv_dat = crv_data_manager
         ob = self.crv_dat.snap_ob
         bme = bmesh.new()
-        bme.from_object(ob, context.scene)
+        bme.from_object(ob, context.evaluated_depsgraph_get())
         self.snap_ob = ob
         self.bme = bme
         self.bvh = BVHTree.FromBMesh(self.bme)
@@ -56,7 +56,7 @@ class MarginSlicer(object):
         if tooth.axis != '':
             axis = bpy.data.objects[tooth.axis]
             axis_mx = axis.matrix_world
-            self.Z = axis_mx.to_3x3() * Vector((0,0,1))
+            self.Z = axis_mx.to_3x3() @ Vector((0,0,1))
         else:
             self.Z = Vector((0,0,1))
     def get_pt_and_no(self):
@@ -955,7 +955,7 @@ class OPENDENTAL_OT_mark_crown_margin(bpy.types.Operator):
             return 'main'
         
         if event.type == 'X' and event.value == 'PRESS':
-            self.crv.delete_selected(mode = 'selected')
+            self.crv.click_delete_point(mode = 'selected')
             return 'main'
         
         if event.type == 'S' and event.value == 'PRESS' and self.margin_manager:
@@ -967,9 +967,11 @@ class OPENDENTAL_OT_mark_crown_margin(bpy.types.Operator):
             
         elif event.type == 'ESC' and event.value == 'PRESS':
             del_obj = self.crv.crv_obj
-            context.scene.objects.unlink(del_obj)
-            bpy.data.objects.remove(del_obj)
-            self.tooth.margin = ''
+            data = del_obj.data
+            bpy.data.objects.remove(del_obj, do_unlink=True)
+            if data.users == 0:
+                bpy.data.curves.remove(data)
+            self.tooth.margin = self.previous_margin
             return 'cancel' 
 
         return 'main'
@@ -1025,6 +1027,11 @@ class OPENDENTAL_OT_mark_crown_margin(bpy.types.Operator):
             return {'PASS_THROUGH'}
         
         if nmode in {'finish','cancel'}:
+            for obj, hidden in self.visibility:
+                if obj.name in context.view_layer.objects:
+                    obj.hide_set(hidden)
+            if self.margin_manager is not None:
+                self.margin_manager.bme.free()
             #clean up callbacks
             bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
             return {'FINISHED'} if nmode == 'finish' else {'CANCELLED'}
@@ -1034,11 +1041,14 @@ class OPENDENTAL_OT_mark_crown_margin(bpy.types.Operator):
         return {'RUNNING_MODAL'}
     
     def invoke(self, context, event):
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
+        if context.area is None or context.area.type != 'VIEW_3D':
+            self.report({'WARNING'}, 'Use a 3D view to mark the margin')
+            return {'CANCELLED'}
+        self.visibility = [(obj, obj.hide_get()) for obj in context.view_layer.objects]
         
         tooth = odcutils.tooth_selection(context)[0]
         self.tooth = tooth
+        self.previous_margin = tooth.margin
         sce=bpy.context.scene
         a = tooth.name
         prep = tooth.prep_model
@@ -1050,12 +1060,12 @@ class OPENDENTAL_OT_mark_crown_margin(bpy.types.Operator):
         
         if prep and prep in bpy.data.objects:
             Prep = bpy.data.objects[prep]
-            Prep.hide = False
+            Prep.hide_set(False)
             L = Prep.location
             ###Keep a list of unhidden objects
             for o in sce.objects:
-                if o.name != prep and not o.hide:
-                    o.hide = True
+                if o.name != prep and not o.hide_get():
+                    o.hide_set(True)
                     
             self.crv = CurveDataManager(context,snap_type ='OBJECT', snap_object = Prep, shrink_mod = True, name = margin)
             

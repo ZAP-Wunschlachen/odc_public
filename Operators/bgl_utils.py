@@ -195,7 +195,7 @@ def draw_3d_points(context, points, size, color = (1,0,0,1)):
     bgl.glEnd()  
       
     bgl.glDisable(bgl.GL_POINT_SMOOTH)  
-    bgl.glDisable(bgl.GL_POINTS)  
+    bgl.glPointSize(1)
     return
 
 def draw_callback_crevice_walking(self,context):
