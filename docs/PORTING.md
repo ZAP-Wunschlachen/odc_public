@@ -330,3 +330,10 @@ import plus accepted circular margin) exits without the report. One seating call
 reports eight blocks (~2.3 KB), versus sixteen after two calls. This narrows the
 source to per-call seating work, rather than the asset import or margin acceptance;
 it does not yet identify the particular Blender operation or fix the allocation.
+
+The shutdown report is now reproducible without importing or enabling ODC:
+`tests/probe_asset_editmode_shutdown.py` loads tooth 16 and performs one native
+Edit/Object mode round trip, yielding one 300-byte block at Blender exit. A plain
+cube region-selection probe did not report it. This establishes an interaction
+between Blender 5.1.2 and the loaded asset/edit-mode path, not a requirement to run
+ODC's seating algorithm. Root cause within that path remains unresolved.
