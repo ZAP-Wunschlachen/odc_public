@@ -1500,7 +1500,7 @@ class OPENDENTAL_OT_teeth_arch(bpy.types.Operator):
         full_arch_methods.teeth_to_curve(context, ob, quad,settings.tooth_lib, 
                                     shift = shift,
                                     limit = self.limit,
-                                    link = self.link, 
+                                    link = self.link,
                                     reverse = self.reverse,
                                     mirror = self.mirror, 
                                     debug = dbg)
@@ -1559,7 +1559,7 @@ class OPENDENTAL_OT_occlusal_scheme_to_curve(bpy.types.Operator):
                                                    ob, 
                                                    settings.tooth_lib, 
                                                    teeth = [], 
-                                                   link = self.link, 
+                                                   link = self.link,
                                                    flip = False, 
                                                    reorient = True)
         
