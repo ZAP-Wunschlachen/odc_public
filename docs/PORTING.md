@@ -323,3 +323,10 @@ produced no shutdown memory report. The complete seating fixture still reports
 of the stack before application, removing Blender's non-first-modifier warning.
 The tooth 16 repeated alignment/evaluated geometry assertions still pass; the
 shutdown allocation source remains unresolved.
+
+`tests/probe_seating_shutdown.py` provides separate `-- prepare` and `-- seat`
+stages to investigate the allocation report. The preparation-only run (library
+import plus accepted circular margin) exits without the report. One seating call
+reports eight blocks (~2.3 KB), versus sixteen after two calls. This narrows the
+source to per-call seating work, rather than the asset import or margin acceptance;
+it does not yet identify the particular Blender operation or fix the allocation.
