@@ -979,3 +979,9 @@ Replaced repeated move-up operations with explicit target indices: Hooks first i
 ### Broader FlexiTooth regression — failing geometry invariant
 
 Expanded creation/bake coverage to teeth 11, 16, 25 and 36. Tooth 11 passes; tooth 16 fails the existing 1e-4 evaluated-coordinate preservation tolerance with maximum displacement 0.0010287789 after Keep. Later teeth are not reached in this run. A trial baking the Hook/Laplacian prefix in one evaluation produced the identical error and was discarded. The test remains strict and failing so the broader regression exposes this unresolved defect; do not claim the expanded suite is green.
+
+### FlexiTooth molar bake regression corrected
+
+Keep now captures the evaluated Multires surface before selection/lock changes, applies Hook/Laplacian modifiers, and reshapes Multires from that reference. Temporary reference objects/meshes are removed and viewport subdivision level is restored. Capture raises to total subdivision level and disables modifiers after Multires when needed.
+
+The unchanged strict creation/deformation/bake test now passes teeth 11, 16, 25 and 36 at tolerance 1e-4; the shared-control Keep test also passes. Diagnostic reshape errors were below 1e-6. The small shutdown allocation warning persists. Lower viewport levels, additional trailing modifiers, shared source meshes and mid-application failures require further coverage.

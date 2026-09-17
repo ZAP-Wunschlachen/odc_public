@@ -276,6 +276,24 @@ class OPENDENTAL_OT_keep_hook(bpy.types.Operator):
             modifiers = [mod for mod in obj.modifiers if mod.type in {'HOOK', 'LAPLACIANDEFORM'}]
             if not modifiers:
                 continue
+            multires = next((mod for mod in obj.modifiers if mod.type == 'MULTIRES' and mod.total_levels), None)
+            capture = None
+            if multires:
+                level = multires.levels
+                stack = list(obj.modifiers)
+                trailing = [(mod, mod.show_viewport) for mod in stack[stack.index(multires)+1:]]
+                try:
+                    if level != multires.total_levels:
+                        multires.levels = multires.total_levels
+                    for mod, visible in trailing:
+                        mod.show_viewport = False
+                    if level != multires.total_levels or trailing:
+                        context.view_layer.update()
+                    capture = bpy.data.meshes.new_from_object(obj.evaluated_get(context.evaluated_depsgraph_get()))
+                finally:
+                    multires.levels = level
+                    for mod, visible in trailing:
+                        mod.show_viewport = visible
             bpy.ops.object.select_all(action='DESELECT')
             obj.hide_set(False)
             obj.select_set(True)
@@ -289,6 +307,20 @@ class OPENDENTAL_OT_keep_hook(bpy.types.Operator):
                         controls.add(control.parent)
                 bpy.ops.object.modifier_apply(modifier=modifier.name)
                 changed = True
+            if capture is not None:
+                proxy = bpy.data.objects.new('FlexiTooth reshape reference', capture)
+                context.collection.objects.link(proxy)
+                proxy.matrix_world = obj.matrix_world
+                try:
+                    multires.levels = multires.total_levels
+                    proxy.select_set(True)
+                    obj.select_set(True)
+                    context.view_layer.objects.active = obj
+                    bpy.ops.object.multires_reshape(modifier=multires.name)
+                finally:
+                    multires.levels = level
+                    bpy.data.objects.remove(proxy, do_unlink=True)
+                    bpy.data.meshes.remove(capture)
         # Children first, retaining controls still referenced by other objects.
         for control in sorted(controls, key=lambda obj: len(obj.children_recursive)):
             users = bpy.data.user_map(subset={control}).get(control, set())
