@@ -975,3 +975,7 @@ Ported collection linking, activation/selection, empty display and matrix multip
 ### FlexiTooth modifier ordering
 
 Replaced repeated move-up operations with explicit target indices: Hooks first in island order, then Laplacian Deform, then prior modifiers. The creation test now asserts this order and still passes deformation/bake equality in Blender 5.1.2. The move-at-start warning is gone; the 28-block shutdown allocation warning remains.
+
+### Broader FlexiTooth regression — failing geometry invariant
+
+Expanded creation/bake coverage to teeth 11, 16, 25 and 36. Tooth 11 passes; tooth 16 fails the existing 1e-4 evaluated-coordinate preservation tolerance with maximum displacement 0.0010287789 after Keep. Later teeth are not reached in this run. A trial baking the Hook/Laplacian prefix in one evaluation produced the identical error and was discarded. The test remains strict and failing so the broader regression exposes this unresolved defect; do not claim the expanded suite is green.
