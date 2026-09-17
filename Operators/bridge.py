@@ -544,50 +544,34 @@ class OPENDENTAL_OT_keep_shape(bpy.types.Operator):
         return cond_1 and cond_2 and cond_3
     
     def execute(self, context):
-        #dbg = context.user_preferences.addons['odc'].preferences.debug
-        obs = context.selected_objects
-        to_delete = []
-        
-        if context.object:
-            c_ob = context.object
-        else:
-            c_ob = None
-            
-        for ob in obs:
-            
-            for mod in ob.modifiers:
-                if mod.type in {'SHRINKWRAP','LATTICE'}:
-                    context.scene.objects.active = ob
-                    ob.hide = False
-                    bpy.ops.object.modifier_apply(modifier = mod.name)
-                    
-                    if mod.type =='LATTICE':
-                        to_delete.append(mod.object)
-                        
-            for mod in ob.modifiers:
-                if mod.type == 'MULTIRES':
-                    bpy.ops.object.multires_base_apply(modifier = mod.name)
-
-                
-        bpy.ops.object.select_all(action='DESELECT')        
-        for ob in to_delete:
-            ob.select = True
-            context.scene.objects.active = ob
-            bpy.ops.object.delete(use_global = True)
-            #lat = ob.data
-            #ob.user_clear()
-            #bpy.data.objects.remove(ob)
-            #bpy.data.lattices.remove(lat)
-            
-        #context.scene.update()   
-        
-        for ob in obs:
-            ob.select = True
-            
-        if c_ob:
-            context.scene.objects.active = c_ob
-            
-        return {'FINISHED'}        
+        objects = list(context.selected_objects)
+        active = context.view_layer.objects.active
+        controls = set()
+        for obj in objects:
+            if obj.type != 'MESH':
+                continue
+            context.view_layer.objects.active = obj
+            obj.hide_set(False)
+            for modifier in list(obj.modifiers):
+                if modifier.type in {'SHRINKWRAP', 'LATTICE'}:
+                    control = modifier.object if modifier.type == 'LATTICE' else None
+                    bpy.ops.object.modifier_apply(modifier=modifier.name)
+                    if control is not None:
+                        controls.add(control)
+            for modifier in obj.modifiers:
+                if modifier.type == 'MULTIRES':
+                    bpy.ops.object.multires_base_apply(modifier=modifier.name)
+        for control in controls:
+            # Another object's deformation must keep its shared control.
+            used = any(mod.type == 'LATTICE' and mod.object == control
+                       for obj in bpy.data.objects for mod in obj.modifiers)
+            if not used:
+                data = control.data
+                bpy.data.objects.remove(control, do_unlink=True)
+                if data.users == 0:
+                    bpy.data.lattices.remove(data)
+        context.view_layer.objects.active = active
+        return {'FINISHED'}
 
 class OPENDENTAL_OT_ClothFillTray(bpy.types.Operator):
     '''Fill a bez loop or mesh loop with remesh'''

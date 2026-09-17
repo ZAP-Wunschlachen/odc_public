@@ -668,3 +668,13 @@ passes the expanded test asserting unchanged source vertex coordinates and modif
 names/types, in addition to the previous combined mesh/margin checks. Detailed
 evaluated-surface equivalence and all possible modifier stacks remain unverified;
 the known small shutdown allocation warning persists.
+
+## Keep Shape, lattice integration
+
+Keep Shape now uses current active-object/visibility APIs and captures lattice
+targets before applying and invalidating modifiers. It preserves controls still
+used by another lattice modifier and removes unused lattice data after the last
+application. Blender 5.1.2 passes evaluated-to-baked coordinate equivalence, shared
+control preservation and final cleanup. Mixed modifier stacks, Multires/shrinkwrap
+interaction and controls used through constraints or other mechanisms still need
+review; this test establishes the lattice-only workflow.
