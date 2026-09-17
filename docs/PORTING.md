@@ -735,3 +735,13 @@ an empty bridge selection without indexing it. Blender 5.1.2 passes repeated bui
 for left, right and midline fixtures, verifying stable object counts, old mesh/object
 removal and unchanged analytic union volume. Partial evaluation failure rollback
 and anatomical mesh behavior still require verification.
+
+## Solidify Bridge initial integration
+
+Solidify Bridge uses dependency-graph mesh evaluation, named BMesh delete contexts,
+current collection/selection APIs and the current from_mesh signature. Missing
+shell/intaglio inputs return before geometry mutation; renamed final objects update
+bridge references. Blender 5.1.2 passes a one-abutment integration fixture using a
+seated crown and calculated intaglio, yielding manifold geometry. Multi-unit shells,
+pontics, repeated solidification and temporary mesh cleanup remain unverified.
+This is initial operator coverage, not validation of a complete multi-unit bridge.

@@ -233,13 +233,23 @@ class OPENDENTAL_OT_solid_bridge(bpy.types.Operator):
         if not Bridge:
             self.report({'ERROR'}, 'Use "Boolean Bridge" to join individual units to an outer shell first')
         
+            return {'CANCELLED'}
+        bridge_teeth = [sce.odc_teeth[name] for name in odc_bridge.tooth_string.split(':')]
+        intag_objects = [bpy.data.objects.get(tooth.intaglio) for tooth in bridge_teeth if tooth.rest_type != '1']
+        if None in intag_objects:
+            self.report({'WARNING'}, 'Missing Intaglio for some abutments')
+            return {'CANCELLED'}
+        def evaluated_mesh(obj):
+            context.view_layer.update()
+            depsgraph = context.evaluated_depsgraph_get()
+            return bpy.data.meshes.new_from_object(obj.evaluated_get(depsgraph), depsgraph=depsgraph)
         go_local = False
-        if context.space_data.local_view:
+        if context.space_data and context.space_data.type == 'VIEW_3D' and context.space_data.local_view:
             go_local = True
             bpy.ops.view3d.localview()
             
         if len(Bridge.modifiers):
-            me = Bridge.to_mesh(context.scene, True, 'PREVIEW')
+            me = evaluated_mesh(Bridge)
             mods = [mod for mod in Bridge.modifiers]
             for mod in mods:
                 Bridge.modifiers.remove(mod)
@@ -247,7 +257,7 @@ class OPENDENTAL_OT_solid_bridge(bpy.types.Operator):
         
         ### Remove the bottom 3 edge loops
         bridge_bme = bmesh.new()
-        bridge_bme.from_object(Bridge, context.scene)
+        bridge_bme.from_object(Bridge, context.evaluated_depsgraph_get())
         
         bridge_bme.edges.ensure_lookup_table()
         bridge_bme.verts.ensure_lookup_table()
@@ -255,10 +265,10 @@ class OPENDENTAL_OT_solid_bridge(bpy.types.Operator):
         
         for i in range(0,3):
             non_man_eds = [ed for ed in bridge_bme.edges if not ed.is_manifold]
-            bmesh.ops.delete(bridge_bme, geom = non_man_eds, context = 2)
+            bmesh.ops.delete(bridge_bme, geom = non_man_eds, context = 'EDGES')
             
             non_man_vs = [v for v in bridge_bme.verts if not v.is_manifold]
-            bmesh.ops.delete(bridge_bme, geom = non_man_vs, context = 1)
+            bmesh.ops.delete(bridge_bme, geom = non_man_vs, context = 'VERTS')
             
             bridge_bme.edges.ensure_lookup_table()
             bridge_bme.verts.ensure_lookup_table()
@@ -278,26 +288,28 @@ class OPENDENTAL_OT_solid_bridge(bpy.types.Operator):
         
         join_obs = []
         for ob in intag_objects:
-            new_me = ob.to_mesh(context.scene, True, 'PREVIEW')
+            new_me = evaluated_mesh(ob)
             new_ob = bpy.data.objects.new(ob.name + ' dupli', new_me)
             new_ob.matrix_world = ob.matrix_world
-            context.scene.objects.link(new_ob)
+            context.collection.objects.link(new_ob)
             join_obs.append(new_ob)
             
         print(join_obs)
         bpy.ops.object.select_all(action = 'DESELECT')
         for ob in join_obs:
-            ob.select = True
-        Bridge.hide = False    
-        Bridge.select = True
-        context.scene.objects.active = Bridge
+            ob.select_set(True)
+        Bridge.hide_set(False)
+        Bridge.select_set(True)
+        context.view_layer.objects.active = Bridge
         
         Bridge.name += '_solid'
+        odc_bridge.bridge = Bridge.name
+        odc_bridge.final_restoration = Bridge.name
         bpy.ops.object.join()
         
         bridge_bme.free()
         bridge_bme = bmesh.new()    
-        bridge_bme.from_mesh(Bridge.data, True)
+        bridge_bme.from_mesh(Bridge.data)
         bridge_bme.edges.ensure_lookup_table()
         bridge_bme.verts.ensure_lookup_table()
         bridge_bme.faces.ensure_lookup_table()
@@ -321,7 +333,7 @@ class OPENDENTAL_OT_solid_bridge(bpy.types.Operator):
         bridge_bme.free()
 
         #new_ob = bpy.data.objects.new(odc_bridge.name + '_solid', new_me)
-        #context.scene.objects.link(new_ob)
+        #context.collection.objects.link(new_ob)
         if go_local:
             bpy.ops.view3d.localview()
         
