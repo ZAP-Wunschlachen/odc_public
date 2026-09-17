@@ -235,3 +235,11 @@ are copied, shared original datablocks remain intact, and deletion resets stale
 selection/hover indices. Removing all points leaves a restartable empty manager;
 curves with fewer than three points are not cyclic. Edge-hover insertion and
 complete interactive marking remain pending.
+
+## Curve hover and edge insertion
+
+The foreground curve-manager test now checks point hover and insertion into the
+closing edge of a cyclic U-shaped fixture. The same edge is not selectable while
+the curve is open. Hover ignores unprojectable points, clears stale state and
+chooses the closest qualifying edge. Inserted Blender points agree with cached
+world coordinates. Full margin-marking modal dispatch remains pending.

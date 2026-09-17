@@ -821,49 +821,32 @@ class CurveDataManager(object):
         if old.users == 0:
             bpy.data.curves.remove(old)
 
-    def hover(self,context,x,y):
-        '''
-        hovering happens in screen space, 20 pixels
-        '''
+    def hover(self, context, x, y):
         self.mouse = Vector((x, y))
-        if len(self.b_pts) == 0:
-            return
-
-        def dist(v):
-            diff = v - Vector((x,y))
-            return diff.length
-        
-        loc3d_reg2D = view3d_utils.location_3d_to_region_2d
-        screen_pts =  [loc3d_reg2D(context.region, context.space_data.region_3d, b_pt) for b_pt in self.b_pts]
-        closest_point = min(screen_pts, key = dist)
-        
-        if (closest_point - Vector((x,y))).length  < 20:
-            self.hovered = ['POINT',screen_pts.index(closest_point)]
-            return
-
-        if len(self.b_pts) < 2: 
-            self.hovered = [None, -1]
-            return
-            
-        for i in range(0,len(self.b_pts)):   
-            a  = loc3d_reg2D(context.region, context.space_data.region_3d,self.b_pts[i])
-            next = (i + 1) % len(self.b_pts)
-            b = loc3d_reg2D(context.region, context.space_data.region_3d,self.b_pts[next])
-      
-            if a and b:
-                
-                intersect = intersect_point_line(Vector((x,y)).to_3d(), a.to_3d(),b.to_3d()) 
-                if intersect:
-                    dist = (intersect[0].to_2d() - Vector((x,y))).length_squared
-                    bound = intersect[1]
-                    if (dist < 900) and (bound < 1) and (bound > 0):
-                        self.hovered = ['EDGE',i]
-                        return
-            else:
-                print('not a and b')
-                print(a,b)
         self.hovered = [None, -1]
-        
+        project = view3d_utils.location_3d_to_region_2d
+        points = [project(context.region, context.space_data.region_3d, point) for point in self.b_pts]
+        visible = [(i, p) for i, p in enumerate(points) if p is not None]
+        if not visible:
+            return
+        index, nearest = min(visible, key=lambda pair: (pair[1]-self.mouse).length_squared)
+        if (nearest-self.mouse).length < 20:
+            self.hovered = ['POINT', index]
+            return
+        cyclic = self.crv_data.splines[0].use_cyclic_u
+        count = len(points) if cyclic else max(0, len(points)-1)
+        candidates = []
+        for i in range(count):
+            a, b = points[i], points[(i+1) % len(points)]
+            if a is None or b is None or (b-a).length_squared < 1e-10:
+                continue
+            projected, fraction = intersect_point_line(self.mouse.to_3d(), a.to_3d(), b.to_3d())
+            distance = (projected.to_2d()-self.mouse).length_squared
+            if 0 < fraction < 1 and distance < 900:
+                candidates.append((distance, i))
+        if candidates:
+            self.hovered = ['EDGE', min(candidates)[1]]
+
     def draw(self,context):
         if len(self.b_pts) == 0: return
         bgl_utils.draw_3d_points(context,self.b_pts, 3)

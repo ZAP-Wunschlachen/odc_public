@@ -42,6 +42,26 @@ def run():
                 manager.grab_cancel()
                 assert (manager.b_pts[1]-old).length < 1e-5
                 assert (manager.crv_obj.matrix_world @ manager.crv_data.splines[0].bezier_points[1].co-old).length < 1e-5
+            # Open U-shaped paths must not expose a phantom closing edge.
+            from bpy_extras.view3d_utils import region_2d_to_location_3d
+            from mathutils import Vector
+            manager = Manager(bpy.context, snap_type='OBJECT', snap_object=surface)
+            cx, cy = region.width/2, region.height/2
+            screen_points = [(cx-150,cy-150),(cx-150,cy+150),(cx+150,cy+150),(cx+150,cy-150)]
+            manager.b_pts = [region_2d_to_location_3d(region, rv, p, Vector((0,0,0))) for p in screen_points]
+            manager.started = True
+            manager.update_blender_curve_data()
+            manager.hover(bpy.context, cx, cy-150)
+            assert manager.hovered == [None,-1]
+            manager.crv_data.splines[0].use_cyclic_u = True
+            manager.hover(bpy.context, cx, cy-150)
+            assert manager.hovered == ['EDGE',3]
+            manager.click_add_point(bpy.context, cx, cy-150)
+            assert len(manager.b_pts) == 5
+            for point, bp in zip(manager.b_pts, manager.crv_data.splines[0].bezier_points):
+                assert (manager.crv_obj.matrix_world @ bp.co-point).length < 1e-5
+            manager.hover(bpy.context, *screen_points[0])
+            assert manager.hovered == ['POINT',0]
         print('ODC_CURVE_MANAGER_PASSED', flush=True)
         bpy.ops.wm.quit_blender()
     except Exception:
