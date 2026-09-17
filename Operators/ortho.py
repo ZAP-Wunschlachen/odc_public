@@ -721,34 +721,33 @@ class OPENDENTAL_OT_set_treatment_keyframe(bpy.types.Operator):
     bl_idname = "opendental.set_treatment_keyframe"
     bl_label = "Set Treatment Keyframe"
     bl_options = {'REGISTER','UNDO'}
-    
+
     def execute(self, context):
-        
-        
+
+
 
         #find obs
         obs = []
         for num in TOOTH_NUMBERS:
             ob = context.scene.objects.get(str(num))
-            if ob != None and not ob.hide:
+            if ob != None and not ob.hide_get():
                 obs.append(ob)
                 continue
-            
-            for ob in context.scene.objects:
-                if ob.name.startswith(str(num)) and not ob.hide:
+
+            for ob in context.view_layer.objects:
+                if ob.name.startswith(str(num)) and not ob.hide_get():
                     obs.append(ob)
-        
-        bpy.ops.object.select_all(action = 'DESELECT')
+
+        if not obs:
+            self.report({'WARNING'}, 'No visible teeth found for treatment keyframes')
+            return {'CANCELLED'}
         for ob in obs:
-            ob.select = True
-        context.scene.objects.active = ob
-        
-        if context.scene.keying_sets.active == None:
-            bpy.ops.anim.keying_set_active_set(type='BUILTIN_KSI_LocRot')
-            
-        bpy.ops.anim.keyframe_insert(type = 'BUILTIN_KSI_LocRot')      
+            ob.keyframe_insert(data_path='location', group='Treatment')
+            rotation_path = {'QUATERNION': 'rotation_quaternion',
+                             'AXIS_ANGLE': 'rotation_axis_angle'}.get(ob.rotation_mode, 'rotation_euler')
+            ob.keyframe_insert(data_path=rotation_path, group='Treatment')
         return {'FINISHED'}
-              
+
 class OPENDENTAL_OT_maxillary_view(bpy.types.Operator):
     '''Will hide all non maxillary objects'''
     bl_idname = "opendental.show_max_teeth"
@@ -756,68 +755,68 @@ class OPENDENTAL_OT_maxillary_view(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
 
     show_master: bpy.props.BoolProperty(default = False)
-    
+
     def execute(self, context):
-        for ob in context.scene.objects:
+        for ob in context.view_layer.objects:
             if ob.name.startswith('1') or ob.name.startswith('2'):
-                ob.hide = False
-            
+                ob.hide_set(False)
+
             elif ('upper' in ob.name or 'Upper' in ob.name) and self.show_master:
-                ob.hide = False
+                ob.hide_set(False)
             elif ('maxil' in ob.name or 'Maxil' in ob.name) and self.show_master:
-                ob.hide = False
+                ob.hide_set(False)
             else:
-                ob.hide = True              
+                ob.hide_set(True)
         return {'FINISHED'}
-     
+
 class OPENDENTAL_OT_mandibular_view(bpy.types.Operator):
     '''Will hide all non mandibuar objects'''
     bl_idname = "opendental.show_man_teeth"
     bl_label = "Show Mandibular Teeth"
     bl_options = {'REGISTER','UNDO'}
-    
+
     show_master: bpy.props.BoolProperty(default = False)
-    
+
     def execute(self, context):
-        for ob in context.scene.objects:
+        for ob in context.view_layer.objects:
             if ob.name.startswith('3') or ob.name.startswith('4'):
-                ob.hide = False
-            
+                ob.hide_set(False)
+
             elif ('lower' in ob.name or 'Lower' in ob.name) and self.show_master:
-                ob.hide = False
+                ob.hide_set(False)
             elif ('mand' in ob.name or 'Mand' in ob.name) and self.show_master:
-                ob.hide = False
+                ob.hide_set(False)
             else:
-                ob.hide = True              
+                ob.hide_set(True)
         return {'FINISHED'}
-    
+
 class OPENDENTAL_OT_right_view(bpy.types.Operator):
     '''Will hide all non right tooth objects'''
     bl_idname = "opendental.show_right_teeth"
     bl_label = "Show Right Teeth"
     bl_options = {'REGISTER','UNDO'}
-    
+
     def execute(self, context):
-        for ob in context.scene.objects:
+        for ob in context.view_layer.objects:
             if ob.name.startswith('1') or ob.name.startswith('4'):
-                ob.hide = False
+                ob.hide_set(False)
             else:
-                ob.hide = True              
+                ob.hide_set(True)
         return {'FINISHED'}
 
-    
+
 class OPENDENTAL_OT_left_view(bpy.types.Operator):
     '''Will hide all non left toot objects'''
     bl_idname = "opendental.show_left_teeth"
     bl_label = "Show Left Teeth"
     bl_options = {'REGISTER','UNDO'}
-    
+
     def execute(self, context):
-        for ob in context.scene.objects:
+        for ob in context.view_layer.objects:
             if ob.name.startswith('2') or ob.name.startswith('3'):
-                ob.hide = False
+                ob.hide_set(False)
             else:
-                ob.hide = True              
+                ob.hide_set(True)
         return {'FINISHED'}
 
 class OPENDENTAL_OT_physics_scene(bpy.types.Operator):

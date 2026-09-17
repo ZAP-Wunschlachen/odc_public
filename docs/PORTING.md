@@ -885,3 +885,9 @@ Ported evaluated curve mesh extraction and collection linking, releases temporar
 ### Meta input validation
 
 Meta surface validates positive radius/resolution and an evaluated source with vertices before allocating result objects. Custom tray validates positive thickness and nonnegative offset separately. The expanded meta-surface test passes valid workflows plus zero/negative parameters and empty source meshes, checking stable object/mesh/metaball counts on rejected surface/scaffold operations.
+
+### Orthodontic visibility and treatment stages
+
+Ported the four jaw/side visibility operators to view-layer hide_set and view-layer object iteration. Treatment staging uses direct location/rotation keyframe insertion with rotation-mode-specific paths, avoids deprecated keying-set operators and handles no visible teeth by cancellation. It no longer changes object selection.
+
+`test_ortho_staging.py` passes on Blender 5.1.2: upper/lower/right/left visibility, upper master toggle, empty-stage cancellation, two-frame position restoration with Euler/quaternion objects, exclusion of hidden lower teeth and unnumbered masters. Rotation interpolation, armature workflows and treatment UI remain unverified.
