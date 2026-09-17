@@ -337,3 +337,13 @@ Edit/Object mode round trip, yielding one 300-byte block at Blender exit. A plai
 cube region-selection probe did not report it. This establishes an interaction
 between Blender 5.1.2 and the loaded asset/edit-mode path, not a requirement to run
 ODC's seating algorithm. Root cause within that path remains unresolved.
+
+## Intaglio helper initial port
+
+`tests/test_intaglio_helper.py` runs the seated-tooth fixture against a synthetic
+preparation sphere and calls the interior helper. Evaluated BVH/BMesh access,
+delete enums, matrix products, linking, selection, shrinkwrap surface mode and
+new edge indexing have been updated. Initial execution creates the interior.
+The test additionally checks zone groups, cement-gap modifier assignment and
+finite evaluated geometry; exact gap geometry, full operator integration, failure
+cleanup and anatomical fit remain pending.

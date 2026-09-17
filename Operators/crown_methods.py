@@ -312,7 +312,7 @@ def calc_intaglio(context, sce, tooth, chamfer, gap, holy_zone, no_undercuts = T
     pmargin = tooth.pmargin
     
     Prep = bpy.data.objects[prep]
-    prep_bvh = BVHTree.FromObject(Prep, sce)
+    prep_bvh = BVHTree.FromObject(Prep, context.evaluated_depsgraph_get())
     prep_imx = Prep.matrix_world.inverted()
     prep_mx = Prep.matrix_world
     
@@ -324,19 +324,19 @@ def calc_intaglio(context, sce, tooth, chamfer, gap, holy_zone, no_undercuts = T
     axis_quat = Axis.matrix_world.to_quaternion()
     axis_mx = Axis.matrix_world
     axis_imx = axis_mx.inverted()
-    axis_z = axis_quat * Vector((0,0,1))
+    axis_z = axis_quat @ Vector((0,0,1))
     
     Restoration = bpy.data.objects[restoration]
     mx = Restoration.matrix_world
     imx = Restoration.matrix_world.inverted()
     
     #rays transform straightforward inverse, unsure on normals
-    local_z = imx.to_3x3() * axis_z
+    local_z = imx.to_3x3() @ axis_z
     local_z.normalize()
     
     #get the non manifold edge of the crown and delete all other geometry 
     intag_bme = bmesh.new()
-    intag_bme.from_object(Restoration, context.scene)
+    intag_bme.from_object(Restoration, context.evaluated_depsgraph_get())
     intag_bme.verts.ensure_lookup_table()
     intag_bme.edges.ensure_lookup_table()
     
@@ -347,7 +347,7 @@ def calc_intaglio(context, sce, tooth, chamfer, gap, holy_zone, no_undercuts = T
         non_man_verts.add(ed.verts[1])
     
     to_del = [v for v in intag_bme.verts if v not in non_man_verts]        
-    bmesh.ops.delete(intag_bme, geom = to_del, context = 1)
+    bmesh.ops.delete(intag_bme, geom = to_del, context = 'VERTS')
     
     intag_bme.edges.ensure_lookup_table()
     intag_bme.verts.ensure_lookup_table()
@@ -387,6 +387,10 @@ def calc_intaglio(context, sce, tooth, chamfer, gap, holy_zone, no_undercuts = T
         new_bmfaces = [ele for ele in ret['geom'] if isinstance(ele, bmesh.types.BMFace)]
     
     
+        intag_bme.verts.index_update()
+        intag_bme.edges.index_update()
+        intag_bme.verts.ensure_lookup_table()
+        intag_bme.edges.ensure_lookup_table()
         offset_bmesh_edge_loop(intag_bme, [ed.index for ed in new_bmedges], local_z, offset, debug = False)
         
         loops = edge_loops_from_bmedges(intag_bme, [ed.index for ed in new_bmedges])
@@ -397,8 +401,8 @@ def calc_intaglio(context, sce, tooth, chamfer, gap, holy_zone, no_undercuts = T
     
         for n, loc in enumerate(spaced_coords):
             co = loc + 1.5 * chamfer * offset * local_z
-            snap, no, ind, d = prep_bvh.find_nearest(prep_imx*mx*co)
-            vs[n].co = imx * prep_mx * snap
+            snap, no, ind, d = prep_bvh.find_nearest(prep_imx @mx @co)
+            vs[n].co = imx @ prep_mx @ snap
             
         if i == 0:
             #get faces oreinted correctly on first pass
@@ -429,9 +433,9 @@ def calc_intaglio(context, sce, tooth, chamfer, gap, holy_zone, no_undercuts = T
     intag_ob.matrix_world = axis_mx.to_3x3().to_4x4()
     intag_ob.location = mx.to_translation()
         
-    context.scene.objects.link(intag_ob)
-    context.scene.objects.active = intag_ob
-    intag_ob.select = True 
+    context.scene.collection.objects.link(intag_ob)
+    context.view_layer.objects.active = intag_ob
+    intag_ob.select_set(True) 
     
     hz_group = intag_ob.vertex_groups.new(name = 'Holy Zone')
     hz_group.add(hz_inds, 1, 'ADD')
@@ -461,9 +465,9 @@ def calc_intaglio(context, sce, tooth, chamfer, gap, holy_zone, no_undercuts = T
     mod.target = Prep
     mod.vertex_group = 'Filled Zone'
     mod.offset = gap
-    mod.use_keep_above_surface = True
+    mod.wrap_mode = 'ABOVE_SURFACE'
     
-    Restoration.hide = True
+    Restoration.hide_set(True)
     tooth.intaglio = intag_ob.name
     intag_bme.free()
     del prep_bvh
