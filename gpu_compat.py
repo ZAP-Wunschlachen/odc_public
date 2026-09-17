@@ -119,9 +119,7 @@ def glEnd():
     elif mode == GL_POLYGON:
         primitive = 'TRIS'
         polygon = [Vector(v) for v in vertices]
-        lookup = {tuple(v): i for i, v in enumerate(polygon)}
-        indices = [tuple(lookup[tuple(v)] for v in triangle)
-                   for triangle in tessellate_polygon([polygon])]
+        indices = tessellate_polygon([polygon])
     else:
         raise ValueError(f"Unsupported ODC overlay primitive: {mode}")
     if not vertices or indices == []:

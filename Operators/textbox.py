@@ -42,7 +42,7 @@ class TextBox(object):
         self.collapsed_msg = "Click for Help"
 
         self.text_size = 12
-        self.text_dpi = context.user_preferences.system.dpi
+        self.text_dpi = context.preferences.system.dpi
         blf.size(0, (self.text_size) * (self.text_dpi) / 72)
         self.line_height = blf.dimensions(0, 'A')[1]
         self.raw_text = message
@@ -50,7 +50,7 @@ class TextBox(object):
         self.format_and_wrap_text()
         
     def hover(self,mouse_x, mouse_y):
-        regOverlap = bpy.context.user_preferences.system.use_region_overlap
+        regOverlap = bpy.context.preferences.system.use_region_overlap
         if regOverlap == True:
             tPan = self.discover_panel_width_and_location('TOOL_PROPS')
             nPan = self.discover_panel_width_and_location('UI')
@@ -89,6 +89,8 @@ class TextBox(object):
                         else:
                             return 0
                         
+        return 0
+
     def screen_boudaries(self):
         print('to be done later')
 
@@ -238,24 +240,24 @@ class TextBox(object):
         return
     
     def draw(self):
-        regOverlap = bpy.context.user_preferences.system.use_region_overlap
+        regOverlap = bpy.context.preferences.system.use_region_overlap
         
-        bgcol = bpy.context.user_preferences.themes[0].user_interface.wcol_menu_item.inner
+        bgcol = bpy.context.preferences.themes[0].user_interface.wcol_menu_item.inner
         bgR = bgcol[0]
         bgG = bgcol[1]
         bgB = bgcol[2]
         bgA = .5
         bg_color = (bgR, bgG, bgB, bgA)
         
-        txtcol = bpy.context.user_preferences.themes[0].user_interface.wcol_menu_item.text
+        txtcol = bpy.context.preferences.themes[0].user_interface.wcol_menu_item.text
         txR = txtcol[0]
         txG = txtcol[1]
         txB = txtcol[2]
         txA = .9
         txt_color = (txR, txG, txB, txA)
         
-        bordcol = bpy.context.user_preferences.themes[0].user_interface.wcol_menu_item.outline
-        hover_color = bpy.context.user_preferences.themes[0].user_interface.wcol_menu_item.inner_sel
+        bordcol = bpy.context.preferences.themes[0].user_interface.wcol_menu_item.outline
+        hover_color = bpy.context.preferences.themes[0].user_interface.wcol_menu_item.inner_sel
         bordR = bordcol[0]
         bordG = bordcol[1]
         bordB = bordcol[2]
@@ -288,14 +290,14 @@ class TextBox(object):
         common_drawing.draw_outline_or_region('GL_POLYGON', outline, bg_color)
         common_drawing.draw_outline_or_region('GL_LINE_LOOP', outline, border_color)
         
-        dpi = bpy.context.user_preferences.system.dpi
+        dpi = bpy.context.preferences.system.dpi
         blf.size(0, (self.text_size) * (dpi) / 72)
         
         if self.is_collapsed:
             txt_x = left + self.border
             txt_y = top - self.border - line_height
             blf.position(0,txt_x, txt_y, 0)
-            bgl.glColor4f(*txt_color)
+            blf.color(0, *txt_color)
             blf.draw(0, self.collapsed_msg)
             return
         
@@ -305,5 +307,5 @@ class TextBox(object):
             txt_y = top - self.border - (i+1) * (line_height + self.spacer)
                 
             blf.position(0,txt_x, txt_y, 0)
-            bgl.glColor4f(*txt_color)
+            blf.color(0, *txt_color)
             blf.draw(0, line)

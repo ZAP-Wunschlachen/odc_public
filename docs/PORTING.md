@@ -96,7 +96,19 @@ while preserving unrelated objects; repeated cleanup is safe. Actual modal event
 selection behavior and GPU display still require interactive verification.
 This is not yet a completed insertion-axis workflow.
 
-## Implemented, not yet verified visually
+## GPU overlay verification
+
+A separate foreground Blender 5.1 instance renders the actual TextBox and insertion
+axis arrow callbacks into a GPU offscreen framebuffer. The captured image was
+visually inspected: the help text, rounded box and labeled Mesial/Distal arrows
+render correctly. This exposed and fixed current tessellation index output,
+removed preference access, independent BLF text color and matrix/vector arrow
+transforms. Run `blender --factory-startup --python tests/test_overlay_gpu.py`
+without `--background`; it closes its own test instance and writes
+`tests/artifacts/axis_overlay.png`. It does not yet verify full modal interaction,
+other overlays, all display scales or interaction with the scene's drawing state.
+
+## Other display work remains
 
 A package-local GPU adapter replaces legacy immediate-mode drawing. Image
 quads use Blender GPU textures. The full interactive display and modal workflows

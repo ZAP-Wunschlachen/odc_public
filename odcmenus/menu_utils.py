@@ -258,7 +258,7 @@ def transform_points(points,x,y,sclx,scly,rot):
     rotmx = Matrix.Rotation(rot,2)
     trans = Vector((x,y))
     for i in range(0,len(points)):
-        transformed[i] = tuple(rotmx*Vector((sclx*points[i][0],scly*points[i][1]))+trans)
+        transformed[i] = tuple(rotmx @ Vector((sclx*points[i][0],scly*points[i][1]))+trans)
     
     return transformed
         

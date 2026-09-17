@@ -113,6 +113,8 @@ def insertion_axis_callback(self,context):
     menu_utils.draw_outline_or_region(bgl.GL_LINE_LOOP, path1)
     menu_utils.draw_outline_or_region(bgl.GL_LINE_LOOP, path2)
     
+    # Font color is independent of GPU shader state.
+    blf.color(0, 1, 1, 1, 1)
     #put words in the arrows
     blf.size(0, (20) * (76) / 72)
     dimension = blf.dimensions(0,"Mesial")
