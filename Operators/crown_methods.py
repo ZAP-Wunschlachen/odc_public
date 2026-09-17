@@ -178,15 +178,15 @@ def prep_from_shell(context, shell, axis_mx, shoulder_width = .75, reduction = 1
         if margin_loop.type != 'CURVE':
             print('failed, not a curve object')
             return {'CANCELLED'}
-        context.scene.objects.active = margin_loop
-        margin_loop.select = True
-        margin_loop.hide = False
+        context.view_layer.objects.active = margin_loop
+        margin_loop.hide_set(False)
+        margin_loop.select_set(True)
         bpy.ops.object.convert(target='MESH', keep_original=True)
     
     else:
-        context.scene.objects.active = shell
-        shell.select = True
-        shell.hide = False
+        context.view_layer.objects.active = shell
+        shell.hide_set(False)
+        shell.select_set(True)
         bpy.ops.object.mode_set(mode='EDIT')
         bpy.ops.mesh.select_all(action='DESELECT')
         context.tool_settings.mesh_select_mode = [False,True,False]
@@ -212,20 +212,20 @@ def prep_from_shell(context, shell, axis_mx, shoulder_width = .75, reduction = 1
     
     #snap in case multires is involved
     #hint..this op needs to be bmesh
-    context.scene.update()
+    context.view_layer.update()
     if len(shell.modifiers):
         for v in prep.data.vertices:
-            if bversion() < '002.077.000':
-                v.co = prep.matrix_world.inverted() * shell.matrix_world * shell.closest_point_on_mesh(shell.matrix_world.inverted() * prep.matrix_world * v.co)[0]
-            else:
-                v.co = prep.matrix_world.inverted() * shell.matrix_world * shell.closest_point_on_mesh(shell.matrix_world.inverted() * prep.matrix_world * v.co)[1]
-    context.scene.update()           
+            local = shell.matrix_world.inverted() @ prep.matrix_world @ v.co
+            hit, point, normal, index = shell.closest_point_on_mesh(local, depsgraph=context.evaluated_depsgraph_get())
+            if hit:
+                v.co = prep.matrix_world.inverted() @ shell.matrix_world @ point
+    context.view_layer.update()
     bpy.ops.object.select_all(action='DESELECT')
-    context.scene.objects.active = prep
-    prep.select = True
+    context.view_layer.objects.active = prep
+    prep.select_set(True)
     
     #remove modifiers
-    for mod in prep.modifiers:
+    for mod in list(prep.modifiers):
         if mod.type not in {'MULTIRES', 'SUBSURF'}:
             
             bpy.ops.object.modifier_apply(modifier = mod.name)
@@ -245,7 +245,7 @@ def prep_from_shell(context, shell, axis_mx, shoulder_width = .75, reduction = 1
     bpy.ops.object.mode_set(mode='OBJECT')
     #bpy.ops.object.editmode_toggle()
     sel_eds = [ed for ed in prep.data.edges if ed.select]
-    loc_z = axis_mx.to_quaternion() * Vector((0,0,1))
+    loc_z = axis_mx.to_quaternion() @ Vector((0,0,1))
     odcutils.extrude_edges_in(prep.data, sel_eds, prep.matrix_world, loc_z, shoulder_width*.9, debug=debug)
     bpy.ops.object.editmode_toggle()
     
@@ -254,7 +254,7 @@ def prep_from_shell(context, shell, axis_mx, shoulder_width = .75, reduction = 1
     bpy.ops.object.mode_set(mode='OBJECT')
     #bpy.ops.object.editmode_toggle()
     sel_eds = [ed for ed in prep.data.edges if ed.select]
-    loc_z = axis_mx.to_quaternion() * Vector((0,0,1))
+    loc_z = axis_mx.to_quaternion() @ Vector((0,0,1))
     odcutils.extrude_edges_in(prep.data, sel_eds, prep.matrix_world, loc_z, shoulder_width*.1, debug=debug)
     bpy.ops.object.editmode_toggle()
     bpy.ops.object.editmode_toggle()
@@ -262,7 +262,9 @@ def prep_from_shell(context, shell, axis_mx, shoulder_width = .75, reduction = 1
     sel_eds = [ed for ed in prep.data.edges if ed.select]
     odcutils.fill_loop_scale(prep, sel_eds, base_res, debug=debug)
     bpy.ops.mesh.select_all(action = 'SELECT')
-    bpy.ops.mesh.normals_make_consistent(inside = False)
+    edit_mesh = bmesh.from_edit_mesh(prep.data)
+    bmesh.ops.recalc_face_normals(edit_mesh, faces=list(edit_mesh.faces))
+    bmesh.update_edit_mesh(prep.data)
     
     bpy.ops.mesh.select_all(action='DESELECT')
     bpy.ops.mesh.select_non_manifold(extend = False)

@@ -999,8 +999,6 @@ class OPENDENTAL_OT_prep_from_crown(bpy.types.Operator):
         dbg = settings.debug
         teeth = odcutils.tooth_selection(context)
         
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
         
         [ob_sets, tool_sets, space_sets] = odcutils.scene_preserv(context, debug=dbg)
         
@@ -1024,7 +1022,7 @@ class OPENDENTAL_OT_prep_from_crown(bpy.types.Operator):
                         #margin = None
                             
                     prep = crown_methods.prep_from_shell(context, shell, axis_mx, shoulder_width = self.margin_width, reduction = self.reduction, base_res = self.margin_width/2, margin_loop = None, debug = dbg)
-                    prep.show_x_ray = True
+                    prep.show_in_front = True
                     prep.name = tooth.name + "_GenPrep"
                     
                     mod = prep.modifiers.new('Margin','SHRINKWRAP')
@@ -1049,15 +1047,11 @@ class OPENDENTAL_OT_prep_from_crown(bpy.types.Operator):
                     prep = crown_methods.prep_from_shell(context, ob, ob.matrix_world, 
                                                          shoulder_width = self.margin_width, reduction = self.reduction, 
                                                          base_res = self.margin_width/2, margin_loop = None, debug = dbg)
-                    prep.show_x_ray = True
+                    prep.show_in_front = True
                     prep.name = ob.name + "_GenPrep"
                               
         odcutils.scene_reconstruct(context, ob_sets, tool_sets, space_sets, debug=dbg)
         odcutils.layer_management(context.scene.odc_teeth, debug = False)
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
-        context.scene.layers[1] = True
-        context.scene.layers[4] = True
         return {'FINISHED'}
 
 class OPENDENTAL_OT_lattice_deform(bpy.types.Operator):

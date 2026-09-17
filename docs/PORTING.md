@@ -486,3 +486,15 @@ passes finite evaluated geometry, manifold edges, nonzero volume, tissue group,
 variant target/offset configuration and active-object restoration checks.
 Measured tissue clearance, repeated conversion of the same crown and rotated-axis
 behavior remain unverified. The known small allocation warning appears at shutdown.
+
+## Preparation from crown
+
+The public prep-from-crown path now uses current object selection/visibility,
+view-layer updates, matrix multiplication, closest-point dependency graph,
+BMesh normal recalculation and in-front display. Removed scene-layer accesses
+are gone and modifier application iterates over a snapshot. Blender 5.1.2 passes
+the new operator test on bundled tooth 25: source geometry is preserved, a separate
+mesh with margin/fill groups is created, reduction target/offset are configured,
+and evaluated coordinates are finite. Measured reduction, explicit curve margins,
+rotated/scaled cases and failure cleanup remain unverified. A small shutdown
+allocation warning is still emitted.
