@@ -559,3 +559,11 @@ and clears modifiers through a stable list. Blender 5.1.2 passes round and flatt
 fixtures: measured width, trimmed width and height, manifold edges, complete upper
 projection cap, parenting and stable object count. Wedge geometry, splint projection,
 changed depth on regeneration and transformed-parent cases remain pending.
+
+## Guide-cylinder depth regeneration
+
+A regression test changing depth from 20 to 15 failed because placement only ran
+when creating a new object. World placement now updates on every invocation using
+the implant world orientation and requested axial offset. The same test passes in
+Blender 5.1.2, including orientation, geometry dimensions and stable object count.
+Scaled/parented implants and projection to splint geometry remain outstanding.

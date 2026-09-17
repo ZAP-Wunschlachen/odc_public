@@ -154,18 +154,11 @@ def implant_outer_cylinder(context, space,
         name = Implant.name + '_GC'
         Cylinder.name = name
     
-        #point the right direction
-        Cylinder.rotation_mode = 'QUATERNION'
-        Cylinder.rotation_quaternion = mx_w.to_quaternion()
-        
-        Cylinder.update_tag()
-        context.view_layer.update()
-    
-        Trans = Implant.rotation_quaternion @ Vector((0,0,-depth))
-        Cylinder.matrix_world[0][3] = mx_w[0][3] + Trans[0]
-        Cylinder.matrix_world[1][3] = mx_w[1][3] + Trans[1]
-        Cylinder.matrix_world[2][3] = mx_w[2][3] + Trans[2]
-    
+    # Recompute world placement on every invocation, including existing children.
+    orientation = mx_w.to_quaternion()
+    location = mx_w.translation + orientation @ Vector((0, 0, -depth))
+    Cylinder.matrix_world = Matrix.LocRotScale(location, orientation, Vector((1, 1, 1)))
+
     bm.to_mesh(me)
     bm.free()
 

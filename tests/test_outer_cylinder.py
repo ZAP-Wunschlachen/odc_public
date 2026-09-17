@@ -18,11 +18,16 @@ implant.rotation_euler = (.2,.3,.4)
 space.implant = implant.name
 bpy.context.view_layer.update()
 count = len(bpy.data.objects)
-for trim in (0, .5):
-    assert bpy.ops.opendental.implant_guide_cylinder(width=6, depth=20, trim_width=trim) == {'FINISHED'}
+for trim, depth in ((0, 20), (.5, 15)):
+    assert bpy.ops.opendental.implant_guide_cylinder(width=6, depth=depth, trim_width=trim) == {'FINISHED'}
     cylinder = bpy.data.objects[space.outer]
     assert cylinder.parent == implant
     assert len(bpy.data.objects) == count+1
+    bpy.context.view_layer.update()
+    orientation = implant.matrix_world.to_quaternion()
+    expected = implant.matrix_world.translation + orientation @ Vector((0,0,-depth))
+    assert (cylinder.matrix_world.translation-expected).length < 1e-5
+    assert cylinder.matrix_world.to_quaternion().rotation_difference(orientation).angle < 1e-5
     xs = [v.co.x for v in cylinder.data.vertices]
     ys = [v.co.y for v in cylinder.data.vertices]
     zs = [v.co.z for v in cylinder.data.vertices]
