@@ -2486,80 +2486,61 @@ def extrude_bmesh_loop(bme, bmedges, mx, axis, res, move_only = False):
         res - distance step for each extrusion...world size
         move_only - will only translate, not extrude edges
     '''
-    start = time.time() #monitor performance
-    
-    #take the appropriate steps to go to local coords
-    imx = mx.copy()
-    imx.invert()
-    irot = imx.to_quaternion()
-    iscl = imx.to_scale() 
-    z = irot*axis
-    
-    bme.verts.ensure_lookup_table()
-    bme.edges.ensure_lookup_table()
-    vert_inds = mesh_cut.edge_loops_from_bmedges(bme, [ed.index for ed in bmedges])[0]
-    
-    if vert_inds[0] != vert_inds[-1]:
-        print('Not a closed loop, get out of here!')
-        return bme
-    
-    if not move_only:
-        ret = bmesh.ops.extrude_edge_only(bme, edges = bmedges)
-        geom_extrude = ret['geom']
-        edges_extrude = [ele for ele in geom_extrude if isinstance(ele, bmesh.types.BMEdge)]
-    
-        #ensure lookup table?
-        bme.verts.ensure_lookup_table()
-        bme.edges.ensure_lookup_table()
-        vert_inds = mesh_cut.edge_loops_from_bmedges(bme, [ed.index for ed in edges_extrude])[0]
-    
-    verts = [bme.verts[i] for i in vert_inds]
-    verts.pop()  #no need to duplicate the end vert
-    vcoords = [vert.co for vert in verts]
-    curl = 0
-    N = len(verts)
-    lerps = []
+    edges = list(bmedges)
+    adjacency = {}
+    for edge in edges:
+        a, b = edge.verts
+        adjacency.setdefault(a, []).append(b)
+        adjacency.setdefault(b, []).append(a)
+    if not adjacency or any(len(neighbors) != 2 for neighbors in adjacency.values()):
+        raise ValueError("Expected one closed margin loop")
+    ordered = [next(iter(adjacency))]
+    previous = None
+    while True:
+        following = next(v for v in adjacency[ordered[-1]] if v != previous)
+        if following == ordered[0]:
+            break
+        if following in ordered:
+            raise ValueError("Margin loop repeats a vertex")
+        previous = ordered[-1]
+        ordered.append(following)
+    if len(ordered) != len(adjacency):
+        raise ValueError("Expected one connected margin loop")
+    if axis.length < 1e-10:
+        raise ValueError("Insertion axis must have a direction")
+    inverse = mx.inverted()
+    normal = axis.normalized()
+    points = [mx @ v.co for v in ordered]
+    tangents = []
+    winding = 0.0
+    for i, point in enumerate(points):
+        incoming = point - points[i-1]
+        outgoing = points[(i+1) % len(points)] - point
+        a = incoming - incoming.project(normal)
+        b = outgoing - outgoing.project(normal)
+        winding += math.atan2(normal.dot(a.cross(b)), a.dot(b))
+        tangent = incoming + outgoing
+        displacement = normal.cross(tangent)
+        if displacement.length < 1e-10:
+            raise ValueError("Margin has a degenerate projected tangent")
+        tangents.append(displacement.normalized())
+    sign = 1 if winding >= 0 else -1
+    destinations = [inverse @ (p + t * (res * sign)) for p, t in zip(points, tangents)]
+    if move_only:
+        for vertex, location in zip(ordered, destinations):
+            vertex.co = location
+    else:
+        ring = [bme.verts.new(location) for location in destinations]
+        for i in range(len(ordered)):
+            j = (i+1) % len(ordered)
+            bme.faces.new((ordered[i], ordered[j], ring[j], ring[i]))
+    bme.normal_update()
+    bme.verts.index_update()
+    bme.edges.index_update()
+    bme.faces.index_update()
+    return bme
 
-    for n, v in enumerate(vcoords):
-        
-        np1 = (n + 1) % N
-        nm1 = (n-1) % N
-        #Vec representation of the two edges
-        V0 = v - vcoords[nm1]
-        V1 = vcoords[np1] - v
-        
-        ##XY projection
-        T0 = V0 - V0.project(z)
-        T1 = V1 - V1.project(z)
-        
-        cross = T0.cross(T1)        
-        sign = 1
-        if cross.dot(z) < 0:
-            sign = -1
-        
-        rot = T0.rotation_difference(T1)  
-        ang = rot.angle
-        curl = curl + ang*sign
-        lerps.append(V0.lerp(V1,.5))
 
-    clockwise = 1
-
-    if curl < 0:
-        clockwise = -1
-    print('The curl is %f' % curl)
-    
-        
-    for n, v in enumerate(verts):
-   
-        V = lerps[n]
-        trans = z.cross(V)*clockwise
-        trans.normalize()
-        delta = scale_vec_mult(trans, iscl)
-        delta *= res       
-        v.co +=  delta       
-
-    print("moved verts in %f seconds" % (time.time()-start))
-                    
 def register():
     pass
 

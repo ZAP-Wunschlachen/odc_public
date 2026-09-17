@@ -187,3 +187,13 @@ curve produces 30 vertices/29 edges with preserved endpoints. Beveled surfaces
 are rejected rather than misinterpreted as a margin path. The conversion orders
 evaluated edges and resamples by arc length. The complete Accept Margin operator,
 pseudo-margin extrusion and interactive margin marking remain pending.
+
+## Margin ribbon geometry
+
+`tests/test_margin_extrusion.py` verifies the shared loop extrusion helper on a
+world-space circular fixture under translation, rotation and nonuniform scaling.
+Both windings produce a 0.2 inward offset followed by a 0.4 outward extrusion,
+with 80 vertices, 40 quads and two boundary loops. Distances are computed in world
+space and transformed back to local space. Open input rejects before mutation.
+This replaces quaternion/scale decomposition and stale BMesh edge-index traversal.
+The complete Accept Margin operator and irregular anatomical loops remain pending.
