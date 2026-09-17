@@ -300,3 +300,7 @@ The crown-seating fixture now repeats the operator and checks stable modifier
 count and retained base margin alignment. Final Seal is reused. The evaluated
 Multires mesh has more vertices than the base and finite coordinates; this does
 not establish surface quality or absence of self-intersections.
+
+The control-lattice test also verifies bounding-box face/edge/corner locations and
+mean edge spacing in local and transformed coordinates. These helpers now use
+full matrix multiplication; empty spacing selections raise a clear error.

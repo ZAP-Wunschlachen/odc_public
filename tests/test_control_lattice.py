@@ -36,5 +36,19 @@ evaluated = obj.evaluated_get(bpy.context.evaluated_depsgraph_get())
 mesh = evaluated.to_mesh()
 assert any((evaluated.matrix_world @ v.co-p).length > .01 for v,p in zip(mesh.vertices,before))
 evaluated.to_mesh_clear()
+# Bounding-box features and mean edge spacing use full affine transforms.
+obj.modifiers.clear()
+bpy.context.view_layer.update()
+for specify in (Vector((0,0,1)), Vector((-1,-1,0)), Vector((1,-1,1))):
+    expected = obj.matrix_world @ (Vector((1,2,3)) + specify)
+    assert (u.box_feature_locations(obj, specify)-expected).length < 1e-5
+assert abs(u.get_linear_density(obj.data, list(obj.data.edges), obj.matrix_world)-6) < 1e-5
+assert abs(u.get_linear_density(obj.data, list(obj.data.edges))-2) < 1e-5
+try:
+    u.get_linear_density(obj.data, [])
+except ValueError:
+    pass
+else:
+    raise AssertionError('Empty edge selection must be rejected')
 addon_utils.disable(ROOT.name, default_set=True)
 print('ODC_CONTROL_LATTICE_PASSED', bpy.app.version_string)

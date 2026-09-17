@@ -432,22 +432,13 @@ def box_feature_locations(ob, specify):
       vector = ((-1,-1,0)) :: left, back, edge midpoint
       vector = ((1,-1,1))  :: right, back, top corner
     '''    
-    #construct the correct matrix
-    xyz = Matrix()
-    xyz = xyz.to_3x3()
-    
-    for i in range(0,3):
-        for j in range(0,3):
-            if i == j:
-                xyz[j][i] = specify[i]
-    
-    dim = ob.dimensions    
-    #calc bbox_center
-    b_cent = get_bbox_center(ob, world=True)
-    location = b_cent + ob.matrix_world.to_quaternion() * (xyz * dim/2)
-    
-    return location
-        
+    bounds = [Vector(point) for point in ob.bound_box]
+    low = Vector(tuple(min(point[i] for point in bounds) for i in range(3)))
+    high = Vector(tuple(max(point[i] for point in bounds) for i in range(3)))
+    local = Vector(tuple((low[i]+high[i])/2 + specify[i]*(high[i]-low[i])/2 for i in range(3)))
+    return ob.matrix_world @ local
+
+
 def get_linear_density(me, edges, mx = None, debug = False):
     '''
     args:
@@ -464,10 +455,12 @@ def get_linear_density(me, edges, mx = None, debug = False):
         mx = Matrix.Identity(3)
     
     N_edges = len(edges)
+    if not N_edges:
+        raise ValueError("Select at least one edge to measure spacing")
     sum_edge_length = 0
     for e in edges:
-        v0= mx * me.vertices[e.vertices[0]].co
-        v1= mx * me.vertices[e.vertices[1]].co
+        v0= mx @ me.vertices[e.vertices[0]].co
+        v1= mx @ me.vertices[e.vertices[1]].co
         V = Vector(v1 - v0)
         sum_edge_length += pow((V.length*V.length),.5)
     
