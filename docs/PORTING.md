@@ -895,3 +895,7 @@ Ported the four jaw/side visibility operators to view-layer hide_set and view-la
 ### Root parenting and adjustment
 
 Ported armature activation/visibility, PoseBone selection and constraint context overrides for root parenting. Adjust Roots validates the armature and supported mode, reveals/selects it and enters armature Edit mode. `test_root_parenting.py` passes in Blender 5.1.2: initial pose preserved with nonidentity tooth/armature translations, root follows a two-unit tooth displacement, repeated setup retains one constraint, and a hidden armature can be opened for adjustment. Jaw proximity deformation, multiple roots and root creation remain unverified.
+
+### Root-to-cast deformation coverage
+
+Extended `test_root_parenting.py` through `link_to_cast=True` with an UpperJaw mesh. Blender 5.1.2 passes repeated setup without duplicate armature/proximity modifiers, correct modifier order, bone vertex-group creation, measurable X deformation after tooth movement with unchanged Y/Z, and unchanged base mesh coordinates. This synthetic single-root test establishes functioning dependency propagation, not anatomical gingival simulation accuracy or lower/multi-root coverage.

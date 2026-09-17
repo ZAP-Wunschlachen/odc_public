@@ -28,4 +28,29 @@ bpy.context.view_layer.objects.active = tooth
 assert bpy.ops.opendental.adjust_bone_roots() == {'FINISHED'}
 assert bpy.context.object == arm and bpy.context.mode == 'EDIT_ARMATURE'
 bpy.ops.object.mode_set(mode='OBJECT')
+tooth.location.x = 3
+bpy.ops.mesh.primitive_cube_add(size=4, location=(3,2,1))
+jaw = bpy.context.object
+jaw.name = 'UpperJaw'
+original = [v.co.copy() for v in jaw.data.vertices]
+for attempt in range(2):
+    assert bpy.ops.opendental.set_roots_parents(link_to_cast=True) == {'FINISHED'}
+    assert len([m for m in jaw.modifiers if m.type == 'ARMATURE']) == 1
+    assert len([m for m in jaw.modifiers if m.type == 'VERTEX_WEIGHT_PROXIMITY']) == 1
+    assert jaw.modifiers[-1].type == 'ARMATURE'
+    assert jaw.vertex_groups.get('11_root') is not None
+bpy.context.view_layer.update()
+def evaluated_positions():
+    evaluated = jaw.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    mesh = evaluated.to_mesh()
+    positions = [v.co.copy() for v in mesh.vertices]
+    evaluated.to_mesh_clear()
+    return positions
+before_jaw = evaluated_positions()
+tooth.location.x += 1
+bpy.context.view_layer.update()
+after_jaw = evaluated_positions()
+assert max((a-b).length for a,b in zip(after_jaw,before_jaw)) > .1
+assert all(abs(a.y-b.y) < 1e-5 and abs(a.z-b.z) < 1e-5 for a,b in zip(after_jaw,before_jaw))
+assert [v.co for v in jaw.data.vertices] == original
 print('ODC_ROOT_PARENTING_PASSED', bpy.app.version_string)
