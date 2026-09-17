@@ -8,12 +8,12 @@ from mathutils import Quaternion, Vector
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 phase = 0
-window = region = obj = occupied = None
+window = region = obj = occupied = area = None
 def send(kind):
     for value in ('PRESS','RELEASE'):
         window.event_simulate(type=kind,value=value,x=region.x+region.width//2,y=region.y+region.height//2)
 def run():
-    global phase,window,region,obj,occupied
+    global phase,window,region,obj,occupied,area
     try:
         if phase == 0:
             assert addon_utils.enable(ROOT.name, default_set=True)
@@ -44,8 +44,17 @@ def run():
         elif phase == 3:
             assert obj.name == '47', obj.name
             assert obj.show_name
+            send('ESC')
+        elif phase == 4:
+            assert obj.name == 'Cube' and not obj.show_name
+            with bpy.context.temp_override(window=window,area=area,region=region):
+                assert bpy.ops.opendental.fast_label_teeth('INVOKE_DEFAULT') == {'RUNNING_MODAL'}
+            send('LEFTMOUSE')
+        elif phase == 5:
+            assert obj.name == '11'
             send('RET')
         else:
+            assert obj.name == '11' and obj.show_name
             assert not any(op.bl_idname == 'OPENDENTAL_OT_fast_label_teeth' for op in window.modal_operators)
             print('ODC_LABEL_MODAL_PASSED',flush=True)
             bpy.ops.wm.quit_blender()

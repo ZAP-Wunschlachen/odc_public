@@ -395,13 +395,14 @@ class OPENDENTAL_OT_fast_label_teeth(bpy.types.Operator):
             if existing is not None and existing != obj:
                 self.report({'WARNING'}, 'Tooth number %s is already assigned' % self.target)
                 return False
+            if obj not in self._labels_before:
+                self._labels_before[obj] = (obj.name, obj.show_name)
             obj.name = str(self.target)
             for ob in context.view_layer.objects:
                 ob.select_set(False)
             obj.select_set(True)
             obj.show_name = True
             context.view_layer.objects.active = obj
-            bpy.ops.object.origin_set(type = 'ORIGIN_GEOMETRY', center = 'BOUNDS')
             return True
         else:
             return False       
@@ -502,6 +503,20 @@ class OPENDENTAL_OT_fast_label_teeth(bpy.types.Operator):
             return {'PASS_THROUGH'}
         
         if nmode in {'finish','cancel'}:
+            if nmode == 'cancel':
+                # Free all session labels before restoring names to avoid suffixes.
+                for obj in self._labels_before:
+                    obj.name = '__ODC_LABEL_RESTORE__'
+                for obj, (name, show_name) in self._labels_before.items():
+                    obj.name = name
+                    obj.show_name = show_name
+            else:
+                bpy.ops.object.select_all(action='DESELECT')
+                for obj in self._labels_before:
+                    obj.select_set(True)
+                    context.view_layer.objects.active = obj
+                    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
+                    obj.select_set(False)
             #clean up callbacks
             bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
             return {'FINISHED'} if nmode == 'finish' else {'CANCELLED'}
@@ -533,6 +548,7 @@ class OPENDENTAL_OT_fast_label_teeth(bpy.types.Operator):
         
         
         
+        self._labels_before = {}
         self.target = 11
         self.message = "Set axis for " + str(self.target)
             

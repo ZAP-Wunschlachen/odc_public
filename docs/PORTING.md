@@ -957,3 +957,7 @@ Ported scene ray-casting, view-layer selection/activation and preflight view-spa
 ### Tooth label collisions
 
 Fast labeling now rejects a number already used by another object before changing the hit object or advancing the label sequence. The real-window test verifies unchanged names after a conflicting click, then frees the number and confirms a second click receives the exact same intended label. Passed on Blender 5.1.2. Escape rollback and preservation of off-center/shared mesh origins remain open.
+
+### Label modal cancellation
+
+Fast labeling snapshots touched object names/show-name flags and restores them on Escape, freeing temporary labels before restoring original names. Origin centering is deferred until Enter, so cancellation does not perform that mesh/transform operation. The real-window test passes collision handling, label/cancel restoration, restart and successful commit. Shared-mesh origin handling and world-coordinate preservation for off-center geometry remain unverified.
