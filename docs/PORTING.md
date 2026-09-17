@@ -197,3 +197,13 @@ with 80 vertices, 40 quads and two boundary loops. Distances are computed in wor
 space and transformed back to local space. Open input rejects before mutation.
 This replaces quaternion/scale decomposition and stale BMesh edge-index traversal.
 The complete Accept Margin operator and irregular anatomical loops remain pending.
+
+## Accept Margin operator
+
+`tests/test_accept_margin.py` executes the registered operator on a translated
+Bezier circle, converts it to a 200-vertex loop and creates the hidden 400-vertex,
+200-face ribbon. Repeated acceptance replaces the previous ribbon. An open curve
+cancels before changing the original object or prior ribbon and releases temporary
+mesh data. Conversion and extrusion finish before scene changes are committed.
+Complex anatomical boundaries, linked collections, parented/edit-mode cases and
+interactive marking/refinement still require additional coverage.

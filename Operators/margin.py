@@ -609,86 +609,78 @@ class OPENDENTAL_OT_accept_margin(bpy.types.Operator):
         return condition_1
 
     def execute(self, context):
-        
-        #picks tooth based on selected/active object...will refactor soon
         tooth = odcutils.tooth_selection(context)[0]
-        sce=bpy.context.scene
-        a = tooth.name
-        mesial = tooth.mesial
-        distal = tooth.distal
-        margin = tooth.margin
-        axis = tooth.axis
-        
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
-        
-        if margin not in bpy.data.objects:
-            self.report({'ERROR'},'No Margin to accept!')
+        margin = context.scene.objects.get(tooth.margin)
+        axis = context.scene.objects.get(tooth.axis)
+        if margin is None or axis is None:
+            self.report({'WARNING'}, 'Assign a margin and insertion axis first')
             return {'CANCELLED'}
-        if axis not in bpy.data.objects:
-            self.report({'ERROR'}, 'No insertion axis for ' + a + ', please define insertion axis')
-            print(tooth.margin)
-            print(tooth.axis)
-            print(tooth.name)
-            
-            print([ob.name for ob in bpy.data.objects])
-            
+        converted = None
+        ribbon = None
+        bm = bmesh.new()
+        try:
+            if margin.type == 'CURVE':
+                converted = odcutils.bezier_to_mesh(margin, tooth.margin, n_points=200)
+                bm.from_mesh(converted)
+            elif margin.type == 'MESH':
+                evaluated = margin.evaluated_get(context.evaluated_depsgraph_get())
+                mesh = evaluated.to_mesh()
+                try:
+                    bm.from_mesh(mesh)
+                finally:
+                    evaluated.to_mesh_clear()
+            else:
+                raise ValueError('Margin must be a mesh loop or curve')
+            if bm.faces:
+                raise ValueError('Margin must be a wire loop without faces')
+            direction = axis.matrix_world.to_3x3() @ Vector((0,0,1))
+            odcutils.extrude_bmesh_loop(bm, list(bm.edges), margin.matrix_world, direction, .2, move_only=True)
+            odcutils.extrude_bmesh_loop(bm, list(bm.edges), margin.matrix_world, direction, -.4)
+            ribbon = bpy.data.meshes.new(tooth.name + '_Psuedo Margin')
+            bm.to_mesh(ribbon)
+        except (ValueError, RuntimeError) as error:
+            if converted is not None:
+                bpy.data.meshes.remove(converted)
+            if ribbon is not None:
+                bpy.data.meshes.remove(ribbon)
+            self.report({'WARNING'}, str(error))
             return {'CANCELLED'}
-        
-        
-        Margin=bpy.data.objects[margin]
-        Axis = bpy.data.objects[axis]
-        if Margin.type != 'MESH':  
-            me_data = odcutils.bezier_to_mesh(Margin,  tooth.margin, n_points = 200)
-            mx = Margin.matrix_world  
-            context.scene.objects.unlink(Margin)
-            bpy.data.objects.remove(Margin)
-            new_obj = bpy.data.objects.new(tooth.margin, me_data)
-            new_obj.matrix_world = mx
-            context.scene.objects.link(new_obj)
-            tooth.margin = new_obj.name #just in case of name collisions
-            Margin = new_obj
-        
-        master=sce.odc_props.master
-        Margin.dupli_type = 'NONE'
-        if mesial:
-            bpy.data.objects[mesial].hide = False
-            
-        if distal:
-            bpy.data.objects[distal].hide = False
-        
-        if bpy.context.mode != 'OBJECT':
+        finally:
+            bm.free()
+        # Commit only after both conversion and ribbon construction succeeded.
+        if context.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode='OBJECT')
-        
-        psuedo_margin= str(a + "_Psuedo Margin")
-        tooth.pmargin = psuedo_margin
-        p_margin_me = Margin.to_mesh(context.scene, True, 'PREVIEW')
-        p_margin_bme = bmesh.new()
-        p_margin_bme.from_mesh(p_margin_me)
-        
-        Z = Axis.matrix_world.to_3x3() * Vector((0,0,1))
-        odcutils.extrude_bmesh_loop(p_margin_bme, p_margin_bme.edges, Margin.matrix_world, Z, .2, move_only = True)
-        odcutils.extrude_bmesh_loop(p_margin_bme, p_margin_bme.edges, Margin.matrix_world, Z, -.4, move_only = False)
-        p_margin_bme.to_mesh(p_margin_me)
-        PMargin = bpy.data.objects.new(psuedo_margin,p_margin_me)
-        PMargin.matrix_world = Margin.matrix_world
-        context.scene.objects.link(PMargin)
-        bpy.data.objects[psuedo_margin].hide=True
-
-        
-        bpy.context.tool_settings.use_snap = False
-        bpy.context.tool_settings.proportional_edit = 'DISABLED'
-        
-        #Now we want to overpack the verts so that when the edge of the
-        #restoration is snapped to it, it won't displace them too much
-        # I have estimated ~25 microns as a fine linear packin
-        #density....another option is to leave the curve as an
-        #implicit function.... hmmmmm
-
-
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
-        context.scene.layers[4] = True
+        if converted is not None:
+            replacement = bpy.data.objects.new(margin.name + '_Accepted', converted)
+            replacement.parent = margin.parent
+            replacement.matrix_parent_inverse = margin.matrix_parent_inverse.copy()
+            replacement.matrix_world = margin.matrix_world.copy()
+            for collection in margin.users_collection:
+                collection.objects.link(replacement)
+            old_name = margin.name
+            was_active = context.view_layer.objects.active == margin
+            bpy.data.objects.remove(margin, do_unlink=True)
+            replacement.name = old_name
+            tooth.margin = replacement.name
+            margin = replacement
+            if was_active:
+                margin.select_set(True)
+                context.view_layer.objects.active = margin
+        previous = bpy.data.objects.get(tooth.pmargin)
+        pmargin = bpy.data.objects.new(tooth.name + '_Psuedo Margin', ribbon)
+        pmargin.matrix_world = margin.matrix_world.copy()
+        context.scene.collection.objects.link(pmargin)
+        tooth.pmargin = pmargin.name
+        if previous is not None and previous != margin and previous != axis:
+            bpy.data.objects.remove(previous, do_unlink=True)
+        pmargin.hide_set(True)
+        for name in (tooth.mesial, tooth.distal):
+            neighbor = context.scene.objects.get(name)
+            if neighbor is not None:
+                neighbor.hide_set(False)
+        context.tool_settings.use_snap = False
+        context.tool_settings.use_proportional_edit = False
+        odcutils.layer_management([tooth])
         return {'FINISHED'}
 
 class OPENDENTAL_OT_place_margin_tracer(bpy.types.Operator):
