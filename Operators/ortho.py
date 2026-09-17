@@ -613,8 +613,9 @@ class OPENDENTAL_OT_setup_root_parenting(bpy.types.Operator):
         if context.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode = 'OBJECT')
             
-        context.scene.objects.active = arm_ob
-        arm_ob.select = True
+        context.view_layer.objects.active = arm_ob
+        arm_ob.hide_set(False)
+        arm_ob.select_set(True)
             
         #create a vertex group for every maxillary bone
         for bone in arm_ob.data.bones:
@@ -659,11 +660,10 @@ class OPENDENTAL_OT_setup_root_parenting(bpy.types.Operator):
                 cons.target = tooth
                     
                 arm_ob.data.bones.active = pbone.bone
-                bone.select = True
+                pbone.select = True
                 bpy.ops.object.mode_set(mode = 'POSE')
-                context_copy = bpy.context.copy()
-                context_copy["constraint"] = pbone.constraints["Child Of"]    
-                bpy.ops.constraint.childof_set_inverse(context_copy, constraint="Child Of", owner='BONE')
+                with context.temp_override(constraint=cons):
+                    bpy.ops.constraint.childof_set_inverse(constraint=cons.name, owner='BONE')
                 bpy.ops.object.mode_set(mode = 'OBJECT')
             
         if max_ob != None:
@@ -690,31 +690,21 @@ class OPENDENTAL_OT_adjust_roots(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     
     @classmethod
-    def poll(self,context):
-        if 'Roots' in context.scene.objects:
-            return True
-        else:
-            return False
-        
+    def poll(cls, context):
+        arm = context.view_layer.objects.get('Roots')
+        return arm is not None and arm.type == 'ARMATURE' and context.mode in {'OBJECT', 'EDIT_ARMATURE'}
+
     def execute(self, context):
-        
-        #make sure we don't mess up any animations!
         context.scene.frame_set(0)
-        
-        arm_ob = context.scene.objects.get('Roots')
-        context.scene.objects.active = arm_ob
-        
-        if context.mode == 'POSE':
-            self.report({'ERROR'}, "Roots Armature is in POSE Mode, must be in OBJECT or EDIT mode")
-        
-        if arm_ob == None:
-            self.report({'ERROR'}, "You need a 'Roots' armature, pease add one or see wiki")
-            return {'CANCELLED'}
-        
-        bpy.ops.object.mode_set(mode = 'EDIT')
-         
+        arm = context.view_layer.objects.get('Roots')
+        if context.mode != 'OBJECT':
+            bpy.ops.object.mode_set(mode='OBJECT')
+        arm.hide_set(False)
+        arm.select_set(True)
+        context.view_layer.objects.active = arm
+        bpy.ops.object.mode_set(mode='EDIT')
         return {'FINISHED'}
-    
+
 
 class OPENDENTAL_OT_set_treatment_keyframe(bpy.types.Operator):
     """Sets a treatment stage at this frame"""

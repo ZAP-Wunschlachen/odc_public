@@ -891,3 +891,7 @@ Meta surface validates positive radius/resolution and an evaluated source with v
 Ported the four jaw/side visibility operators to view-layer hide_set and view-layer object iteration. Treatment staging uses direct location/rotation keyframe insertion with rotation-mode-specific paths, avoids deprecated keying-set operators and handles no visible teeth by cancellation. It no longer changes object selection.
 
 `test_ortho_staging.py` passes on Blender 5.1.2: upper/lower/right/left visibility, upper master toggle, empty-stage cancellation, two-frame position restoration with Euler/quaternion objects, exclusion of hidden lower teeth and unnumbered masters. Rotation interpolation, armature workflows and treatment UI remain unverified.
+
+### Root parenting and adjustment
+
+Ported armature activation/visibility, PoseBone selection and constraint context overrides for root parenting. Adjust Roots validates the armature and supported mode, reveals/selects it and enters armature Edit mode. `test_root_parenting.py` passes in Blender 5.1.2: initial pose preserved with nonidentity tooth/armature translations, root follows a two-unit tooth displacement, repeated setup retains one constraint, and a hidden armature can be opened for adjustment. Jaw proximity deformation, multiple roots and root creation remain unverified.
