@@ -790,55 +790,37 @@ class CurveDataManager(object):
             self.update_blender_curve_data()   
             return
     
-    def click_delete_point(self, mode = 'mouse'):
-        if mode == 'mouse':
-            if not self.hovered[0] == 'POINT': return
-            self.b_pts.pop(self.hovered[1])
-            if len(self.b_pts) == 0:
-                self.started = False
-                return
-            self.update_blender_curve_data()
-        
-        else:
-            if self.selected == -1: return
-            self.b_pts.pop(self.selected)
-            if len(self.b_pts) == 0:
-                self.started = False
-                return
-            self.update_blender_curve_data()
-            
+    def click_delete_point(self, mode='mouse'):
+        index = self.hovered[1] if mode == 'mouse' and self.hovered[0] == 'POINT' else self.selected if mode != 'mouse' else -1
+        if not 0 <= index < len(self.b_pts):
+            return
+        self.b_pts.pop(index)
+        self.selected = -1
+        self.hovered = [None, -1]
+        self.started = bool(self.b_pts)
+        self.update_blender_curve_data()
 
-                          
     def update_blender_curve_data(self):
-        #this may crash blender
-        crv_data = bpy.data.curves.new('Outline','CURVE')
-        crv_data.splines.new('BEZIER')
-        crv_data.dimensions = '3D'
-        #set any matrix stuff here
-        crv_mx = self.crv_obj.matrix_world
-        icrv_mx = crv_mx.inverted()
-        
-        bp = crv_data.splines[0].bezier_points[0]
-        delta = self.b_pts[0] - bp.co
-        bp.co += delta
-        bp.handle_left += delta
-        bp.handle_right += delta
-        bp.handle_right_type = 'AUTO'
-        bp.handle_left_type = 'AUTO'
-        
-        for i in range(1,len(self.b_pts)):
-            crv_data.splines[0].bezier_points.add(count = 1)
-            bp = crv_data.splines[0].bezier_points[i]
-            bp.co = icrv_mx * self.b_pts[i]
-            bp.handle_right_type = 'AUTO'
-            bp.handle_left_type = 'AUTO'
-        
-        crv_data.splines[0].use_cyclic_u = self.crv_data.splines[0].use_cyclic_u
-        self.crv_obj.data = crv_data
-        self.crv_data.user_clear()
-        bpy.data.curves.remove(self.crv_data)
-        self.crv_data = crv_data
-        
+        # Copy curve settings/materials, replacing only this object's spline data.
+        # Other objects may share the original curve datablock.
+        old = self.crv_data
+        data = old.copy()
+        cyclic = old.splines[0].use_cyclic_u if old.splines else False
+        data.splines.clear()
+        spline = data.splines.new('BEZIER')
+        inverse = self.crv_obj.matrix_world.inverted()
+        if self.b_pts:
+            spline.bezier_points.add(len(self.b_pts)-1)
+            for bp, point in zip(spline.bezier_points, self.b_pts):
+                bp.co = inverse @ point
+                bp.handle_left_type = 'AUTO'
+                bp.handle_right_type = 'AUTO'
+        spline.use_cyclic_u = cyclic and len(self.b_pts) >= 3
+        self.crv_obj.data = data
+        self.crv_data = data
+        if old.users == 0:
+            bpy.data.curves.remove(old)
+
     def hover(self,context,x,y):
         '''
         hovering happens in screen space, 20 pixels

@@ -226,3 +226,12 @@ Bezier coordinates agree after cancellation. Collection linking, current scene
 ray casting, matrix multiplication, cursor access and shrinkwrap surface mode are
 ported. Hover/edge insertion/deletion, complete margin-marking modal dispatch and
 modifier-heavy target fixtures remain pending.
+
+## Curve rebuilding and deletion
+
+`tests/test_curve_topology_edit.py` checks rebuilding under translation and
+nonuniform scale, including the previously incorrect first point. Curve settings
+are copied, shared original datablocks remain intact, and deletion resets stale
+selection/hover indices. Removing all points leaves a restartable empty manager;
+curves with fewer than three points are not cyclic. Edge-hover insertion and
+complete interactive marking remain pending.
