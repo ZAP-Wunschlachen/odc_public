@@ -112,88 +112,70 @@ def project_report(scene):
 
 #TODO: Layers get messed up if in another layer when object added.  make sure layer management forces other layers off....
 #TODO: Using layers may cause data access problems...may have to manage this in scene preservation/reconstruction
-def scene_preserv(context, objects = True, tools = True, space = True, debug = False):
-    '''
-    #TODO: write this docstring
-    basically collects a lot of settings so you can mess with them
-    in an operator and then put everytying back like you found it.
-    '''
-    if debug:
-        start = time.time()
-    ret_list = []
-    
+def scene_preserv(context, objects=True, tools=True, space=True, debug=False):
+    """Snapshot view-layer object state and current tool/view settings."""
+    result = []
     if objects:
-        objects_dict = {}
-        for setting in ["object","selected_objects","mode"]:
-            objects_dict[setting] = getattr(context, setting)
-        
-        hidden_obs = [ob for ob in bpy.data.objects if ob.hide]
-        objects_dict["hidden"] = hidden_obs
-        ret_list.append(objects_dict)
-        
+        result.append({
+            'object': context.view_layer.objects.active,
+            'selected_objects': list(context.selected_objects),
+            'mode': context.object.mode if context.object else 'OBJECT',
+            'states': [(ob, ob.hide_get(), ob.select_get()) for ob in context.view_layer.objects],
+        })
     if tools:
-        tools_dict = {}
-        for setting in ["vertex_group_weight", "mesh_select_mode","use_proportional_edit_objects", "proportional_edit", "proportional_edit_falloff","proportional_size","use_snap","snap_element"]:
-            tools_dict[setting] = getattr(context.tool_settings, setting)
-        ret_list.append(tools_dict)
-    
-    if space:   
-        space_dict = {}
-        for setting in ["pivot_point","transform_orientation","use_pivot_point_align","use_occlude_geometry","show_manipulator"]:
-            space_dict[setting] = getattr(context.space_data, setting)
-        
-        ret_list.append(space_dict)
-    
-    if debug:    
-        print('preserved the scene in %f seconds' % (time.time() - start))
-    elif debug > 1:
-        for key in objects_dict.keys():
-            print("%s : %s" % (key, objects_dict[key]))
-    
-    return ret_list
+        settings = context.tool_settings
+        names = ('vertex_group_weight', 'mesh_select_mode',
+                 'use_proportional_edit_objects', 'use_proportional_edit',
+                 'proportional_edit_falloff', 'proportional_size', 'use_snap',
+                 'snap_elements', 'transform_pivot_point', 'use_transform_pivot_point_align')
+        values = {}
+        for name in names:
+            if not hasattr(settings, name):
+                continue
+            value = getattr(settings, name)
+            values[name] = tuple(value) if name == 'mesh_select_mode' else value
+        result.append(values)
+    if space:
+        view = context.space_data
+        values = {}
+        if view and view.type == 'VIEW_3D':
+            values['show_gizmo'] = view.show_gizmo
+        result.append(values)
+    return result
 
-def scene_reconstruct(context, obj_dict = {}, tools_dict = {}, space_dict = {}, debug = False):
-    '''
-    #TODO: write this docstring
-    basically collects a lot of settings so you can mess with them
-    in an operator and then put everytying back like you found it.
-    '''
-    if debug:
-        start = time.time()
-    
+
+def scene_reconstruct(context, obj_dict=None, tools_dict=None, space_dict=None, debug=False):
+    """Restore surviving objects without changing newly created object visibility."""
     if obj_dict:
-        context.scene.objects.active = obj_dict["object"]
-        for ob in bpy.data.objects:
-            if ob in obj_dict["selected_objects"]:
-                ob.select = True
-            else:
-                ob.select = False
-            if ob in obj_dict["hidden"]:
-                ob.hide = True
-            else:
-                ob.hide = False
-                
-        if context.mode != obj_dict["mode"]:
-            if 'EDIT' in obj_dict["mode"]:
-                bpy.ops.object.mode_set(mode='EDIT')
-            else:
-                bpy.ops.object.mode_set(mode=obj_dict["mode"])
-        
+        if context.object and context.object.mode != 'OBJECT':
+            bpy.ops.object.mode_set(mode='OBJECT')
+        for ob in context.view_layer.objects:
+            ob.select_set(False)
+        for ob, hidden, selected in obj_dict['states']:
+            try:
+                if context.view_layer.objects.get(ob.name) != ob:
+                    continue
+                ob.hide_set(False)
+                ob.select_set(selected)
+                ob.hide_set(hidden)
+            except ReferenceError:
+                continue
+        active = obj_dict['object']
+        try:
+            active = active if active and context.view_layer.objects.get(active.name) == active else None
+        except ReferenceError:
+            active = None
+        context.view_layer.objects.active = active
+        if active and obj_dict['mode'] != 'OBJECT':
+            bpy.ops.object.mode_set(mode=obj_dict['mode'])
     if tools_dict:
-        for setting in tools_dict.keys():
-            setattr(context.tool_settings, setting, tools_dict[setting])
-        
-    
-    if space_dict:   
-        for setting in space_dict.keys():
-            setattr(context.space_data, setting,space_dict[setting])
+        for name, value in tools_dict.items():
+            setattr(context.tool_settings, name, value)
+    if space_dict and context.space_data and context.space_data.type == 'VIEW_3D':
+        for name, value in space_dict.items():
+            setattr(context.space_data, name, value)
 
-    
-    if debug:    
-        print('reconstructed the scene in %f seconds' % (time.time() - start))
-        
-    return None
-    
+
 def get_all_addons(display=False):
     """
     Prints the addon state based on the user preferences.

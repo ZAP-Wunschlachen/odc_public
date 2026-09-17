@@ -464,3 +464,15 @@ the helper. Blender 5.1.2 passes enclosure, unchanged initial geometry, actual
 control-point deformation, repeat invocation without duplicate modifiers/objects,
 and multi-object selection with a non-mesh reference. Degenerate bounding boxes
 and exclusion from the active view layer remain untested.
+
+## Scene state prerequisite for remaining crown tools
+
+The shared scene preservation helpers now use view-layer visibility/selection,
+current tool settings and object mode identifiers. Snap element sets and mesh
+selection arrays are captured independently; deleted objects are tolerated when
+restoring. New objects retain their visibility and are deselected. The headless
+Blender 5.1.2 test verifies edit-mode restoration, selection, hidden objects,
+snapping, pivot and deleted active-object handling. Foreground gizmo restoration,
+custom transform orientations and multi-object edit sessions remain unverified.
+The separate pontic conversion operator still requires its geometry-path port;
+this change only repairs its shared state-management prerequisite.
