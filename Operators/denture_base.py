@@ -217,29 +217,28 @@ class OPENDENTAL_OT_meta_rim_from_curve(bpy.types.Operator):
         crv_data = context.object.data
         if len(crv_data.splines) != 2:
             #TODO, make real error
-            print('ERROR, curve must have 2 splines in one object')
+            self.report({'WARNING'}, 'Curve must contain two splines')
             return {'CANCELLED'}
             
         ob = context.object
         mx = ob.matrix_world
         
-        meta_data = bpy.data.metaballs.new('Meta Wax Rim')
-        meta_obj = bpy.data.objects.new('Meta Surface', meta_data)
-        meta_data.resolution = .8
-        meta_data.render_resolution = .8
-        context.scene.objects.link(meta_obj)
-        
-        me = context.object.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
+        me = bpy.data.meshes.new_from_object(ob.evaluated_get(context.evaluated_depsgraph_get()))
         bme = bmesh.new()
         bme.from_mesh(me)
+        bpy.data.meshes.remove(me)
         bme.verts.ensure_lookup_table()
         bme.edges.ensure_lookup_table()
         
         loops = edge_loops_from_bmedges(bme, [ed.index for ed in bme.edges])
             
         
-        vs0 = [bme.verts[i].co for i in loops[0]]
-        vs1 = [bme.verts[i].co for i in loops[1]]
+        if len(loops) != 2 or any(len(loop) < 3 for loop in loops):
+            bme.free()
+            self.report({'WARNING'}, 'Two paths with at least three points are required')
+            return {'CANCELLED'}
+        vs0 = [bme.verts[i].co.copy() for i in loops[0]]
+        vs1 = [bme.verts[i].co.copy() for i in loops[1]]
         
         vs_even_0, eds0 = space_evenly_on_path(vs0, [(0,1),(1,2)], 60)
         vs_even_1, eds1 = space_evenly_on_path(vs1, [(0,1),(1,2)], 60)
@@ -248,6 +247,17 @@ class OPENDENTAL_OT_meta_rim_from_curve(bpy.types.Operator):
             vs_even_1.reverse()
             
             
+        meta_data = bpy.data.metaballs.new('Meta Wax Rim')
+        name = 'Meta Wax Rim'
+        index = 1
+        while name in bpy.data.objects:
+            name = 'Meta Wax Rim %d' % index
+            index += 1
+        meta_obj = bpy.data.objects.new(name, meta_data)
+        meta_data.resolution = .8
+        meta_data.render_resolution = .8
+        context.collection.objects.link(meta_obj)
+
         for i in range(1,len(vs_even_0)-1):
             
             
@@ -291,18 +301,6 @@ class OPENDENTAL_OT_meta_rim_from_curve(bpy.types.Operator):
             
         meta_obj.matrix_world = mx
         
-        #if self.finalize:
-        #    context.scene.update()
-        #    me = meta_obj.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
-        #    new_ob = bpy.data.objects.new('MetaSurfaceMesh', me)
-        #    context.scene.objects.link(new_ob)
-        #    new_ob.matrix_world = mx
-        #    if meta_obj.data.materials:
-        #        new_ob.data.materials.append(meta_obj.data.materials[0])
-        #        
-        #    context.scene.objects.unlink(meta_obj)
-        #    bpy.data.objects.remove(meta_obj)
-        #    bpy.data.metaballs.remove(meta_data)
         bme.free()
   
         return {'FINISHED'}

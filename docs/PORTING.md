@@ -875,3 +875,9 @@ Ported evaluated mesh extraction, collection linking and Shrinkwrap ABOVE_SURFAC
 Replaced invocation-only target enumeration with retained dynamic enum items from scene meshes, excluding the active object and offering an explicit empty choice. Polling requires a mesh in Object mode; execution validates the target before creating an Exact Difference modifier. Corrected the operator label.
 
 `test_denture_boolean.py` passes on Blender 5.1.2: empty selection cancels without modifier creation; direct execution with a master cast creates a manifold hollow result with signed volume 56 for nested cubes of volumes 64 and 8. Source meshes remain unbaked. Anatomical tray geometry and dialog interaction remain unverified.
+
+### Meta wax rim
+
+Ported evaluated curve mesh extraction and collection linking, releases temporary mesh data, validates two usable edge paths before creating a result, and uses independent metaball family names. Invalid spline counts now produce a user-facing warning. Removed obsolete commented conversion code.
+
+`test_meta_rim.py` passes in Blender 5.1.2 for CUBE and ELLIPSOID elements on two semicircular paths: correct element midpoint and half-height, more than 50 elements, nonempty evaluated surface for both simultaneous results, no temporary mesh accumulation, and no created objects on an invalid empty curve. Degenerate, cyclic, bevelled and intersecting path cases remain unverified.
