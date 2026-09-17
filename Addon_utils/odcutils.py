@@ -667,7 +667,7 @@ def tooth_selection(context):
         
     elif behave_mode == 'ACTIVE':
         #test the active object, if nothing...default to item_list
-        if context.object and context.object.select_get == True:
+        if context.object and context.object.select_get():
             ob = context.object
             tooth = active_odc_item_candidate(sce.odc_teeth, ob,[])
             if tooth:
@@ -676,7 +676,7 @@ def tooth_selection(context):
 
     elif behave_mode == 'ACTIVE_SELECTED':
         #test active object and selected objects
-        if context.object and context.object.select_get == True:
+        if context.object and context.object.select_get():
             #test the active object
             ob = context.object
             tooth = active_odc_item_candidate(sce.odc_teeth, ob,[])
@@ -1067,135 +1067,62 @@ def material_management(context, odc_items, force = False, debug = False):
         print("managed materials in %f" % (time.time()-starttime))
     return
 
-def scene_verification(scene, debug = False):
-    if debug:
-        start = time.time()
-    #remember the props we dont watnt to test
-    exclusion_props = ['','name','log','in_bridge','rest_type','teeth','implants','connectors',"tooth_string","implant_string"]
-    #splint_props = ['']
-    #bridge_props_exclude=['']
-    
-    teeth = scene.odc_teeth
-    imps = scene.odc_implants
-    bridges = scene.odc_bridges
-    splints = scene.odc_splints
-    
-    for collect in [teeth, imps, bridges,splints]:
-        if len(collect):
-            for item in collect:
-                keys = item.keys()
-                if debug > 2:
-                    print(keys)
-                if keys:
-                    values = item.values()
-                    if debug > 2:
-                        print(values)
-                    for n in range(0,len(keys)):
-                        if keys[n] not in exclusion_props and values[n] not in bpy.data.objects:
-                            if debug:
-                                print('cant find %s = %s in blender data, removing prop' % (keys[n], values[n]))
-                            setattr(item, keys[n], '')
-                
-    if debug:
-        print("verified scene in %f seconds" % (start-time.time()))
-    
-    return
-    
-def layer_management(odc_items, debug = False):
-    '''
-    odc_items = Collection of type ToothRestoration...eg context.scene.odc_teeth or one ToothRestoration
-    puts items in different layers to help with organization
-    
-    There are 20 layers in a scene
-    Implant layers will mirror crown/bridge layers +10
-    0. Everything
-    1. preps, restorations
-    11. implants, abutments
-    2. Insertion Axes
-    12. Abutment Axes
-    3.Master Model + Opposing
-    13. Teeth + Bone + etc
-    4. Margins, Bubble, Pmargin, intaglio
-    14. Occlusal Plane, Stent Outline
-    5. Bridge, 
-    15. Bars, 
-    16. Solid restoration
-    
-    
-    Garbage Collection
-    9. Most C&B things...prep, mesial, distals, final restorations
-    19. Most Implant things...imaplnt,all the hardware, etc.
-    10: Guide, Stent, OccGuards,Custon Tray, DentureBase
-    '''
-    #Check for a master model
-    sce = bpy.context.scene
-    if sce.odc_props.master in bpy.data.objects:
-        ob = bpy.data.objects[sce.odc_props.master]
-        ob.layers[0] = True
-        ob.layers[3] = True
-        
-    if sce.odc_props.opposing in bpy.data.objects:
-        ob = bpy.data.objects[sce.odc_props.opposing]
-        ob.layers[0] = True
-        ob.layers[3] = True
-        
-    if sce.odc_props.bone in bpy.data.objects:
-        ob = bpy.data.objects[sce.odc_props.bone]
-        ob.layers[0] = True
-        ob.layers[13] = True 
-        
-    if debug:
-        starttime = time.time()
-    layer_dictionary = {"axis":[0,2],
-                         "mesial":[0,9],
-                         "distal":[0,9],
-                         "prep_model":[0,1,9],
-                         "margin":[0,4],
-                         "pmargin":[0,4],
-                         "bubble":[0,4],
-                         "restoration":[0,1,9],
-                         "contour":[0,1],
-                         "coping":[0,1],
-                         "acoping":[0,1],
-                         "intaglio":[0,4],
-                         "implant":[0,11,19],
-                         "outer":[0,19],
-                         "sleeve":[0,19],
-                         "drill":[0,19],
-                         "inner":[0,9],
-                         "cutout":[0,9],
-                         "bone":[0,13],
-                         "abut_axis":[0,12],
-                         "tissue":[0,11,19],
-                         "splint":[0,10],
-                         "plane":[0,14],
-                         "cut":[0,14],
-                         "refractory":[0,14],
-                         "bridge":[0,5],
-                         "solid":[0,16]}
-                         
-    #here comes the worst if, then, for if, loops logic statement EVER
-    for item in odc_items:
-        keys = item.keys()
-        print(keys)
-        if keys:
-            values = item.values()
-            print(values)
-            for n in range(0,len(keys)):
-                if keys[n] in layer_dictionary.keys():
-                    print(values[n])
-                    ob = bpy.data.objects.get(item.get(keys[n]))
-                    if ob:
-                        odc_layers = layer_dictionary[keys[n]]
-                        for i, L in enumerate(ob.layers):
-                            if i in odc_layers:
-                                ob.layers[i] = True
-                            else:
-                                ob.layers[i] = False
-                    else:
-                        print('couldnt find the object; perhaps scene verify is not working')
-    if debug:
-        print("managed layers in %f" % (time.time()-starttime))
+def scene_verification(scene, debug=False):
+    """Clear missing object references, preserving planning metadata and custom fields."""
+    for name in ("odc_teeth", "odc_implants", "odc_bridges", "odc_splints"):
+        for item in getattr(scene, name, ()):
+            for field in OBJECT_ROLE_COLLECTIONS:
+                value = getattr(item, field, "")
+                if isinstance(value, str) and value and value not in bpy.data.objects:
+                    if debug:
+                        print(f"Missing object for {item.name}.{field}: {value}")
+                    setattr(item, field, "")
+
+# Roles formerly assigned to Blender's twenty scene layers.
+OBJECT_ROLE_COLLECTIONS = {
+    "opposing": "Models", "axis": "Insertion Axes", "mesial": "Adjacent Teeth", "distal": "Adjacent Teeth",
+    "prep_model": "Preparations", "margin": "Margins and Intaglio",
+    "pmargin": "Margins and Intaglio", "bubble": "Margins and Intaglio",
+    "intaglio": "Margins and Intaglio", "restoration": "Restorations",
+    "contour": "Restorations", "coping": "Restorations", "acoping": "Restorations",
+    "implant": "Implants", "tissue": "Implants", "outer": "Implant Hardware",
+    "sleeve": "Implant Hardware", "drill": "Implant Hardware",
+    "inner": "Cutouts", "cutout": "Cutouts", "bone": "Bone",
+    "abut_axis": "Abutment Axes", "splint": "Splints and Guides",
+    "plane": "Construction", "cut": "Construction", "refractory": "Construction",
+    "bridge": "Bridges", "solid": "Solid Restorations",
+}
+
+
+def layer_management(odc_items, debug=False):
+    """Organize referenced objects in scene-local collections without unlinking user data."""
+    scene = bpy.context.scene
+
+    def collection(parent, role):
+        for child in parent.children:
+            if child.get("odc_collection_role") == role:
+                return child
+        child = bpy.data.collections.new("ODC " + role)
+        child["odc_collection_role"] = role
+        parent.children.link(child)
+        return child
+
+    root = collection(scene.collection, "Dental")
+
+    def assign(name, role):
+        obj = bpy.data.objects.get(name) if name else None
+        if obj is not None:
+            target = collection(root, role)
+            if obj.name not in target.objects:
+                target.objects.link(obj)
+
+    for field, role in (("master", "Models"), ("opposing", "Models"), ("bone", "Bone")):
+        assign(getattr(scene.odc_props, field, ""), role)
+    items = [odc_items] if isinstance(odc_items, bpy.types.PropertyGroup) else odc_items
+    for item in items:
+        for field, role in OBJECT_ROLE_COLLECTIONS.items():
+            assign(getattr(item, field, ""), role)
+
 
 def transform_management(item,scene,space_data,val="axis"):
     '''

@@ -534,9 +534,19 @@ class CBGetCrownForm(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     bl_property = "ob_list"
 
+    _library_items = []
+
     def item_cb(self, context):
-        return [(obj.name, obj.name, '') for obj in self.objs]
-   
+        # Retain enum strings for Blender and support execution without a popup.
+        names = [obj.name for obj in self.objs]
+        if not names:
+            try:
+                names = odcutils.obj_list_from_lib(get_settings().tooth_lib, exclude='_')
+            except (OSError, RuntimeError):
+                names = []
+        CBGetCrownForm._library_items = [(name, name, '') for name in names]
+        return CBGetCrownForm._library_items
+
     objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     ob_list: bpy.props.EnumProperty(name="Tooth Library Objects", description="A List of the tooth library", items=item_cb)
         
@@ -568,23 +578,22 @@ class CBGetCrownForm(bpy.types.Operator):
                 self.report({'WARNING'},"I'm not sure which tooth you want, guessing based on active tooth in list")
                 tooth = sce.odc_teeth[sce.odc_tooth_index]
         
-            if tooth.restoration and tooth.restoration in bpy.data.objects:
-                old_ob = bpy.data.objects[tooth.restoration]
-                old_ob.name = 'To Delete'
-                context.scene.objects.unlink(old_ob)
-                old_ob.user_clear()
-                bpy.data.objects.remove(old_ob)
-        
-        if tooth == None:
-            self.report({'WARNING'},"No planned teeth, inserting object anyway")
-                
-        odcutils.obj_from_lib(settings.tooth_lib,self.ob_list)
-        
-        ob = bpy.data.objects[self.ob_list]
-        sce.objects.link(ob)
-        ob.location = sce.cursor_location
-        
-        
+        if tooth is None:
+            self.report({'WARNING'}, "No planned teeth, inserting object anyway")
+
+        try:
+            ob = odcutils.obj_from_lib(settings.tooth_lib, self.ob_list)
+        except (OSError, RuntimeError, ValueError) as error:
+            self.report({'WARNING'}, str(error))
+            return {'CANCELLED'}
+        sce.collection.objects.link(ob)
+        ob.location = sce.cursor.location
+        # Do not discard the previous restoration until its replacement loaded.
+        if tooth is not None and tooth.restoration:
+            old_ob = bpy.data.objects.get(tooth.restoration)
+            if old_ob is not None:
+                bpy.data.objects.remove(old_ob, do_unlink=True)
+
         if tooth != None:
             
             ob.name = tooth.name + "_FullContour"
@@ -592,11 +601,11 @@ class CBGetCrownForm(bpy.types.Operator):
             ob.rotation_mode = 'QUATERNION'
         
             #align with the insertion axis
-            axis = tooth.axis
-            if not axis:
+            axis = sce.objects.get(tooth.axis) if tooth.axis else None
+            if axis is None:
                 self.report({'WARNING'}, "No insertion axis set, can't align tooth properly, may cause problem later!")
             else:
-                rot = sce.objects[axis].rotation_quaternion #matrix_world.to_quaterion() ?  Perhaps so
+                rot = axis.matrix_world.to_quaternion()
                 ob.rotation_quaternion = rot
         
         

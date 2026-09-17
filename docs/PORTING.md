@@ -34,6 +34,22 @@ release. Loading successfully is only the first verification gate.
 - These helper checks do not yet verify their crown/implant callers. Those still
   need migration from name-based lookup and legacy scene APIs.
 
+## Crown import and organization verified
+
+The normal crown import operator loads bundled tooth 25 at the cursor, applies
+its insertion-axis world rotation and replaces the previous restoration without
+mistaking an existing object named like the library asset for the imported tooth.
+Planning references and collection membership survive a saved-file round trip.
+Legacy layer organization now creates scene-local ODC role collections, supports
+individual planning items and is idempotent without unlinking user collections.
+Scene verification clears known missing object references while preserving notes,
+restoration types and custom metadata. Active-object selection now calls
+`select_get()` instead of comparing the method itself to a boolean.
+
+This does not yet validate pontic closure, crown adaptation or manufacturing.
+Remaining direct legacy layer accesses elsewhere still need migration; role
+collections alone do not replace those visibility workflows.
+
 ## Implemented, not yet verified visually
 
 A package-local GPU adapter replaces legacy immediate-mode drawing. Image
@@ -60,6 +76,7 @@ Run from this repository with Blender 5.1:
 blender --background --factory-startup --python-exit-code 1 --python tests/test_registration.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_model_workflows.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_library_helpers.py
+blender --background --factory-startup --python-exit-code 1 --python tests/test_crown_import.py
 ```
 
 Tests use synthetic geometry. The port tests do not validate a patient-specific
