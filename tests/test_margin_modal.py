@@ -1,4 +1,4 @@
-"""Real window events exercise insertion-axis invoke, placement, cancel and finish."""
+"""Real window events exercise margin cancellation and closed-contour acceptance."""
 import sys
 import os
 import traceback
@@ -11,9 +11,10 @@ sys.path.insert(0, str(ROOT.parent))
 phase = 0
 window = area = region = None
 
-def send(kind):
-    window.event_simulate(type=kind, value='PRESS', x=region.x+region.width//2, y=region.y+region.height//2)
-    window.event_simulate(type=kind, value='RELEASE', x=region.x+region.width//2, y=region.y+region.height//2)
+def send(kind, dx=0, dy=0):
+    window.event_simulate(type='MOUSEMOVE', value='NOTHING', x=region.x+region.width//2+dx, y=region.y+region.height//2+dy)
+    window.event_simulate(type=kind, value='PRESS', x=region.x+region.width//2+dx, y=region.y+region.height//2+dy)
+    window.event_simulate(type=kind, value='RELEASE', x=region.x+region.width//2+dx, y=region.y+region.height//2+dy)
 
 def running():
     return any(op.bl_idname == 'OPENDENTAL_OT_mark_crown_margin' for op in window.modal_operators)
@@ -35,6 +36,8 @@ def run():
             with bpy.context.temp_override(window=window, area=area, region=region):
                 area.spaces.active.region_3d.view_rotation = Quaternion((1,0,0,0))
                 area.spaces.active.region_3d.view_location = (0,0,0)
+                area.spaces.active.region_3d.view_distance = 6
+                area.spaces.active.region_3d.view_perspective = 'ORTHO'
                 assert bpy.ops.opendental.mark_crown_margin('INVOKE_DEFAULT') == {'RUNNING_MODAL'}
             assert running()
             send('LEFTMOUSE')
@@ -53,6 +56,18 @@ def run():
             assert bpy.context.scene.odc_teeth[0].margin
             send('RET')
         elif phase == 4:
+            assert running(), 'Incomplete margin was accepted'
+            send('LEFTMOUSE', 70, 0)
+        elif phase == 5:
+            send('LEFTMOUSE', 70, 70)
+        elif phase == 6:
+            send('LEFTMOUSE', 0, 0)
+        elif phase == 7:
+            curve = bpy.data.objects[bpy.context.scene.odc_teeth[0].margin]
+            assert len(curve.data.splines[0].bezier_points) == 3
+            assert curve.data.splines[0].use_cyclic_u
+            send('RET')
+        elif phase == 8:
             assert not running(), 'Finish left modal handler active'
             assert bpy.context.scene.odc_teeth[0].margin in bpy.data.objects
             print('ODC_MARGIN_MODAL_PASSED', flush=True)

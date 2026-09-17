@@ -250,6 +250,8 @@ world coordinates. Full margin-marking modal dispatch remains pending.
 place a point, cancel, restart and finish. Cancellation restores the previous
 margin reference; exit restores object visibility and frees the slicer's BMesh.
 The drawing log is clean after removing an invalid GL_POINTS capability disable.
-This is only a lifecycle check: it currently finishes a single-point outline.
-Closed-loop validation, multi-point editing and slice interaction still need
-implementation/verification before this workflow is complete.
+The extended test now rejects an incomplete outline, adds three points, closes the
+contour by clicking the first point and confirms it through the real event queue.
+The operator requires at least three points and a cyclic curve before acceptance.
+The help text now correctly identifies the first point as the closure target.
+Slice interaction and more complex point editing still need verification.

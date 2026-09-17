@@ -963,6 +963,9 @@ class OPENDENTAL_OT_mark_crown_margin(bpy.types.Operator):
             return 'slice'
             
         if event.type == 'RET' and event.value == 'PRESS':
+            if len(self.crv.b_pts) < 3 or not self.crv.crv_data.splines[0].use_cyclic_u:
+                self.report({'WARNING'}, 'Close the margin by clicking its first point before confirming')
+                return 'main'
             return 'finish'
             
         elif event.type == 'ESC' and event.value == 'PRESS':
@@ -1087,7 +1090,7 @@ class OPENDENTAL_OT_mark_crown_margin(bpy.types.Operator):
         
         tooth.margin = self.crv.crv_obj.name
         
-        help_txt = "DRAW MARGIN OUTLINE\n\nLeft Click on model to draw outline \nRight click to delete a point \nLeft Click last point to make loop \n G to grab  \n S to show slice \n ENTER to confirm \n ESC to cancel"
+        help_txt = "DRAW MARGIN OUTLINE\n\nLeft Click on model to draw outline \nRight click to delete a point \nLeft Click first point to close loop \n G to grab  \n S to show slice \n ENTER to confirm \n ESC to cancel"
         self.help_box = TextBox(context,500,500,300,200,10,20,help_txt)
         self.help_box.snap_to_corner(context, corner = [1,1])
         self.mode = 'main'
