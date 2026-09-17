@@ -1592,9 +1592,9 @@ def vert_group_inds_get(context, ob, vgroup, debug = False):
         bpy.ops.object.mode_set(mode='OBJECT')
     
     bpy.ops.object.select_all(action='DESELECT')
-    ob.select = True
-    ob.hide = False
-    context.scene.objects.active = ob
+    ob.select_set(True)
+    ob.hide_set(False)
+    context.view_layer.objects.active = ob
     
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='DESELECT')
@@ -1604,7 +1604,7 @@ def vert_group_inds_get(context, ob, vgroup, debug = False):
     inds = [v.index for v in ob.data.vertices if v.select]
     
     if debug:
-        print('got vgroup indices in %f seconds' % time.time() - start)
+        print('got vgroup indices in %f seconds' % (time.time() - start))
     return inds
 
     #do the scene reconstruct thing

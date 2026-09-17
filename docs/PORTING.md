@@ -823,3 +823,9 @@ neighbor navigation and Escape rollback remain outstanding.
 The interactive connector now edits a private mesh copy. Escape restores the original mesh datablock and removes the working copy; Enter commits and removes the unused original. Shared original meshes remain intact. Invocation is restricted to Object mode, and the help text now documents the actual Space/Enter/Escape controls.
 
 Validation: `tests/test_bridge_modal.py` passed in a Blender 5.1.2 window with simulated events: invalid single-unit input cancels, Space creates geometry, Escape restores original mesh identity and coordinates with stable mesh count, and a fresh session commits with Enter and stable mesh count. This does not yet verify all bridge navigation or repeated connector selections.
+
+### Teeth along an arch curve
+
+Ported `teeth_to_curve` object activation, visibility, collection linking, dependency updates, matrix/quaternion products, and library object identity handling. Replacement removes mesh data only when unused, and newly created Follow Path constraints are addressed directly. Updated the shared vertex-group selection helper to current object APIs.
+
+Validation: `test_teeth_to_curve.py` passes on Blender 5.1.2 using the bundled 14 upper-arch teeth across COM, BUCCAL and FOSSA alignment, including repeated replacement. Checks cover finite transforms, nonzero dimensions, one path constraint per tooth, and spatial distribution. Anatomical orientation, exact curve placement, lower arches, mirroring, linked restorations and the public modal workflow remain unverified. Blender reports a small shutdown allocation warning (32 blocks).

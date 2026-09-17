@@ -94,9 +94,9 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
     orig_arch_name = arch.name
     
     bpy.ops.object.select_all(action='DESELECT')
-    context.scene.objects.active = arch
-    arch.hide = False
-    arch.select = True
+    context.view_layer.objects.active = arch
+    arch.hide_set(False)
+    arch.select_set(True)
     
     if mirror:
         #This should help with the mirroring?
@@ -134,12 +134,12 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
     for i in range(0,len(arch_mesh.data.vertices)-1):
         v0 = arch_mesh.data.vertices[i]
         v1 = arch_mesh.data.vertices[i+1]
-        V0 = mx*v1.co - mx*v0.co
+        V0 = mx @ v1.co - mx @ v0.co
         arch_len += V0.length
     
         if i < len(arch_mesh.data.vertices)-2:
             v2 = arch_mesh.data.vertices[i+2]
-            V1 = mx*v2.co - mx*v1.co
+            V1 = mx @ v2.co - mx @ v1.co
             
             occ_dir += V0.cross(V1)
     
@@ -167,7 +167,7 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
     bpy.ops.object.delete()
     
     if reorient:
-        arch_z = mx.to_quaternion() * Vector((0,0,1))
+        arch_z = mx.to_quaternion() @ Vector((0,0,1))
         arch_z.normalize()
         if math.pow(arch_z.dot(occ_dir),2) < .9:
             orient = odcutils.rot_between_vecs(Vector((0,0,1)), occ_dir) #align the local Z of bezier with occlusal direction (which is global).
@@ -209,14 +209,13 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
                         if new_name in bpy.data.objects:   
                             ob = bpy.data.objects[new_name]
                             me = ob.data
-                            ob.user_clear()
-                            bpy.data.objects.remove(ob)
-                            bpy.data.meshes.remove(me)
-                            context.scene.update()
+                            bpy.data.objects.remove(ob, do_unlink=True)
+                            if me.users == 0:
+                                bpy.data.meshes.remove(me)
+                            context.view_layer.update()
                            
-                        odcutils.obj_from_lib(tooth_library, tooth)
-                        ob = bpy.data.objects[tooth]
-                        context.scene.objects.link(ob)
+                        ob = odcutils.obj_from_lib(tooth_library, tooth)
+                        context.collection.objects.link(ob)
                         ob.name = new_name
                         tooth_objects[i] = ob
                         tooth_in_scene[0].contour = ob.name
@@ -228,25 +227,26 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
                     if new_name in bpy.data.objects:   
                         ob = bpy.data.objects[new_name]
                         me = ob.data
-                        ob.user_clear()
-                        bpy.data.objects.remove(ob)
-                        bpy.data.meshes.remove(me)
-                        context.scene.update()
+                        bpy.data.objects.remove(ob, do_unlink=True)
+                        if me.users == 0:
+                            bpy.data.meshes.remove(me)
+                        context.view_layer.update()
                         
-                    odcutils.obj_from_lib(tooth_library, tooth)
-                    ob = bpy.data.objects[tooth]
+                    ob = odcutils.obj_from_lib(tooth_library, tooth)
                     ob.name += "_ArchPlanned"
                     if limit:
-                        context.scene.objects.link(ob)
+                        context.collection.objects.link(ob)
                         delete_later.append(ob)    
                     else:
-                        context.scene.objects.link(ob)
+                        context.collection.objects.link(ob)
                         
                     tooth_objects[i]= ob
                     break  
     if debug:
         print(tooth_objects)
     
+    context.view_layer.update()
+
     #secretly, we imported the whole quadrant..we will delete them later
     teeth_len = 0
     lengths = [[0]] * len(curve_teeth) #list of tooth mesial/distal lengths
@@ -291,12 +291,11 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
         #center line...we want palatinal face median point z,y with midpointx and center line min local z
         #buccal line...we want incisal edge median local y, maxlocal z, midpoing bbox x and buccal cusp max z?
 
-        context.scene.objects.active = ob
-        ob.select = True
-        ob.hide = False
+        context.view_layer.objects.active = ob
+        ob.select_set(True)
+        ob.hide_set(False)
 
-        ob.constraints.new('FOLLOW_PATH')
-        path_constraint = ob.constraints["Follow Path"]
+        path_constraint = ob.constraints.new('FOLLOW_PATH')
         path_constraint.target = arch
         path_constraint.use_curve_follow = True
         #find out if we cross the midline
@@ -318,14 +317,14 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
     #quaternion rotation rules
     # Qtotal = Qa * Qb represtnts rotation b followed by rotation a
     #what we are doing is testing the occlusal direction of one tooth vs the arch occlusal direction
-    context.scene.update()
+    context.view_layer.update()
     ob_dist = tooth_objects[1]
     ob_mes = tooth_objects[0]
     mesial = int(curve_teeth[1]) - int(curve_teeth[0]) == 1 #if true....distal numbers > mesial numbers
-    vect = ob_mes.matrix_world * ob_mes.location - ob_dist.matrix_world * ob_dist.location
-    spin = (vect.dot(ob_dist.matrix_world.to_quaternion() * Vector((1,0,0))) < 0) == mesial
+    vect = ob_mes.matrix_world.translation - ob_dist.matrix_world.translation
+    spin = (vect.dot(ob_dist.matrix_world.to_quaternion() @ Vector((1,0,0))) < 0) == mesial
 
-    tooth_occ = ob_mes.matrix_world.to_quaternion() * Vector((0,0,1))
+    tooth_occ = ob_mes.matrix_world.to_quaternion() @ Vector((0,0,1))
     flip = tooth_occ.dot(occ_dir) > 0
         
     if debug:
@@ -335,7 +334,7 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
         if flip:
             ob.rotation_quaternion = Quaternion((0,1,0,0))
         if spin:
-            ob.rotation_quaternion = Quaternion((0,0,0,1)) * ob.rotation_quaternion 
+            ob.rotation_quaternion = Quaternion((0,0,0,1)) @ ob.rotation_quaternion
  
     for i, ob in enumerate(tooth_objects):
                     
@@ -392,9 +391,9 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
     if limit:
         bpy.ops.object.select_all(action='DESELECT')        
         for ob in delete_later:
-            ob.select = True
+            ob.select_set(True)
             
-        context.scene.objects.active = ob
+        context.view_layer.objects.active = ob
         bpy.ops.object.delete()        
 
 def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = False, flip = False, reorient = True):
