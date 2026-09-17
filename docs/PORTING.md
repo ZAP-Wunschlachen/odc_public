@@ -407,3 +407,14 @@ faces and finite evaluated coordinates. It passes. This does not yet establish
 measured clearance or failure rollback. Blender still reports a small allocation
 at shutdown, consistent with the separately documented asset/edit-mode diagnostic;
 this run is not evidence of leak-free operation.
+
+## Cervical convergence
+
+The operator now uses current visibility, selection, active-object and quaternion
+APIs and no longer accesses removed scene layers. The ring-orientation condition
+now recognizes either ordering of an existing vertical edge. The integration test
+runs two requested angles on bundled tooth 25 and independently checks adjacent
+boundary edges: angle to the insertion axis, preserved length and unchanged
+boundary coordinates. Blender 5.1.2 passes. Nonuniform scaling, malformed boundary
+loops and alternate crown topology remain unverified. The known small shutdown
+allocation warning also appears in this edit-mode workflow.

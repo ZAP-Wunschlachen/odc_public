@@ -756,9 +756,9 @@ def cervical_convergence_improved(context, tooth, angle, selected = False, debug
     matrix1 = Restoration.matrix_world
     
     bpy.ops.object.select_all(action='DESELECT')
-    Restoration.hide = False
-    Restoration.select = True
-    sce.objects.active = Restoration
+    Restoration.hide_set(False)
+    Restoration.select_set(True)
+    context.view_layer.objects.active = Restoration
     
     #find the margin.
     bpy.ops.object.mode_set(mode = 'EDIT')
@@ -845,7 +845,7 @@ def cervical_convergence_improved(context, tooth, angle, selected = False, debug
             test_edge_key = margin_vert_loop[indx_1 -1], ring_vert_loop[indx_2-1]
             test_edge_key1 = test_edge_key[1], test_edge_key[0]  #possible that (a,b) isnt in the list but (b,a) is
             
-            if not (test_edge_key in vertical_edge_set) or (test_edge_key1 in vertical_edge_set):
+            if test_edge_key not in vertical_edge_set and test_edge_key1 not in vertical_edge_set:
                 ring_vert_loop.reverse()
                 indx_2 = ring_vert_loop.index(list(vert2)[0]) #need to find the new index...we could do math...but why
             
@@ -865,8 +865,8 @@ def cervical_convergence_improved(context, tooth, angle, selected = False, debug
     
     ### iterate thourhg and translate the top vertex of each vertical edge
     ### to make the proper angle of cervical convergence.
-    insertion_z = Axis.matrix_world.to_quaternion() * Vector((0,0,1))
-    local_z = matrix1.to_quaternion().inverted() * insertion_z
+    insertion_z = Axis.matrix_world.to_quaternion() @ Vector((0,0,1))
+    local_z = matrix1.to_quaternion().inverted() @ insertion_z
     local_z.normalize()
     me = Restoration.data
     
@@ -905,7 +905,7 @@ def cervical_convergence_improved(context, tooth, angle, selected = False, debug
         quat = Quaternion((cos, sin*axis[0], sin*axis[1], sin*axis[2]))
         quat.normalize()
         vec = edge_v.length * local_z
-        me.vertices[tp].co = v1 + quat * vec
+        me.vertices[tp].co = v1 + quat @ vec
         
         #print('translating' + str(trans))
         context.tool_settings.mesh_select_mode = [True, False, False]

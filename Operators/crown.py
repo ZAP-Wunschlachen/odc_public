@@ -787,15 +787,10 @@ class OPENDENTAL_OT_crown_cervical_convergence(bpy.types.Operator):
         dbg = settings.debug
         tooth = odcutils.tooth_selection(context)[0]
         
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
         angle = self.ang
         crown_methods.cervical_convergence_improved(context, tooth, angle, selected = False, debug = dbg)
         
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
         odcutils.layer_management(context.scene.odc_teeth, debug = False)
-        context.scene.layers[1] = True
         return{'FINISHED'}
         
     def draw(self, context):
