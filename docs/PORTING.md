@@ -476,3 +476,13 @@ snapping, pivot and deleted active-object handling. Foreground gizmo restoration
 custom transform orientations and multi-object edit sessions remain unverified.
 The separate pontic conversion operator still requires its geometry-path port;
 this change only repairs its shared state-management prerequisite.
+
+## Public pontic conversion
+
+The separate pontic conversion path now uses current selection, visibility,
+active-object, cursor, display, pivot and matrix APIs. The public operator test
+runs OVATE, TISSUE and PRESCULPT on fresh bundled tooth-25 crowns. Blender 5.1.2
+passes finite evaluated geometry, manifold edges, nonzero volume, tissue group,
+variant target/offset configuration and active-object restoration checks.
+Measured tissue clearance, repeated conversion of the same crown and rotated-axis
+behavior remain unverified. The known small allocation warning appears at shutdown.

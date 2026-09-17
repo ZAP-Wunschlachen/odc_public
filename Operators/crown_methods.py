@@ -31,9 +31,9 @@ def pontificate(context, tooth, shell, p_type, offset):
     
     bpy.ops.object.mode_set(mode= 'OBJECT')
     bpy.ops.object.select_all(action = 'DESELECT')
-    shell.select = True
-    shell.hide = False
-    context.scene.objects.active = shell
+    shell.hide_set(False)
+    shell.select_set(True)
+    context.view_layer.objects.active = shell
     context.tool_settings.mesh_select_mode = [False, True, True]
     bpy.ops.object.mode_set(mode = 'EDIT')
     bpy.ops.mesh.select_all(action='DESELECT')
@@ -68,14 +68,14 @@ def pontificate(context, tooth, shell, p_type, offset):
     
         #get dimensions of loop (x,y)
     
-        xs = [(mx*me.vertices[i].co)[0] for i in sel_verts]
-        ys = [(mx*me.vertices[i].co)[1] for i in sel_verts]
+        xs = [(mx @ me.vertices[i].co)[0] for i in sel_verts]
+        ys = [(mx @ me.vertices[i].co)[1] for i in sel_verts]
         scale_x = (max(xs) - min(xs))/1.5
         scale_y = (max(ys) - min(ys))/1.5
     
         #add a sphere at COP
-        context.scene.cursor_location = COM
-        ov_loc = mx.inverted() * (COM + Vector((0,0,3)))
+        context.scene.cursor.location = COM
+        ov_loc = mx.inverted() @ (COM + Vector((0,0,3)))
     
         current_objects=list(bpy.data.objects)                
         bpy.ops.mesh.primitive_uv_sphere_add(location = tuple(COM + Vector((0,0,3))))
@@ -84,22 +84,17 @@ def pontificate(context, tooth, shell, p_type, offset):
                 #o.parent= Master #conside Master..but then you have to move them both #actually, dependency loop....sphere parent = pontic but pontic shrinkwrapped to sphere...problem.
                 o.name = tooth.name + '_ovate'        
                 Ovate = o
-                Ovate.draw_type = 'WIRE'
+                Ovate.display_type = 'WIRE'
             
-        #pivot point at median point
-        for A in bpy.context.window.screen.areas:
-            if A.type == 'VIEW_3D':
-                for s in A.spaces:
-                    if s.type == 'VIEW_3D':
-                        s.pivot_point = 'MEDIAN_POINT'
+        context.tool_settings.transform_pivot_point = 'MEDIAN_POINT'
         #scale X
         scale_z = min([scale_x, scale_y])
         bpy.ops.transform.resize(value = (scale_x, scale_y, scale_z))
 
         #make pontic active and selected again
         bpy.ops.object.select_all(action = 'DESELECT')
-        shell.select = True
-        context.scene.objects.active = shell
+        shell.select_set(True)
+        context.view_layer.objects.active = shell
     
         #shrinkwarp filled hole to this oval
         n=len(shell.modifiers)    
