@@ -716,3 +716,13 @@ two meshes in Object mode. Blender 5.1.2 passes both DEFORM and SLICE with Apply
 checking separated baked vertices, no remaining operation modifiers, unchanged
 object count and restored active object. Mixed pre-existing modifier stacks and
 partial application failure cleanup remain unverified.
+
+## Boolean bridge integration
+
+Boolean bridge mesh evaluation now uses dependency-graph objects and persistent
+`new_from_object` meshes. Current collection linking/removal replaces old APIs,
+and superseded temporary meshes are removed when unused. Blender 5.1.2 passes
+left-only, right-only and midline-spanning fixtures with overlapping cubes,
+verifying manifold edges and the analytic union volume of 12. Anatomical open
+crowns, repeated-build replacement, missing input handling and final restoration
+assembly remain unverified.

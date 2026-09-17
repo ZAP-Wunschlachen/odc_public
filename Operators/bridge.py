@@ -81,7 +81,7 @@ class OPENDENTAL_OT_bridge_boolean(bpy.types.Operator):
     bl_idname='opendental.bridge_boolean'
     bl_label="Boolean Bridge"
     bl_options = {'REGISTER','UNDO'}
-    
+
     @classmethod
     def poll(cls, context):
         #restoration exists and is in scene
@@ -97,11 +97,14 @@ class OPENDENTAL_OT_bridge_boolean(bpy.types.Operator):
         settings = get_settings()
         dbg = settings.debug
         odc_bridge = bridge_methods.active_spanning_restoration(context)[0]
-        
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True        
+
+        def evaluated_mesh(obj):
+            context.view_layer.update()
+            depsgraph = context.evaluated_depsgraph_get()
+            return bpy.data.meshes.new_from_object(obj.evaluated_get(depsgraph), depsgraph=depsgraph)
+
         bridge_teeth = [context.scene.odc_teeth[name] for name in odc_bridge.tooth_string.split(sep=":")]
-        
+
         contour_obs = [bpy.data.objects.get(tooth.contour) for tooth in bridge_teeth]
         if None in contour_obs:
             bad_unit = contour_obs.index(None)
@@ -124,14 +127,14 @@ class OPENDENTAL_OT_bridge_boolean(bpy.types.Operator):
         print([tooth.name for tooth in sorted(left_teeth, key = get_key, reverse = True)])
         if len(left_teeth):
             left_teeth_sorted = [tooth for tooth in sorted(left_teeth, key = get_key, reverse = True)]
-            left_contours = [bpy.data.objects.get(tooth.contour) for tooth in left_teeth_sorted]    
+            left_contours = [bpy.data.objects.get(tooth.contour) for tooth in left_teeth_sorted]
             left_base_ob = left_contours[0]
             print(left_base_ob.name)
-            left_bridge_me = left_base_ob.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
+            left_bridge_me = evaluated_mesh(left_base_ob)
             left_bridge_ob = bpy.data.objects.new(odc_bridge.name, left_bridge_me)
             left_bridge_ob.matrix_world = left_base_ob.matrix_world
-            context.scene.objects.link(left_bridge_ob)
-            
+            context.collection.objects.link(left_bridge_ob)
+
             print(left_bridge_ob.name)
             for i in range(1, len(left_contours)):
                 print('adding boolean modifier')
@@ -139,57 +142,67 @@ class OPENDENTAL_OT_bridge_boolean(bpy.types.Operator):
                 mod.operation = 'UNION'
                 mod.object = left_contours[i]
                 print(left_contours[i].name)
-            
-            left_final_me = left_bridge_ob.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
+
+            left_final_me = evaluated_mesh(left_bridge_ob)
             mods = [mod for mod in left_bridge_ob.modifiers]
             for mod in mods:
                 left_bridge_ob.modifiers.remove(mod)
-            
+
+            old_mesh = left_bridge_ob.data
             left_bridge_ob.data = left_final_me
+            if old_mesh.users == 0:
+                bpy.data.meshes.remove(old_mesh)
             odc_bridge.bridge = left_bridge_ob.name
-            
+
         if len(right_teeth):
             right_teeth_sorted = [tooth for tooth in sorted(right_teeth, key = get_key, reverse = True)]
-            right_contours = [bpy.data.objects.get(tooth.contour) for tooth in right_teeth_sorted]    
+            right_contours = [bpy.data.objects.get(tooth.contour) for tooth in right_teeth_sorted]
             right_base_ob = right_contours[0]
-            right_bridge_me = right_base_ob.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
+            right_bridge_me = evaluated_mesh(right_base_ob)
             right_bridge_ob = bpy.data.objects.new(odc_bridge.name, right_bridge_me)
             right_bridge_ob.matrix_world = right_base_ob.matrix_world
-            context.scene.objects.link(right_bridge_ob)
-            
+            context.collection.objects.link(right_bridge_ob)
+
             for i in range(1, len(right_contours)):
                 mod = right_bridge_ob.modifiers.new(str(i), 'BOOLEAN')
                 mod.operation = 'UNION'
                 mod.object = right_contours[i]
-            
-            right_final_me = right_bridge_ob.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
+
+            right_final_me = evaluated_mesh(right_bridge_ob)
             mods = [mod for mod in right_bridge_ob.modifiers]
             for mod in mods:
                 right_bridge_ob.modifiers.remove(mod)
-            
+
+            old_mesh = right_bridge_ob.data
             right_bridge_ob.data = right_final_me
+            if old_mesh.users == 0:
+                bpy.data.meshes.remove(old_mesh)
             odc_bridge.bridge = right_bridge_ob.name
-            
+
         if len(left_teeth) and len(right_teeth):
             mod = left_bridge_ob.modifiers.new('Midline', 'BOOLEAN')
             mod.operation = 'UNION'
             mod.object = right_bridge_ob
-            
+
             left_bridge_ob.update_tag()
-            context.scene.update()
-            
-            final_me = left_bridge_ob.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
+            context.view_layer.update()
+
+            final_me = evaluated_mesh(left_bridge_ob)
             mods = [mod for mod in left_bridge_ob.modifiers]
             for mod in mods:
                 left_bridge_ob.modifiers.remove(mod)
-            
+
+            old_mesh = left_bridge_ob.data
             left_bridge_ob.data = final_me
-            context.scene.objects.unlink(right_bridge_ob)
-            bpy.data.objects.remove(right_bridge_ob)
-            bpy.data.meshes.remove(right_bridge_me)
-        
+            if old_mesh.users == 0:
+                bpy.data.meshes.remove(old_mesh)
+            right_data = right_bridge_ob.data
+            bpy.data.objects.remove(right_bridge_ob, do_unlink=True)
+            if right_data.users == 0:
+                bpy.data.meshes.remove(right_data)
+
             odc_bridge.bridge = left_bridge_ob.name
-        return {'FINISHED'} 
+        return {'FINISHED'}
 
 class OPENDENTAL_OT_solid_bridge(bpy.types.Operator):
     ''''''
