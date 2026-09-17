@@ -353,3 +353,12 @@ The intaglio fixture now invokes the registered Calculate Intaglio operator with
 object references are checked before generation. The test also verifies missing
 axis cancellation preserves the existing interior. The alternate
 `no_undercuts=False` implementation remains unported and is not validated here.
+
+## Cement-gap geometry measurement
+
+The intaglio test now measures every fully weighted Filled Zone vertex on the
+evaluated interior against the triangulated, unscaled preparation sphere. At
+0.07 model units it measures 0.0696106–0.0699998; at 0.12 it measures
+0.119333–0.120000. The test requires maximum error below 0.001 model units and
+checks both settings. This tests distance magnitude on the synthetic sphere, not
+signed clearance, scaled-object compensation, transition width or clinical fit.
