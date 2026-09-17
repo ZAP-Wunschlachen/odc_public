@@ -541,3 +541,12 @@ quaternion multiplication. The shared cylinder primitive uses the current BMesh
 object count. Projection-group membership (currently based on vertex parity),
 world positioning, automatic diameter and outer-cylinder generation still require
 additional tests and review.
+
+## Inner-cylinder geometric follow-up
+
+The expanded Blender 5.1.2 test confirms that the current cone primitive's odd
+indices select exactly the complete upper cap, so no corrective group change was
+necessary. It also verifies world translation and orientation against the existing
+implant-relative offset formula, plus automatic diameter and stable object count.
+These checks pass for the rotated/translated unit-scale fixture. They do not
+establish anatomical apex conventions or behavior under scaled/parented implants.
