@@ -512,21 +512,43 @@ class OPENDENTAL_OT_BreakContact(bpy.types.Operator):
         cond_1 = context.object
         cond_2 = len(context.selected_objects) == 2
         
-        return cond_1 and cond_2
+        return cond_1 and cond_2 and context.mode == 'OBJECT' and all(obj.type == 'MESH' for obj in context.selected_objects)
     
     def execute(self, context):
         #dbg = context.user_preferences.addons['odc'].preferences.debug
         ob1 = context.selected_objects[0]
         ob2 = context.selected_objects[1]
-        print(ob1)
-        print(ob2)
-        print('did we make it this far?')
+        active = context.view_layer.objects.active
+        previous_objects = set(bpy.data.objects)
+        previous_modifiers = {obj: set(obj.modifiers) for obj in (ob1, ob2)}
         if self.method == '0':
             bridge_methods.break_contact_deform(context, ob1, ob2, debug = 1, separation=self.sep)
         elif self.method == '1':
             bridge_methods.break_contact_slice(context, ob1, ob2, self.sep, debug = 1)
         
         
+        if self.apply:
+            context.view_layer.update()
+            for obj in (ob1, ob2):
+                context.view_layer.objects.active = obj
+                for modifier in list(obj.modifiers):
+                    if modifier not in previous_modifiers[obj]:
+                        bpy.ops.object.modifier_apply(modifier=modifier.name)
+            # Only this operation's temporary controls and separator are owned here.
+            created = set(bpy.data.objects) - previous_objects
+            for obj in sorted(created, key=lambda item: item.type != 'LATTICE'):
+                users = bpy.data.user_map(subset={obj}).get(obj, set())
+                if any(not isinstance(user, (bpy.types.Collection, bpy.types.Scene)) for user in users):
+                    continue
+                data = obj.data
+                kind = obj.type
+                bpy.data.objects.remove(obj, do_unlink=True)
+                if data is not None and data.users == 0:
+                    if kind == 'LATTICE':
+                        bpy.data.lattices.remove(data)
+                    elif kind == 'MESH':
+                        bpy.data.meshes.remove(data)
+            context.view_layer.objects.active = active
         return {'FINISHED'}
 
 class OPENDENTAL_OT_keep_shape(bpy.types.Operator):

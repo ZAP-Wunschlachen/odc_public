@@ -707,3 +707,12 @@ at approximately -0.07167/+0.07167 for separation=0.2. This is a soft deformatio
 not an exact-clearance operation. The test verifies separated bodies and lattice
 modifiers; anatomical meshes, overshoot, Apply and repeated invocation remain
 unverified. The slice path remains the measured per-side-clearance test.
+
+## Break Contact Apply option
+
+The previously ignored Apply option now bakes only modifiers created by the current
+contact operation and removes its unused controls/separator. The operator polls for
+two meshes in Object mode. Blender 5.1.2 passes both DEFORM and SLICE with Apply,
+checking separated baked vertices, no remaining operation modifiers, unchanged
+object count and restored active object. Mixed pre-existing modifier stacks and
+partial application failure cleanup remain unverified.
