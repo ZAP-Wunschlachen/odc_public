@@ -455,3 +455,12 @@ On Blender 5.1.2, all 26 cases passed after the merge-method port; seven cases
 reported the known shutdown allocation warning. This verifies existing test
 coverage only. It does not establish compatibility of the entire operator
 inventory; unported functions and untested UI paths remain outstanding.
+
+## Crown lattice operator
+
+The Crown Lattice operator no longer accesses removed scene layers. The existing
+control-lattice geometry test now invokes the public operator rather than only
+the helper. Blender 5.1.2 passes enclosure, unchanged initial geometry, actual
+control-point deformation, repeat invocation without duplicate modifiers/objects,
+and multi-object selection with a non-mesh reference. Degenerate bounding boxes
+and exclusion from the active view layer remain untested.

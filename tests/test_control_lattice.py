@@ -18,7 +18,12 @@ bpy.context.view_layer.update()
 assert (u.get_bbox_center(obj, world=False)-Vector((1,2,3))).length < 1e-6
 assert (u.get_bbox_center(obj)-(obj.matrix_world @ Vector((1,2,3)))).length < 1e-5
 before = [obj.matrix_world @ v.co for v in obj.data.vertices]
-lattice = u.bbox_to_lattice(bpy.context.scene,obj)
+assert bpy.ops.opendental.lattice_deform() == {'FINISHED'}
+lattice = obj.modifiers['Lattice'].object
+object_count = len(bpy.data.objects)
+assert bpy.ops.opendental.lattice_deform() == {'FINISHED'}
+assert len(bpy.data.objects) == object_count
+assert len([m for m in obj.modifiers if m.type == 'LATTICE']) == 1
 bpy.context.view_layer.update()
 assert len(lattice.data.points) == 27
 inverse = lattice.matrix_world.inverted()
@@ -50,5 +55,18 @@ except ValueError:
     pass
 else:
     raise AssertionError('Empty edge selection must be rejected')
+# Multi-object invocation skips non-mesh selections and keeps separate controls.
+bpy.ops.object.select_all(action='DESELECT')
+bpy.ops.mesh.primitive_cube_add(location=(-4,0,0))
+other = bpy.context.object
+empty = bpy.data.objects.new('Selected reference', None)
+bpy.context.scene.collection.objects.link(empty)
+empty.select_set(True)
+obj.select_set(True)
+before_objects = len(bpy.data.objects)
+assert bpy.ops.opendental.lattice_deform() == {'FINISHED'}
+assert len(bpy.data.objects) == before_objects + 2
+assert obj.modifiers['Lattice'].object != other.modifiers['Lattice'].object
+assert not empty.modifiers
 addon_utils.disable(ROOT.name, default_set=True)
 print('ODC_CONTROL_LATTICE_PASSED', bpy.app.version_string)

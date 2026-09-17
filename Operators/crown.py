@@ -1079,8 +1079,6 @@ class OPENDENTAL_OT_lattice_deform(bpy.types.Operator):
         return condition0 and condition1
     
     def execute(self, context):
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
         
         for ob in context.selected_objects:
             mods = [mod.type for mod in ob.modifiers]
@@ -1091,9 +1089,6 @@ class OPENDENTAL_OT_lattice_deform(bpy.types.Operator):
                 if ob.type == 'MESH':
                     odcutils.bbox_to_lattice(context.scene, ob)
             
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
-        context.scene.layers[1] = True
         
         return {'FINISHED'}
     
