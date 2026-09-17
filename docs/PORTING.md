@@ -597,3 +597,14 @@ reparented. Blender 5.1.2 passes location/orientation, linked hardware, stable o
 count on replacement and missing-asset preservation. Public placement operators,
 master parenting, mid-load failure cleanup and user-attached child ownership still
 need review. This is helper coverage, not completion of the placement UI.
+
+## Public implant placement
+
+The public placement operator now uses a retained library enum and the current
+assembly helper instead of duplicated legacy linking/deletion code. Removed layer
+writes are gone. Local bounding-box length and world transforms preserve the
+upstream platform convention when replacing a rotated implant. Blender 5.1.2
+passes first placement at the cursor platform and replacement with a second
+library asset while preserving platform and orientation. Standalone placement,
+search popup, scaled/master-parented cases and hardware world transforms require
+further tests. The platform convention itself is not a clinical validation.

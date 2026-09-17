@@ -166,9 +166,13 @@ class OPENDENTAL_OT_place_implant(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     bl_property = "imp"
 
+    _enum_items = []
+
     def item_cb(self, context):
-        return [(obj.name, obj.name, '') for obj in self.objs]
- 
+        type(self)._enum_items = [(name, name, '') for name in
+            odcutils.obj_list_from_lib(get_settings().imp_lib, exclude='_')]
+        return type(self)._enum_items
+
     objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
     imp: bpy.props.EnumProperty(name="Implant Library Objects",
@@ -177,8 +181,8 @@ class OPENDENTAL_OT_place_implant(bpy.types.Operator):
     hardware: bpy.props.BoolProperty(name="Include Hardware", default=False)
     
     @classmethod
-    def polls(cls, context):
-        return len(context.scene.odc_implants) > 0
+    def poll(cls, context):
+        return context.mode == 'OBJECT' and hasattr(context.scene, 'odc_implants')
         
     def invoke(self, context, event): 
         self.objs.clear()
@@ -194,140 +198,30 @@ class OPENDENTAL_OT_place_implant(bpy.types.Operator):
     
     def execute(self, context):
         settings = get_settings()
-        dbg = settings.debug
-        #if bpy.context.mode != 'OBJECT':
-        #    bpy.ops.object.mode_set(mode = 'OBJECT')
-        
-        sce = context.scene
-        #n = sce.odc_implant_index
-        #implant_space = sce.odc_implants[n]
-        
-        implants = odcutils.implant_selection(context)
-        layers_copy = [layer for layer in context.scene.collection.all_objects]
-        context.scene.collection.all_objects[0] 
-        
-        if implants != []:
-        
-            for implant_space in implants:
-                #check if space already has an implant object.
-                #if so, delete, replace, print warning
-                if implant_space.implant and implant_space.implant in bpy.data.objects:
-                    self.report({'WARNING'}, "replacing the existing implant with the one you chose")
-                    Implant = bpy.data.objects[implant_space.implant]
-                    
-                    
-                    #the origin/location of the implant is it's apex
-                    L = Implant.location.copy()  
-
-                    world_mx = Implant.matrix_world.copy()
-                    
-                    #the platorm is the length of the implant above the apex, in the local Z direction
-                    #local Z positive is out the apex, soit's negative.
-                    #Put the cursor there
-                    sce.cursor.location = L - Implant.dimensions[2] * world_mx.to_3x3() @  Vector((0,0,1))
-                                        
-                    #first get rid of children...so we can use the
-                    #parent to find out who the children are
-                    if Implant.children:
-                        for child in Implant.children:
-                            sce.objects.unlink(child)
-                            child.user_clear()
-                            bpy.data.objects.remove(child)
-                            
-                    #unlink it from the scene, clear it's users, remove it.
-                    sce.objects.unlink(Implant)
-                    Implant.user_clear()
-                    #remove the object
-                    bpy.data.objects.remove(Implant)
-                    
-                    
-                    
-                #TDOD what about the children/hardwares?
-                else:
-                    world_mx = Matrix.Identity(4)
-                    
-                world_mx[0][3]=sce.cursor.location[0]
-                world_mx[1][3]=sce.cursor.location[1]
-                world_mx[2][3]=sce.cursor.location[2]
-                                        
-                #is this more memory friendly than listing all objects?
-                current_obs = [ob.name for ob in bpy.data.objects]
-                
-                #link the new implant from the library
-                odcutils.obj_from_lib(settings.imp_lib,self.imp)
-                
-                #this is slightly more robust than trusting we don't have duplicate names.
-                for ob in bpy.data.objects:
-                    if ob.name not in current_obs:
-                        Implant = ob
-                        
-                context.collection.objects.link(Implant)
-                
-                #this relies on the associated hardware objects having the parent implant
-                #name inside them
-                if self.hardware:
-                    current_obs = [ob.name for ob in bpy.data.objects]
-                    
-                    inc = self.imp + '_'
-                    hardware_list = odcutils.obj_list_from_lib(settings.imp_lib, include = inc)
-                    print(hardware_list)
-                    for ob in hardware_list:
-                        odcutils.obj_from_lib(settings.imp_lib,ob)
-                
-                    for ob in bpy.data.objects:
-                        if ob.name not in current_obs:
-                            context.collection.objects.link(ob)
-                            ob.parent = Implant
-                            ob.layers[11] = True
-                
-
-                delta =  Implant.dimensions[2] * world_mx.to_3x3() @ Vector((0,0,1))
-                print(delta.length)
-                world_mx[0][3] += delta[0]
-                world_mx[1][3] += delta[1]
-                world_mx[2][3] += delta[2]
-                    
-
-                Implant.matrix_world = world_mx
-
-                
-                if sce.odc_props.master:
-                    Master = bpy.data.objects[sce.odc_props.master]
-                    odcutils.parent_in_place(Implant, Master)
-                else:
-                    self.report({'WARNING'}, 'No Master Model, placing implant anyway, moving objects may not preserve spatial relationships')
-                
-                #looks a little redundant, but it ensure if any
-                #duplicates exist our referencing stays accurate
-                Implant.name = implant_space.name + '_' + Implant.name
-                implant_space.implant = Implant.name
-                    
-                odcutils.layer_management(sce.odc_implants, debug = dbg)
-        
-        else:
-            world_mx = Matrix.Identity(4)
-            world_mx[0][3]=sce.cursor.location[0]
-            world_mx[1][3]=sce.cursor.location[1]
-            world_mx[2][3]=sce.cursor.location[2]
-                                    
-            #is this more memory friendly than listing all objects?
-            current_obs = [ob.name for ob in bpy.data.objects]
-            
-            #link the new implant from the library
-            odcutils.obj_from_lib(settings.imp_lib,self.imp)
-            
-            #this is slightly more robust than trusting we don't have duplicate names.
-            for ob in bpy.data.objects:
-                if ob.name not in current_obs:
-                    Implant = ob
-                    
-            context.collection.objects.link(Implant)
-            Implant.matrix_world = world_mx  
-            
-            
-        for i, layer in enumerate(layers_copy):
-            context.scene.collection.all_objects[i] = layer
-        context.scene.collection.all_objects[11] = True           
+        spaces = odcutils.implant_selection(context)
+        if not spaces:
+            implant = odcutils.obj_from_lib(settings.imp_lib, self.imp)
+            context.collection.objects.link(implant)
+            implant.matrix_world = Matrix.Translation(context.scene.cursor.location)
+            return {'FINISHED'}
+        for space in spaces:
+            old = bpy.data.objects.get(space.implant)
+            if old is None:
+                orientation = Matrix.Identity(4).to_quaternion()
+                platform = context.scene.cursor.location.copy()
+            else:
+                orientation = old.matrix_world.to_quaternion()
+                length = max(v[2] for v in old.bound_box)-min(v[2] for v in old.bound_box)
+                platform = old.matrix_world @ Vector((0, 0, -length))
+            implant = implant_utils.place_implant(context, space, platform, orientation,
+                                                  self.imp, hardware=self.hardware)
+            context.view_layer.update()
+            length = max(v[2] for v in implant.bound_box)-min(v[2] for v in implant.bound_box)
+            matrix = implant.matrix_world.copy()
+            matrix.translation = platform + orientation @ Vector((0, 0, length))
+            implant.matrix_world = matrix
+            context.view_layer.update()
+        odcutils.layer_management(context.scene.odc_implants, debug=settings.debug)
         return {'FINISHED'}
 
 class OPENDENTAL_OT_place_sleeve(bpy.types.Operator):
