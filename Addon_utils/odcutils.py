@@ -235,7 +235,7 @@ def primitive_flattened_cylinder(R, r, N, H):
     if r >= R:
         #make a primitive cylinder and return it
         bm = bmesh.new()
-        ret = bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=N, diameter1=R, diameter2=R, depth=H)
+        ret = bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=N, radius1=R, radius2=R, depth=H)
         for vert in bm.verts:
             vert.co[2] += H/2
             
@@ -327,7 +327,7 @@ def primitive_wedge_cylinder(R, pct, N, H):
     if pct >= .99 or pct < .1:
         #error, bad input...
         bm = bmesh.new() 
-        ret = bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=N, diameter1=R, diameter2=R, depth=H)
+        ret = bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=N, radius1=R, radius2=R, depth=H)
         for vert in bm.verts:
             vert.co[2] += H/2
             

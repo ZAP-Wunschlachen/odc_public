@@ -219,7 +219,7 @@ def implant_inner_cylinder(context, space, thickness = None, debug = False):
     if Implant.rotation_mode != 'QUATERNION':
         Implant.rotation_mode = 'QUATERNION'
         Implant.update_tag()
-        context.scene.update()
+        context.view_layer.update()
 
     if space.inner and space.inner in bpy.data.objects:
         Cylinder = bpy.data.objects[space.inner]
@@ -230,7 +230,7 @@ def implant_inner_cylinder(context, space, thickness = None, debug = False):
         Cylinder = bpy.data.objects.new(Implant.name + '_IC', me)
         # Add the mesh to the scene
         scene = bpy.context.scene
-        scene.objects.link(Cylinder)
+        context.collection.objects.link(Cylinder)
         
         #point the right direction
         Cylinder.rotation_mode = 'QUATERNION'
@@ -242,9 +242,9 @@ def implant_inner_cylinder(context, space, thickness = None, debug = False):
         #rotation...and they changes will be lost when we access
         #the matrix to assign different values to other elements
         Cylinder.update_tag()
-        context.scene.update()
+        context.view_layer.update()
     
-        Trans = Implant.rotation_quaternion * Vector((0,0,- (30 + Implant.dimensions[2])))
+        Trans = Implant.rotation_quaternion @ Vector((0,0,- (30 + Implant.dimensions[2])))
         Cylinder.matrix_world[0][3] = mx_w[0][3] + Trans[0]
         Cylinder.matrix_world[1][3] = mx_w[1][3] + Trans[1]
         Cylinder.matrix_world[2][3] = mx_w[2][3] + Trans[2]
@@ -261,7 +261,7 @@ def implant_inner_cylinder(context, space, thickness = None, debug = False):
     Cylinder.vertex_groups["Project"].add(vert_inds, 1,'REPLACE')
         
     Cylinder.update_tag()
-    context.scene.update()
+    context.view_layer.update()
     
     space.inner = Cylinder.name
     

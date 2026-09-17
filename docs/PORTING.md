@@ -530,3 +530,14 @@ is removed, and implant users are preserved. Blender 5.1.2 passes the public tes
 for negative and positive depths on a rotated/translated implant, orientation,
 parenting, stable object count and missing-implant cancellation. Popup interaction,
 scaled implants and multi-implant failure rollback remain unverified.
+
+## Implant inner cylinder, initial port
+
+The public inner-cylinder operator no longer treats collection entries as scene
+layers. Its helper uses current collection linking, view-layer updates and
+quaternion multiplication. The shared cylinder primitive uses the current BMesh
+`radius1`/`radius2` arguments. Blender 5.1.2 passes repeated creation with diameters
+5 and 3: measured local diameter and length, manifold edges, parenting and stable
+object count. Projection-group membership (currently based on vertex parity),
+world positioning, automatic diameter and outer-cylinder generation still require
+additional tests and review.
