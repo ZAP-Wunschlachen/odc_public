@@ -648,3 +648,13 @@ modifier and retained source objects. Source modifier application still follows
 upstream behavior; source geometry preservation, real margins, repeated creation
 and connector construction are not yet verified. The small edit-mode shutdown
 allocation warning remains.
+
+## Pre-bridge with accepted margins
+
+The integration fixture now accepts and seats two separate circular margins before
+invoking Make Pre-Bridge. Blender 5.1.2 passes combined margin vertex count, world
+coordinate preservation (nearest-vertex comparison), retained original margins and
+the bridge shrinkwrap target. The run reports that applied modifiers were not first
+in the stack; source/evaluated geometry preservation must be reviewed before this
+path can be considered fully validated. The known shutdown allocation warning also
+appears. These tests establish margin assembly, not final bridge quality.
