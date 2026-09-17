@@ -937,3 +937,7 @@ Ported activation/selection and helper removal in `empties_to_bones`. Converts a
 ### Root modal startup
 
 Ported root-axis empty display settings, collection linking, object visibility/selection/activation and scene ray-casting to the dependency-graph API. Added space validation before accessing region_3d. `test_root_modal.py` passes in a real Blender 5.1.2 window: startup creates the numbered root bone, draw callbacks run without tracebacks and simulated Enter finishes in Object mode. This startup test intentionally has no placed axis; mouse placement and Escape rollback remain open. Added the window test to headless-runner exclusions.
+
+### Root modal surface placement
+
+Axis helper creation now occurs only after a successful ray hit on the selected tooth. The Blender window test simulates a miss (no helper created), a center click on a cube tooth in top orthographic view (axis at Z=1), and Enter. The resulting root tail is Z=1 and head Z=-15, with helper removal and modal completion verified. Escape rollback and multi-tooth navigation remain open.

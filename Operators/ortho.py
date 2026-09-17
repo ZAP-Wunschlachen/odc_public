@@ -67,6 +67,17 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
         if not self.target:
             return
         
+        coord = (event.mouse_region_x, event.mouse_region_y)
+        v3d = context.space_data
+        rv3d = v3d.region_3d
+        view_vector = view3d_utils.region_2d_to_vector_3d(context.region, rv3d, coord)
+        ray_origin = view3d_utils.region_2d_to_origin_3d(context.region, rv3d, coord)
+        ray_target = ray_origin + (view_vector * 1000)
+        res, loc, no, ind, obj, mx = context.scene.ray_cast(context.evaluated_depsgraph_get(), ray_origin, view_vector)
+
+        if not res or obj != self.target:
+            return
+
         empty_name = self.target.name + 'root_empty'
         if empty_name in context.scene.objects:
             ob = context.scene.objects[empty_name]
@@ -78,22 +89,7 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
             ob.empty_display_size = 10
             context.collection.objects.link(ob)
             
-        coord = (event.mouse_region_x, event.mouse_region_y)
-        v3d = context.space_data
-        rv3d = v3d.region_3d
-        view_vector = view3d_utils.region_2d_to_vector_3d(context.region, rv3d, coord)
-        ray_origin = view3d_utils.region_2d_to_origin_3d(context.region, rv3d, coord)
-        ray_target = ray_origin + (view_vector * 1000)
-        res, loc, no, ind, obj, mx = context.scene.ray_cast(context.evaluated_depsgraph_get(), ray_origin, view_vector)
-
-        if res:
-            if obj != self.target:
-                return
-                
-            ob.location = loc
-        else:
-            return
-            
+        ob.location = loc
         if ob.rotation_mode != 'QUATERNION':
             ob.rotation_mode = 'QUATERNION'
             
