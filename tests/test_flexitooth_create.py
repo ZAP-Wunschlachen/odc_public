@@ -17,6 +17,8 @@ hooks = [m for m in obj.modifiers if m.type == 'HOOK']
 assert len(hooks) > 0
 lap = next(m for m in obj.modifiers if m.type == 'LAPLACIANDEFORM')
 assert lap.is_bind
+assert all(mod.type == 'HOOK' for mod in list(obj.modifiers)[:len(hooks)])
+assert list(obj.modifiers)[len(hooks)] == lap
 bpy.context.view_layer.update()
 def coordinates():
     evaluated = obj.evaluated_get(bpy.context.evaluated_depsgraph_get())

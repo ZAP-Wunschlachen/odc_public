@@ -971,3 +971,7 @@ The separately started full headless regression completed with 61/61 cases passi
 ### FlexiTooth creation and deformation
 
 Ported collection linking, activation/selection, empty display and matrix multiplication; removed obsolete layer access and snapshots selected inputs. Laplacian binding now executes in Object mode as required by Blender 5.1.2. `test_flexitooth_create.py` passes with bundled tooth 25: Hook creation, bound Laplacian modifier, measurable deformation after moving a control, and evaluated-geometry equality after Keep. The run still emits a modifier move-at-start warning and 28-block shutdown allocation warning. Other library teeth, transformed inputs, invalid topology and repeat setup remain unverified.
+
+### FlexiTooth modifier ordering
+
+Replaced repeated move-up operations with explicit target indices: Hooks first in island order, then Laplacian Deform, then prior modifiers. The creation test now asserts this order and still passes deformation/bake equality in Blender 5.1.2. The move-at-start warning is gone; the 28-block shutdown allocation warning remains.
