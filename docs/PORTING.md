@@ -508,3 +508,15 @@ nonempty mesh content: 45 implant objects, 27 drill/sleeve objects and 23 bracke
 objects load in Blender 5.1.2. This verifies asset access only; placement operators
 still contain obsolete scene updates and collection-as-layer mutations and need
 separate porting and execution tests. Existing user-customized paths are unchanged.
+
+## Guide sleeve placement
+
+Guide sleeve placement now uses current library returns, view-layer updates and
+object removal. It no longer mutates collection entries as though they were old
+scene layers, or clears the implant's users when replacing a sleeve. The enum
+reads the actual library and retains item strings. Existing sleeves are removed
+only after their replacements have been loaded and positioned. Blender 5.1.2
+passes a public-operator test for two depths on a rotated/translated implant,
+orientation, parenting, stable object count and missing-implant cancellation.
+The search popup, multi-implant load failure rollback and scaled implant cases
+remain untested; drill placement is still pending.

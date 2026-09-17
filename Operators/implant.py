@@ -337,9 +337,13 @@ class OPENDENTAL_OT_place_sleeve(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     bl_property = "drill"
 
+    _enum_items = []
+
     def item_cb(self, context):
-        return [(obj.name, obj.name, '') for obj in self.objs]
- 
+        type(self)._enum_items = [(name, name, '') for name in
+            odcutils.obj_list_from_lib(get_settings().drill_lib, exclude='Drill')]
+        return type(self)._enum_items
+
     objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
     drill: bpy.props.EnumProperty(name="Drill/Sleeve Library",
@@ -349,8 +353,8 @@ class OPENDENTAL_OT_place_sleeve(bpy.types.Operator):
     depth: bpy.props.FloatProperty(name="Depth", description="Top edge to apex of implant", default=20, min=0, max=30, step=5, precision=2, options={'ANIMATABLE'})
     
     @classmethod
-    def polls(cls, context):
-        return len(context.scene.odc_implants) > 0
+    def poll(cls, context):
+        return context.mode == 'OBJECT' and bool(odcutils.implant_selection(context))
         
     def invoke(self, context, event): 
         self.objs.clear()
@@ -366,72 +370,33 @@ class OPENDENTAL_OT_place_sleeve(bpy.types.Operator):
     
     def execute(self, context):
         settings = get_settings()
-        dbg = settings.debug
-        #if bpy.context.mode != 'OBJECT':
-        #    bpy.ops.object.mode_set(mode = 'OBJECT')
-        
-        sce = context.scene
-        layers_copy = [layer for layer in context.scene.collection.all_objects]
-        context.scene.collection.all_objects[0] = True
-        
-        implants = odcutils.implant_selection(context)
-        
-        if implants != []:
-        
-            for implant_space in implants:
-                #check if space already has an implant object.
-                #if so, delete, replace, print warning
-                Implant = bpy.data.objects[implant_space.implant]
-                if Implant.rotation_mode != 'QUATERNION':
-                    Implant.rotation_mode = 'QUATERNION'
-                    Implant.update_tag()
-                    sce.update()
-                    
-                if bpy.data.objects.get(implant_space.sleeve):
-                    self.report({'WARNING'}, "replacing the existing sleeve with the one you chose")
-                    Sleeve = bpy.data.objects[implant_space.sleeve]
-                    #unlink it from the scene, clear it's users, remove it.
-                    sce.objects.unlink(Sleeve)
-                    Implant.user_clear()
-                    #remove the object
-                    bpy.data.objects.remove(Sleeve)
-                    
-                current_obs = [ob.name for ob in bpy.data.objects]
-                
-                #link the new implant from the library
-                odcutils.obj_from_lib(settings.drill_lib,self.drill)
-                
-                #this is slightly more robust than trusting we don't have duplicate names.
-                for ob in bpy.data.objects:
-                    if ob.name not in current_obs:
-                        Sleeve = ob
-                        
-                context.collection.objects.link(Sleeve)
-                
-                mx_w = Implant.matrix_world.copy()
-                #point the right direction
-                Sleeve.rotation_mode = 'QUATERNION'
-                Sleeve.rotation_quaternion = mx_w.to_quaternion()          
-                Sleeve.update_tag()
-                context.scene.update()   
-                Trans = Sleeve.rotation_quaternion @ Vector((0,0,-self.depth))
-                Sleeve.matrix_world[0][3] = mx_w[0][3] + Trans[0]
-                Sleeve.matrix_world[1][3] = mx_w[1][3] + Trans[1]
-                Sleeve.matrix_world[2][3] = mx_w[2][3] + Trans[2]
-                
-                Sleeve.name = implant_space.name + '_' + 'Sleeve'
-                implant_space.sleeve = Sleeve.name
-                Sleeve.update_tag()
-                context.scene.update()    
-                odcutils.parent_in_place(Sleeve, Implant)
-                odcutils.layer_management(sce.odc_implants, debug = dbg)
-        
-        for i, layer in enumerate(layers_copy):
-            context.scene.collection.all_objects[i] = layer
-        context.scene.collection.all_objects[19] = True
-                        
+        spaces = odcutils.implant_selection(context)
+        for space in spaces:
+            implant = bpy.data.objects.get(space.implant)
+            if implant is None or context.view_layer.objects.get(implant.name) != implant:
+                self.report({'WARNING'}, 'Assign an implant in the current view layer first')
+                return {'CANCELLED'}
+        for space in spaces:
+            implant = bpy.data.objects[space.implant]
+            previous = bpy.data.objects.get(space.sleeve)
+            sleeve = odcutils.obj_from_lib(settings.drill_lib, self.drill)
+            context.collection.objects.link(sleeve)
+            orientation = implant.matrix_world.to_quaternion()
+            sleeve.rotation_mode = 'QUATERNION'
+            sleeve.rotation_quaternion = orientation
+            sleeve.location = implant.matrix_world.translation + orientation @ Vector((0, 0, -self.depth))
+            sleeve.name = space.name + '_Sleeve'
+            context.view_layer.update()
+            odcutils.parent_in_place(sleeve, implant)
+            space.sleeve = sleeve.name
+            if previous is not None and previous != implant:
+                mesh = previous.data if previous.type == 'MESH' else None
+                bpy.data.objects.remove(previous, do_unlink=True)
+                if mesh is not None and mesh.users == 0:
+                    bpy.data.meshes.remove(mesh)
+        odcutils.layer_management(context.scene.odc_implants, debug=settings.debug)
         return {'FINISHED'}
-    
+
 class OPENDENTAL_OT_place_drill(bpy.types.Operator):
     '''Places or replaces drill at specified depth'''
     bl_idname = "opendental.place_drill"
