@@ -293,3 +293,10 @@ checks that base margin-group vertices lie within 1e-4 Blender units of the targ
 vertices, all coordinates are finite and Final Seal targets the margin. Repeated
 seating, influence behavior, evaluated Multires quality, other library teeth and
 anatomical margins remain unverified; this is not a production crown validation.
+
+## Repeated seating
+
+The crown-seating fixture now repeats the operator and checks stable modifier
+count and retained base margin alignment. Final Seal is reused. The evaluated
+Multires mesh has more vertices than the base and finite coordinates; this does
+not establish surface quality or absence of self-intersections.

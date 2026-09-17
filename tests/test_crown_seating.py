@@ -33,5 +33,15 @@ assert indices
 assert max(tree.find(crown.matrix_world @ crown.data.vertices[i].co)[2] for i in indices) < 1e-4
 assert all(math.isfinite(c) for v in crown.data.vertices for c in v.co)
 assert any(m.type == 'SHRINKWRAP' and m.name == 'Final Seal' and m.target == margin for m in crown.modifiers)
+modifier_count = len(crown.modifiers)
+assert bpy.ops.opendental.seat_to_margin() == {'FINISHED'}
+assert len(crown.modifiers) == modifier_count
+assert max(tree.find(crown.matrix_world @ crown.data.vertices[i].co)[2] for i in indices) < 1e-4
+bpy.context.view_layer.update()
+evaluated = crown.evaluated_get(bpy.context.evaluated_depsgraph_get())
+mesh = evaluated.to_mesh()
+assert len(mesh.vertices) > len(crown.data.vertices)
+assert all(math.isfinite(c) for v in mesh.vertices for c in v.co)
+evaluated.to_mesh_clear()
 addon_utils.disable(ROOT.name, default_set=True)
 print('ODC_CROWN_SEATING_PASSED', bpy.app.version_string)

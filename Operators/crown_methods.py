@@ -1123,7 +1123,9 @@ def seat_to_margin_improved(context, sce, tooth, influence, debug = False):
             
         
     #final seal after multires
-    mod = Restoration.modifiers.new('Final Seal','SHRINKWRAP')
+    mod = next((m for m in Restoration.modifiers if m.type == 'SHRINKWRAP' and m.name == 'Final Seal'), None)
+    if mod is None:
+        mod = Restoration.modifiers.new('Final Seal', 'SHRINKWRAP')
     mod.wrap_method='NEAREST_VERTEX' 
     mod.target = Margin
     mod.vertex_group = margin
