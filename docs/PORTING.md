@@ -837,3 +837,9 @@ Removed obsolete scene-layer access and ported active-object/selection restorati
 ### Linked arch placement repetition
 
 Reuses an existing Follow Path constraint targeting the selected arch and removes duplicate constraints for that same arch, preserving unrelated constraints. Extended the public operator test with two working teeth (11/21), `link=True, limit=True`, and repeated execution. Blender 5.1.2 passes object identity, contour references, exactly one path per retained tooth and absence of unrequested planned teeth. This does not establish repeated geometric invariance, which remains to be checked.
+
+### Occlusal scheme initial execution
+
+Ported the public occlusal scheme operator away from scene layers and legacy selection. The helper uses evaluated mesh extraction, current BMesh dependency-graph arguments, matrix products, collection linking and actual returned library objects. Its temporary curve mesh is released, replacement mesh deletion respects users, and contact-group checks require both groups.
+
+Validation: `test_occlusal_scheme.py` executes the public operator with the bundled tooth library and a semicircular arch under Blender 5.1.2. It produces 28 teeth with finite transforms and positive scales, including execution of anterior cross-section measurement. This is initial execution coverage only: anatomical intercuspation, linked/repeated placement, mirror/reverse options and exact geometry remain unverified. Small shutdown allocation warning persists.

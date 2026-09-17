@@ -418,19 +418,21 @@ def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = Fa
         print('mirrored, this should not matter')
     
     mx = arch.matrix_world
-    arch_me = arch.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
+    arch_me = bpy.data.meshes.new_from_object(arch.evaluated_get(context.evaluated_depsgraph_get()))
 
-    arch_vs = [mx*v.co for v in arch_me.vertices]
+    arch_vs = [mx @ v.co for v in arch_me.vertices]
     
     #estiamte occlusal plane for first, mid and last points
-    v_mid = mx * arch_me.vertices[int(len(arch_me.vertices)/2)].co
-    v_0= mx * arch_me.vertices[0].co  #presumed the right side
-    v_n = mx * arch_me.vertices[len(arch_me.vertices)-1].co  #presumed the left side
+    v_mid = mx @ arch_me.vertices[int(len(arch_me.vertices)/2)].co
+    v_0= mx @ arch_me.vertices[0].co  #presumed the right side
+    v_n = mx @ arch_me.vertices[len(arch_me.vertices)-1].co  #presumed the left side
     
     #looking down, assuming v_0 is right side, this CCW direction represents from 1-16 aand 32->17 on the bottom
     occ_dir = (v_n - v_mid).cross(v_0 - v_mid)
     occ_dir.normalize()
     
+    bpy.data.meshes.remove(arch_me)
+
     arch_len = 0
     s_index_map = [0]
     
@@ -477,14 +479,13 @@ def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = Fa
                     if new_name in bpy.data.objects:   
                         ob = bpy.data.objects[new_name]
                         me = ob.data
-                        ob.user_clear()
-                        bpy.data.objects.remove(ob)
-                        bpy.data.meshes.remove(me)
-                        context.scene.update()
+                        bpy.data.objects.remove(ob, do_unlink=True)
+                        if me.users == 0:
+                            bpy.data.meshes.remove(me)
+                        context.view_layer.update()
                        
-                    odcutils.obj_from_lib(tooth_library, tooth)
-                    ob = bpy.data.objects[tooth]
-                    context.scene.objects.link(ob)
+                    ob = odcutils.obj_from_lib(tooth_library, tooth)
+                    context.collection.objects.link(ob)
                     ob.name = new_name
                     tooth_objects[i] = ob
                     if link and len(tooth_in_scene):
@@ -526,20 +527,20 @@ def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = Fa
         if loc:
             print('found by cross section')
             bme = bmesh.new()
-            bme.from_object(tooth_ob, bpy.context.scene, deform=True, render=False, cage=False, face_normals=True)
+            bme.from_object(tooth_ob, context.evaluated_depsgraph_get(), cage=False, face_normals=True)
             bvh = BVHTree.FromBMesh(bme)
             
             mx = tooth_ob.matrix_world
-            Y = mx.to_3x3() * Vector((0,1,0))
+            Y = mx.to_3x3() @ Vector((0,1,0))
             pt, no, seed, dist = bvh.find_nearest(loc)
-            verts, eds = cross_section_seed_ver1(bme, mx, mx*pt, Y, seed, max_tests = 100)
+            verts, eds = cross_section_seed_ver1(bme, mx, mx @ pt, Y, seed, max_tests = 100)
              
             m_loc_hi_res = max(verts, key = lambda x: x[0])
             d_loc_hi_res = min(verts, key = lambda x: x[0])
             
             bme.free()
             
-        elif "Mesial Contact" and "Distal Contact" in tooth_ob.vertex_groups:
+        elif all(name in tooth_ob.vertex_groups for name in ("Mesial Contact", "Distal Contact")):
             gi_m = tooth_ob.vertex_groups["Mesial Contact"].index
             gi_d = tooth_ob.vertex_groups["Distal Contact"].index
         
@@ -564,8 +565,8 @@ def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = Fa
         else:
             imx = tooth_ob.matrix_world.inverted()
             
-            m_loc_hi_res = imx *odcutils.box_feature_locations(tooth_ob, Vector((1,0,0)))
-            d_loc_hi_res = imx * odcutils.box_feature_locations(tooth_ob, Vector((-1,0,0)))
+            m_loc_hi_res = imx @ odcutils.box_feature_locations(tooth_ob, Vector((1,0,0)))
+            d_loc_hi_res = imx @ odcutils.box_feature_locations(tooth_ob, Vector((-1,0,0)))
             
             
         return m_loc_hi_res, d_loc_hi_res
@@ -616,7 +617,7 @@ def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = Fa
     mand_path_locs = [[0]] * 14    
     mand_snap = [[0]] * 14
     
-    context.scene.update()
+    context.view_layer.update()
     
     #gather a BUNCH of data
     for i in range(0,14):
@@ -629,8 +630,8 @@ def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = Fa
             max_mes1, max_dis1 = get_tooth_mes_distal(tooth_objects[i])
             
             mx1 = tooth_objects[i].matrix_world
-            max_md_width = (mx1 * max_mes - mx1 * max_dis).length
-            max_md_width1 = (mx1 * max_mes1 - mx1 * max_dis1).length
+            max_md_width = (mx1 @ max_mes - mx1 @ max_dis).length
+            max_md_width1 = (mx1 @ max_mes1 - mx1 @ max_dis1).length
             
             print('Cross Section Width %f, box width %f' % (max_md_width, max_md_width1))
             
@@ -645,8 +646,8 @@ def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = Fa
         mx2 = tooth_objects[i+14].matrix_world
         
         #world width of tooth
-        max_md_width = (mx1 * max_mes - mx1 * max_dis).length
-        man_md_width = (mx2 * man_mes - mx2 * man_dis).length
+        max_md_width = (mx1 @ max_mes - mx1 @ max_dis).length
+        man_md_width = (mx2 @ man_mes - mx2 @ man_dis).length
         
         #local midpoint between mes and distal contact
         max_md_mid  = .5 * (max_mes + max_dis)
@@ -719,11 +720,11 @@ def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = Fa
         
         #now we build our shift, but since the snap point is local,
         #we need to transform the shift first, then apply it
-        snap_world = matRot*matScl*Vector(snap_local)
+        snap_world = matRot @ matScl @ Vector(snap_local)
         delta = curve_loc - snap_world
         matTrans = Matrix.Translation(delta)
         
-        return matTrans * matRot * matScl
+        return matTrans @ matRot @ matScl
         
     for i in range(0,14):
         #compute position on curve for each tooth

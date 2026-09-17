@@ -1551,8 +1551,6 @@ class OPENDENTAL_OT_occlusal_scheme_to_curve(bpy.types.Operator):
         return {'RUNNING_MODAL'}       
     def execute(self, context):
         settings = get_settings()
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
         
         ob = context.object
         settings = get_settings()
@@ -1566,14 +1564,11 @@ class OPENDENTAL_OT_occlusal_scheme_to_curve(bpy.types.Operator):
                                                    reorient = True)
         
         bpy.ops.object.select_all(action='DESELECT')
-        context.scene.objects.active = ob
-        ob.select = True
+        context.view_layer.objects.active = ob
+        ob.select_set(True)
         #go into weight paint mode?
         
         odcutils.layer_management(context.scene.odc_teeth, debug = True)
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
-        context.scene.layers[1] = True
         return {'FINISHED'}
     
        
