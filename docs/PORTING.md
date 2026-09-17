@@ -637,3 +637,14 @@ role exclusions and duplicate matches while preserving member-tooth fallback.
 Blender 5.1.2 passes public bridge definition from two selected units, member
 resolution, direct object role matching, unrelated metadata rejection and list
 selection. The geometry-producing bridge operators remain to be ported.
+
+## Pre-bridge initial integration
+
+Make Pre-Bridge now uses current selection, visibility and active-object APIs;
+removed scene layers are gone and modifier loops use snapshots. Blender 5.1.2
+passes a two-library-tooth public-operator fixture without margins, verifying a
+separate combined mesh, summed vertex count, connector/margin groups, smoothing
+modifier and retained source objects. Source modifier application still follows
+upstream behavior; source geometry preservation, real margins, repeated creation
+and connector construction are not yet verified. The small edit-mode shutdown
+allocation warning remains.

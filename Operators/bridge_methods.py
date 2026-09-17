@@ -324,9 +324,9 @@ def make_pre_bridge(context, odc_bridge, debug = False):
             margin = tooth.margin
             Margin = bpy.data.objects[margin]
             
-            Margin.hide = False
-            Margin.select = True
-            context.scene.objects.active = Margin
+            Margin.hide_set(False)
+            Margin.select_set(True)
+            context.view_layer.objects.active = Margin
             
     #not sure why this is commented out, I may revisit it    
     #bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)    
@@ -352,8 +352,8 @@ def make_pre_bridge(context, odc_bridge, debug = False):
         else:
             continue    
         ob = bpy.data.objects[restoration]
-        ob.select = True
-        ob.hide = False
+        ob.hide_set(False)
+        ob.select_set(True)
         
         #test out deleting the fake user...
         me = ob.data
@@ -362,13 +362,13 @@ def make_pre_bridge(context, odc_bridge, debug = False):
         
         #Change this later since it resets the active objects len(bridge) times
         #but it ends with one of the teeth as the active object, so...
-        context.scene.objects.active = ob
+        context.view_layer.objects.active = ob
         bpy.ops.object.multires_base_apply(modifier = 'Multires')
         
         if 'Dynamic Margin' in ob.modifiers:
             bpy.ops.object.modifier_apply(modifier = 'Dynamic Margin')
             bpy.ops.object.multires_base_apply()
-        for mod in ob.modifiers:
+        for mod in list(ob.modifiers):
             if mod.name != 'Multires':
                 bpy.ops.object.modifier_apply(modifier = mod.name)
     
@@ -395,8 +395,8 @@ def make_pre_bridge(context, odc_bridge, debug = False):
             Bridge = ob
         
     bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.scene.objects.active=Bridge
-    Bridge.select = True
+    bpy.context.view_layer.objects.active=Bridge
+    Bridge.select_set(True)
     
     bpy.ops.object.mode_set(mode = 'EDIT')
     bpy.ops.mesh.select_all(action = 'DESELECT')
@@ -421,7 +421,7 @@ def make_pre_bridge(context, odc_bridge, debug = False):
 
     bpy.ops.object.mode_set(mode='OBJECT')
     #remove all the modifiers
-    for mod in Bridge.modifiers:
+    for mod in list(Bridge.modifiers):
         if mod.name != 'Multires':
             bpy.ops.object.modifier_remove(modifier = mod.name)
             
@@ -461,7 +461,7 @@ def make_pre_bridge(context, odc_bridge, debug = False):
             restoration = tooth.contour
             
         Restoration = context.scene.objects[restoration]
-        Restoration.hide = True
+        Restoration.hide_set(True)
         
     if debug:
         print('made pre bridge in %f seconds' % (time.time() - start))

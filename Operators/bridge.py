@@ -64,16 +64,11 @@ class OPENDENTAL_OT_bridge_prebridge(bpy.types.Operator):
         settings = get_settings()
         dbg = settings.debug
         
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
          
         odc_bridge = bridge_methods.active_spanning_restoration(context)[0]
         bridge_methods.make_pre_bridge(context, odc_bridge, debug=dbg) #TODO: debug settings
         
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
             
-        context.scene.layers[5] = True
         odcutils.layer_management(context.scene.odc_bridges, debug = dbg)
         
         return {'FINISHED'}
