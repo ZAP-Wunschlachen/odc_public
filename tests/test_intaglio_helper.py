@@ -73,6 +73,12 @@ for gap in (.07, .12):
     evaluated.to_mesh_clear()
     print('MEASURED_CEMENT_GAP', gap, min(distances), max(distances), flush=True)
     assert max(abs(distance-gap) for distance in distances) < .001
+previous_name = tooth.intaglio
+before_rebuild = len(bpy.data.objects)
+assert bpy.ops.opendental.calculate_inside(chamfer=.2, gap=.09, holy_zone=.2, no_undercuts=True) == {'FINISHED'}
+assert len(bpy.data.objects) == before_rebuild
+assert previous_name not in bpy.data.objects
+assert abs(bpy.data.objects[tooth.intaglio].modifiers['Cement Gap'].offset-.09) < 1e-6
 before_count = len(bpy.data.objects)
 old_inside = tooth.intaglio
 tooth.axis = ''

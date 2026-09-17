@@ -368,3 +368,9 @@ preparation face normals at both tested offsets. All fully weighted Filled Zone
 vertices lie outside the synthetic surface. Holy Zone and Filled Zone memberships
 are nonempty and disjoint. This does not measure the physical Holy Zone width or
 prove absence of face intersections between sampled vertices.
+
+Repeated protected-path intaglio generation now replaces the prior interior only
+after the new object and modifiers have been constructed, and removes its mesh
+when unused. The integration fixture verifies stable object count and the updated
+gap setting on the replacement. Required preparation/margin/axis/crown objects
+are excluded from deletion if an old reference is misassigned.

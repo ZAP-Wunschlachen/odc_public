@@ -468,7 +468,13 @@ def calc_intaglio(context, sce, tooth, chamfer, gap, holy_zone, no_undercuts = T
     mod.wrap_mode = 'ABOVE_SURFACE'
     
     Restoration.hide_set(True)
+    previous = bpy.data.objects.get(tooth.intaglio)
     tooth.intaglio = intag_ob.name
+    if previous is not None and previous not in {Prep, Margin, Axis, Restoration, intag_ob}:
+        previous_mesh = previous.data if previous.type == 'MESH' else None
+        bpy.data.objects.remove(previous, do_unlink=True)
+        if previous_mesh is not None and previous_mesh.users == 0:
+            bpy.data.meshes.remove(previous_mesh)
     intag_bme.free()
     del prep_bvh
     return  
