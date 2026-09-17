@@ -2412,29 +2412,68 @@ def silouette_brute_force(context, ob, view, world = True, smooth = True, debug 
         
     '''
 
-def bezier_to_mesh(crv_obj,  name, n_points = 200):
-    C = bpy.context
-    me = crv_obj.to_mesh(C.scene, True, 'PREVIEW')
-    verts = [v.co for v in me.vertices]
-    edges = [(0,1)]
-    if crv_obj.data.splines[0].use_cyclic_u:
-        edges += [(1,0)]
-    
-    vs, eds = mesh_cut.space_evenly_on_path(verts, edges, n_points)
-    
-    bme = bmesh.new()
-    bmverts = []
-    for v in vs:
-        bmverts.append(bme.verts.new(v))
-    
-    for i in range(0, len(vs)-1):
-        bme.edges.new((bmverts[i],bmverts[i+1])) 
-    if crv_obj.data.splines[0].use_cyclic_u:
-        bme.edges.new((bmverts[n_points-1],bmverts[0])) 
-        
-    new_me = bpy.data.meshes.new(name)
-    bme.to_mesh(new_me)
-    return new_me
+def bezier_to_mesh(crv_obj, name, n_points=200):
+    """Resample one un-beveled curve into a local-space wire mesh."""
+    if crv_obj.type != 'CURVE' or len(crv_obj.data.splines) != 1:
+        raise ValueError("A margin must contain exactly one curve spline")
+    if n_points < 3:
+        raise ValueError("A margin needs at least three sample points")
+    evaluated = crv_obj.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    mesh = evaluated.to_mesh()
+    try:
+        if mesh.polygons:
+            raise ValueError("Use an unfilled curve without bevel for the margin")
+        positions = [v.co.copy() for v in mesh.vertices]
+        adjacency = {i: [] for i in range(len(positions))}
+        for edge in mesh.edges:
+            a, b = edge.vertices
+            adjacency[a].append(b)
+            adjacency[b].append(a)
+    finally:
+        evaluated.to_mesh_clear()
+    cyclic = crv_obj.data.splines[0].use_cyclic_u
+    endpoints = [i for i, neighbors in adjacency.items() if len(neighbors) == 1]
+    if not positions or any(len(v) not in (1, 2) for v in adjacency.values()):
+        raise ValueError("Margin curve must be a connected path")
+    if (cyclic and endpoints) or (not cyclic and len(endpoints) != 2):
+        raise ValueError("Margin topology does not match the spline")
+    order = [0 if cyclic else endpoints[0]]
+    previous = None
+    while True:
+        candidates = [i for i in adjacency[order[-1]] if i != previous]
+        if not candidates or candidates[0] == order[0]:
+            break
+        following = candidates[0]
+        if following in order:
+            raise ValueError("Margin path repeats a vertex")
+        previous = order[-1]
+        order.append(following)
+    if len(order) != len(positions):
+        raise ValueError("Margin contains disconnected geometry")
+    path = [positions[i] for i in order]
+    if cyclic:
+        path.append(path[0])
+    lengths = [0.0]
+    for a, b in zip(path, path[1:]):
+        lengths.append(lengths[-1] + (b-a).length)
+    if lengths[-1] <= 1e-10:
+        raise ValueError("Margin has zero length")
+    points = []
+    segment = 0
+    for index in range(n_points):
+        distance = lengths[-1] * index / (n_points if cyclic else n_points-1)
+        while segment < len(path)-2 and lengths[segment+1] <= distance:
+            segment += 1
+        span = lengths[segment+1] - lengths[segment]
+        points.append(path[segment].lerp(path[segment+1], (distance-lengths[segment])/span if span else 0))
+    edges = [(i, i+1) for i in range(n_points-1)]
+    if cyclic:
+        edges.append((n_points-1, 0))
+    result = bpy.data.meshes.new(name)
+    result.from_pydata(points, edges, [])
+    result.update()
+    return result
+
 
 def extrude_bmesh_loop(bme, bmedges, mx, axis, res, move_only = False):
 

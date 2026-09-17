@@ -177,3 +177,13 @@ negative offset projects beyond the target plane, not away from it. Connector
 group restrictions, anatomical geometry and rotated/nonuniformly scaled crowns
 still need coverage. The assessment and adjustment modifiers may share a display
 name; lookup distinguishes their types.
+
+## Margin curve conversion
+
+`tests/test_margin_curve.py` verifies evaluated curve-to-wire conversion using
+Blender 5.1 mesh lifetime APIs. A closed Bezier circle produces 200 connected
+vertices/edges near the expected radius without changing the source. An open
+curve produces 30 vertices/29 edges with preserved endpoints. Beveled surfaces
+are rejected rather than misinterpreted as a margin path. The conversion orders
+evaluated edges and resamples by arc length. The complete Accept Margin operator,
+pseudo-margin extrusion and interactive margin marking remain pending.
