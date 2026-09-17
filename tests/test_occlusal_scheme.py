@@ -28,14 +28,18 @@ for obj in objects:
     assert all(math.isfinite(value) for row in obj.matrix_world for value in row)
     assert min(obj.scale) > 0
 # Exercise an existing contour, an empty assignment and a stale assignment together.
-existing = bpy.data.objects['17_ArchPlanned']
-for number, contour in (('17', existing.name), ('21', ''), ('31', 'Missing contour')):
+existing = bpy.data.objects['11_ArchPlanned']
+existing.location = (8, -3, 2)
+existing.rotation_mode = 'XYZ'
+existing.rotation_euler = (.2, .3, .7)
+bpy.context.view_layer.update()
+for number, contour in (('11', existing.name), ('21', ''), ('31', 'Missing contour')):
     tooth = bpy.context.scene.odc_teeth.add()
     tooth.name = number
     tooth.contour = contour
 bpy.context.view_layer.objects.active = arch
 assert bpy.ops.opendental.occlusal_scheme(link=True) == {'FINISHED'}
-assert bpy.data.objects[bpy.context.scene.odc_teeth['17'].contour] == existing
+assert bpy.data.objects[bpy.context.scene.odc_teeth['11'].contour] == existing
 for tooth in bpy.context.scene.odc_teeth:
     obj = bpy.data.objects.get(tooth.contour)
     assert obj is not None and obj.type == 'MESH'

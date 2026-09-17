@@ -847,3 +847,9 @@ Validation: `test_occlusal_scheme.py` executes the public operator with the bund
 ### Occlusal scheme Link option
 
 The public operator now forwards its Link setting and requires Object mode. The helper reuses a valid contour and imports/assigns a replacement for empty or stale contour references. Extended `test_occlusal_scheme.py` passes in Blender 5.1.2 with an existing posterior contour, an empty anterior reference and a missing lower-arch reference in one invocation. It verifies retained object identity, valid resulting references, finite transforms and 28 planned objects. Repeat geometric stability and transformed anterior cross-sections remain unverified.
+
+### Regression after arch placement ports
+
+Expanded the occlusal Link fixture to reuse a translated and rotated anterior tooth (11), exercising its cross-section path. The operator passes identity, reference and finite-transform checks; this is not a geometric invariance assertion.
+
+Ran `python3 tests/run_headless.py --blender /Applications/Blender.app/Contents/MacOS/Blender` after these changes: all 50 headless integration cases passed, process exit 0. Detailed local results are in ignored `tests/artifacts/headless/results.json`. UI tests are excluded by the runner. Remaining legacy APIs in other modules and untested workflows prevent claiming a complete plugin port.
