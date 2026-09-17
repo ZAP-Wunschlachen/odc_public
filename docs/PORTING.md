@@ -165,3 +165,15 @@ the target updates the result. Invalid distance ranges cancel without mutation.
 The helper now uses native vertex groups and modifier creation without legacy
 selection/edit-mode operators. These checks do not yet validate geometric grinding,
 self-intersections, cyclic dependencies from other workflows or weight-paint UI.
+
+## Directional contact adjustment
+
+`tests/test_contact_adjustment.py` evaluates actual shrinkwrap output on plane
+fixtures for occlusal, mesial and distal projection. It checks requested offset
+changes, preservation of source vertices, no duplicate modifiers on repeat calls
+and no targetless modifier when a requested neighbor is missing. The original
+local-axis directions and offset signs are retained: in the distal fixture the
+negative offset projects beyond the target plane, not away from it. Connector
+group restrictions, anatomical geometry and rotated/nonuniformly scaled crowns
+still need coverage. The assessment and adjustment modifiers may share a display
+name; lookup distinguishes their types.

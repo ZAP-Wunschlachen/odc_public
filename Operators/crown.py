@@ -1411,58 +1411,16 @@ class OPENDENTAL_OT_grind_contacts(bpy.types.Operator):
         return (condition_1 or condition_2 or condition_3) and (condition_4 or condition_5)
             
     def execute(self, context):
-        
-        teeth = odcutils.tooth_selection(context)
-        
-        for tooth in teeth:
-            if tooth.restoration in bpy.data.objects:
-                Contour = bpy.data.objects[tooth.restoration]
-            else:
-                Contour = bpy.data.objects[tooth.contour]
-            
-                    
+        from .contact_adjustment import adjust
+        changed = False
+        for tooth in odcutils.tooth_selection(context):
             if self.mesial:
-                Mesial = bpy.data.objects.get(tooth.mesial)
-                if Mesial == None: pass
-                
-                mod = Contour.modifiers.new('Mesial Contact','SHRINKWRAP')
-                mod.wrap_method = 'PROJECT'
-                mod.use_negative_direction = True
-                mod.use_positive_direction = False
-                mod.use_project_z = False
-                mod.use_project_y = False
-                mod.use_project_x = True
-                mod.offset = self.overlap
-                mod.target = Mesial
-                
-                if tooth.mesial in {context.scene.odc_props.master, tooth.prep_model}:
-                    mod.vertex_group = 'Mesial Connector'
-                    mod.cull_face = 'FRONT'
-                    mod.project_limit = .5
-                    
-                     
-    
+                changed |= adjust(context, tooth, 'mesial', self.overlap)
             if self.distal:
-                Distal = bpy.data.objects.get(tooth.distal)
-                if Distal == None: pass
-                
-                mod = Contour.modifiers.new('Distal Contact','SHRINKWRAP')
-                mod.wrap_method = 'PROJECT'
-                mod.use_negative_direction = False
-                mod.use_positive_direction = True
-                mod.use_project_z = False
-                mod.use_project_y = False
-                mod.use_project_x = True
-                mod.offset = -self.overlap
-                mod.target = Distal
-                
-                if tooth.distal in {context.scene.odc_props.master, tooth.prep_model}:
-                    mod.vertex_group = 'Distal Connector'
-                    mod.cull_face = 'FRONT'
-                    mod.project_limit = .5
-                    
-        
-        #go into weight paint mode?
+                changed |= adjust(context, tooth, 'distal', self.overlap)
+        if not changed:
+            self.report({'WARNING'}, 'Assign a restoration and the requested contact target first')
+            return {'CANCELLED'}
         return {'FINISHED'}
 
 class OPENDENTAL_OT_grind_occlusion(bpy.types.Operator):
@@ -1486,31 +1444,15 @@ class OPENDENTAL_OT_grind_occlusion(bpy.types.Operator):
         return condition_3 and (condition_4 or condition_5)
             
     def execute(self, context):
-        
-        teeth = odcutils.tooth_selection(context)
-        
-        for tooth in teeth:
-            if tooth.restoration in bpy.data.objects:
-                Contour = bpy.data.objects[tooth.restoration]
-            else:
-                Contour = bpy.data.objects[tooth.contour]
-                
-            Opposing = bpy.data.objects.get(tooth.opposing)
-            if Opposing == None: pass
-            
-            mod = Contour.modifiers.new('Occlusion','SHRINKWRAP')
-            mod.wrap_method = 'PROJECT'
-            mod.use_negative_direction = True
-            mod.use_positive_direction = False
-            mod.use_project_z = True
-            mod.use_project_y = False
-            mod.use_project_x = False
-            mod.offset = self.overlap
-            mod.target = Opposing
-    
-        #go into weight paint mode?
-        return {'FINISHED'}  
-       
+        from .contact_adjustment import adjust
+        changed = False
+        for tooth in odcutils.tooth_selection(context):
+            changed |= adjust(context, tooth, 'opposing', self.overlap)
+        if not changed:
+            self.report({'WARNING'}, 'Assign a restoration and the requested contact target first')
+            return {'CANCELLED'}
+        return {'FINISHED'}
+
 class OPENDENTAL_OT_teeth_arch(bpy.types.Operator):
     ''''''
     bl_idname = 'opendental.teeth_to_arch'
