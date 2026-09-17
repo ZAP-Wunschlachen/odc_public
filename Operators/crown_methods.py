@@ -503,7 +503,7 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     
     #take control of the scene TODO:consider overriding context
     bpy.ops.object.select_all(action='DESELECT')
-    current_objects=list(bpy.data.objects)
+    previous = bpy.data.objects.get(tooth.intaglio)
     Restoration.hide_set(False)
     context.view_layer.objects.active=Restoration
     Restoration.select_set(True)
@@ -513,15 +513,13 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     #to go back and make changes if necessary.        
     bpy.ops.object.duplicate()
     
-    intaglio=str(tooth.name + "_Intaglio")
-    for o in bpy.data.objects:
-        if o not in current_objects:
-            o.name=intaglio
-            if master in sce.objects:
-                odcutils.parent_in_place(o, sce.objects[master])
-            
+    # Keep the duplicate itself: the requested name may already be occupied.
+    Intaglio = context.object
+    Intaglio.name = tooth.name + "_Intaglio"
+    if master in sce.objects:
+        odcutils.parent_in_place(Intaglio, sce.objects[master])
+
     bpy.ops.object.select_all(action='DESELECT')
-    Intaglio = bpy.data.objects[intaglio] 
     context.view_layer.objects.active=Intaglio
     Intaglio.select_set(True)
     
@@ -538,7 +536,7 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     #to let the user define the amount of precision.
     multires_cuts = Restoration.modifiers['Multires'].levels 
     bpy.ops.object.modifier_remove(modifier="Multires")
-    for mod in Intaglio.modifiers:
+    for mod in list(Intaglio.modifiers):
         bpy.ops.object.modifier_apply(modifier=mod.name)
     
     #clean out the vertex groups
@@ -650,7 +648,7 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     
     #Apply both modifiers and fix some vertex groups weights
     #note. vertex groups 'grow' during multires subdivision
-    for mod in Intaglio.modifiers:
+    for mod in list(Intaglio.modifiers):
         bpy.ops.object.modifier_apply(modifier = mod.name)
     
     
@@ -720,7 +718,13 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
     bpy.ops.object.modifier_apply(modifier="Final Seat")
     
     Restoration.hide_set(True)
-    tooth.intaglio = intaglio
+    tooth.intaglio = Intaglio.name
+    if previous is not None and previous not in {
+            Prep, Margin, Axis, Restoration, Psuedomargin, Intaglio}:
+        previous_mesh = previous.data if previous.type == 'MESH' else None
+        bpy.data.objects.remove(previous, do_unlink=True)
+        if previous_mesh is not None and previous_mesh.users == 0:
+            bpy.data.meshes.remove(previous_mesh)
 
     
     #for a in bpy.context.window.screen.areas:

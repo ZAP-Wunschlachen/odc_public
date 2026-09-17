@@ -48,5 +48,23 @@ evaluated = inside.evaluated_get(bpy.context.evaluated_depsgraph_get())
 mesh = evaluated.to_mesh()
 assert all(math.isfinite(c) for v in mesh.vertices for c in v.co)
 evaluated.to_mesh_clear()
+# Rebuilding must operate on the duplicate, not the old object with its name.
+old_name = inside.name
+old_mesh_name = inside.data.name
+object_count = len(bpy.data.objects)
+assert bpy.ops.opendental.calculate_inside(chamfer=.2, gap=.12, holy_zone=.2, no_undercuts=False) == {'FINISHED'}
+inside = bpy.data.objects[tooth.intaglio]
+assert inside.name != old_name
+assert bpy.data.objects.get(old_name) is None
+assert bpy.data.meshes.get(old_mesh_name) is None
+assert len(bpy.data.objects) == object_count
+assert abs(inside.modifiers['Cement Gap'].offset-.12) < 1e-6
+assert len(inside.data.polygons) > 0
+assert inside.vertex_groups.get('Holy Zone') and inside.vertex_groups.get('filled_hole')
+bpy.context.view_layer.update()
+evaluated = inside.evaluated_get(bpy.context.evaluated_depsgraph_get())
+mesh = evaluated.to_mesh()
+assert mesh.polygons and all(math.isfinite(c) for v in mesh.vertices for c in v.co)
+evaluated.to_mesh_clear()
 addon_utils.disable(ROOT.name, default_set=True)
 print('ODC_ALTERNATE_INTAGLIO_PASSED', bpy.app.version_string)

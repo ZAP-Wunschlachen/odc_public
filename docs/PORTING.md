@@ -394,3 +394,16 @@ references are refreshed after modifier application before filling. The run
 produces faces and zone groups with finite evaluated coordinates and the requested
 gap setting. Exact clearance, repeated generation, cleanup and anatomical quality
 remain unverified for this alternative path.
+
+## Alternative intaglio regeneration
+
+The alternative path now keeps the duplicate object directly instead of looking
+it up by a requested name that may belong to the previous interior. On successful
+completion it stores the actual new name and removes the previous interior and
+its unused mesh. Modifier application iterates over a snapshot of the stack.
+The Blender 5.1.2 integration test builds twice with different gap settings,
+checks stable object count, removal of the previous object/mesh, zone groups,
+faces and finite evaluated coordinates. It passes. This does not yet establish
+measured clearance or failure rollback. Blender still reports a small allocation
+at shutdown, consistent with the separately documented asset/edit-mode diagnostic;
+this run is not evidence of leak-free operation.
