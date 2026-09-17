@@ -587,3 +587,13 @@ z=2: the existing 0.5 offset keeps it on the source side. Lower-cap coordinates
 and upper-cap x/y coordinates remain unchanged. This establishes the actual
 projection behavior on a plane, not clinical clearance or intersection quality
 against curved splints. No code correction was required for this tested path.
+
+## Implant placement helper
+
+The shared placement helper now loads the implant and hardware before replacing
+an existing assembly, uses current linking/removal and accepts matrix or quaternion
+orientation. Unused new library-parent dependencies are removed after hardware is
+reparented. Blender 5.1.2 passes location/orientation, linked hardware, stable object
+count on replacement and missing-asset preservation. Public placement operators,
+master parenting, mid-load failure cleanup and user-attached child ownership still
+need review. This is helper coverage, not completion of the placement UI.

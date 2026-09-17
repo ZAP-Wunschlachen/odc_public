@@ -16,104 +16,54 @@ from .. import Addon_utils
 from ..Addon_utils import odcutils
 from ..Addon_utils.odcutils import get_settings
 
-def place_implant(context, implant_space, location,orientation,imp, hardware = True):
-    '''
-    
-    args:
-        context
-        implant_space - ODC Implant Space type
-        location - Vector
-        orientation - Matrix or Quaternion
-        lib_implants - 
-        imp - string representing implant object name in link library
-    '''
-    #check if space already has an implant object.
-    #if so, delete, replace, print warning
-    sce = context.scene
-    if implant_space.implant and implant_space.implant in bpy.data.objects:
-        print("replacing the existing implant with the one you chose")
-        Implant = bpy.data.objects[implant_space.implant]
-        #unlink it from the scene, clear it's useres, remove it.
-        
-        
-        if Implant.children:
-            for child in Implant.children:
-                sce.objects.unlink(child)
-                child.user_clear
-                bpy.data.objects.remove(child)
-                            
-        sce.objects.unlink(Implant)
-        implant_mesh = Implant.data
-        
-        Implant.user_clear()
-        #remove the object
-        bpy.data.objects.remove(Implant)
-        implant_mesh.user_clear()
-        bpy.data.meshes.remove(implant_mesh)
-        
-        sce.update()
-        #TDOD what about the children/hardwares?
-   
-    world_mx = Matrix.Identity(4)
-    world_mx[0][3]=location[0]
-    world_mx[1][3]=location[1]
-    world_mx[2][3]=location[2]
-        
-        #mx_b = Matrix.Identity(4)
-        #mx_l = Matrix.Identity(4)
-    #is this more memory friendly than listing all objects?
-    current_obs = [ob.name for ob in bpy.data.objects]
-    
-    #link the new implant from the library
+def place_implant(context, implant_space, location, orientation, imp, hardware=True):
+    """Load an implant and its library hardware before replacing the old assembly."""
     settings = get_settings()
-    odcutils.obj_from_lib(settings.imp_lib, imp)
-    
-    #this is slightly more robust than trusting we don't have duplicate names.
-    for ob in bpy.data.objects:
-        if ob.name not in current_obs:
-            Implant = ob
-    
-    
-    sce.objects.link(Implant)
-    #Implant.matrix_basis = mx_b
-    Implant.matrix_world = world_mx
-    Implant.update_tag()
-    sce.update()
-    Implant.rotation_mode = 'QUATERNION'
-    Implant.rotation_quaternion = orientation
-    sce.update()
-    #Implant.matrix_local = mx_l
-    #Implant.location = L
-    
-    if sce.odc_props.master:
-        Master = bpy.data.objects[sce.odc_props.master]
-        odcutils.parent_in_place(Implant, Master)
-    else:
-        print('No Master Model, placing implant anyway, moving objects may not preserve spatial relationships')
-    
-    #looks a little redundant, but it ensure if any
-    #duplicates exist our referencing stays accurate
-    Implant.name = implant_space.name + "_" + Implant.name
-    implant_space.implant = Implant.name
-    
-    if hardware:
-        current_obs = [ob.name for ob in bpy.data.objects]
-                    
-        inc = imp + '_'
-        
-        settings = get_settings()
-        hardware_list = odcutils.obj_list_from_lib(settings.imp_lib, include = inc)
-        print(hardware_list)
-        for ob in hardware_list:
-            odcutils.obj_from_lib(settings.imp_lib,ob)
-                
-        for ob in bpy.data.objects:
-            if ob.name not in current_obs:
-                sce.objects.link(ob)
-                ob.parent = Implant
-                ob.layers[11] = True  #TODO: put this in layer management.
-                                           
-    return Implant
+    previous = bpy.data.objects.get(implant_space.implant)
+    loaded = []
+    existing_objects = set(bpy.data.objects)
+    try:
+        implant = odcutils.obj_from_lib(settings.imp_lib, imp)
+        loaded.append(implant)
+        if hardware:
+            for name in odcutils.obj_list_from_lib(settings.imp_lib, include=imp + '_'):
+                loaded.append(odcutils.obj_from_lib(settings.imp_lib, name))
+        for obj in loaded:
+            context.collection.objects.link(obj)
+        rotation = orientation.to_quaternion() if isinstance(orientation, Matrix) else orientation
+        implant.rotation_mode = 'QUATERNION'
+        implant.rotation_quaternion = rotation
+        implant.location = location
+        context.view_layer.update()
+        master = bpy.data.objects.get(context.scene.odc_props.master)
+        if master is not None:
+            odcutils.parent_in_place(implant, master)
+        for obj in loaded[1:]:
+            obj.parent = implant
+        # Appending each hardware object can also append its library parent.
+        # After reparenting, remove only new, unused dependency objects.
+        for dependency in set(bpy.data.objects) - existing_objects - set(loaded):
+            if dependency.users == 0:
+                data = dependency.data if dependency.type == 'MESH' else None
+                bpy.data.objects.remove(dependency)
+                if data is not None and data.users == 0:
+                    bpy.data.meshes.remove(data)
+        implant.name = implant_space.name + '_' + implant.name
+    except Exception:
+        for obj in reversed(loaded):
+            data = obj.data if obj.type == 'MESH' else None
+            bpy.data.objects.remove(obj, do_unlink=True)
+            if data is not None and data.users == 0:
+                bpy.data.meshes.remove(data)
+        raise
+    implant_space.implant = implant.name
+    if previous is not None:
+        for obj in [*previous.children_recursive, previous]:
+            data = obj.data if obj.type == 'MESH' else None
+            bpy.data.objects.remove(obj, do_unlink=True)
+            if data is not None and data.users == 0:
+                bpy.data.meshes.remove(data)
+    return implant
 
 def implant_outer_cylinder(context, space, 
                            width, depth, trim = 0, 
