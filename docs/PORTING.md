@@ -608,3 +608,13 @@ passes first placement at the cursor platform and replacement with a second
 library asset while preserving platform and orientation. Standalone placement,
 search popup, scaled/master-parented cases and hardware world transforms require
 further tests. The platform convention itself is not a clinical validation.
+
+## Implant from crown
+
+The crown-driven placement operator now provides a retained library enum and
+removes obsolete collection-as-layer accesses. Its depth expression no longer
+attempts matrix multiplication on an integer. Local implant length and an explicit
+world-matrix assignment position the platform below the crown bounding-box CEJ
+reference. Blender 5.1.2 passes two depths with a rotated/translated crown fixture,
+checking platform position and axis direction. Explicit insertion-axis overrides,
+missing-input reporting, multi-tooth selection and UI interaction remain pending.

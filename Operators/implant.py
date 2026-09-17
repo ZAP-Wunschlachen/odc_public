@@ -73,9 +73,13 @@ class OPENDENTAL_OT_implant_from_contour(bpy.types.Operator):
     bl_property = "imp"
     
     
+    _enum_items = []
+
     def item_cb(self, context):
-        return [(obj.name, obj.name, '') for obj in self.objs]
- 
+        type(self)._enum_items = [(name, name, '') for name in
+            odcutils.obj_list_from_lib(get_settings().imp_lib, exclude='_')]
+        return type(self)._enum_items
+
     objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     imp: bpy.props.EnumProperty(name="Implant Library Objects",
                                  description="A List of the tooth library", 
@@ -111,8 +115,6 @@ class OPENDENTAL_OT_implant_from_contour(bpy.types.Operator):
         teeth = odcutils.tooth_selection(context)
         sce = bpy.context.scene
         
-        layers_copy = [layer for layer in context.scene.collection.all_objects]
-        context.scene.collection.all_objects[0] 
         
         for tooth in teeth:
             
@@ -144,18 +146,18 @@ class OPENDENTAL_OT_implant_from_contour(bpy.types.Operator):
                     Imp = implant_utils.place_implant(context, sce.odc_implants[tooth.name], new_loc, rot_diff, self.imp, hardware = self.hardware)
                     
                     #reposition platform below CEJ
-                    world_mx = Imp.matrix_world
-                    delta =  Imp.dimensions[2] * world_mx.to_3x3() @ Vector((0,0,1)) + self.depth @ world_mx.to_3x3() @ Vector((0,0,1))
+                    context.view_layer.update()
+                    world_mx = Imp.matrix_world.copy()
+                    length = max(v[2] for v in Imp.bound_box)-min(v[2] for v in Imp.bound_box)
+                    delta = (length + self.depth) * (world_mx.to_quaternion() @ Vector((0,0,1)))
                     
                     world_mx[0][3] += delta[0]
                     world_mx[1][3] += delta[1]
                     world_mx[2][3] += delta[2]
-                    #odcutils.reorient_object(Imp, rot_diff)
+                    Imp.matrix_world = world_mx
+                    context.view_layer.update()
         
         odcutils.layer_management(sce.odc_implants, debug = False)
-        for i, layer in enumerate(layers_copy):
-            context.scene.collection.all_objects[i] = layer
-        context.scene.collection.all_objects[11] = True
         
         return {'FINISHED'}
         
