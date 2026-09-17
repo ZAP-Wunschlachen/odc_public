@@ -909,3 +909,7 @@ The base operator now searches boundary edges and chooses the largest closed loo
 Replaced legacy scene linking/screen scene assignment with tagged object copies, collection linking and window scene switching. Copies retain world placement with parent/constraints/animation cleared; mesh data remains shared as in the original single-user-object workflow. Rebuild removes only tagged copies from simulation collections and deletes them only if unused. Rigid-body setup uses current active/selection APIs and filters meshes.
 
 `test_physics_scene.py` passes on Blender 5.1.2 for initial and repeated setup: one independent object copy, same mesh and world matrix, intact source scene object, rigid-body settings on the copy only, and disabled gravity. Actual simulation dynamics, forcefields and animated/deformed sources remain unverified.
+
+### Forcefield API port — simulation cycle still open
+
+Ported forcefield object linking/selection/activation. Tagged fields are reused per parent tooth and cleaned with simulation copies on rebuild. The expanded physics-scene test passes field count, parent-relative world position, FORCE type, strength and radius checks across repeated setup. However Blender reports a dependency cycle: a field parented to a simulated rigid body affects that same simulation. Thus the API/setup test passes but forcefield dynamics are not validated; the inherited simulation design still needs correction. Do not treat this as a completed physics workflow.

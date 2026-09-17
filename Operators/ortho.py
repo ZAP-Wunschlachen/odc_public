@@ -912,7 +912,7 @@ class OPENDENTAL_OT_add_forcefields(bpy.types.Operator):
     bl_idname = "opendental.add_forcefields"
     bl_label = "Add Forcefields All"
     bl_options = {'REGISTER','UNDO'}
-    
+
     @classmethod
     def poll(self,context):
         if context.scene.name == 'Physics Sim':
@@ -922,26 +922,31 @@ class OPENDENTAL_OT_add_forcefields(bpy.types.Operator):
     def execute(self, context):
         obs = [ob for ob in context.selected_objects]
         bpy.ops.object.select_all(action = 'DESELECT')
-        
+
         for ob in obs:
             if ob.type != 'MESH': continue
-            empty = bpy.data.objects.new(ob.name[0:2] + 'force', None)
-            context.scene.objects.link(empty)
-            context.scene.objects.active = empty
+            empty = next((child for child in ob.children if child.get('odc_tooth_forcefield')), None)
+            if empty is None:
+                empty = bpy.data.objects.new(ob.name[0:2] + 'force', None)
+                context.scene.collection.objects.link(empty)
+                empty['odc_tooth_forcefield'] = True
+                empty['odc_physics_copy'] = True
+            context.view_layer.objects.active = empty
             empty.parent = ob
             empty.matrix_world = ob.matrix_world
-            empty.select = True
-            bpy.ops.object.forcefield_toggle()
+            empty.select_set(True)
+            if empty.field is None or empty.field.type == 'NONE':
+                bpy.ops.object.forcefield_toggle()
             empty.field.strength = -1000
             empty.field.falloff_type = 'SPHERE'
             empty.field.use_radial_min = True
             empty.field.use_radial_max = True
             empty.field.radial_min = ob.dimensions[0]/1.8
             empty.field.radial_max = 10
-            empty.select = False
-            
-        return {'FINISHED'} 
-    
+            empty.select_set(False)
+
+        return {'FINISHED'}
+
 class OPENDENTAL_OT_limit_movements(bpy.types.Operator):
     '''Add constraints to limit movements in simulation'''
     bl_idname = "opendental.limit_physics_movements"

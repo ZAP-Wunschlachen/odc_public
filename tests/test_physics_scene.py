@@ -16,7 +16,7 @@ for attempt in range(2):
     assert bpy.ops.opendental.add_physics_scene() == {'FINISHED'}
     scene = bpy.context.scene
     assert scene.name == 'Physics Sim'
-    copies = [o for o in scene.objects if o.get('odc_physics_copy')]
+    copies = [o for o in scene.objects if o.get('odc_physics_copy') and o.type == 'MESH']
     assert len(copies) == 1
     copy = copies[0]
     assert copy != source and copy.data == source.data
@@ -24,6 +24,18 @@ for attempt in range(2):
     assert source.name in source_scene.objects
     assert bpy.ops.opendental.physics_sim_setup() == {'FINISHED'}
     assert copy.rigid_body is not None and source.rigid_body is None
+    for repeat in range(2):
+        copy.select_set(True)
+        bpy.context.view_layer.objects.active = copy
+        assert bpy.ops.opendental.add_forcefields() == {'FINISHED'}
+        fields = [child for child in copy.children if child.get('odc_tooth_forcefield')]
+        assert len(fields) == 1
+        field = fields[0]
+        bpy.context.view_layer.update()
+        assert (field.matrix_world.translation-copy.matrix_world.translation).length < 1e-5
+        assert field.field.type == 'FORCE'
+        assert abs(field.field.strength+1000) < 1e-5
+        assert abs(field.field.radial_min-copy.dimensions.x/1.8) < 1e-5
     assert not scene.use_gravity
     assert scene.rigidbody_world.solver_iterations == 15
 print('ODC_PHYSICS_SCENE_PASSED', bpy.app.version_string)
