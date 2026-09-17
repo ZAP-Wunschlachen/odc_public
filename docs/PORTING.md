@@ -763,3 +763,12 @@ by type and target instead of their display name. Blender 5.1.2 passes a public
 operator test with a renamed path constraint, translated/rotated parent, world
 matrix preservation and repeat invocation. Other remaining constraint stacks,
 animated transforms and multi-object arch generation still require testing.
+
+## Connector helper initial port
+
+`bridge_loop_2` uses current active-object/visibility APIs, bundled LoopTools relax
+and BMesh normal recalculation. Blender 5.1.2 passes a two-box connector fixture:
+the resulting mesh has manifold edges and a single connected component. Modal
+Bridge Individual interaction, anatomical connector groups, parameter mapping
+(segments/twist/cubic currently follow upstream behavior) and repeat edits remain
+unverified. This establishes the helper path, not the complete connector workflow.
