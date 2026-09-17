@@ -869,3 +869,9 @@ The custom tray operator now delegates its identical outer-envelope generation t
 Ported evaluated mesh extraction, collection linking and Shrinkwrap ABOVE_SURFACE mode. Fixed the chained legacy property assignment so Smooth and Shrink register independently. Both offset paths copy normals before changing coordinates; the in-place mesh is updated explicitly.
 
 `test_simple_offset_surface.py` passes on Blender 5.1.2: all four smooth/shrink combinations, unchanged source for duplicate mode, expected modifier counts, raw and evaluated planar offset +0.4, and in-place offset -0.2. Curved geometry, self-intersections and nonuniform object scale are not validated by this planar fixture.
+
+### Denture Boolean Intaglio
+
+Replaced invocation-only target enumeration with retained dynamic enum items from scene meshes, excluding the active object and offering an explicit empty choice. Polling requires a mesh in Object mode; execution validates the target before creating an Exact Difference modifier. Corrected the operator label.
+
+`test_denture_boolean.py` passes on Blender 5.1.2: empty selection cancels without modifier creation; direct execution with a master cast creates a manifold hollow result with signed volume 56 for nested cubes of volumes 64 and 8. Source meshes remain unbaked. Anatomical tray geometry and dialog interaction remain unverified.

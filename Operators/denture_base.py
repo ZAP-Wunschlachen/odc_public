@@ -430,49 +430,41 @@ class OPENDENTAL_OT_simple_offset_surface(bpy.types.Operator):
         return {'FINISHED'}
                
 class OPENDENTAL_OT_boolean_intaglio(bpy.types.Operator):
-    """Add boolean modifier to remove intaglio surfaec"""
+    """Subtract a master cast from the active mesh."""
     bl_idname = "opendental.denture_boolean_intaglio"
-    bl_label = "Create Meta Surface"
+    bl_label = "Boolean Intaglio"
     bl_options = {'REGISTER', 'UNDO'}
-    
-    
+    _items = []
+
     def item_cb(self, context):
-        return [(obj.name, obj.name, '') for obj in self.objs]
- 
-    objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
-    
-    ob: bpy.props.EnumProperty(name="Master Cast",
-                                 description="Select obj in scene which is master cast", 
-                                 items=item_cb)
-    
+        items = [('NONE', 'Select Master Cast', '')]
+        if context and context.scene:
+            items += [(obj.name, obj.name, '') for obj in context.scene.objects
+                      if obj != context.object and obj.type == 'MESH']
+        type(self)._items = items  # Keep enum strings alive for Blender.
+        return type(self)._items
+
+    ob: EnumProperty(name="Master Cast", items=item_cb)
+
     @classmethod
     def poll(cls, context):
-        if context.mode == "OBJECT" and context.object != None:
-            return True
-        else:
-            return False
-        
+        return context.mode == 'OBJECT' and context.object is not None and context.object.type == 'MESH'
+
     def execute(self, context):
-        
-        ob = context.object
-        mod = ob.modifiers.new('Intaglio', type = 'BOOLEAN')
-        
-        mod.operation = 'DIFFERENCE'
-        if self.ob != None:
-            mod.object = bpy.data.objects[self.ob]  
-        
+        target = context.scene.objects.get(self.ob)
+        if target is None or target == context.object or target.type != 'MESH':
+            self.report({'WARNING'}, 'Select a separate mesh as the master cast')
+            return {'CANCELLED'}
+        modifier = context.object.modifiers.new('Intaglio', 'BOOLEAN')
+        modifier.operation = 'DIFFERENCE'
+        modifier.solver = 'EXACT'
+        modifier.object = target
         return {'FINISHED'}
-    
+
     def invoke(self, context, event):
-        self.objs.clear()
-        assets = [ob.name for ob in context.scene.objects if ob != context.object]
-       
-        for asset_object_name in assets:
-            self.objs.add().name = asset_object_name
-        
         return context.window_manager.invoke_props_dialog(self)
-    
-    
+
+
 def register():
     bpy.utils.register_class(OPENDENTAL_OT_meta_offset_surface)
     bpy.utils.register_class(OPENDENTAL_OT_meta_custom_tray)
