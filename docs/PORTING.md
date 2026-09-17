@@ -92,9 +92,11 @@ nonuniformly scaled master, and following subsequent master movement. The modal
 operator calls this helper. Its selection API, obsolete layer access, previous-tooth
 wraparound and Space event handling have been updated. A tested cancellation
 session restores existing axis transforms/display and removes newly created axes
-while preserving unrelated objects; repeated cleanup is safe. Actual modal events,
-selection behavior and GPU display still require interactive verification.
-This is not yet a completed insertion-axis workflow.
+while preserving unrelated objects; repeated cleanup is safe. A separate foreground test now invokes the registered operator and sends events
+through Blender's window event queue. Space placement, Escape cancellation,
+left-click placement, Enter acceptance and removal of the modal handler pass.
+Multi-tooth navigation, right-click selection, existing-axis cancellation through
+the UI and all viewport configurations still require broader coverage.
 
 ## GPU overlay verification
 
@@ -144,3 +146,11 @@ blender --background --factory-startup --python-exit-code 1 --python tests/test_
 
 Tests use synthetic geometry. The port tests do not validate a patient-specific
 restoration or define material/manufacturing parameters.
+
+## Real window event test
+
+Run a separate test instance with
+`blender --factory-startup --enable-event-simulate --disable-autoexec --python tests/test_axis_modal.py`.
+It uses synthetic scene geometry, exercises actual modal dispatch, asserts scene
+results and handler cleanup, then closes that instance. Failure exits nonzero.
+The successful run log was also checked for drawing callback exceptions.
