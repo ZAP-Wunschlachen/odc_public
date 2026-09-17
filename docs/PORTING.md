@@ -618,3 +618,13 @@ world-matrix assignment position the platform below the crown bounding-box CEJ
 reference. Blender 5.1.2 passes two depths with a rotated/translated crown fixture,
 checking platform position and axis direction. Explicit insertion-axis overrides,
 missing-input reporting, multi-tooth selection and UI interaction remain pending.
+
+## Implant view operators and regression
+
+All 36 existing headless cases passed after the implant placement changes.
+A new foreground test invokes slice view and normal view in a real VIEW_3D region,
+verifying four quad views, requested clip interval and return to a single view.
+Both operators now poll for the correct area/region. Blender 5.1.2 passes this
+foreground test without tracebacks. The headless runner excludes it explicitly.
+This checks view switching, not clinical cross-section interpretation or every
+other interactive workflow. Full plugin compatibility remains incomplete.

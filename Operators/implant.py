@@ -33,6 +33,10 @@ class OPENDENTAL_OT_implant_slice_view(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     
     thickness: bpy.props.FloatProperty(name="Slice Thickness", description="view slice thickenss", default=1, min=1, max=10, step=5, precision=2, options={'ANIMATABLE'})
+    @classmethod
+    def poll(cls, context):
+        return context.area is not None and context.area.type == 'VIEW_3D' and context.region is not None and context.region.type == 'WINDOW'
+
     def execute(self,context):
         
         view = bpy.context.space_data
@@ -51,6 +55,10 @@ class OPENDENTAL_OT_implant_normal_view(bpy.types.Operator):
     bl_label = "Normal View"
     bl_options = {'REGISTER','UNDO'}
     
+    @classmethod
+    def poll(cls, context):
+        return context.area is not None and context.area.type == 'VIEW_3D' and context.region is not None and context.region.type == 'WINDOW'
+
     def execute(self,context):
         
         view = bpy.context.space_data        
