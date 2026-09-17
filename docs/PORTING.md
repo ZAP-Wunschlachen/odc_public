@@ -923,3 +923,9 @@ Ported quaternion-vector products in movement limits and removed obsolete dialog
 Movement limits now use a fixed, unit-scale custom reference at the initial tooth world pose. This replaces incorrectly mixed local coordinates and rotated world projections. Repeated configuration reuses the reference; unlimit removes it when no non-scene/collection references remain. References are tagged for simulation rebuild cleanup.
 
 The extended physics limits test passes both unrotated and 90-degree-rotated objects, no initial position jump, expected clamped world position and reference cleanup. These remain transform-constraint tests, not proof of rigid-body dynamics enforcement; the forcefield cycle remains unresolved.
+
+### Simulation lock dynamics and result transfer
+
+`test_physics_lock.py` verifies real sequential rigid-body evaluation: a location-locked cube remains at height 10 through frame 24 and falls after unlocking/resetting. No lock implementation change was required.
+
+Physics copies now record source object and source scene ID references. Keep Simulation Results collects evaluated world transforms and applies them only to mapped originals, returning to the recorded scene without destructively baking simulation objects. Expanded setup test verifies transfer while leaving another object sharing the source mesh unchanged. Existing field dependency-cycle warnings persist; this is not complete forcefield dynamics validation.

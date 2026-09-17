@@ -817,6 +817,7 @@ class OPENDENTAL_OT_physics_scene(bpy.types.Operator):
                 and any(obj.type == 'MESH' for obj in context.selected_objects))
 
     def execute(self, context):
+        source_scene = context.scene
         sources = [(obj, obj.matrix_world.copy()) for obj in context.selected_objects if obj.type == 'MESH']
         scene = bpy.data.scenes.get('Physics Sim') or bpy.data.scenes.new('Physics Sim')
         # Remove only our previous copies; unrelated scene objects are preserved.
@@ -827,10 +828,12 @@ class OPENDENTAL_OT_physics_scene(bpy.types.Operator):
                         collection.objects.unlink(obj)
                 if obj.users == 0:
                     bpy.data.objects.remove(obj)
+        scene['odc_source_scene'] = source_scene
         copies = []
         for source, world in sources:
             obj = source.copy()
             obj['odc_physics_copy'] = True
+            obj['odc_source_object'] = source
             obj.parent = None
             obj.constraints.clear()
             obj.animation_data_clear()
@@ -1105,28 +1108,25 @@ class OPENDENTAL_OT_keep_simulation_result(bpy.types.Operator):
             return False
     
     def execute(self, context):
-        other_scenes = [sce for sce in bpy.data.scenes if sce.name != 'Physics Sim']
-        scene = other_scenes[0]
-        
-        for ob in context.scene.objects:
-            ob.select = True
-        
-        context.scene.objects.active = ob
-        
-        #this ruins the phys simulation but OH WELL!
-        bpy.ops.object.visual_transform_apply()
-        
-        for pob in bpy.data.scenes['Physics Sim'].objects:
-            for ob in scene.objects:
-                if pob.data == ob.data:
-                    ob.matrix_world = pob.matrix_world
-        
-        #todo, trash all the objects and physics sim
-        
-        #switch back to the old scene             
-        context.screen.scene = scene
-        
-        return {'FINISHED'}        
+        scene = context.scene.get('odc_source_scene')
+        if not isinstance(scene, bpy.types.Scene):
+            self.report({'WARNING'}, 'The simulation has no recorded source scene')
+            return {'CANCELLED'}
+        depsgraph = context.evaluated_depsgraph_get()
+        results = []
+        for obj in context.scene.objects:
+            source = obj.get('odc_source_object')
+            if isinstance(source, bpy.types.Object) and source.name in scene.objects:
+                results.append((source, obj.evaluated_get(depsgraph).matrix_world.copy()))
+        if not results:
+            self.report({'WARNING'}, 'No surviving source objects were found')
+            return {'CANCELLED'}
+        context.window.scene = scene
+        for source, world in results:
+            source.matrix_world = world
+        context.view_layer.update()
+        return {'FINISHED'}
+
 
 def register():
     bpy.utils.register_class(OPENDENTAL_OT_mandibular_view)

@@ -38,4 +38,17 @@ for attempt in range(2):
         assert abs(field.field.radial_min-copy.dimensions.x/1.8) < 1e-5
     assert not scene.use_gravity
     assert scene.rigidbody_world.solver_iterations == 15
+# Explicit source mapping must not overwrite another object sharing the mesh.
+bpy.context.window.scene = source_scene
+sibling = bpy.data.objects.new('Shared mesh sibling', source.data)
+source_scene.collection.objects.link(sibling)
+sibling.location = (-8,0,0)
+bpy.context.window.scene = scene
+copy.location = (7,8,9)
+bpy.context.view_layer.update()
+expected = copy.evaluated_get(bpy.context.evaluated_depsgraph_get()).matrix_world.copy()
+assert bpy.ops.opendental.keep_simulation_results() == {'FINISHED'}
+assert bpy.context.scene == source_scene
+assert (source.matrix_world.translation-expected.translation).length < 1e-5
+assert tuple(sibling.location) == (-8,0,0)
 print('ODC_PHYSICS_SCENE_PASSED', bpy.app.version_string)
