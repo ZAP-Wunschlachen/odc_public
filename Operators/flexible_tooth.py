@@ -124,10 +124,8 @@ class OPENDENTAL_OT_hook_deform(bpy.types.Operator):
         return condition0 and condition1
     
     def execute(self, context):
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
         
-        for ob in context.selected_objects:
+        for ob in list(context.selected_objects):
             mods = [mod.type for mod in ob.modifiers]
             if 'HOOK' in mods:
                 self.report({'WARNING'}, 'There are hook modifiers in' + ob.name +'.  Please apply or remove them') 
@@ -149,15 +147,15 @@ class OPENDENTAL_OT_hook_deform(bpy.types.Operator):
                     data_name = ob.data.name[0:2]
                     
                     hook_parent = bpy.data.objects.new(data_name + '_hook', None)
-                    context.scene.objects.link(hook_parent)
+                    context.collection.objects.link(hook_parent)
                     hook_parent.matrix_world = ob.matrix_world
                     
                     v_islands = v_groups[ob.data.name[0:2]]
                     modnames = [data_name + '_hook.'+str(k).zfill(3) for k in range(len(v_islands))]
                     
                     bpy.ops.object.select_all(action = 'DESELECT')
-                    context.scene.objects.active = ob
-                    ob.select = True
+                    context.view_layer.objects.active = ob
+                    ob.select_set(True)
                     N_mods = len(ob.modifiers)
                     for grp, modname in  zip(v_islands,modnames):
                         bpy.ops.object.mode_set(mode = 'EDIT')
@@ -170,14 +168,14 @@ class OPENDENTAL_OT_hook_deform(bpy.types.Operator):
                         center *= 1/len(grp)
                         
                         hook = bpy.data.objects.new(modname, None)
-                        context.scene.objects.link(hook)
+                        context.collection.objects.link(hook)
                         
                         if bversion() < '002.077.000':
                             new_loc, no, ind = ob.closest_point_on_mesh(center)
                         
                         else:
                             ok, new_loc, no, ind = ob.closest_point_on_mesh(center)
-                        world_loc = mx * new_loc
+                        world_loc = mx @ new_loc
                     
 
                         hook.parent = hook_parent
@@ -185,8 +183,8 @@ class OPENDENTAL_OT_hook_deform(bpy.types.Operator):
                         hook.matrix_world[1][3] = world_loc[1]
                         hook.matrix_world[2][3] = world_loc[2]
                         
-                        hook.empty_draw_type = 'SPHERE'
-                        hook.empty_draw_size = .5
+                        hook.empty_display_type = 'SPHERE'
+                        hook.empty_display_size = .5
                         
                         
                         mod = ob.modifiers.new(modname, type='HOOK')         
@@ -203,13 +201,13 @@ class OPENDENTAL_OT_hook_deform(bpy.types.Operator):
                         #    if obj.name not in old_obs:
                         #        hook = obj
                         #        hook.name = modname
-                        #        hook.empty_draw_type = 'SPHERE'
-                        #        hook.empty_draw_size = .5
+                        #        hook.empty_display_type = 'SPHERE'
+                        #        hook.empty_display_size = .5
                         #        hook.show_x_ray = True
                         #        loc = hook.location
                         #        bpy.ops.object.mode_set(mode = 'OBJECT')
                         #        new_loc, no, ind = ob.closest_point_on_mesh(imx*loc)
-                         #       hook.location = mx * new_loc
+                         #       hook.location = mx @ new_loc
                                 #TODO, parent in place and keep transform
                         
                         
@@ -240,8 +238,8 @@ class OPENDENTAL_OT_hook_deform(bpy.types.Operator):
                     
                     for n in range(0, N_mods):      
                         bpy.ops.object.modifier_move_up(modifier = "flexitooth")
-                    bpy.ops.object.mode_set(mode = 'EDIT')
-                    bpy.ops.object.laplaciandeform_bind(modifier = "flexitooth")
+                    bpy.ops.object.mode_set(mode = 'OBJECT')
+                    bpy.ops.object.laplaciandeform_bind(modifier = mod.name)
                     bpy.ops.object.mode_set(mode = 'OBJECT')    
                     
                     for mod in ob.modifiers:
