@@ -800,3 +800,11 @@ default for existing callers and accepts zero iterations. Blender 5.1.2 passes
 the parameter test showing different vertex coordinates for zero versus five
 iterations alongside the existing segment/twist/strength checks. Modal UI testing
 and anatomical connector-quality checks remain outstanding.
+
+## Bridge Individual foreground execution
+
+A separate foreground Blender 5.1.2 test invokes Bridge Individual on named
+24/25 connector groups, sends Space through window event simulation, checks new
+connector vertices and sends Enter. The modal handler is removed and the log has
+no tracebacks. The headless runner excludes this foreground test. Scroll navigation,
+Escape semantics, repeated connector edits and anatomical fixtures remain untested.
