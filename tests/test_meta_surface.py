@@ -44,4 +44,17 @@ for finalize in (False, True):
         assert result.type == 'META'
         assert len(result.data.elements) == len(scaffold.data.vertices)
         assert all(abs(ball.radius-3.5) < 1e-6 for ball in result.data.elements)
+for arguments in ({'radius': 0}, {'resolution': 0}, {'radius': -1}):
+    counts = (len(bpy.data.objects), len(bpy.data.metaballs), len(bpy.data.meshes))
+    assert bpy.ops.opendental.meta_offset_surface(**arguments) == {'CANCELLED'}
+    assert counts == (len(bpy.data.objects), len(bpy.data.metaballs), len(bpy.data.meshes))
+assert bpy.ops.opendental.meta_custom_tray(tray_thickness=-1, tray_offset=3) == {'CANCELLED'}
+assert bpy.ops.opendental.meta_custom_tray(tray_thickness=3, tray_offset=-1) == {'CANCELLED'}
+empty = bpy.data.objects.new('Empty scaffold', bpy.data.meshes.new('Empty scaffold'))
+bpy.context.scene.collection.objects.link(empty)
+bpy.context.view_layer.objects.active = empty
+counts = (len(bpy.data.objects), len(bpy.data.metaballs), len(bpy.data.meshes))
+assert bpy.ops.opendental.meta_offset_surface() == {'CANCELLED'}
+assert bpy.ops.opendental.meta_scaffold_create() == {'CANCELLED'}
+assert counts == (len(bpy.data.objects), len(bpy.data.metaballs), len(bpy.data.meshes))
 print('ODC_META_SURFACE_PASSED', bpy.app.version_string)

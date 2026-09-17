@@ -126,6 +126,16 @@ class OPENDENTAL_OT_meta_offset_surface(bpy.types.Operator):
         ob = context.object
         mx = ob.matrix_world
         
+        if self.radius <= 0 or self.resolution <= 0:
+            self.report({'WARNING'}, 'Radius and resolution must be positive')
+            return {'CANCELLED'}
+        bme = bmesh.new()
+        bme.from_object(ob, context.evaluated_depsgraph_get())
+        if not bme.verts:
+            bme.free()
+            self.report({'WARNING'}, 'The source mesh has no vertices')
+            return {'CANCELLED'}
+
         meta_data = bpy.data.metaballs.new('Meta Mesh')
         # Metaballs with dot-number suffixes form one family. Use a distinct
         # base name so repeated runs can be evaluated independently.
@@ -145,8 +155,6 @@ class OPENDENTAL_OT_meta_offset_surface(bpy.types.Operator):
             meta_obj.data.materials.append(mat)
             
             
-        bme = bmesh.new()
-        bme.from_object(ob, context.evaluated_depsgraph_get())
         for v in bme.verts:
             mb = meta_data.elements.new(type = 'BALL')
             mb.radius = self.radius
@@ -329,6 +337,9 @@ class OPENDENTAL_OT_meta_custom_tray(bpy.types.Operator):
             return False
         
     def execute(self, context):
+        if self.tray_thickness <= 0 or self.tray_offset < 0:
+            self.report({'WARNING'}, 'Tray thickness must be positive and offset nonnegative')
+            return {'CANCELLED'}
         # This legacy tool generates the outer envelope. The intaglio is
         # created separately with the Boolean Intaglio operator.
         return bpy.ops.opendental.meta_offset_surface(

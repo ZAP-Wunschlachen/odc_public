@@ -881,3 +881,7 @@ Replaced invocation-only target enumeration with retained dynamic enum items fro
 Ported evaluated curve mesh extraction and collection linking, releases temporary mesh data, validates two usable edge paths before creating a result, and uses independent metaball family names. Invalid spline counts now produce a user-facing warning. Removed obsolete commented conversion code.
 
 `test_meta_rim.py` passes in Blender 5.1.2 for CUBE and ELLIPSOID elements on two semicircular paths: correct element midpoint and half-height, more than 50 elements, nonempty evaluated surface for both simultaneous results, no temporary mesh accumulation, and no created objects on an invalid empty curve. Degenerate, cyclic, bevelled and intersecting path cases remain unverified.
+
+### Meta input validation
+
+Meta surface validates positive radius/resolution and an evaluated source with vertices before allocating result objects. Custom tray validates positive thickness and nonnegative offset separately. The expanded meta-surface test passes valid workflows plus zero/negative parameters and empty source meshes, checking stable object/mesh/metaball counts on rejected surface/scaffold operations.
