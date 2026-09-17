@@ -299,7 +299,7 @@ def join_bmesh_map(source, target, src_trg_map = None, src_mx = None, trg_mx = N
     for v in source.verts:
         if v.index not in src_trg_map:
             new_ind = len(target.verts)
-            new_bv = target.verts.new(i_trg_mx * src_mx * v.co)
+            new_bv = target.verts.new(i_trg_mx @ src_mx @ v.co)
             new_bmverts.append(new_bv)  #gross...append
             src_trg_map[v.index] = new_ind
             
@@ -357,7 +357,7 @@ def join_bmesh(source, target, src_mx = None, trg_mx = None):
     for v in source.verts:
         if v.index not in src_trg_map:
             new_ind = len(target.verts)
-            new_bv = target.verts.new(i_trg_mx * src_mx * v.co)
+            new_bv = target.verts.new(i_trg_mx @ src_mx @ v.co)
             new_bmverts.append(new_bv)
             src_trg_map[v.index] = new_ind
     

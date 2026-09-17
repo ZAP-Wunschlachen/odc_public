@@ -823,8 +823,6 @@ class OPENDENTAL_make_solid_restoration(bpy.types.Operator):
         settings = get_settings()
         dbg = settings.debug
         teeth = odcutils.tooth_selection(context)
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
         
         for tooth in teeth:
             if self.method == 0:
@@ -832,10 +830,7 @@ class OPENDENTAL_make_solid_restoration(bpy.types.Operator):
             else:
                 crown_methods.make_solid_restoration2(context, tooth, debug = dbg)
         
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
         odcutils.layer_management(context.scene.odc_teeth, debug = False)
-        context.scene.layers[16] = True
             
         return {'FINISHED'}
            

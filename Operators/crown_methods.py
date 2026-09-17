@@ -1697,7 +1697,7 @@ def make_solid_restoration2(context, tooth, debug = False):
     intaglio=tooth.intaglio
     Intaglio = bpy.data.objects[intaglio]
     i_bme = bmesh.new()
-    i_bme.from_object(Intaglio, context.scene)
+    i_bme.from_object(Intaglio, context.evaluated_depsgraph_get())
     intag_bme = i_bme.copy()
     i_bme.free()
     
@@ -1707,7 +1707,7 @@ def make_solid_restoration2(context, tooth, debug = False):
     
     #get modifier applied version of crown, without altering it!
     c_bme = bmesh.new()
-    c_bme.from_object(Restoration, context.scene)
+    c_bme.from_object(Restoration, context.evaluated_depsgraph_get())
     crown_bme = c_bme.copy()
     c_bme.free()
     
@@ -1718,10 +1718,10 @@ def make_solid_restoration2(context, tooth, debug = False):
     
     for i in range(0,4):
         non_man_eds = [ed for ed in crown_bme.edges if not ed.is_manifold]
-        bmesh.ops.delete(crown_bme, geom = non_man_eds, context = 2)
+        bmesh.ops.delete(crown_bme, geom = non_man_eds, context = 'EDGES')
             
         non_man_vs = [v for v in crown_bme.verts if not v.is_manifold]
-        bmesh.ops.delete(crown_bme, geom = non_man_vs, context = 1)
+        bmesh.ops.delete(crown_bme, geom = non_man_vs, context = 'VERTS')
             
         #crown_bme.edges.ensure_lookup_table()
         #crown_bme.verts.ensure_lookup_table()
@@ -1750,6 +1750,7 @@ def make_solid_restoration2(context, tooth, debug = False):
     ret = bmesh.ops.subdivide_edges(crown_bme, edges = new_edges, cuts = 3)#, interp_mode, smooth, cuts, profile_shape, profile_shape_factor)
     vs = [ele for ele in ret['geom_inner'] if isinstance(ele, bmesh.types.BMVert)]
     crown_bme.verts.ensure_lookup_table()
+    crown_bme.verts.index_update()
     vs_inds = [v.index for v in vs]
     
     
@@ -1767,7 +1768,7 @@ def make_solid_restoration2(context, tooth, debug = False):
     cej_group.remove([v.index for v in solid_rest_me.vertices]) #Vertex Group Bug
     cej_group.add(vs_inds, 1, 'ADD')
     
-    context.scene.objects.link(Solid_Restoration)    
+    context.collection.objects.link(Solid_Restoration)
     
     
     mod = Solid_Restoration.modifiers.new('Shrink', 'SHRINKWRAP')

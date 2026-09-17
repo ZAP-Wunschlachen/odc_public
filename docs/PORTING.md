@@ -418,3 +418,16 @@ boundary edges: angle to the insertion axis, preserved length and unchanged
 boundary coordinates. Blender 5.1.2 passes. Nonuniform scaling, malformed boundary
 loops and alternate crown topology remain unverified. The known small shutdown
 allocation warning also appears in this edit-mode workflow.
+
+## Solid restoration, bridge method
+
+The default solid-restoration method now evaluates source meshes through the
+current dependency graph, uses named BMesh deletion contexts and current collection
+linking. The BMesh join helper uses matrix multiplication with `@`. Newly subdivided
+vertices receive updated indices before the CEJ group is assigned. The operator
+no longer uses scene layers. `test_solid_restoration.py` runs the protected intaglio
+fixture followed by the actual default solid operator in Blender 5.1.2; the result
+has faces, finite coordinates and exclusively manifold edges. This establishes
+closure only on the synthetic tooth-25 fixture, not freedom from self-intersections,
+clinical fit, repeated-build cleanup or the alternative merge method. The known
+small edit-mode shutdown allocation warning remains.
