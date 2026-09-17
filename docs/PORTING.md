@@ -853,3 +853,9 @@ The public operator now forwards its Link setting and requires Object mode. The 
 Expanded the occlusal Link fixture to reuse a translated and rotated anterior tooth (11), exercising its cross-section path. The operator passes identity, reference and finite-transform checks; this is not a geometric invariance assertion.
 
 Ran `python3 tests/run_headless.py --blender /Applications/Blender.app/Contents/MacOS/Blender` after these changes: all 50 headless integration cases passed, process exit 0. Detailed local results are in ignored `tests/artifacts/headless/results.json`. UI tests are excluded by the runner. Remaining legacy APIs in other modules and untested workflows prevent claiming a complete plugin port.
+
+### Denture meta scaffold and surface
+
+Ported scaffold and meta-surface dependency graphs, mesh extraction, collection linking and deletion. Polls require meshes; scaffold rejects empty-edge meshes or nonpositive radius. Meta surface now builds its BMesh in execute, freeing dialog preview data immediately. Distinct metaball family names prevent subsequent surfaces from evaluating as empty family members.
+
+`test_meta_surface.py` passes on Blender 5.1.2: reduced scaffold vertex count, world-transform preservation within tolerance, nonfinalized ball positions/radii, finalized nonempty mesh while an earlier meta surface exists, and unchanged source mesh coordinates. No shutdown warning in this test. Tray/rim and further denture workflows remain unported.

@@ -39,7 +39,7 @@ class OPENDENTAL_OT_prepare_meta_scaffold(bpy.types.Operator):
     
     @classmethod
     def poll(cls, context):
-        if context.mode == "OBJECT" and context.object != None:
+        if context.mode == "OBJECT" and context.object is not None and context.object.type == 'MESH':
             return True
         else:
             return False
@@ -49,13 +49,17 @@ class OPENDENTAL_OT_prepare_meta_scaffold(bpy.types.Operator):
         ob = context.object
         
         bme = bmesh.new()
-        bme.from_object(ob, context.scene)
+        bme.from_object(ob, context.evaluated_depsgraph_get())
         
         bme.edges.ensure_lookup_table()
         total_l = 0
         for ed in bme.edges:
             total_l += ed.calc_length()
             
+        if not bme.edges or self.radius <= 0:
+            bme.free()
+            self.report({'WARNING'}, 'A mesh with edges and a positive radius are required')
+            return {'CANCELLED'}
         total_l *= 1/len(bme.edges)
         
         factor = total_l / self.radius
@@ -64,10 +68,10 @@ class OPENDENTAL_OT_prepare_meta_scaffold(bpy.types.Operator):
         mod.ratio = min(1,.5 * factor)
         
         if self.finalize:
-            context.scene.update()
-            me = ob.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
+            context.view_layer.update()
+            me = bpy.data.meshes.new_from_object(ob.evaluated_get(context.evaluated_depsgraph_get()))
             new_ob = bpy.data.objects.new('Meta Scaffold', me)
-            context.scene.objects.link(new_ob)
+            context.collection.objects.link(new_ob)
             new_ob.matrix_world = ob.matrix_world
             
             if ob.data.materials:
@@ -112,7 +116,7 @@ class OPENDENTAL_OT_meta_offset_surface(bpy.types.Operator):
     n_verts: IntProperty(default = 1000)
     @classmethod
     def poll(cls, context):
-        if context.mode == "OBJECT" and context.object != None:
+        if context.mode == "OBJECT" and context.object is not None and context.object.type == 'MESH':
             return True
         else:
             return False
@@ -123,10 +127,17 @@ class OPENDENTAL_OT_meta_offset_surface(bpy.types.Operator):
         mx = ob.matrix_world
         
         meta_data = bpy.data.metaballs.new('Meta Mesh')
-        meta_obj = bpy.data.objects.new('Meta Surface', meta_data)
+        # Metaballs with dot-number suffixes form one family. Use a distinct
+        # base name so repeated runs can be evaluated independently.
+        name = 'Meta Surface'
+        index = 1
+        while name in bpy.data.objects:
+            name = 'Meta Surface %d' % index
+            index += 1
+        meta_obj = bpy.data.objects.new(name, meta_data)
         meta_data.resolution = self.resolution
         meta_data.render_resolution = self.resolution
-        context.scene.objects.link(meta_obj)
+        context.collection.objects.link(meta_obj)
         
         # Copy Material if any
         if ob.data.materials:
@@ -134,7 +145,9 @@ class OPENDENTAL_OT_meta_offset_surface(bpy.types.Operator):
             meta_obj.data.materials.append(mat)
             
             
-        for v in self.bme.verts:
+        bme = bmesh.new()
+        bme.from_object(ob, context.evaluated_depsgraph_get())
+        for v in bme.verts:
             mb = meta_data.elements.new(type = 'BALL')
             mb.radius = self.radius
             mb.co = v.co
@@ -142,27 +155,25 @@ class OPENDENTAL_OT_meta_offset_surface(bpy.types.Operator):
         meta_obj.matrix_world = mx
         
         if self.finalize:
-            context.scene.update()
-            me = meta_obj.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
+            context.view_layer.update()
+            me = bpy.data.meshes.new_from_object(meta_obj.evaluated_get(context.evaluated_depsgraph_get()))
             new_ob = bpy.data.objects.new('MetaSurfaceMesh', me)
-            context.scene.objects.link(new_ob)
+            context.collection.objects.link(new_ob)
             new_ob.matrix_world = mx
             if meta_obj.data.materials:
                 new_ob.data.materials.append(mat)
                 
-            context.scene.objects.unlink(meta_obj)
-            bpy.data.objects.remove(meta_obj)
+            bpy.data.objects.remove(meta_obj, do_unlink=True)
             bpy.data.metaballs.remove(meta_data)
         
-        self.bme.free()    
+        bme.free()
         return {'FINISHED'}
     
     def invoke(self, context, event):
-        self.bme = bmesh.new()
-        self.bme.from_object(context.object, context.scene)
-        self.bme.verts.ensure_lookup_table()
-        
-        self.n_verts = len(self.bme.verts)
+        bme = bmesh.new()
+        bme.from_object(context.object, context.evaluated_depsgraph_get())
+        self.n_verts = len(bme.verts)
+        bme.free()
         
         return context.window_manager.invoke_props_dialog(self)
     
