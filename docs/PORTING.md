@@ -933,3 +933,7 @@ Physics copies now record source object and source scene ID references. Keep Sim
 ### Root axis conversion
 
 Ported activation/selection and helper removal in `empties_to_bones`. Converts axis transforms into armature space before setting head/tail and roll, replacing mixed world/local placement. `test_root_axis_conversion.py` passes under Blender 5.1.2 with translated/rotated axis and armature: world tail matches the axis origin, head is 16 units along negative axis Z, and the temporary empty is removed. Nonuniform armature scale and the upstream modal axis workflow remain unverified.
+
+### Root modal startup
+
+Ported root-axis empty display settings, collection linking, object visibility/selection/activation and scene ray-casting to the dependency-graph API. Added space validation before accessing region_3d. `test_root_modal.py` passes in a real Blender 5.1.2 window: startup creates the numbered root bone, draw callbacks run without tracebacks and simulated Enter finishes in Object mode. This startup test intentionally has no placed axis; mouse placement and Escape rollback remain open. Added the window test to headless-runner exclusions.

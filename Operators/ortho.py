@@ -70,13 +70,13 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
         empty_name = self.target.name + 'root_empty'
         if empty_name in context.scene.objects:
             ob = context.scene.objects[empty_name]
-            ob.empty_draw_type = 'SINGLE_ARROW'
-            ob.empty_draw_size = 10
+            ob.empty_display_type = 'SINGLE_ARROW'
+            ob.empty_display_size = 10
         else:
             ob = bpy.data.objects.new(empty_name, None)
-            ob.empty_draw_type = 'SINGLE_ARROW'
-            ob.empty_draw_size = 10
-            context.scene.objects.link(ob)
+            ob.empty_display_type = 'SINGLE_ARROW'
+            ob.empty_display_size = 10
+            context.collection.objects.link(ob)
             
         coord = (event.mouse_region_x, event.mouse_region_y)
         v3d = context.space_data
@@ -84,11 +84,8 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
         view_vector = view3d_utils.region_2d_to_vector_3d(context.region, rv3d, coord)
         ray_origin = view3d_utils.region_2d_to_origin_3d(context.region, rv3d, coord)
         ray_target = ray_origin + (view_vector * 1000)
-        if bversion() < '002.077.000':
-            res, obj, loc, no, mx = context.scene.ray_cast(ray_origin, ray_target)
-        else:
-            res, loc, no, ind, obj, mx = context.scene.ray_cast(ray_origin, view_vector)
-        
+        res, loc, no, ind, obj, mx = context.scene.ray_cast(context.evaluated_depsgraph_get(), ray_origin, view_vector)
+
         if res:
             if obj != self.target:
                 return
@@ -116,9 +113,9 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
         self.target_box.fit_box_width_to_text_lines()
 
         for obj in context.scene.objects:
-            obj.select = False
+            obj.select_set(False)
         
-        self.target.select = True
+        self.target.select_set(True)
         context.space_data.region_3d.view_location = self.target.location
         
               
@@ -135,9 +132,9 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
         self.target_box.fit_box_width_to_text_lines()
 
         for obj in context.scene.objects:
-            obj.select = False
+            obj.select_set(False)
         
-        self.target.select = True
+        self.target.select_set(True)
         context.space_data.region_3d.view_location = self.target.location
                        
     def update_selection(self,context):
@@ -263,6 +260,9 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
         settings = get_settings()
         dbg = settings.debug
         
+        if not context.space_data or context.space_data.type != 'VIEW_3D':
+            self.report({'WARNING'}, 'Active space must be a View3d')
+            return {'CANCELLED'}
         if context.space_data.region_3d.is_perspective:
             #context.space_data.region_3d.is_perspective = False
             bpy.ops.view3d.view_persportho()
@@ -276,7 +276,7 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
         
         for i in TOOTH_NUMBERS:
             ob = context.scene.objects.get(str(i))
-            if ob != None and not ob.hide:
+            if ob != None and not ob.hide_get():
                 self.units.append(ob)
             
         if not len(self.units):
@@ -293,9 +293,9 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
                 
         if context.scene.objects.get('Roots'):
             root_arm = context.scene.objects.get('Roots')
-            root_arm.select = True
-            root_arm.hide = False
-            context.scene.objects.active = root_arm
+            root_arm.select_set(True)
+            root_arm.hide_set(False)
+            context.view_layer.objects.active = root_arm
             bpy.ops.object.mode_set(mode = 'EDIT')
             
             for ob in self.units:
@@ -305,18 +305,18 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
         else:
             root_data = bpy.data.armatures.new('Roots')
             root_arm = bpy.data.objects.new('Roots',root_data)
-            context.scene.objects.link(root_arm)
+            context.collection.objects.link(root_arm)
             
-            root_arm.select = True
-            context.scene.objects.active = root_arm
+            root_arm.select_set(True)
+            context.view_layer.objects.active = root_arm
             bpy.ops.object.mode_set(mode = 'EDIT')
             
             for ob in self.units:
                 bpy.ops.armature.bone_primitive_add(name = ob.name + 'root')
         
         bpy.ops.object.mode_set(mode = 'OBJECT')
-        root_arm.select = False
-        self.units[0].select = True
+        root_arm.select_set(False)
+        self.units[0].select_set(True)
             
         help_txt = "Right click to select a tooth \n Align View with root, mes and distal\n Up Arrow and Dn Arrow to select different units \n Left click in middle of prep to set axis \n Enter to finish \n ESC to cancel"
         self.help_box = TextBox(context,500,500,300,200,10,20,help_txt)
