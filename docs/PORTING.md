@@ -949,3 +949,7 @@ Added session snapshots of existing bone names and axis transforms/display setti
 ### Existing-root cancellation coverage
 
 Extended the real-window root modal test with an existing 11root bone, a preexisting axis with distinct transform/display settings, and a second tooth requiring a new 21root bone. After mouse replacement of the axis and Escape, Blender 5.1.2 preserves the original bone endpoints, removes the newly added bone, restores the axis matrix/display type/size and exits the modal handler. Viewport/selection restoration and shared armature data remain unverified.
+
+### Fast tooth labeling
+
+Ported scene ray-casting, view-layer selection/activation and preflight view-space validation. Corrected backward quadrant transitions to invert the existing 28-tooth forward sequence (11→47, 21→17, 31→27, 41→37). `test_label_modal.py` passes in Blender 5.1.2 with real Down-arrow, mouse and Enter events, verifies label 47 and name display, and clean modal completion. Added it to headless exclusions. Escape rollback, label collisions and origin preservation remain open.

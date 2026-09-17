@@ -388,18 +388,15 @@ class OPENDENTAL_OT_fast_label_teeth(bpy.types.Operator):
         view_vector = view3d_utils.region_2d_to_vector_3d(context.region, rv3d, coord)
         ray_origin = view3d_utils.region_2d_to_origin_3d(context.region, rv3d, coord)
         ray_target = ray_origin + (view_vector * 1000)
-        if bversion() < '002.077.000':
-            res, obj, loc, no, mx = context.scene.ray_cast(ray_origin, ray_target)
-        else:
-            res, loc, no, ind, obj, mx = context.scene.ray_cast(ray_origin, view_vector)
-        
+        res, loc, no, ind, obj, mx = context.scene.ray_cast(context.evaluated_depsgraph_get(), ray_origin, view_vector)
+
         if res:
             obj.name = str(self.target)
-            for ob in bpy.data.objects:
-                ob.select = False
-            obj.select = True
+            for ob in context.view_layer.objects:
+                ob.select_set(False)
+            obj.select_set(True)
             obj.show_name = True
-            context.scene.objects.active = obj
+            context.view_layer.objects.active = obj
             bpy.ops.object.origin_set(type = 'ORIGIN_GEOMETRY', center = 'BOUNDS')
             return True
         else:
@@ -430,10 +427,10 @@ class OPENDENTAL_OT_fast_label_teeth(bpy.types.Operator):
             if math.fmod(n, 10) > 1:
                 return n - 1
             elif math.fmod(n, 10) == 1:
-                if n == 11: return 41
-                elif n== 21: return 11
-                elif n == 31: return 21
-                elif n == 41: return 31
+                if n == 11: return 47
+                elif n== 21: return 17
+                elif n == 31: return 27
+                elif n == 41: return 37
                 
                 
         self.target = prev_ind(self.target)
@@ -516,6 +513,9 @@ class OPENDENTAL_OT_fast_label_teeth(bpy.types.Operator):
         settings = get_settings()
         dbg = settings.debug
         
+        if not context.space_data or context.space_data.type != 'VIEW_3D':
+            self.report({'WARNING'}, 'Active space must be a View3d')
+            return {'CANCELLED'}
         if context.space_data.region_3d.is_perspective:
             #context.space_data.region_3d.is_perspective = False
             bpy.ops.view3d.view_persportho()
