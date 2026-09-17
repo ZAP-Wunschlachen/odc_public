@@ -808,3 +808,12 @@ A separate foreground Blender 5.1.2 test invokes Bridge Individual on named
 connector vertices and sends Enter. The modal handler is removed and the log has
 no tracebacks. The headless runner excludes this foreground test. Scroll navigation,
 Escape semantics, repeated connector edits and anatomical fixtures remain untested.
+
+## Bridge Individual input guards
+
+Invoke rejects fewer than two or nonnumeric bridge units before adding a draw/modal
+handler, and execute checks required connector groups before geometry mutation.
+The Blender 5.1.2 foreground test now verifies single-unit cancellation without a
+modal handler followed by successful normal invocation, Space execution and Enter.
+Missing-group messaging is guarded in code but not yet exercised by this test;
+neighbor navigation and Escape rollback remain outstanding.

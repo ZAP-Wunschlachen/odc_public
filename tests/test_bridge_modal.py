@@ -45,6 +45,10 @@ def run():
             area = next(a for a in window.screen.areas if a.type == 'VIEW_3D')
             region = next(r for r in area.regions if r.type == 'WINDOW')
             with bpy.context.temp_override(window=window,area=area,region=region):
+                bridge.tooth_string = '24'
+                assert bpy.ops.opendental.bridge_individual('INVOKE_DEFAULT') == {'CANCELLED'}
+                assert not any(op.bl_idname == 'OPENDENTAL_OT_bridge_individual' for op in window.modal_operators)
+                bridge.tooth_string = '24:25'
                 assert bpy.ops.opendental.bridge_individual('INVOKE_DEFAULT') == {'RUNNING_MODAL'}
             send('SPACE')
         elif phase == 1:

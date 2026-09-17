@@ -470,10 +470,13 @@ class OPENDENTAL_OT_bridge_individual(bpy.types.Operator):
         return {'RUNNING_MODAL'}
     def invoke(self, context, event):
 
-        if context.space_data.type == 'VIEW_3D':
+        if context.space_data and context.space_data.type == 'VIEW_3D':
             self.odc_bridge = bridge_methods.active_spanning_restoration(context)[0]
             #list of all teeth in the bridge
             self.units = self.odc_bridge.tooth_string.split(sep=":")
+            if len(self.units) < 2 or any(not unit.isdigit() for unit in self.units):
+                self.report({'WARNING'}, 'A connector requires at least two numbered bridge units')
+                return {'CANCELLED'}
             self.target_index = 0
             self.a = self.units[0]
             self.b = self.units[1]
@@ -515,6 +518,10 @@ class OPENDENTAL_OT_bridge_individual(bpy.types.Operator):
         mes_tooth_distal_connector = self.b + self.b_group
         dis_tooth_mesial_connector = self.a + self.a_group
         
+        required = (mes_tooth_distal_connector, dis_tooth_mesial_connector, 'Connectors')
+        if any(Bridge.vertex_groups.get(name) is None for name in required):
+            self.report({'WARNING'}, 'Required connector vertex groups are missing; create the pre-bridge first')
+            return {'CANCELLED'}
         [ob_sets, tool_sets, space_sets] = odcutils.scene_preserv(context, debug=dbg) #TODO: global debug
         
         bridge_methods.bridge_loop(context, Bridge, mes_tooth_distal_connector, dis_tooth_mesial_connector, 2, self.twist, self.bulbous, group3 = "Connectors", debug=True, smooth=self.smooth)
