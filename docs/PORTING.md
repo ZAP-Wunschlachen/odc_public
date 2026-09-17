@@ -953,3 +953,7 @@ Extended the real-window root modal test with an existing 11root bone, a preexis
 ### Fast tooth labeling
 
 Ported scene ray-casting, view-layer selection/activation and preflight view-space validation. Corrected backward quadrant transitions to invert the existing 28-tooth forward sequence (11→47, 21→17, 31→27, 41→37). `test_label_modal.py` passes in Blender 5.1.2 with real Down-arrow, mouse and Enter events, verifies label 47 and name display, and clean modal completion. Added it to headless exclusions. Escape rollback, label collisions and origin preservation remain open.
+
+### Tooth label collisions
+
+Fast labeling now rejects a number already used by another object before changing the hit object or advancing the label sequence. The real-window test verifies unchanged names after a conflicting click, then frees the number and confirms a second click receives the exact same intended label. Passed on Blender 5.1.2. Escape rollback and preservation of off-center/shared mesh origins remain open.

@@ -8,12 +8,12 @@ from mathutils import Quaternion, Vector
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 phase = 0
-window = region = obj = None
+window = region = obj = occupied = None
 def send(kind):
     for value in ('PRESS','RELEASE'):
         window.event_simulate(type=kind,value=value,x=region.x+region.width//2,y=region.y+region.height//2)
 def run():
-    global phase,window,region,obj
+    global phase,window,region,obj,occupied
     try:
         if phase == 0:
             assert addon_utils.enable(ROOT.name, default_set=True)
@@ -21,6 +21,8 @@ def run():
             bpy.ops.object.delete()
             bpy.ops.mesh.primitive_cube_add()
             obj = bpy.context.object
+            occupied = bpy.data.objects.new('47', None)
+            bpy.context.scene.collection.objects.link(occupied)
             window = bpy.context.window
             area = next(a for a in window.screen.areas if a.type == 'VIEW_3D')
             region = next(r for r in area.regions if r.type == 'WINDOW')
@@ -35,6 +37,11 @@ def run():
         elif phase == 1:
             send('LEFTMOUSE')
         elif phase == 2:
+            assert obj.name == 'Cube'
+            assert occupied.name == '47'
+            occupied.name = 'Previously labeled'
+            send('LEFTMOUSE')
+        elif phase == 3:
             assert obj.name == '47', obj.name
             assert obj.show_name
             send('RET')

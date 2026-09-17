@@ -391,6 +391,10 @@ class OPENDENTAL_OT_fast_label_teeth(bpy.types.Operator):
         res, loc, no, ind, obj, mx = context.scene.ray_cast(context.evaluated_depsgraph_get(), ray_origin, view_vector)
 
         if res:
+            existing = bpy.data.objects.get(str(self.target))
+            if existing is not None and existing != obj:
+                self.report({'WARNING'}, 'Tooth number %s is already assigned' % self.target)
+                return False
             obj.name = str(self.target)
             for ob in context.view_layer.objects:
                 ob.select_set(False)
