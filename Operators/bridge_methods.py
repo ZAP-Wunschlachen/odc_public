@@ -602,7 +602,7 @@ def bridge_loop(context, ob, group1, group2, segments, twist, cubic, group3 = No
     #loopstools bridge giving weird results w/o the edimode toggle
     bpy.ops.object.editmode_toggle()
     bpy.ops.object.editmode_toggle()
-    bpy.ops.mesh.bridge_edge_loops(type='SINGLE', use_merge=False, merge_factor=0.5, number_cuts=1, interpolation='SURFACE', smoothness=1, profile_shape_factor=0, profile_shape='SMOOTH')
+    bpy.ops.mesh.bridge_edge_loops(type='SINGLE', use_merge=False, merge_factor=0.5, number_cuts=max(0, int(segments)-1), twist_offset=int(twist), interpolation='SURFACE', smoothness=float(cubic), profile_shape_factor=0, profile_shape='SMOOTH')
     #bpy.ops.mesh.looptools_bridge(cubic_strength=cubic, interpolation='cubic', loft=False, loft_loop=False, min_width=75, mode='shortest', remove_faces=False, reverse=False, segments=segments, twist=twist)
     
     context.tool_settings.mesh_select_mode = [True,False,False]

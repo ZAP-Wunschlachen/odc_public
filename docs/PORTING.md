@@ -781,3 +781,13 @@ APIs, bundled relax and BMesh normal recalculation. Its separate Blender 5.1.2
 test passes manifold edges and a single connected component on the two-box fixture.
 The earlier test covered only the alternate PATH helper. Modal interaction and
 parameter mapping remain outstanding for the actual user workflow.
+
+## Surface connector parameter mapping
+
+The active `bridge_loop` path now maps segment count to bridge subdivisions,
+twist to twist_offset and cubic/bulbous strength to SURFACE smoothness instead of
+hardcoding them. Blender 5.1.2 tests show increased vertices with more segments
+and changed geometry with twist and strength, with manifold edges in all fixtures.
+The existing connected-component surface test also passes. The alternate PATH
+helper, separate UI smooth property, modal parameter interaction and anatomical
+shape quality still require work.
