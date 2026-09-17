@@ -863,3 +863,9 @@ Ported scaffold and meta-surface dependency graphs, mesh extraction, collection 
 ### Custom tray outer envelope
 
 The custom tray operator now delegates its identical outer-envelope generation to the ported meta-surface operator using radius = thickness + offset. This preserves the original outer-only behavior; the original inner-spacer block was commented out. Dialog BMesh data is released immediately and polling requires a mesh. Extended `test_meta_surface.py` passes both META and finalized MESH outputs, configured ball radius, element count and nonempty polygon output with other meta surfaces already present. Exact physical spacer/wall thickness and the separate Boolean Intaglio workflow remain unverified.
+
+### Simple offset surface
+
+Ported evaluated mesh extraction, collection linking and Shrinkwrap ABOVE_SURFACE mode. Fixed the chained legacy property assignment so Smooth and Shrink register independently. Both offset paths copy normals before changing coordinates; the in-place mesh is updated explicitly.
+
+`test_simple_offset_surface.py` passes on Blender 5.1.2: all four smooth/shrink combinations, unchanged source for duplicate mode, expected modifier counts, raw and evaluated planar offset +0.4, and in-place offset -0.2. Curved geometry, self-intersections and nonuniform object scale are not validated by this planar fixture.

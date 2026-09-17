@@ -374,7 +374,7 @@ class OPENDENTAL_OT_simple_offset_surface(bpy.types.Operator):
     offset: FloatProperty(default = 0.3, min = -3, max = 3,  description = 'Distance to offset')
     duplicate: BoolProperty(default = False , description = 'Will create new object, leaving original in tact')
     smooth: BoolProperty(default = True, description = 'Will add smooth modifier to attempt to remove self intersections')
-    shrink = smooth = BoolProperty(default = False, description = 'Will add shrinkwrap modifier to attempt to reoffset after smoothing')
+    shrink: BoolProperty(default = False, description = 'Will add shrinkwrap modifier to attempt to reoffset after smoothing')
     
     @classmethod
     def poll(cls, context):
@@ -389,8 +389,10 @@ class OPENDENTAL_OT_simple_offset_surface(bpy.types.Operator):
         mx = ob.matrix_world
         
         if not self.duplicate:
-            for v in ob.data.vertices:
-                v.co += self.offset*v.normal
+            normals = [v.normal.copy() for v in ob.data.vertices]
+            for vertex, normal in zip(ob.data.vertices, normals):
+                vertex.co += self.offset * normal
+            ob.data.update()
             
             return {'FINISHED'}
         
@@ -399,15 +401,15 @@ class OPENDENTAL_OT_simple_offset_surface(bpy.types.Operator):
         if ob.data.materials:
             mat = ob.data.materials[0]
             
-        me = context.object.to_mesh(context.scene, apply_modifiers = True, settings = 'PREVIEW')
+        me = bpy.data.meshes.new_from_object(ob.evaluated_get(context.evaluated_depsgraph_get()))
         
-        nos = [v.normal for v in me.vertices]
+        nos = [v.normal.copy() for v in me.vertices]
         for i, v in enumerate(me.vertices):
             v.co += self.offset * nos[i]
             
             
         new_ob = bpy.data.objects.new(ob.name + '_offset', me)
-        context.scene.objects.link(new_ob)
+        context.collection.objects.link(new_ob)
         new_ob.matrix_world = mx
         if ob.data.materials:
             new_ob.data.materials.append(mat)
@@ -419,7 +421,7 @@ class OPENDENTAL_OT_simple_offset_surface(bpy.types.Operator):
             swmod = new_ob.modifiers.new('Shrinkwrap', type = 'SHRINKWRAP')
             swmod.wrap_method = 'NEAREST_SURFACEPOINT'
             swmod.offset = self.offset
-            swmod.use_keep_above_surface = True
+            swmod.wrap_mode = 'ABOVE_SURFACE'
             swmod.target = ob
             
             smod = new_ob.modifiers.new('Smooth', type = 'SMOOTH')
