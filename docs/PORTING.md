@@ -83,6 +83,16 @@ These checks verify references, not contact adjustment or occlusal geometry.
 Registration, model workflows, all operator poll contexts, crown/pontic imports and
 preparation assignment were rerun successfully after these changes.
 
+## Insertion-axis placement geometry verified
+
+The placement helper now uses evaluated scene ray casting and current Empty
+properties. Tests verify surface hits, view-plane fallback on misses, reuse of an
+existing axis, correct world translation/rotation/unit scale under a rotated and
+nonuniformly scaled master, and following subsequent master movement. The modal
+operator calls this helper; its remaining selection, layer, event and cancellation
+handling and GPU display still require migration and interactive verification.
+This is not yet a completed insertion-axis workflow.
+
 ## Implemented, not yet verified visually
 
 A package-local GPU adapter replaces legacy immediate-mode drawing. Image
@@ -114,6 +124,7 @@ blender --background --factory-startup --python-exit-code 1 --python tests/test_
 blender --background --factory-startup --python-exit-code 1 --python tests/test_dental_materials.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_preparation_assignment.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_reference_assignment.py
+blender --background --factory-startup --python-exit-code 1 --python tests/test_insertion_axis.py
 ```
 
 Tests use synthetic geometry. The port tests do not validate a patient-specific

@@ -302,53 +302,14 @@ class OPENDENTAL_OT_insertion_axis(bpy.types.Operator):
     
     def set_axis(self, context, event):
         tooth = context.scene.odc_teeth[self.target]
-        axis = tooth.axis
-        if axis and axis in bpy.data.objects:
-            ob = bpy.data.objects[axis]
-            ob.empty_draw_type = 'SINGLE_ARROW'
-            ob.empty_draw_size = 10
-        else:
-            ob = bpy.data.objects.new(tooth.name + "_Axis", None)
-            ob.empty_draw_type = 'SINGLE_ARROW'
-            ob.empty_draw_size = 10
-            context.scene.objects.link(ob)
-            tooth.axis = ob.name
-            master = context.scene.odc_props.master
-            if master and master in bpy.data.objects:
-                odcutils.parent_in_place(ob,bpy.data.objects[master])
-            else:
-                self.report({'WARNING'}, 'No Master model, be careful when moving things')
+        from .insertion_axis import place_axis
         coord = (event.mouse_region_x, event.mouse_region_y)
-        v3d = context.space_data
-        rv3d = v3d.region_3d
-        view_vector = view3d_utils.region_2d_to_vector_3d(context.region, rv3d, coord)
-        ray_origin = view3d_utils.region_2d_to_origin_3d(context.region, rv3d, coord)
-        ray_target = ray_origin + (view_vector * 1000)
-        if bversion() < '002.077.000':
-            res, obj, loc, no, mx = context.scene.ray_cast(ray_origin, ray_target)
-        else:
-            res, loc, no, ind, obj, mx = context.scene.ray_cast(ray_origin, view_vector)
-        
-        if res:
-            ob.location = loc
-        else:
-            vect = context.space_data.region_3d.view_location - ray_origin
-            Z = rv3d.view_rotation * Vector((0,0,1)) #-1?
-            delta_view = vect.dot(Z) * Z #this works kind of like orthographic mode even in perspective
-            ob.location = ray_origin + delta_view
-            
-        if ob.rotation_mode != 'QUATERNION':
-            ob.rotation_mode = 'QUATERNION'
-            
-        vrot = rv3d.view_rotation    
-        self.align = vrot.inverted()
-        if ob.parent:
-            mx = ob.parent.matrix_world
-            imx = mx.inverted()
-            iq = imx.to_quaternion()         
-            vrot = iq * vrot
-        ob.rotation_quaternion = vrot
-                   
+        rv3d = context.space_data.region_3d
+        direction = view3d_utils.region_2d_to_vector_3d(context.region, rv3d, coord)
+        origin = view3d_utils.region_2d_to_origin_3d(context.region, rv3d, coord)
+        place_axis(context, tooth, origin, direction, rv3d.view_rotation, rv3d.view_location)
+        self.align = rv3d.view_rotation.inverted()
+
     def advance_next_prep(self,context):
         self.target_index = int(math.fmod(self.target_index +1, len(self.units)))
         self.target = self.units[self.target_index]
