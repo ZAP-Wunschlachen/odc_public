@@ -6,11 +6,12 @@ import addon_utils
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 assert addon_utils.enable(ROOT.name, default_set=True)
+asset = sys.argv[sys.argv.index('--')+1] if '--' in sys.argv else '25'
 scene = bpy.context.scene
 tooth = scene.odc_teeth.add()
-tooth.name = '25'
+tooth.name = asset
 tooth.rest_type = '0'
-assert bpy.ops.opendental.get_crown_form(ob_list='25') == {'FINISHED'}
+assert bpy.ops.opendental.get_crown_form(ob_list=asset) == {'FINISHED'}
 axis = bpy.data.objects.new('axis', None)
 scene.collection.objects.link(axis)
 tooth.axis = axis.name
@@ -44,4 +45,4 @@ assert len(mesh.vertices) > len(crown.data.vertices)
 assert all(math.isfinite(c) for v in mesh.vertices for c in v.co)
 evaluated.to_mesh_clear()
 addon_utils.disable(ROOT.name, default_set=True)
-print('ODC_CROWN_SEATING_PASSED', bpy.app.version_string)
+print('ODC_CROWN_SEATING_PASSED', bpy.app.version_string, asset)

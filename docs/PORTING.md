@@ -304,3 +304,13 @@ not establish surface quality or absence of self-intersections.
 The control-lattice test also verifies bounding-box face/edge/corner locations and
 mean edge spacing in local and transformed coordinates. These helpers now use
 full matrix multiplication; empty spacing selections raise a clear error.
+
+## Additional crown-library seating fixtures
+
+The seating test accepts a library tooth identifier after `--`, for example
+`blender --background --factory-startup --python-exit-code 1 --python tests/test_crown_seating.py -- 16`.
+Tooth forms 11, 16 and 36 pass the same repeated seating, margin alignment and
+evaluated finite-coordinate checks as 25. These remain circular synthetic margins.
+All three runs report small unfreed memory blocks during Blender shutdown (about
+4–5 KB); the source of that shutdown report still needs investigation. The test
+assertions pass, but this is not evidence of leak-free operation or anatomical fit.
