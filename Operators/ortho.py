@@ -161,8 +161,9 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
         bpy.ops.object.select_all(action = 'DESELECT')
         
         arm_ob = bpy.data.objects['Roots']
-        arm_ob.select = True
-        context.scene.objects.active = arm_ob
+        arm_ob.hide_set(False)
+        arm_ob.select_set(True)
+        context.view_layer.objects.active = arm_ob
         bpy.ops.object.mode_set(mode = 'EDIT')
         
         for ob in self.units:
@@ -170,16 +171,15 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
             b = arm_ob.data.edit_bones.get(ob.name + 'root')
             
             if e != None and b != None:
-                b.transform(e.matrix_world) #this gets the local x,y,z in order
-                Z = e.matrix_world.to_quaternion() * Vector((0,0,1))
-                b.tail.xyz = e.location
-                b.head.xyz = e.location - 16 * Z
+                local = arm_ob.matrix_world.inverted() @ e.matrix_world
+                Z = local.to_3x3() @ Vector((0,0,1))
+                Z.normalize()
+                b.tail = local.translation
+                b.head = local.translation - 16 * Z
+                b.align_roll(local.to_3x3() @ Vector((0,1,0)))
                 b.head_radius = 1.5
                 b.tail_radius = 2.5
-                
-                context.scene.objects.unlink(e)
-                e.user_clear()
-                bpy.data.objects.remove(e)
+                bpy.data.objects.remove(e, do_unlink=True)
             else:
                 print('missing bone or empty')
                     

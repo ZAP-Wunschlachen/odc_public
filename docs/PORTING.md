@@ -929,3 +929,7 @@ The extended physics limits test passes both unrotated and 90-degree-rotated obj
 `test_physics_lock.py` verifies real sequential rigid-body evaluation: a location-locked cube remains at height 10 through frame 24 and falls after unlocking/resetting. No lock implementation change was required.
 
 Physics copies now record source object and source scene ID references. Keep Simulation Results collects evaluated world transforms and applies them only to mapped originals, returning to the recorded scene without destructively baking simulation objects. Expanded setup test verifies transfer while leaving another object sharing the source mesh unchanged. Existing field dependency-cycle warnings persist; this is not complete forcefield dynamics validation.
+
+### Root axis conversion
+
+Ported activation/selection and helper removal in `empties_to_bones`. Converts axis transforms into armature space before setting head/tail and roll, replacing mixed world/local placement. `test_root_axis_conversion.py` passes under Blender 5.1.2 with translated/rotated axis and armature: world tail matches the axis origin, head is 16 units along negative axis Z, and the temporary empty is removed. Nonuniform armature scale and the upstream modal axis workflow remain unverified.
