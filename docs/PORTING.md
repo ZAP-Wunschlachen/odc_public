@@ -73,6 +73,16 @@ The 3D viewport alignment, multi-object edit behavior and complex scan/modifier
 fixtures still require further coverage. Other model assignment operators remain
 pending.
 
+## Neighbor and opposing references verified
+
+Tests execute mesial/distal assignment for one selected planning item and opposing
+assignment for either one item or all items. The global opposing reference is
+preserved during individual assignment, and can be assigned before tooth planning.
+Missing planning or an invalid active index is handled without an exception.
+These checks verify references, not contact adjustment or occlusal geometry.
+Registration, model workflows, all operator poll contexts, crown/pontic imports and
+preparation assignment were rerun successfully after these changes.
+
 ## Implemented, not yet verified visually
 
 A package-local GPU adapter replaces legacy immediate-mode drawing. Image
@@ -103,6 +113,7 @@ blender --background --factory-startup --python-exit-code 1 --python tests/test_
 blender --background --factory-startup --python-exit-code 1 --python tests/test_pontic_import.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_dental_materials.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_preparation_assignment.py
+blender --background --factory-startup --python-exit-code 1 --python tests/test_reference_assignment.py
 ```
 
 Tests use synthetic geometry. The port tests do not validate a patient-specific

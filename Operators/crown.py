@@ -181,6 +181,12 @@ class OPENDENTAL_OT_set_mesial(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     
     
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and hasattr(context.scene, 'odc_teeth')
+                and 0 <= context.scene.odc_tooth_index < len(context.scene.odc_teeth))
+
     def execute(self, context):
         #grab active tooth the old way
         sce=bpy.context.scene
@@ -197,6 +203,12 @@ class OPENDENTAL_OT_set_distal(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     
     
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and hasattr(context.scene, 'odc_teeth')
+                and 0 <= context.scene.odc_tooth_index < len(context.scene.odc_teeth))
+
     def execute(self, context):
         #grab active tooth the old way
         sce=bpy.context.scene
@@ -212,6 +224,11 @@ class OPENDENTAL_OT_set_opposing(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     
     for_all: bpy.props.BoolProperty(default = True)
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and hasattr(context.scene, 'odc_props'))
+
     def execute(self, context):
         #grab active tooth the old way
         
@@ -221,7 +238,10 @@ class OPENDENTAL_OT_set_opposing(bpy.types.Operator):
             
             context.scene.odc_props.opposing = context.object.name
         else:
-            sce=bpy.context.scene
+            sce = context.scene
+            if not 0 <= sce.odc_tooth_index < len(sce.odc_teeth):
+                self.report({'WARNING'}, 'Plan and select a tooth first')
+                return {'CANCELLED'}
             tooth = odcutils.active_tooth_from_index(sce)
             tooth.opposing = context.object.name
         self.report({'INFO'},'You Set The Opposing')
