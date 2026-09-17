@@ -899,3 +899,7 @@ Ported armature activation/visibility, PoseBone selection and constraint context
 ### Root-to-cast deformation coverage
 
 Extended `test_root_parenting.py` through `link_to_cast=True` with an UpperJaw mesh. Blender 5.1.2 passes repeated setup without duplicate armature/proximity modifiers, correct modifier order, bone vertex-group creation, measurable X deformation after tooth movement with unchanged Y/Z, and unchanged base mesh coordinates. This synthetic single-root test establishes functioning dependency propagation, not anatomical gingival simulation accuracy or lower/multi-root coverage.
+
+### Simple orthodontic base
+
+The base operator now searches boundary edges and chooses the largest closed loop, cancels cleanly when no suitable loop exists, and explicitly updates mesh data. `test_ortho_base.py` passes on Blender 5.1.2: a closed cube cancels without coordinate changes; removing its bottom and adding a -2 base produces a manifold volume-16 solid with expected Z bounds [-3, 1]. Multiple boundaries, curved casts and nonuniform transforms remain unverified.

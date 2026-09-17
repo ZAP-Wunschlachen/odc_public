@@ -549,23 +549,17 @@ class OPENDENTAL_OT_simple_ortho_base(bpy.types.Operator):
         bme.edges.ensure_lookup_table()
         bme.faces.ensure_lookup_table()
         
-        non_man_eds = [ed.index for ed in bme.edges if not ed.is_manifold]
+        non_man_eds = [ed.index for ed in bme.edges if ed.is_boundary]
         loops = edge_loops_from_bmedges(bme, non_man_eds)
                 
                 
-        if len(loops)>1:
-            biggest_loop = max(loops, key = len)
-        else:
-            biggest_loop = loops[0]
-            
-        
-        if biggest_loop[0] != biggest_loop[-1]:
-            
-            print('Biggest loop not a hole!')
-            bme.free() 
-            
-            return {'FINISHED'}
-        
+        closed_loops = [loop for loop in loops if len(loop) >= 4 and loop[0] == loop[-1]]
+        if not closed_loops:
+            bme.free()
+            self.report({'WARNING'}, 'The model needs a closed boundary loop for a base')
+            return {'CANCELLED'}
+        biggest_loop = max(closed_loops, key=len)
+
         biggest_loop.pop()
         
         com = Vector((0,0,0))
@@ -579,7 +573,8 @@ class OPENDENTAL_OT_simple_ortho_base(bpy.types.Operator):
         bme.faces.new([bme.verts[vind] for vind in biggest_loop])
         bmesh.ops.recalc_face_normals(bme, faces = bme.faces)
         bme.to_mesh(context.object.data)
-        bme.free()             
+        bme.free()
+        context.object.data.update()
         return {'FINISHED'}
     
 class OPENDENTAL_OT_setup_root_parenting(bpy.types.Operator):
