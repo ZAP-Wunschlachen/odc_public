@@ -829,3 +829,7 @@ Validation: `tests/test_bridge_modal.py` passed in a Blender 5.1.2 window with s
 Ported `teeth_to_curve` object activation, visibility, collection linking, dependency updates, matrix/quaternion products, and library object identity handling. Replacement removes mesh data only when unused, and newly created Follow Path constraints are addressed directly. Updated the shared vertex-group selection helper to current object APIs.
 
 Validation: `test_teeth_to_curve.py` passes on Blender 5.1.2 using the bundled 14 upper-arch teeth across COM, BUCCAL and FOSSA alignment, including repeated replacement. Checks cover finite transforms, nonzero dimensions, one path constraint per tooth, and spatial distribution. Anatomical orientation, exact curve placement, lower arches, mirroring, linked restorations and the public modal workflow remain unverified. Blender reports a small shutdown allocation warning (32 blocks).
+
+### Public Teeth to Arch operator
+
+Removed obsolete scene-layer access and ported active-object/selection restoration in `opendental.teeth_to_arch`; polling now requires Object mode. The arch placement test now invokes the public operator for both MAX and MAND, each with BODY, BUCCAL and FOSSA alignment. All six executions pass under Blender 5.1.2, including repeated replacement and restoring the curve as active object. This covers operator execution, not the properties dialog or anatomical correctness. Shutdown allocation warning persists (64 blocks in this expanded run).

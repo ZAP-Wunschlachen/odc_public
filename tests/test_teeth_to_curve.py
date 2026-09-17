@@ -19,8 +19,13 @@ for i, point in enumerate(spline.points):
     point.co = (25*math.cos(angle), 25*math.sin(angle), 0, 1)
 arch = bpy.data.objects.new('Arch test', curve)
 bpy.context.scene.collection.objects.link(arch)
-for shift in ('COM', 'BUCCAL', 'FOSSA'):
-    m.teeth_to_curve(bpy.context, arch, 'MAX', u.get_settings().tooth_lib, shift=shift)
+for arch_type in ('0', '1'):
+ for shift in ('2', '0', '1'):
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.context.view_layer.objects.active = arch
+    arch.select_set(True)
+    assert bpy.ops.opendental.teeth_to_arch(arch_type=arch_type, shift=shift) == {'FINISHED'}
+    assert bpy.context.object == arch
     bpy.context.view_layer.update()
     objects = [o for o in bpy.context.scene.objects if any(c.type == 'FOLLOW_PATH' and c.target == arch for c in o.constraints)]
     assert len(objects) == 14, len(objects)
@@ -31,4 +36,9 @@ for shift in ('COM', 'BUCCAL', 'FOSSA'):
         assert len([c for c in obj.constraints if c.type == 'FOLLOW_PATH']) == 1
         positions.append(obj.matrix_world.translation.copy())
     assert max((a-b).length for a in positions for b in positions) > 20
+ for obj in objects:
+    data = obj.data
+    bpy.data.objects.remove(obj, do_unlink=True)
+    if not data.users:
+        bpy.data.meshes.remove(data)
 print('ODC_TEETH_TO_CURVE_PASSED', bpy.app.version_string)

@@ -1481,7 +1481,7 @@ class OPENDENTAL_OT_teeth_arch(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         #restoration exists and is in scene
-        return context.object is not None and context.object.type == 'CURVE'
+        return context.object is not None and context.object.type == 'CURVE' and context.mode == 'OBJECT'
     
     def invoke(self,context,event):
         
@@ -1489,8 +1489,6 @@ class OPENDENTAL_OT_teeth_arch(bpy.types.Operator):
         return {'RUNNING_MODAL'}       
     def execute(self, context):
         settings = get_settings()
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
         
         ob = context.object
         quad = self.arch_types[int(self.arch_type)]
@@ -1510,14 +1508,11 @@ class OPENDENTAL_OT_teeth_arch(bpy.types.Operator):
         
         
         bpy.ops.object.select_all(action='DESELECT')
-        context.scene.objects.active = ob
-        ob.select = True
+        context.view_layer.objects.active = ob
+        ob.select_set(True)
         #go into weight paint mode?
         
         odcutils.layer_management(context.scene.odc_teeth, debug = True)
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
-        context.scene.layers[1] = True
         return {'FINISHED'}
 
 class OPENDENTAL_OT_occlusal_scheme_to_curve(bpy.types.Operator):
