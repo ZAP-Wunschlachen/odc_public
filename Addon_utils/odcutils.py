@@ -603,17 +603,13 @@ def active_odc_item_candidate(items, ob, exclude, debug = False):
     '''
     candidate = None
     for tooth in items:
-        prop_keys = tooth.keys()
-        prop_vals = tooth.values()
-        
-        if ob.name in prop_vals:
-            n = prop_vals.index(ob.name)
-            this_key = prop_keys[n]
-            if debug:
-                print("found the object named %s as the property value: %s" %(ob.name, this_key))
-            if this_key and (this_key not in exclude):
+        for key in OBJECT_ROLE_COLLECTIONS:
+            if key not in exclude and getattr(tooth, key, "") == ob.name:
+                if debug:
+                    print(f"Object {ob.name} matches {tooth.name}.{key}")
                 candidate = tooth
-                
+                break
+
     return candidate
 
 def splint_selction(context):
@@ -1348,9 +1344,9 @@ def fill_loop_scale(ob, edges, res, debug = False):
         bpy.ops.object.mode_set(mode = 'OBJECT')
     bpy.ops.object.select_all(action = 'DESELECT')
     
-    ob.hide = False
-    ob.select = True
-    bpy.context.scene.objects.active = ob
+    ob.hide_set(False)
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
     
     
     verts = edge_loops_from_edges(me,edges)
@@ -1397,7 +1393,7 @@ def fill_loop_scale(ob, edges, res, debug = False):
     R=0
     L = len(verts)
     for v in verts:
-        r = mx * me.vertices[v].co - COM     
+        r = mx @ me.vertices[v].co - COM
         R = R + r.length
 
     R = R/L
@@ -1414,8 +1410,8 @@ def fill_loop_scale(ob, edges, res, debug = False):
         for i in range(0,l-1):
             a = vert_loop[i]
             b = vert_loop[i+1]
-            v0=mx * me.vertices[a].co
-            v1=mx * me.vertices[b].co
+            v0=mx @ me.vertices[a].co
+            v1=mx @ me.vertices[b].co
             V=v1-v0
           
             lengths.append(V.length)
@@ -1449,7 +1445,8 @@ def fill_loop_scale(ob, edges, res, debug = False):
     
             bpy.ops.transform.resize(value = (scl, scl, scl))    
             bpy.ops.mesh.remove_doubles(threshold=.85*res)    
-            bpy.ops.mesh.looptools_relax(input='selected', interpolation='cubic', iterations='3', regular=True)
+            from ..Operators.mesh_loop_tools import relax_selected
+            relax_selected(ob.data, iterations=3)
         
         
         if sverts < 3:

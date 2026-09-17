@@ -18,6 +18,7 @@ from ..odcmenus import menu_utils as menu_utils
 from ..odcmenus import button_data as button_data
 from ..Operators import crown_methods, full_arch_methods, bgl_utils, classes
 from ..Operators.curve import CurveDataManager
+from .mesh_loop_tools import flatten_selected
 from ..Operators.textbox import TextBox
 
 '''
@@ -617,11 +618,13 @@ class CBGetCrownForm(bpy.types.Operator):
         
             if tooth.rest_type == '1':
                 print('pontic!')
-                sce.objects.active = ob
+                bpy.ops.object.select_all(action='DESELECT')
+                ob.select_set(True)
+                context.view_layer.objects.active = ob
                 bpy.ops.object.mode_set(mode='EDIT')
                 bpy.ops.mesh.select_all(action='DESELECT')
                 bpy.ops.mesh.select_non_manifold()
-                bpy.ops.mesh.looptools_flatten(influence = 100, plane = 'best_fit', restriction = 'none')
+                flatten_selected(ob.data)
                 bpy.ops.transform.translate(value = (0,0,-1))
             
                 bpy.ops.object.mode_set(mode= 'OBJECT')

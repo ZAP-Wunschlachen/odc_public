@@ -46,7 +46,13 @@ Scene verification clears known missing object references while preserving notes
 restoration types and custom metadata. Active-object selection now calls
 `select_get()` instead of comparing the method itself to a boolean.
 
-This does not yet validate pontic closure, crown adaptation or manufacturing.
+Pontic import now uses direct entry points to the bundled best-fit flattening and
+cubic relaxation algorithms, without requiring separately registered LoopTools
+operators. Bundled tooth 25 passes repeated pontic import, closed manifold edge
+checks, finite coordinates and nonzero volume for both base and evaluated meshes.
+Saved-file round-trip checks pass too. This does not establish anatomical quality,
+self-intersection freedom, crown adaptation or manufacturing suitability; visual
+review and broader tooth-library fixtures remain outstanding.
 Remaining direct legacy layer accesses elsewhere still need migration; role
 collections alone do not replace those visibility workflows.
 
@@ -77,6 +83,7 @@ blender --background --factory-startup --python-exit-code 1 --python tests/test_
 blender --background --factory-startup --python-exit-code 1 --python tests/test_model_workflows.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_library_helpers.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_crown_import.py
+blender --background --factory-startup --python-exit-code 1 --python tests/test_pontic_import.py
 ```
 
 Tests use synthetic geometry. The port tests do not validate a patient-specific
