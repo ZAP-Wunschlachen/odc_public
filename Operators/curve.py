@@ -605,7 +605,7 @@ class CurveDataManager(object):
         self.crv_data.splines[0].bezier_points[0].handle_right_type = 'AUTO'
         self.crv_data.dimensions = '3D'
         self.crv_obj = bpy.data.objects.new(name,self.crv_data)
-        context.scene.objects.link(self.crv_obj)
+        context.scene.collection.objects.link(self.crv_obj)
         
         self.snap_type = snap_type  #'SCENE' 'OBJECT'
         self.snap_ob = snap_object
@@ -613,7 +613,7 @@ class CurveDataManager(object):
         if snap_object and shrink_mod:
             mod = self.crv_obj.modifiers.new('Wrap','SHRINKWRAP')
             mod.target = snap_object
-            mod.use_keep_above_surface = True
+            mod.wrap_mode = 'ABOVE_SURFACE'
             #mod.use_apply_on_spline = True
         
         self.started = False
@@ -651,7 +651,7 @@ class CurveDataManager(object):
             if bversion() < '002.077.000':
                 res, obj, omx, loc, no = context.scene.ray_cast(ray_origin, ray_target)
             else:
-                res, loc, no, ind, obj, omx = context.scene.ray_cast(ray_origin, view_vector)
+                res, loc, no, ind, obj, omx = context.scene.ray_cast(context.evaluated_depsgraph_get(), ray_origin, view_vector)
             
             if res:
                 hit = True
@@ -660,7 +660,7 @@ class CurveDataManager(object):
                 #cast the ray into a plane a
                 #perpendicular to the view dir, at the last bez point of the curve
                 hit = True
-                view_direction = rv3d.view_rotation * Vector((0,0,-1))
+                view_direction = rv3d.view_rotation @ Vector((0,0,-1))
                 plane_pt = self.grab_undo_loc
                 loc = intersect_line_plane(ray_origin, ray_target,plane_pt, view_direction)
                 
@@ -669,11 +669,11 @@ class CurveDataManager(object):
             imx = mx.inverted()
             
             if bversion() < '002.077.000':
-                loc, no, face_ind = self.snap_ob.ray_cast(imx * ray_origin, imx * ray_target)
+                loc, no, face_ind = self.snap_ob.ray_cast(imx @ ray_origin, imx @ ray_target)
                 if face_ind != -1:
                     hit = True
             else:
-                ok, loc, no, face_ind = self.snap_ob.ray_cast(imx * ray_origin, imx * ray_target - imx*ray_origin)
+                ok, loc, no, face_ind = self.snap_ob.ray_cast(imx @ ray_origin, imx @ ray_target - imx @ray_origin)
                 if ok:
                     hit = True
    
@@ -681,17 +681,17 @@ class CurveDataManager(object):
             self.grab_cancel()
             
         else:
-            local_loc = i_crv_mx * mx * loc
+            local_loc = i_crv_mx @ mx @ loc
             self.crv_data.splines[0].bezier_points[self.selected].co = local_loc
-            self.b_pts[self.selected] = mx * loc
+            self.b_pts[self.selected] = mx @ loc
         
     def grab_cancel(self):
         crv_mx = self.crv_obj.matrix_world
         i_crv_mx = crv_mx.inverted()  
         
-        old_co =  i_crv_mx * self.grab_undo_loc
+        old_co =  i_crv_mx @ self.grab_undo_loc
         self.crv_data.splines[0].bezier_points[self.selected].co = old_co
-        self.b_pts[self.selected] = old_co
+        self.b_pts[self.selected] = self.grab_undo_loc.copy()
         return
     
     def grab_confirm(self):
@@ -722,14 +722,14 @@ class CurveDataManager(object):
             if bversion() < '002.077.000':
                 res, obj, omx, loc, no = context.scene.ray_cast(ray_origin, ray_target)  #changed in 2.77
             else:
-                res, loc, no, ind, obj, omx = context.scene.ray_cast(ray_origin, view_vector)
+                res, loc, no, ind, obj, omx = context.scene.ray_cast(context.evaluated_depsgraph_get(), ray_origin, view_vector)
                 
             hit = res
             if not hit:
                 #cast the ray into a plane a
                 #perpendicular to the view dir, at the last bez point of the curve
             
-                view_direction = rv3d.view_rotation * Vector((0,0,-1))
+                view_direction = rv3d.view_rotation @ Vector((0,0,-1))
             
                 if len(self.b_pts):
                     if self.hovered[0] == 'EDGE':
@@ -737,7 +737,7 @@ class CurveDataManager(object):
                     else:
                         plane_pt = self.b_pts[-1]
                 else:
-                    plane_pt = context.scene.cursor_location
+                    plane_pt = context.scene.cursor.location
                 loc = intersect_line_plane(ray_origin, ray_target,plane_pt, view_direction)
                 hit = True
         elif self.snap_type == 'OBJECT':
@@ -745,11 +745,11 @@ class CurveDataManager(object):
             imx = mx.inverted()
             
             if bversion() < '002.077.000':
-                loc, no, face_ind = self.snap_ob.ray_cast(imx * ray_origin, imx * ray_target)
+                loc, no, face_ind = self.snap_ob.ray_cast(imx @ ray_origin, imx @ ray_target)
                 if face_ind != -1:
                     hit = True
             else:
-                ok, loc, no, face_ind = self.snap_ob.ray_cast(imx * ray_origin, imx * ray_target - imx*ray_origin)
+                ok, loc, no, face_ind = self.snap_ob.ray_cast(imx @ ray_origin, imx @ ray_target - imx @ray_origin)
                 if ok:
                     hit = True
             
@@ -766,17 +766,17 @@ class CurveDataManager(object):
                 bp = self.crv_data.splines[0].bezier_points[-1]
                 bp.handle_right_type = 'AUTO'
                 bp.handle_left_type = 'AUTO'
-                bp.co =i_crv_mx* mx * loc
-                self.b_pts.append(mx * loc)
+                bp.co =i_crv_mx @ mx @ loc
+                self.b_pts.append(mx @ loc)
                 
             else:
                 self.started = True
-                delta = i_crv_mx *mx * loc - self.crv_data.splines[0].bezier_points[-1].co
+                delta = i_crv_mx @mx @ loc - self.crv_data.splines[0].bezier_points[-1].co
                 bp = self.crv_data.splines[0].bezier_points[0]
                 bp.co += delta
                 bp.handle_left += delta
                 bp.handle_right += delta  
-                self.b_pts.append(mx * loc) 
+                self.b_pts.append(mx @ loc)
           
         if self.hovered[0] == 'POINT':
             self.selected = self.hovered[1]
@@ -786,7 +786,7 @@ class CurveDataManager(object):
 
             
         elif self.hovered[0] == 'EDGE':  #cut in a new point
-            self.b_pts.insert(self.hovered[1]+1, mx * loc)
+            self.b_pts.insert(self.hovered[1]+1, mx @ loc)
             self.update_blender_curve_data()   
             return
     

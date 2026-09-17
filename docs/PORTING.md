@@ -216,3 +216,13 @@ world-space plane, edit mode, current face snapping/proportional editing setting
 and a single reused shrinkwrap constraint. The refine-to-accept transition creates
 the ribbon and returns to object mode. Interactive dragging, snapping behavior,
 complex scans and parented/linked collection cases remain unverified.
+
+## Shared curve manager
+
+Foreground `tests/test_curve_manager.py` exercises real viewport projection for
+scene and object surface snapping, three point insertions, point movement and
+cancellation with a translated curve object. World-space cached points and local
+Bezier coordinates agree after cancellation. Collection linking, current scene
+ray casting, matrix multiplication, cursor access and shrinkwrap surface mode are
+ported. Hover/edge insertion/deletion, complete margin-marking modal dispatch and
+modifier-heavy target fixtures remain pending.
