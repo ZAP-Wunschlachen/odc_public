@@ -189,7 +189,7 @@ def break_contact_slice(context, ob1, ob2, space, before_multires = True, debug 
     
     
     
-def break_contact_deform(context, ob1,ob2, debug = False):
+def break_contact_deform(context, ob1,ob2, debug = False, separation=0):
     '''
     separate two objects by deforming a lattice with
     a plane.  Results in a smooth separation.
@@ -210,6 +210,13 @@ def break_contact_deform(context, ob1,ob2, debug = False):
     lat1 = odcutils.bbox_to_lattice(context.scene, ob1)
     lat2 = odcutils.bbox_to_lattice(context.scene, ob2)
     
+    # Interpolating splines reach the displaced control planes; B-splines
+    # attenuate the deformation enough to retain the original overlap.
+    for lattice in (lat1, lat2):
+        lattice.data.interpolation_type_u = 'KEY_CARDINAL'
+        lattice.data.interpolation_type_v = 'KEY_CARDINAL'
+        lattice.data.interpolation_type_w = 'KEY_CARDINAL'
+
     print('we made lattices?')
     loc_1 = odcutils.get_bbox_center(ob1, world = True)
     loc_2 = odcutils.get_bbox_center(ob2, world = True)
@@ -224,8 +231,8 @@ def break_contact_deform(context, ob1,ob2, debug = False):
     #dot each of the x,y,z coords (transformed to workd dir) with the vector between
     #the two bounding box centers.
     
-    dirs1 = [(quat_1 * x).dot(diff)**2, (quat_1 * y).dot(diff)**2, (quat_1 * z).dot(diff)**2]
-    dirs2 = [(quat_2 * x).dot(diff)**2, (quat_2 * y).dot(diff)**2, (quat_2 * z).dot(diff)**2]
+    dirs1 = [(quat_1 @ x).dot(diff)**2, (quat_1 @ y).dot(diff)**2, (quat_1 @ z).dot(diff)**2]
+    dirs2 = [(quat_2 @ x).dot(diff)**2, (quat_2 @ y).dot(diff)**2, (quat_2 @ z).dot(diff)**2]
     
     #find the maximium dot product
     #this is the dirction which is most parallel
@@ -236,8 +243,8 @@ def break_contact_deform(context, ob1,ob2, debug = False):
     #don't get confused because we will negate again
     #when we put the shrinwrap mod on.  This is determinging
     #whether +x or -x points at the othe robject
-    neg1 = 1 + -2 * ((quat_1 * vecs[dir1]).dot(diff) < 0)
-    neg2 = 1 + -2 * ((quat_2 * vecs[dir2]).dot(diff) > 0)
+    neg1 = 1 + -2 * ((quat_1 @ vecs[dir1]).dot(diff) < 0)
+    neg2 = 1 + -2 * ((quat_2 @ vecs[dir2]).dot(diff) > 0)
     
     vec1 = neg1 * vecs[dir1]
     vec2 = neg2 * vecs[dir2]
@@ -267,7 +274,7 @@ def break_contact_deform(context, ob1,ob2, debug = False):
     new_plane_ob.location = midpoint
     new_plane_ob.scale = .5 * (ob1.dimensions + ob2.dimensions)
     
-    context.scene.objects.link(new_plane_ob)
+    context.collection.objects.link(new_plane_ob)
     
     mod1 = lat1.modifiers.new('Contact', 'SHRINKWRAP')
     mod2 = lat2.modifiers.new('Contact', 'SHRINKWRAP')
@@ -304,6 +311,7 @@ def break_contact_deform(context, ob1,ob2, debug = False):
     else:
         mod2.use_project_z = True
     
+    mod1.offset = mod2.offset = -separation
     mod1.target = new_plane_ob
     mod2.target = new_plane_ob    
     print('broken!')

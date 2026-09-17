@@ -696,3 +696,14 @@ offsets retained overlap; offsets now cross the separator plane, giving the requ
 per-side clearance. Blender 5.1.2 passes a measured 0.4 gap for sep=0.2 and unchanged
 outer faces. DEFORM, the Apply option, rotated/nonconvex geometry and repeated use
 remain pending. This test establishes the slice path only.
+
+## Break Contact deform path
+
+The deform helper uses current quaternion/linking APIs and receives the previously
+ignored separation property. Negative projection offsets cross the separator.
+Cardinal interpolation replaces B-spline attenuation for this operation: the cube
+fixture otherwise retained overlap. Blender 5.1.2 now measures separated extents
+at approximately -0.07167/+0.07167 for separation=0.2. This is a soft deformation,
+not an exact-clearance operation. The test verifies separated bodies and lattice
+modifiers; anatomical meshes, overshoot, Apply and repeated invocation remain
+unverified. The slice path remains the measured per-side-clearance test.

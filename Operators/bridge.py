@@ -522,7 +522,7 @@ class OPENDENTAL_OT_BreakContact(bpy.types.Operator):
         print(ob2)
         print('did we make it this far?')
         if self.method == '0':
-            bridge_methods.break_contact_deform(context, ob1, ob2, debug = 1)
+            bridge_methods.break_contact_deform(context, ob1, ob2, debug = 1, separation=self.sep)
         elif self.method == '1':
             bridge_methods.break_contact_slice(context, ob1, ob2, self.sep, debug = 1)
         
