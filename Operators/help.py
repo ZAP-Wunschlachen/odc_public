@@ -8,15 +8,16 @@ import time
 
 #Blender imports :
 import bpy
-import bgl
+from .. import gpu_compat as bgl
 import blf
 from bpy.app.handlers import persistent
 
 #Addon imports : 
-import Addon_utils.odcutils
-import Operators.bridge_methods
-
-from Operators.textbox import TextBox
+from .. import Addon_utils
+from ..Addon_utils import odcutils
+from .. import Operators
+from ..Operators import bridge_methods
+from ..Operators.textbox import TextBox
 
 #Module Level globals
 
@@ -620,15 +621,13 @@ def register():
     bpy.utils.register_class(OPENDENTAL_OT_help_start_guide)
     bpy.utils.register_class(OPENDENTAL_OT_help_stop)
 def unregister():
-    bpy.utils.unregister_class(OPENDENTAL_OT_crown_report)
-    bpy.utils.unregister_class(OPENDENTAL_OT_help_start_crown)
-    bpy.utils.unregister_class(OPENDENTAL_OT_help_start_implant)
-    bpy.utils.unregister_class(OPENDENTAL_OT_help_start_bridge)
-    bpy.utils.unregister_class(OPENDENTAL_OT_help_start_guide)
-    bpy.utils.unregister_class(OPENDENTAL_OT_help_stop)
-    
-    
     clear_help_handlers()
+    bpy.utils.unregister_class(OPENDENTAL_OT_help_stop)
+    bpy.utils.unregister_class(OPENDENTAL_OT_help_start_guide)
+    bpy.utils.unregister_class(OPENDENTAL_OT_help_start_bridge)
+    bpy.utils.unregister_class(OPENDENTAL_OT_help_start_implant)
+    bpy.utils.unregister_class(OPENDENTAL_OT_help_start_crown)
+    bpy.utils.unregister_class(OPENDENTAL_OT_crown_report)
     
 if __name__ == "__main__":
     register()

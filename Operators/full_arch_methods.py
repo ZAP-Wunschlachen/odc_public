@@ -16,11 +16,11 @@ from mathutils import Vector, Matrix, Quaternion, Color
 from mathutils.bvhtree import BVHTree
 
 #Addon imports : 
-from Addon_utils import odcutils
-from Addon_utils.odcutils import get_com
+from ..Addon_utils import odcutils
+from ..Addon_utils.odcutils import get_com
 
-from Operators import crown_methods
-from Operators.mesh_cut import cross_section_seed_ver1, bound_box
+from ..Operators import crown_methods
+from ..Operators.mesh_cut import cross_section_seed_ver1, bound_box
 
 #enums?
 arch_types = ['MAX','MAND','LR','LL','LA','UR','UL','UA']
@@ -1271,10 +1271,10 @@ def splint_bezier_step_1(context, model, margin, axis, thickness, debug=False):
     Falloff.select = False
     
     #group the mesh into appriate parts
-    Splint.vertex_groups.new('Top')
-    Splint.vertex_groups.new('Bottom')
-    Splint.vertex_groups.new('Rim')
-    Splint.vertex_groups.new('Bone')
+    Splint.vertex_groups.new(name='Top')
+    Splint.vertex_groups.new(name='Bottom')
+    Splint.vertex_groups.new(name='Rim')
+    Splint.vertex_groups.new(name='Bone')
     Splint.select = True
     context.scene.objects.active = Splint
     

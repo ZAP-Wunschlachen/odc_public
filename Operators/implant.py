@@ -15,11 +15,11 @@ import bpy
 from mathutils import Vector, Matrix
 
 #Addon imports : 
-import Addon_utils.odcutils
-from Addon_utils.odcutils import get_settings
-import Operators.implant_utils
-
-
+from .. import Addon_utils
+from ..Addon_utils import odcutils
+from ..Addon_utils.odcutils import get_settings
+from .. import Operators
+from ..Operators import implant_utils
 #Global variables (should they be?)
 global lib_imp
 global lib_imp_enum
@@ -32,7 +32,7 @@ class OPENDENTAL_OT_implant_slice_view(bpy.types.Operator):
     bl_label = "Slice View"
     bl_options = {'REGISTER','UNDO'}
     
-    thickness = bpy.props.FloatProperty(name="Slice Thickness", description="view slice thickenss", default=1, min=1, max=10, step=5, precision=2, options={'ANIMATABLE'})
+    thickness: bpy.props.FloatProperty(name="Slice Thickness", description="view slice thickenss", default=1, min=1, max=10, step=5, precision=2, options={'ANIMATABLE'})
     def execute(self,context):
         
         view = bpy.context.space_data
@@ -76,12 +76,12 @@ class OPENDENTAL_OT_implant_from_contour(bpy.types.Operator):
     def item_cb(self, context):
         return [(obj.name, obj.name, '') for obj in self.objs]
  
-    objs = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
-    imp = bpy.props.EnumProperty(name="Implant Library Objects", 
+    objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    imp: bpy.props.EnumProperty(name="Implant Library Objects",
                                  description="A List of the tooth library", 
                                  items=item_cb)
-    depth = bpy.props.IntProperty(name = 'Depth', description = "milimeters below CEJ to place implant", default = 5)
-    hardware = bpy.props.BoolProperty(name="Include Hardware", default=True)
+    depth: bpy.props.IntProperty(name = 'Depth', description = "milimeters below CEJ to place implant", default = 5)
+    hardware: bpy.props.BoolProperty(name="Include Hardware", default=True)
     @classmethod
     def poll(cls, context):
         #restoration exists and is in scene
@@ -169,12 +169,12 @@ class OPENDENTAL_OT_place_implant(bpy.types.Operator):
     def item_cb(self, context):
         return [(obj.name, obj.name, '') for obj in self.objs]
  
-    objs = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
-    imp = bpy.props.EnumProperty(name="Implant Library Objects", 
+    imp: bpy.props.EnumProperty(name="Implant Library Objects",
                                  description="A List of the tooth library", 
                                  items=item_cb)
-    hardware = bpy.props.BoolProperty(name="Include Hardware", default=False)
+    hardware: bpy.props.BoolProperty(name="Include Hardware", default=False)
     
     @classmethod
     def polls(cls, context):
@@ -340,13 +340,13 @@ class OPENDENTAL_OT_place_sleeve(bpy.types.Operator):
     def item_cb(self, context):
         return [(obj.name, obj.name, '') for obj in self.objs]
  
-    objs = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
-    drill = bpy.props.EnumProperty(name="Drill/Sleeve Library", 
+    drill: bpy.props.EnumProperty(name="Drill/Sleeve Library",
                                  description="A List of the items library", 
                                  items=item_cb)
     
-    depth = bpy.props.FloatProperty(name="Depth", description="Top edge to apex of implant", default=20, min=0, max=30, step=5, precision=2, options={'ANIMATABLE'}) 
+    depth: bpy.props.FloatProperty(name="Depth", description="Top edge to apex of implant", default=20, min=0, max=30, step=5, precision=2, options={'ANIMATABLE'})
     
     @classmethod
     def polls(cls, context):
@@ -442,13 +442,13 @@ class OPENDENTAL_OT_place_drill(bpy.types.Operator):
     def item_cb(self, context):
         return [(obj.name, obj.name, '') for obj in self.objs]
  
-    objs = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
-    drill = bpy.props.EnumProperty(name="Drill Library", 
+    drill: bpy.props.EnumProperty(name="Drill Library",
                                  description="A List of the items library", 
                                  items=item_cb)
     
-    depth = bpy.props.FloatProperty(name="Depth", description="Distance tip of drill to implant apex", default=0, min=-4, max=10, step=5, precision=2, options={'ANIMATABLE'}) 
+    depth: bpy.props.FloatProperty(name="Depth", description="Distance tip of drill to implant apex", default=0, min=-4, max=10, step=5, precision=2, options={'ANIMATABLE'})
     
     @classmethod
     def polls(cls, context):
@@ -542,11 +542,11 @@ class OPENDENTAL_OT_implant_guide_cylinder(bpy.types.Operator):
     
 
     #inner = bpy.props.FloatProperty(name="Slice Thickness", description="view slice thickenss", default=1, min=1, max=10, step=5, precision=2, options={'ANIMATABLE'})
-    width = bpy.props.FloatProperty(name="Width", description="Width of Support", default=6, min=1, max=10, step=5, precision=2, options={'ANIMATABLE'})
-    depth = bpy.props.FloatProperty(name="Top Edge to Apex of Implant", description="", default=20, min=10, max=30, step=5, precision=2, options={'ANIMATABLE'})
-    trim_width = bpy.props.FloatProperty(name="Trim Width", description="Amount to shave off sides", default=0, min=0, max=4, step=5, precision=2, options={'ANIMATABLE'})
-    use_wedge = bpy.props.BoolProperty(name = 'Use Wedge', description = "Make a fraction of a full circle", default = False)
-    pctg = bpy.props.FloatProperty(name="Wedge pctg", description="Fraction of full circle to make", default=.65, min=0, max=1, step=5, precision=2, options={'ANIMATABLE'})
+    width: bpy.props.FloatProperty(name="Width", description="Width of Support", default=6, min=1, max=10, step=5, precision=2, options={'ANIMATABLE'})
+    depth: bpy.props.FloatProperty(name="Top Edge to Apex of Implant", description="", default=20, min=10, max=30, step=5, precision=2, options={'ANIMATABLE'})
+    trim_width: bpy.props.FloatProperty(name="Trim Width", description="Amount to shave off sides", default=0, min=0, max=4, step=5, precision=2, options={'ANIMATABLE'})
+    use_wedge: bpy.props.BoolProperty(name = 'Use Wedge', description = "Make a fraction of a full circle", default = False)
+    pctg: bpy.props.FloatProperty(name="Wedge pctg", description="Fraction of full circle to make", default=.65, min=0, max=1, step=5, precision=2, options={'ANIMATABLE'})
     
     
     def invoke(self, context, event): 
@@ -596,8 +596,8 @@ class OPENDENTAL_OT_implant_inner_cylinder(bpy.types.Operator):
     bl_label = "Inner Cylinder"
     bl_options = {'REGISTER','UNDO'}
     
-    use_thickness = bpy.props.BoolProperty(name="Manual Diameter", default=True)
-    thickness = bpy.props.FloatProperty(name="Cylinder Diameter", description="diameter of the hole", default=5, min=1, max=7, step=5, precision=1, options={'ANIMATABLE'})
+    use_thickness: bpy.props.BoolProperty(name="Manual Diameter", default=True)
+    thickness: bpy.props.FloatProperty(name="Cylinder Diameter", description="diameter of the hole", default=5, min=1, max=7, step=5, precision=1, options={'ANIMATABLE'})
 
     def execute(self,context):
         settings = get_settings()
@@ -666,15 +666,14 @@ def register():
     #bpy.utils.register_module(__name__)
 
 def unregister():
-
-    bpy.utils.unregister_class(OPENDENTAL_OT_implant_guide_cylinder)
-    bpy.utils.unregister_class(OPENDENTAL_OT_implant_inner_cylinder)
-    bpy.utils.unregister_class(OPENDENTAL_OT_implant_slice_view)
-    bpy.utils.unregister_class(OPENDENTAL_OT_implant_normal_view)
+    bpy.utils.unregister_class(OPENDENTAL_OT_place_drill)
+    bpy.utils.unregister_class(OPENDENTAL_OT_place_sleeve)
     bpy.utils.unregister_class(OPENDENTAL_OT_place_implant)
     bpy.utils.unregister_class(OPENDENTAL_OT_implant_from_contour)
-    bpy.utils.unregister_class(OPENDENTAL_OT_place_sleeve)
-    bpy.utils.unregister_class(OPENDENTAL_OT_place_drill)
+    bpy.utils.unregister_class(OPENDENTAL_OT_implant_normal_view)
+    bpy.utils.unregister_class(OPENDENTAL_OT_implant_slice_view)
+    bpy.utils.unregister_class(OPENDENTAL_OT_implant_inner_cylinder)
+    bpy.utils.unregister_class(OPENDENTAL_OT_implant_guide_cylinder)
     
 #    bpy.utils.unregister_class(SetMaster)
 

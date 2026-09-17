@@ -29,3 +29,9 @@ odcmenus/__pycache__/button_data.cpython-34.pyc
 odcmenus/__pycache__/menu_utils.cpython-32.pyc
 odcmenus/__pycache__/menu_utils.cpython-33.pyc
 odcmenus/__pycache__/menu_utils.cpython-34.pyc
+
+# Python runtimes and generated verification artifacts
+__pycache__/
+*.py[cod]
+tests/artifacts/
+*.blend1

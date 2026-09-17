@@ -21,10 +21,10 @@ from bpy_extras import view3d_utils
 from bpy.props import IntProperty, FloatProperty, BoolProperty, EnumProperty
 
 #Addon imports :
-from Operators import bgl_utils, common_drawing
-from Operators.mesh_cut import edge_loops_from_bmedges, space_evenly_on_path
-from Operators.textbox import TextBox
-from Addon_utils.odcutils import get_settings, obj_list_from_lib, obj_from_lib
+from ..Operators import bgl_utils, common_drawing
+from ..Operators.mesh_cut import edge_loops_from_bmedges, space_evenly_on_path
+from ..Operators.textbox import TextBox
+from ..Addon_utils.odcutils import get_settings, obj_list_from_lib, obj_from_lib
 
 
 
@@ -34,8 +34,8 @@ class OPENDENTAL_OT_prepare_meta_scaffold(bpy.types.Operator):
     bl_label = "Create Meta Scaffold"
     bl_options = {'REGISTER', 'UNDO'}
     
-    radius = FloatProperty(default = 1.25, description = 'Radius of scafold should be 1/2 radius of planned metaballs')
-    finalize = BoolProperty(default = False, description = 'Will apply the decimate modifier')
+    radius: FloatProperty(default = 1.25, description = 'Radius of scafold should be 1/2 radius of planned metaballs')
+    finalize: BoolProperty(default = False, description = 'Will apply the decimate modifier')
     
     @classmethod
     def poll(cls, context):
@@ -106,10 +106,10 @@ class OPENDENTAL_OT_meta_offset_surface(bpy.types.Operator):
     bl_label = "Create Meta Surface"
     bl_options = {'REGISTER', 'UNDO'}
     
-    radius = FloatProperty(default = 2.5, description = 'Radius metaballs to be added')
-    finalize = BoolProperty(default = False, description = 'Will convert meta to mesh and remove meta object')
-    resolution = FloatProperty(default = .8, description = 'Mesh resolution. 0.8 for dentures, .3 for cast reduction')
-    n_verts = IntProperty(default = 1000)
+    radius: FloatProperty(default = 2.5, description = 'Radius metaballs to be added')
+    finalize: BoolProperty(default = False, description = 'Will convert meta to mesh and remove meta object')
+    resolution: FloatProperty(default = .8, description = 'Mesh resolution. 0.8 for dentures, .3 for cast reduction')
+    n_verts: IntProperty(default = 1000)
     @classmethod
     def poll(cls, context):
         if context.mode == "OBJECT" and context.object != None:
@@ -191,9 +191,9 @@ class OPENDENTAL_OT_meta_rim_from_curve(bpy.types.Operator):
     bl_label = "Create Meta Wax Rim"
     bl_options = {'REGISTER', 'UNDO'}
     
-    posterior_width = FloatProperty(default = 9, description = 'Width of posterior rim')
-    anterior_width = FloatProperty(default = 4, description = 'Width of anterior rim')
-    meta_type = EnumProperty(name = 'Meta Type', items = [('CUBE','CUBE','CUBE'), ('ELLIPSOID', 'ELLIPSOID','ELLIPSOID')], default = 'CUBE')
+    posterior_width: FloatProperty(default = 9, description = 'Width of posterior rim')
+    anterior_width: FloatProperty(default = 4, description = 'Width of anterior rim')
+    meta_type: EnumProperty(name = 'Meta Type', items = [('CUBE','CUBE','CUBE'), ('ELLIPSOID', 'ELLIPSOID','ELLIPSOID')], default = 'CUBE')
     @classmethod
     def poll(cls, context):
         if context.mode == "OBJECT" and context.object != None and context.object.type == 'CURVE':
@@ -307,11 +307,11 @@ class OPENDENTAL_OT_meta_custom_tray(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     
-    tray_thickness = FloatProperty(default = 2, description = 'Thickness of tray')
-    tray_offset = FloatProperty(default = 2.5, description = 'Spacer for impression material')
-    finalize = BoolProperty(default = False, description = 'Will convert meta to mesh and remove meta object')
+    tray_thickness: FloatProperty(default = 2, description = 'Thickness of tray')
+    tray_offset: FloatProperty(default = 2.5, description = 'Spacer for impression material')
+    finalize: BoolProperty(default = False, description = 'Will convert meta to mesh and remove meta object')
     
-    n_verts = IntProperty(default = 5000)
+    n_verts: IntProperty(default = 5000)
     @classmethod
     def poll(cls, context):
         if context.mode == "OBJECT" and context.object != None:
@@ -407,9 +407,9 @@ class OPENDENTAL_OT_simple_offset_surface(bpy.types.Operator):
     bl_label = "Simple Meta Surface"
     bl_options = {'REGISTER', 'UNDO'}
     
-    offset = FloatProperty(default = 0.3, min = -3, max = 3,  description = 'Distance to offset')
-    duplicate = BoolProperty(default = False , description = 'Will create new object, leaving original in tact')
-    smooth = BoolProperty(default = True, description = 'Will add smooth modifier to attempt to remove self intersections')
+    offset: FloatProperty(default = 0.3, min = -3, max = 3,  description = 'Distance to offset')
+    duplicate: BoolProperty(default = False , description = 'Will create new object, leaving original in tact')
+    smooth: BoolProperty(default = True, description = 'Will add smooth modifier to attempt to remove self intersections')
     shrink = smooth = BoolProperty(default = False, description = 'Will add shrinkwrap modifier to attempt to reoffset after smoothing')
     
     @classmethod
@@ -473,9 +473,9 @@ class OPENDENTAL_OT_boolean_intaglio(bpy.types.Operator):
     def item_cb(self, context):
         return [(obj.name, obj.name, '') for obj in self.objs]
  
-    objs = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
-    ob = bpy.props.EnumProperty(name="Master Cast", 
+    ob: bpy.props.EnumProperty(name="Master Cast",
                                  description="Select obj in scene which is master cast", 
                                  items=item_cb)
     
@@ -515,12 +515,12 @@ def register():
     bpy.utils.register_class(OPENDENTAL_OT_boolean_intaglio)
     bpy.utils.register_class(OPENDENTAL_OT_simple_offset_surface)
 def unregister():
-    bpy.utils.unregister_class(OPENDENTAL_OT_meta_offset_surface)
-    bpy.utils.unregister_class(OPENDENTAL_OT_meta_custom_tray)
-    bpy.utils.unregister_class(OPENDENTAL_OT_prepare_meta_scaffold)
-    bpy.utils.unregister_class(OPENDENTAL_OT_meta_rim_from_curve)
-    bpy.utils.unregister_class(OPENDENTAL_OT_boolean_intaglio)
     bpy.utils.unregister_class(OPENDENTAL_OT_simple_offset_surface)
+    bpy.utils.unregister_class(OPENDENTAL_OT_boolean_intaglio)
+    bpy.utils.unregister_class(OPENDENTAL_OT_meta_rim_from_curve)
+    bpy.utils.unregister_class(OPENDENTAL_OT_prepare_meta_scaffold)
+    bpy.utils.unregister_class(OPENDENTAL_OT_meta_custom_tray)
+    bpy.utils.unregister_class(OPENDENTAL_OT_meta_offset_surface)
     
 if __name__ == "__main__":
     register()

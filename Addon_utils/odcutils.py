@@ -30,15 +30,15 @@ from mathutils.geometry import intersect_point_line
 
 
 #Addon imports :
-from Addon_utils.common_utilities import bversion
-from Operators import mesh_cut
-from Operators.mesh_cut import edge_loops_from_bmedges
+from ..Addon_utils.common_utilities import bversion
+from ..Operators import mesh_cut
+from ..Operators.mesh_cut import edge_loops_from_bmedges
 
 
 
 #addon name :
 addon_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-addon_name = os.path.basename(addon_path)
+addon_name = __package__.rsplit(".", 1)[0]
 ##################################################################
 #Borrowed from retopoflow @CGCookie, Jonathan Wiliamson, Jon Denning, Patrick Moore
 def get_settings():

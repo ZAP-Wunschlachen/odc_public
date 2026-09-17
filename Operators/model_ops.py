@@ -288,7 +288,7 @@ class OPENDENTAL_OT_center_cursor(bpy.types.Operator):
 
     def execute(self, context) :
 
-        bpy.ops.view3d.snap_cursor_to_center()
+        context.scene.cursor.location = (0.0, 0.0, 0.0)
 
         return {"FINISHED"}
 
@@ -320,7 +320,7 @@ class OPENDENTAL_OT_decimate_model(bpy.types.Operator):
             bpy.ops.object.mode_set(mode="OBJECT")
             bpy.ops.object.modifier_add(type="DECIMATE")
             bpy.context.object.modifiers["Decimate"].ratio = decimate_ratio
-            bpy.ops.object.modifier_apply(apply_as="DATA", modifier="Decimate")
+            bpy.ops.object.modifier_apply(modifier="Decimate")
 
             return {"FINISHED"}
 
@@ -820,7 +820,7 @@ class OPENDENTAL_OT_make_curve(bpy.types.Operator):
                 bpy.ops.object.select_all(action="DESELECT")
                 cutting_tool.select_set(True)
                 bpy.context.view_layer.objects.active = cutting_tool
-                bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Shrinkwrap")
+                bpy.ops.object.modifier_apply(modifier="Shrinkwrap")
 
                 
                 bpy.ops.object.mode_set(mode="EDIT")
@@ -1271,11 +1271,11 @@ class OPENDENTAL_OT_square_cut_confirm(bpy.types.Operator):
 
                 # Apply boolean modifier :
                 if cutting_mode == "Cut inner" :
-                    bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Boolean")
+                    bpy.ops.object.modifier_apply(modifier="Boolean")
 
                 if cutting_mode == "Keep inner" :
                     bpy.context.object.modifiers["Boolean"].operation = 'INTERSECT'
-                    bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Boolean")
+                    bpy.ops.object.modifier_apply(modifier="Boolean")
 
                 # Delete resulting loose geometry :
 
@@ -1614,11 +1614,12 @@ class OPENDENTAL_OT_hollow_model(bpy.types.Operator):
 
                 # remesh Model_lowres 1.0 mm :
 
-                bpy.context.object.data.use_remesh_smooth_normals = True
                 bpy.context.object.data.use_remesh_preserve_volume = True
                 bpy.context.object.data.use_remesh_fix_poles = True
                 bpy.context.object.data.remesh_voxel_size = 1
                 bpy.ops.object.voxel_remesh()
+                for polygon in bpy.context.object.data.polygons:
+                    polygon.use_smooth = True
                 
                 # Add Metaballs :
 
@@ -1666,7 +1667,7 @@ class OPENDENTAL_OT_hollow_model(bpy.types.Operator):
                 bpy.context.object.modifiers["Boolean"].show_viewport = False
                 bpy.context.object.modifiers["Boolean"].operation = 'INTERSECT'
                 bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Mball_object"]
-                bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Boolean")
+                bpy.ops.object.modifier_apply(modifier="Boolean")
 
                 # Delet Model_lowres and Mball_object:
 
@@ -1834,8 +1835,9 @@ class OPENDENTAL_OT_remesh_model(bpy.types.Operator):
             bpy.ops.object.select_all(action="DESELECT")
             Model.select_set(True)
             bpy.context.object.data.remesh_voxel_size = 0.1
-            bpy.context.object.data.use_remesh_smooth_normals = True
             bpy.ops.object.voxel_remesh()
+            for polygon in Model.data.polygons:
+                polygon.use_smooth = True
             
             bpy.ops.object.mode_set(mode="OBJECT")
             
@@ -1952,7 +1954,8 @@ class OPENDENTAL_OT_add_offset(bpy.types.Operator):
 
             bpy.ops.object.modifier_add(type='DISPLACE')
             bpy.context.object.modifiers["Displace"].strength = offset
-            bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Displace")
+            bpy.context.object.modifiers["Displace"].mid_level = 0.0
+            bpy.ops.object.modifier_apply(modifier="Displace")
 
 
         return {"FINISHED"}

@@ -14,9 +14,9 @@ import bmesh
 from bpy.props import BoolProperty
 
 #Addon imports :
-from Addon_utils import odcutils
-from Addon_utils.odcutils import get_settings
-from Operators import mesh_cut, bridge_methods, bgl_utils, full_arch_methods
+from ..Addon_utils import odcutils
+from ..Addon_utils.odcutils import get_settings
+from ..Operators import mesh_cut, bridge_methods, bgl_utils, full_arch_methods
 
 
 
@@ -355,15 +355,15 @@ class OPENDENTAL_OT_bridge_individual(bpy.types.Operator):
     #dvert_adj = bpy.props.FloatProperty(name="D Vertical Adjust", description="", default=0, min=-2, max=2, step=2, precision=1, options={'ANIMATABLE'})    
     #dlat_adj = bpy.props.FloatProperty(name="D Lateral Adjust", description="", default=0, min=-2, max=2, step=2, precision=1, options={'ANIMATABLE'})
     
-    bulbous = bpy.props.FloatProperty(name="bulbous", description="", default=.5, min=0, max=1.5, step=2, precision=1, options={'ANIMATABLE'})
-    twist = bpy.props.IntProperty(name="twist", description="twist", default=0, min=-5, max=5, options={'ANIMATABLE'})     
-    smooth = bpy.props.IntProperty(name="smooth", description="smooth", default=3, min=0, max=20, options={'ANIMATABLE'})     
+    bulbous: bpy.props.FloatProperty(name="bulbous", description="", default=.5, min=0, max=1.5, step=2, precision=1, options={'ANIMATABLE'})
+    twist: bpy.props.IntProperty(name="twist", description="twist", default=0, min=-5, max=5, options={'ANIMATABLE'})
+    smooth: bpy.props.IntProperty(name="smooth", description="smooth", default=3, min=0, max=20, options={'ANIMATABLE'})
 
     @classmethod
     def poll(cls,context):
         bridges = bridge_methods.active_spanning_restoration(context)
         
-        if len(bridges):
+        if bridges and bridges[0] is not None:
             bridge = bridges[0]
             condition_1 = bridge.bridge and bridge.bridge in bpy.data.objects
         else:
@@ -505,11 +505,11 @@ class OPENDENTAL_OT_BreakContact(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
 
     #arg grid size
-    method = bpy.props.EnumProperty(name='Method', items = (('0','DEFORM','0'),('1','SLICE','1')), default = '0')
+    method: bpy.props.EnumProperty(name='Method', items = (('0','DEFORM','0'),('1','SLICE','1')), default = '0')
     
-    sep = bpy.props.FloatProperty(name="Separation", description="Slice Thickness", default=.5, min=-10, max=10, options={'ANIMATABLE'})
+    sep: bpy.props.FloatProperty(name="Separation", description="Slice Thickness", default=.5, min=-10, max=10, options={'ANIMATABLE'})
     
-    apply = bpy.props.BoolProperty(name="Apply", description="Apply the deformatino and delete lattice", default=False, options={'ANIMATABLE'})
+    apply: bpy.props.BoolProperty(name="Apply", description="Apply the deformatino and delete lattice", default=False, options={'ANIMATABLE'})
     
 
     @classmethod
@@ -601,12 +601,12 @@ class OPENDENTAL_OT_ClothFillTray(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
 
     #arg  octree
-    oct = bpy.props.IntProperty(name="Resolution", description="Octree Depth", default=4, min=1, max=10, options={'ANIMATABLE'})
+    oct: bpy.props.IntProperty(name="Resolution", description="Octree Depth", default=4, min=1, max=10, options={'ANIMATABLE'})
     #some day I will be able to estimate the grid based on onctree and scale
     #arg grid size
-    grid = bpy.props.FloatProperty(name="Grid", description="Grid", default=1, min=.01, max=10, options={'ANIMATABLE'})
+    grid: bpy.props.FloatProperty(name="Grid", description="Grid", default=1, min=.01, max=10, options={'ANIMATABLE'})
 
-    smooth = bpy.props.IntProperty(name="smooth", description="# of smooth iterations", default=5, min=1, max=20, options={'ANIMATABLE'})
+    smooth: bpy.props.IntProperty(name="smooth", description="# of smooth iterations", default=5, min=1, max=20, options={'ANIMATABLE'})
     
     '''
     @classmethod
@@ -648,15 +648,15 @@ def register():
 
     
 def unregister():
-    bpy.utils.unregister_class(OPENDENTAL_OT_bridge_from_selected)
-    bpy.utils.unregister_class(OPENDENTAL_OT_bridge_keep_arch_plan)
-    bpy.utils.unregister_class(OPENDENTAL_OT_bridge_prebridge)
-    bpy.utils.unregister_class(OPENDENTAL_OT_bridge_individual)
-    bpy.utils.unregister_class(OPENDENTAL_OT_ClothFillTray)
-    bpy.utils.unregister_class(OPENDENTAL_OT_BreakContact)
-    bpy.utils.unregister_class(OPENDENTAL_OT_keep_shape)
-    bpy.utils.unregister_class(OPENDENTAL_OT_bridge_boolean)
     bpy.utils.unregister_class(OPENDENTAL_OT_solid_bridge)
+    bpy.utils.unregister_class(OPENDENTAL_OT_bridge_boolean)
+    bpy.utils.unregister_class(OPENDENTAL_OT_keep_shape)
+    bpy.utils.unregister_class(OPENDENTAL_OT_BreakContact)
+    bpy.utils.unregister_class(OPENDENTAL_OT_ClothFillTray)
+    bpy.utils.unregister_class(OPENDENTAL_OT_bridge_individual)
+    bpy.utils.unregister_class(OPENDENTAL_OT_bridge_prebridge)
+    bpy.utils.unregister_class(OPENDENTAL_OT_bridge_keep_arch_plan)
+    bpy.utils.unregister_class(OPENDENTAL_OT_bridge_from_selected)
     #bpy.utils.unregister_class(OPENDENTAL_OT_seat_to_margin)
     #bpy.utils.unregister_class(OPENDENTAL_OT_calculate_inside)
     #bpy.utils.unregister_class(OPENDENTAL_OT_crown_cervical_convergence)

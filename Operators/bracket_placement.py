@@ -19,11 +19,11 @@ from mathutils.bvhtree import BVHTree
 from bpy_extras import view3d_utils
 
 #Addon imports :
-from Addon_utils.common_utilities import bversion
-from Addon_utils.odcutils import get_settings, obj_list_from_lib, obj_from_lib
-from Operators import common_drawing, bgl_utils
-from Operators.mesh_cut import cross_section_seed_ver1, bound_box
-from Operators.textbox import TextBox
+from ..Addon_utils.common_utilities import bversion
+from ..Addon_utils.odcutils import get_settings, obj_list_from_lib, obj_from_lib
+from ..Operators import common_drawing, bgl_utils
+from ..Operators.mesh_cut import cross_section_seed_ver1, bound_box
+from ..Operators.textbox import TextBox
 
 class BracketDataManager(object):
     '''
@@ -698,9 +698,9 @@ class OPENDENTAL_OT_place_bracket_static(bpy.types.Operator):
     def item_cb(self, context):
         return [(obj.name, obj.name, '') for obj in self.objs]
  
-    objs = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
-    ob = bpy.props.EnumProperty(name="Bracket Library Objects", 
+    ob: bpy.props.EnumProperty(name="Bracket Library Objects",
                                  description="A List of the ortho library", 
                                  items=item_cb)
     
@@ -752,8 +752,8 @@ def register():
     bpy.utils.register_class(OPENDENTAL_OT_place_bracket)
     bpy.utils.register_class(OPENDENTAL_OT_place_bracket_static)
 def unregister():
-    bpy.utils.unregister_class(OPENDENTAL_OT_place_bracket)
     bpy.utils.unregister_class(OPENDENTAL_OT_place_bracket_static)
+    bpy.utils.unregister_class(OPENDENTAL_OT_place_bracket)
 
 if __name__ == "__main__":
     register()

@@ -3,7 +3,7 @@ import bpy
 from mathutils import Vector
 
 #Addon imports :
-from Addon_utils.common_utilities import bversion
+from ..Addon_utils.common_utilities import bversion
 
 upper_molar23 = [[198, 89,77], #central pit
            [241, 87, 240,239], #MMR
@@ -218,7 +218,7 @@ class OPENDENTAL_OT_hook_deform(bpy.types.Operator):
                         if mod.type == 'HOOK':
                             mod.show_expanded = False
                     if 'Anchor' not in ob.vertex_groups:
-                        ob.vertex_groups.new('Anchor')
+                        ob.vertex_groups.new(name='Anchor')
                     
                     bpy.ops.object.vertex_group_set_active(group = 'Anchor')
                     bpy.ops.object.mode_set(mode = 'EDIT')
@@ -317,5 +317,5 @@ def register():
     bpy.utils.register_class(OPENDENTAL_OT_keep_hook)
         
 def unregister():
-    bpy.utils.unregister_class(OPENDENTAL_OT_hook_deform)
     bpy.utils.unregister_class(OPENDENTAL_OT_keep_hook)
+    bpy.utils.unregister_class(OPENDENTAL_OT_hook_deform)

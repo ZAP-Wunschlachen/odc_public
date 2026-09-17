@@ -10,16 +10,15 @@ from mathutils import Vector, Matrix
 from bpy_extras import view3d_utils
 
 #Addon imports :
-from Addon_utils import odcutils
-from Addon_utils.odcutils import get_settings
-from Addon_utils.common_utilities import bversion
+from ..Addon_utils import odcutils
+from ..Addon_utils.odcutils import get_settings
+from ..Addon_utils.common_utilities import bversion
 
-import odcmenus.menu_utils as menu_utils
-import odcmenus.button_data as button_data
-
-from Operators import crown_methods, full_arch_methods, bgl_utils, classes
-from Operators.curve import CurveDataManager
-from Operators.textbox import TextBox
+from ..odcmenus import menu_utils as menu_utils
+from ..odcmenus import button_data as button_data
+from ..Operators import crown_methods, full_arch_methods, bgl_utils, classes
+from ..Operators.curve import CurveDataManager
+from ..Operators.textbox import TextBox
 
 '''
 This module handles operators for the crown (and maybe bridge) functionality of ODC
@@ -110,7 +109,7 @@ class OPENDENTAL_OT_set_as_prep(bpy.types.Operator):
     bl_label = "Set as Prep"
     bl_options = {'REGISTER','UNDO'}
     
-    abutment = bpy.props.BoolProperty(name = "abutment", default = False)
+    abutment: bpy.props.BoolProperty(name = "abutment", default = False)
     
     def execute(self, context):
         settings = get_settings()
@@ -242,7 +241,7 @@ class OPENDENTAL_OT_set_opposing(bpy.types.Operator):
     bl_label = "Set Opposing"
     bl_options = {'REGISTER','UNDO'}
     
-    for_all = bpy.props.BoolProperty(default = True)
+    for_all: bpy.props.BoolProperty(default = True)
     def execute(self, context):
         #grab active tooth the old way
         
@@ -265,7 +264,7 @@ class ViewToZ(bpy.types.Operator):
     bl_label = "View to Z"
     bl_options = {'REGISTER','UNDO'}
 
-    keep_orientation = bpy.props.BoolProperty(default = False, name = "Keep Orientation")
+    keep_orientation: bpy.props.BoolProperty(default = False, name = "Keep Orientation")
     
     def execute(self, context):
         bpy.ops.object.select_all(action = 'DESELECT')
@@ -538,8 +537,8 @@ class CBGetCrownForm(bpy.types.Operator):
     def item_cb(self, context):
         return [(obj.name, obj.name, '') for obj in self.objs]
    
-    objs = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
-    ob_list = bpy.props.EnumProperty(name="Tooth Library Objects", description="A List of the tooth library", items=item_cb)
+    objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    ob_list: bpy.props.EnumProperty(name="Tooth Library Objects", description="A List of the tooth library", items=item_cb)
         
     def invoke(self, context, event): 
         self.objs.clear()
@@ -663,7 +662,7 @@ class OPENDENTAL_OT_seat_to_margin(bpy.types.Operator):
     bl_label = "Seat to Margin"
     bl_options = {'REGISTER','UNDO'}
     
-    influence = bpy.props.FloatProperty(name="Nearby Influence", description="", default=1, min=.1, max=2, step=2, precision=1, options={'ANIMATABLE'}) 
+    influence: bpy.props.FloatProperty(name="Nearby Influence", description="", default=1, min=.1, max=2, step=2, precision=1, options={'ANIMATABLE'})
     
     
     @classmethod
@@ -735,10 +734,10 @@ class OPENDENTAL_OT_calculate_inside(bpy.types.Operator):
     bl_label = "Calculate Intaglio"
     bl_options = {'REGISTER','UNDO'}
     
-    holy_zone = bpy.props.FloatProperty(name="Holy Zone Width", description="", default=.4, min=.2, max=2, step=5, precision=1, options={'ANIMATABLE'})
-    chamfer = bpy.props.FloatProperty(name="Chamfer", description="0 = shoulder 1 = feather", default=.2, min=0, max=1, step=2, precision=2, options={'ANIMATABLE'})
-    gap = bpy.props.FloatProperty(name="Gap Thickness", description="thickness required for cement", default=0.07, min=.01, max=.5, step=2, precision=2, options={'ANIMATABLE'})
-    no_undercuts = bpy.props.BoolProperty(name="No Undercuts", description="Uncheck if there are significant undercuts", default=True)
+    holy_zone: bpy.props.FloatProperty(name="Holy Zone Width", description="", default=.4, min=.2, max=2, step=5, precision=1, options={'ANIMATABLE'})
+    chamfer: bpy.props.FloatProperty(name="Chamfer", description="0 = shoulder 1 = feather", default=.2, min=0, max=1, step=2, precision=2, options={'ANIMATABLE'})
+    gap: bpy.props.FloatProperty(name="Gap Thickness", description="thickness required for cement", default=0.07, min=.01, max=.5, step=2, precision=2, options={'ANIMATABLE'})
+    no_undercuts: bpy.props.BoolProperty(name="No Undercuts", description="Uncheck if there are significant undercuts", default=True)
 
     @classmethod
     def poll(cls,context):
@@ -794,7 +793,7 @@ class OPENDENTAL_OT_crown_cervical_convergence(bpy.types.Operator):
     bl_label = "Angle Cervical Convergence"
     bl_options = {'REGISTER','UNDO'}
 
-    ang = bpy.props.FloatProperty(name="Angle", description="", default=math.pi/12, min=0, options={'ANIMATABLE'}, subtype='ANGLE', unit='ROTATION')
+    ang: bpy.props.FloatProperty(name="Angle", description="", default=math.pi/12, min=0, options={'ANIMATABLE'}, subtype='ANGLE', unit='ROTATION')
     
     @classmethod
     def poll(cls, context):
@@ -843,7 +842,7 @@ class OPENDENTAL_make_solid_restoration(bpy.types.Operator):
     bl_label = "Make Solid Restoration"
     bl_options = {'REGISTER','UNDO'}
     
-    method = bpy.props.IntProperty(default = 1)
+    method: bpy.props.IntProperty(default = 1)
     @classmethod
     def poll(cls, context):
         #restoration exists and is in scene
@@ -1010,9 +1009,9 @@ class OPENDENTAL_OT_prep_from_crown(bpy.types.Operator):
     bl_label = "Prep From Crown"
     bl_options = {'REGISTER','UNDO'}
     
-    margin_width = bpy.props.FloatProperty(name="Chamfer Depth", description="", default=.5, min=.1, max=2, step=5, precision=2, options={'ANIMATABLE'})
-    reduction = bpy.props.FloatProperty(name="Occlusal Reduction", description="", default=.5, min=.1, max=4, step=5, precision=2, options={'ANIMATABLE'})
-    make_inside = bpy.props.BoolProperty(name="Make Inside", description = "Use if making prefab temp shell", default = True)
+    margin_width: bpy.props.FloatProperty(name="Chamfer Depth", description="", default=.5, min=.1, max=2, step=5, precision=2, options={'ANIMATABLE'})
+    reduction: bpy.props.FloatProperty(name="Occlusal Reduction", description="", default=.5, min=.1, max=4, step=5, precision=2, options={'ANIMATABLE'})
+    make_inside: bpy.props.BoolProperty(name="Make Inside", description = "Use if making prefab temp shell", default = True)
 
     
     @classmethod
@@ -1153,8 +1152,8 @@ class OPENDENTAL_OT_pointic_from_crown(bpy.types.Operator):
     p_enum = []
     for index, type in enumerate(p_types):
         p_enum.append((str(index), p_types[index], str(index)))
-    p_type = bpy.props.EnumProperty(name="Pontic Type", description="How To Shape the pontic", items=p_enum, default='0')
-    offset = bpy.props.FloatProperty(name="Tissue spacer", description="", default=1, min=-1, max=4, step=2, precision=1, options={'ANIMATABLE'}) 
+    p_type: bpy.props.EnumProperty(name="Pontic Type", description="How To Shape the pontic", items=p_enum, default='0')
+    offset: bpy.props.FloatProperty(name="Tissue spacer", description="", default=1, min=-1, max=4, step=2, precision=1, options={'ANIMATABLE'})
     
     @classmethod
     def poll(cls, context):
@@ -1384,13 +1383,16 @@ class OPENDENTAL_OT_assess_contacts(bpy.types.Operator):
     bl_label = "Asses Contacts"
     bl_options = {'REGISTER','UNDO'}
     
-    min_d = bpy.props.FloatProperty(name="Touching", description="", default=0, min=0, max=1, step=5, precision=2, options={'ANIMATABLE'})
-    max_d = bpy.props.FloatProperty(name="Max D", description="", default=.5, min=.1, max=2, step=5, precision=2, options={'ANIMATABLE'})
+    min_d: bpy.props.FloatProperty(name="Touching", description="", default=0, min=0, max=1, step=5, precision=2, options={'ANIMATABLE'})
+    max_d: bpy.props.FloatProperty(name="Max D", description="", default=.5, min=.1, max=2, step=5, precision=2, options={'ANIMATABLE'})
     
     @classmethod
     def poll(cls, context):
         #restoration exists and is in scene
-        tooth = odcutils.tooth_selection(context)[0]  #TODO: make this poll work for all selected teeth...
+        teeth = odcutils.tooth_selection(context)
+        if not teeth:
+            return False
+        tooth = teeth[0]
         condition_1 = tooth.mesial and tooth.mesial in bpy.data.objects #TODO: make this restoration when that property implemented
         condition_2 = tooth.distal and tooth.distal in bpy.data.objects
         condition_3 = tooth.opposing and tooth.opposing in bpy.data.objects
@@ -1415,9 +1417,9 @@ class OPENDENTAL_OT_grind_contacts(bpy.types.Operator):
     bl_label = "Grind Contacts"
     bl_options = {'REGISTER','UNDO'}
     
-    mesial = bpy.props.BoolProperty(default = True)
-    distal = bpy.props.BoolProperty(default = True)
-    overlap = bpy.props.FloatProperty(name='Offset', default = .04)
+    mesial: bpy.props.BoolProperty(default = True)
+    distal: bpy.props.BoolProperty(default = True)
+    overlap: bpy.props.FloatProperty(name='Offset', default = .04)
     @classmethod
     def poll(cls, context):
         #restoration exists and is in scene
@@ -1494,7 +1496,7 @@ class OPENDENTAL_OT_grind_occlusion(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     
 
-    overlap = bpy.props.FloatProperty(name='Offset', default = .05)
+    overlap: bpy.props.FloatProperty(name='Offset', default = .05)
     @classmethod
     def poll(cls, context):
         #restoration exists and is in scene
@@ -1549,36 +1551,36 @@ class OPENDENTAL_OT_teeth_arch(bpy.types.Operator):
     for index, type in enumerate(shifts):
         shift_enum.append((str(index), shifts[index], str(index)))
         
-    arch_type = bpy.props.EnumProperty(
+    arch_type: bpy.props.EnumProperty(
         name="Arch", 
         description="What Segment of the mouth does this curve represent?", 
         items=arch_enum, 
         default='0',
         options={'ANIMATABLE'})
     
-    shift = bpy.props.EnumProperty(
+    shift: bpy.props.EnumProperty(
         name="Arch", 
         description="What Segment of the mouth does this curve represent?", 
         items=shift_enum, 
         default='0',
         options={'ANIMATABLE'})
     
-    mirror = bpy.props.BoolProperty(
+    mirror: bpy.props.BoolProperty(
         name = "Mirror", 
         description = "If checked, will mirror the arch and place teeth on contralateral side",
         default = False)
             
-    reverse = bpy.props.BoolProperty(
+    reverse: bpy.props.BoolProperty(
         name = "Reverse", 
         description = "Check this if the teeth come in ordered the wrong way...not if they are flipped over",
         default = False)
             
-    link = bpy.props.BoolProperty(
+    link: bpy.props.BoolProperty(
         name = "Link", 
         description = "If checked, sets the teeth as the restoration for working teeth",
         default = False)
         
-    limit = bpy.props.BoolProperty(
+    limit: bpy.props.BoolProperty(
         name = "Limit", 
         description = "If checked, only inserts teeth from the working teeth",
         default = False)
@@ -1586,7 +1588,7 @@ class OPENDENTAL_OT_teeth_arch(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         #restoration exists and is in scene
-        return context.object.type == 'CURVE'
+        return context.object is not None and context.object.type == 'CURVE'
     
     def invoke(self,context,event):
         
@@ -1634,17 +1636,17 @@ class OPENDENTAL_OT_occlusal_scheme_to_curve(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     
     
-    mirror = bpy.props.BoolProperty(
+    mirror: bpy.props.BoolProperty(
         name = "Mirror", 
         description = "If checked, will mirror the arch and place teeth on contralateral side",
         default = False)
             
-    reverse = bpy.props.BoolProperty(
+    reverse: bpy.props.BoolProperty(
         name = "Reverse", 
         description = "Check this if the teeth come in ordered the wrong way...not if they are flipped over",
         default = False)
             
-    link = bpy.props.BoolProperty(
+    link: bpy.props.BoolProperty(
         name = "Link", 
         description = "If checked, sets the teeth as the restoration for working teeth",
         default = False)
@@ -1653,7 +1655,7 @@ class OPENDENTAL_OT_occlusal_scheme_to_curve(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         #restoration exists and is in scene
-        return context.object.type == 'CURVE'
+        return context.object is not None and context.object.type == 'CURVE'
     
     def invoke(self,context,event):
         
@@ -1721,29 +1723,29 @@ def register():
     #bpy.utils.register_module(__name__)
    
 def unregister():
-    bpy.utils.unregister_class(OPENDENTAL_OT_set_master)
-    bpy.utils.unregister_class(OPENDENTAL_OT_center_all_objects)
-    bpy.utils.unregister_class(OPENDENTAL_OT_plan_restorations)
-    bpy.utils.unregister_class(OPENDENTAL_OT_set_as_prep)
-    bpy.utils.unregister_class(OPENDENTAL_OT_set_opposing)
-    bpy.utils.unregister_class(OPENDENTAL_OT_set_mesial)
-    bpy.utils.unregister_class(OPENDENTAL_OT_set_distal)
-
-    bpy.utils.unregister_class(OPENDENTAL_OT_insertion_axis)
-    bpy.utils.unregister_class(OPENDENTAL_OT_seat_to_margin)
-    bpy.utils.unregister_class(OPENDENTAL_OT_grind_contacts)
-    bpy.utils.unregister_class(OPENDENTAL_OT_grind_occlusion)
-    bpy.utils.unregister_class(OPENDENTAL_OT_calculate_inside)
-    bpy.utils.unregister_class(OPENDENTAL_OT_prep_from_crown)
-    bpy.utils.unregister_class(OPENDENTAL_OT_crown_cervical_convergence)
-    bpy.utils.unregister_class(OPENDENTAL_OT_assess_contacts)
-    bpy.utils.unregister_class(ViewToZ)
-    bpy.utils.unregister_class(OPENDENTAL_make_solid_restoration)
-    bpy.utils.unregister_class(OPENDENTAL_OT_teeth_arch)
-    bpy.utils.unregister_class(OPENDENTAL_OT_occlusal_scheme_to_curve)
-    bpy.utils.unregister_class(CBGetCrownForm)
-    bpy.utils.unregister_class(OPENDENTAL_OT_pointic_from_crown)
     bpy.utils.unregister_class(OPENDENTAL_OT_lattice_deform)
+    bpy.utils.unregister_class(OPENDENTAL_OT_pointic_from_crown)
+    bpy.utils.unregister_class(CBGetCrownForm)
+    bpy.utils.unregister_class(ViewToZ)
+    bpy.utils.unregister_class(OPENDENTAL_OT_occlusal_scheme_to_curve)
+    bpy.utils.unregister_class(OPENDENTAL_OT_teeth_arch)
+    bpy.utils.unregister_class(OPENDENTAL_OT_assess_contacts)
+    bpy.utils.unregister_class(OPENDENTAL_OT_manufacture_restoration)
+    bpy.utils.unregister_class(OPENDENTAL_make_solid_restoration)
+    bpy.utils.unregister_class(OPENDENTAL_OT_crown_cervical_convergence)
+    bpy.utils.unregister_class(OPENDENTAL_OT_grind_occlusion)
+    bpy.utils.unregister_class(OPENDENTAL_OT_grind_contacts)
+    bpy.utils.unregister_class(OPENDENTAL_OT_prep_from_crown)
+    bpy.utils.unregister_class(OPENDENTAL_OT_calculate_inside)
+    bpy.utils.unregister_class(OPENDENTAL_OT_seat_to_margin)
+    bpy.utils.unregister_class(OPENDENTAL_OT_insertion_axis)
+    bpy.utils.unregister_class(OPENDENTAL_OT_set_distal)
+    bpy.utils.unregister_class(OPENDENTAL_OT_set_mesial)
+    bpy.utils.unregister_class(OPENDENTAL_OT_set_opposing)
+    bpy.utils.unregister_class(OPENDENTAL_OT_set_as_prep)
+    bpy.utils.unregister_class(OPENDENTAL_OT_plan_restorations)
+    bpy.utils.unregister_class(OPENDENTAL_OT_center_all_objects)
+    bpy.utils.unregister_class(OPENDENTAL_OT_set_master)
 
     
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ import bmesh
 from mathutils import Matrix, Vector, Color
 from mathutils.bvhtree import BVHTree
 
-from Operators import loops_tools
+from ..Operators import loops_tools
 
 
 def remove_undercuts(context, ob, view, world = True, smooth = True, epsilon = .000001):

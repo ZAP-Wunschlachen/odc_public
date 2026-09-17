@@ -3139,51 +3139,51 @@ class Bridge(bpy.types.Operator):
     bl_description = "Bridge two, or loft several, loops of vertices"
     bl_options = {'REGISTER', 'UNDO'}
 
-    cubic_strength = bpy.props.FloatProperty(name = "Strength",
+    cubic_strength: bpy.props.FloatProperty(name = "Strength",
         description = "Higher strength results in more fluid curves",
         default = 1.0,
         soft_min = -3.0,
         soft_max = 3.0)
-    interpolation = bpy.props.EnumProperty(name = "Interpolation mode",
+    interpolation: bpy.props.EnumProperty(name = "Interpolation mode",
         items = (('cubic', "Cubic", "Gives curved results"),
             ('linear', "Linear", "Basic, fast, straight interpolation")),
         description = "Interpolation mode: algorithm used when creating "\
             "segments",
         default = 'cubic')
-    loft = bpy.props.BoolProperty(name = "Loft",
+    loft: bpy.props.BoolProperty(name = "Loft",
         description = "Loft multiple loops, instead of considering them as "\
             "a multi-input for bridging",
         default = False)
-    loft_loop = bpy.props.BoolProperty(name = "Loop",
+    loft_loop: bpy.props.BoolProperty(name = "Loop",
         description = "Connect the first and the last loop with each other",
         default = False)
-    min_width = bpy.props.IntProperty(name = "Minimum width",
+    min_width: bpy.props.IntProperty(name = "Minimum width",
         description = "Segments with an edge smaller than this are merged "\
             "(compared to base edge)",
         default = 0,
         min = 0,
         max = 100,
         subtype = 'PERCENTAGE')
-    mode = bpy.props.EnumProperty(name = "Mode",
+    mode: bpy.props.EnumProperty(name = "Mode",
         items = (('basic', "Basic", "Fast algorithm"), ('shortest',
             "Shortest edge", "Slower algorithm with better vertex matching")),
         description = "Algorithm used for bridging",
         default = 'shortest')
-    remove_faces = bpy.props.BoolProperty(name = "Remove faces",
+    remove_faces: bpy.props.BoolProperty(name = "Remove faces",
         description = "Remove faces that are internal after bridging",
         default = True)
-    reverse = bpy.props.BoolProperty(name = "Reverse",
+    reverse: bpy.props.BoolProperty(name = "Reverse",
         description = "Manually override the direction in which the loops "\
                       "are bridged. Only use if the tool gives the wrong " \
                       "result",
         default = False)
-    segments = bpy.props.IntProperty(name = "Segments",
+    segments: bpy.props.IntProperty(name = "Segments",
         description = "Number of segments used to bridge the gap "\
             "(0 = automatic)",
         default = 1,
         min = 0,
         soft_max = 20)
-    twist = bpy.props.IntProperty(name = "Twist",
+    twist: bpy.props.IntProperty(name = "Twist",
         description = "Twist what vertices are connected to each other",
         default = 0)
 
@@ -3313,40 +3313,40 @@ class Circle(bpy.types.Operator):
     bl_description = "Move selected vertices into a circle shape"
     bl_options = {'REGISTER', 'UNDO'}
 
-    custom_radius = bpy.props.BoolProperty(name = "Radius",
+    custom_radius: bpy.props.BoolProperty(name = "Radius",
         description = "Force a custom radius",
         default = False)
-    fit = bpy.props.EnumProperty(name = "Method",
+    fit: bpy.props.EnumProperty(name = "Method",
         items = (("best", "Best fit", "Non-linear least squares"),
             ("inside", "Fit inside","Only move vertices towards the center")),
         description = "Method used for fitting a circle to the vertices",
         default = 'best')
-    flatten = bpy.props.BoolProperty(name = "Flatten",
+    flatten: bpy.props.BoolProperty(name = "Flatten",
         description = "Flatten the circle, instead of projecting it on the " \
             "mesh",
         default = True)
-    influence = bpy.props.FloatProperty(name = "Influence",
+    influence: bpy.props.FloatProperty(name = "Influence",
         description = "Force of the tool",
         default = 100.0,
         min = 0.0,
         max = 100.0,
         precision = 1,
         subtype = 'PERCENTAGE')
-    lock_x = bpy.props.BoolProperty(name = "Lock X",
+    lock_x: bpy.props.BoolProperty(name = "Lock X",
         description = "Lock editing of the x-coordinate",
         default = False)
-    lock_y = bpy.props.BoolProperty(name = "Lock Y",
+    lock_y: bpy.props.BoolProperty(name = "Lock Y",
         description = "Lock editing of the y-coordinate",
         default = False)
-    lock_z = bpy.props.BoolProperty(name = "Lock Z",
+    lock_z: bpy.props.BoolProperty(name = "Lock Z",
         description = "Lock editing of the z-coordinate",
         default = False)
-    radius = bpy.props.FloatProperty(name = "Radius",
+    radius: bpy.props.FloatProperty(name = "Radius",
         description = "Custom radius for circle",
         default = 1.0,
         min = 0.0,
         soft_max = 1000.0)
-    regular = bpy.props.BoolProperty(name = "Regular",
+    regular: bpy.props.BoolProperty(name = "Regular",
         description = "Distribute vertices at constant distances along the " \
             "circle",
         default = True)
@@ -3471,36 +3471,36 @@ class Curve(bpy.types.Operator):
     bl_description = "Turn a loop into a smooth curve"
     bl_options = {'REGISTER', 'UNDO'}
 
-    boundaries = bpy.props.BoolProperty(name = "Boundaries",
+    boundaries: bpy.props.BoolProperty(name = "Boundaries",
         description = "Limit the tool to work within the boundaries of the "\
             "selected vertices",
         default = False)
-    influence = bpy.props.FloatProperty(name = "Influence",
+    influence: bpy.props.FloatProperty(name = "Influence",
         description = "Force of the tool",
         default = 100.0,
         min = 0.0,
         max = 100.0,
         precision = 1,
         subtype = 'PERCENTAGE')
-    interpolation = bpy.props.EnumProperty(name = "Interpolation",
+    interpolation: bpy.props.EnumProperty(name = "Interpolation",
         items = (("cubic", "Cubic", "Natural cubic spline, smooth results"),
             ("linear", "Linear", "Simple and fast linear algorithm")),
         description = "Algorithm used for interpolation",
         default = 'cubic')
-    lock_x = bpy.props.BoolProperty(name = "Lock X",
+    lock_x: bpy.props.BoolProperty(name = "Lock X",
         description = "Lock editing of the x-coordinate",
         default = False)
-    lock_y = bpy.props.BoolProperty(name = "Lock Y",
+    lock_y: bpy.props.BoolProperty(name = "Lock Y",
         description = "Lock editing of the y-coordinate",
         default = False)
-    lock_z = bpy.props.BoolProperty(name = "Lock Z",
+    lock_z: bpy.props.BoolProperty(name = "Lock Z",
         description = "Lock editing of the z-coordinate",
         default = False)
-    regular = bpy.props.BoolProperty(name = "Regular",
+    regular: bpy.props.BoolProperty(name = "Regular",
         description = "Distribute vertices at constant distances along the" \
             "curve",
         default = True)
-    restriction = bpy.props.EnumProperty(name = "Restriction",
+    restriction: bpy.props.EnumProperty(name = "Restriction",
         items = (("none", "None", "No restrictions on vertex movement"),
             ("extrude", "Extrude only","Only allow extrusions (no "\
                 "indentations)"),
@@ -3603,23 +3603,23 @@ class Flatten(bpy.types.Operator):
     bl_description = "Flatten vertices on a best-fitting plane"
     bl_options = {'REGISTER', 'UNDO'}
 
-    influence = bpy.props.FloatProperty(name = "Influence",
+    influence: bpy.props.FloatProperty(name = "Influence",
         description = "Force of the tool",
         default = 100.0,
         min = 0.0,
         max = 100.0,
         precision = 1,
         subtype = 'PERCENTAGE')
-    lock_x = bpy.props.BoolProperty(name = "Lock X",
+    lock_x: bpy.props.BoolProperty(name = "Lock X",
         description = "Lock editing of the x-coordinate",
         default = False)
-    lock_y = bpy.props.BoolProperty(name = "Lock Y",
+    lock_y: bpy.props.BoolProperty(name = "Lock Y",
         description = "Lock editing of the y-coordinate",
         default = False)
-    lock_z = bpy.props.BoolProperty(name = "Lock Z",
+    lock_z: bpy.props.BoolProperty(name = "Lock Z",
         description = "Lock editing of the z-coordinate",
         default = False)
-    plane = bpy.props.EnumProperty(name = "Plane",
+    plane: bpy.props.EnumProperty(name = "Plane",
         items = (("best_fit", "Best fit", "Calculate a best fitting plane"),
             ("normal", "Normal", "Derive plane from averaging vertex "\
             "normals"),
@@ -3627,7 +3627,7 @@ class Flatten(bpy.types.Operator):
             "viewing angle")),
         description = "Plane on which vertices are flattened",
         default = 'best_fit')
-    restriction = bpy.props.EnumProperty(name = "Restriction",
+    restriction: bpy.props.EnumProperty(name = "Restriction",
         items = (("none", "None", "No restrictions on vertex movement"),
             ("bounding_box", "Bounding box", "Vertices are restricted to "\
             "movement inside the bounding box of the selection")),
@@ -3716,7 +3716,7 @@ class GStretch(bpy.types.Operator):
     bl_description = "Stretch selected vertices to Grease Pencil stroke"
     bl_options = {'REGISTER', 'UNDO'}
 
-    conversion = bpy.props.EnumProperty(name = "Conversion",
+    conversion: bpy.props.EnumProperty(name = "Conversion",
         items = (("distance", "Distance", "Set the distance between vertices "\
             "of the converted grease pencil stroke"),
             ("limit_vertices", "Limit vertices", "Set the minimum and maximum "\
@@ -3729,55 +3729,55 @@ class GStretch(bpy.types.Operator):
         description = "If grease pencil strokes are converted to geometry, "\
             "use this simplification method",
         default = 'limit_vertices')
-    conversion_distance = bpy.props.FloatProperty(name = "Distance",
+    conversion_distance: bpy.props.FloatProperty(name = "Distance",
         description = "Absolute distance between vertices along the converted "\
             "grease pencil stroke",
         default = 0.1,
         min = 0.000001,
         soft_min = 0.01,
         soft_max = 100)
-    conversion_max = bpy.props.IntProperty(name = "Max Vertices",
+    conversion_max: bpy.props.IntProperty(name = "Max Vertices",
         description = "Maximum number of vertices grease pencil strokes will "\
             "have, when they are converted to geomtery",
         default = 32,
         min = 3,
         soft_max = 500,
         update = gstretch_update_min)
-    conversion_min = bpy.props.IntProperty(name = "Min Vertices",
+    conversion_min: bpy.props.IntProperty(name = "Min Vertices",
         description = "Minimum number of vertices grease pencil strokes will "\
             "have, when they are converted to geomtery",
         default = 8,
         min = 3,
         soft_max = 500,
         update = gstretch_update_max)
-    conversion_vertices = bpy.props.IntProperty(name = "Vertices",
+    conversion_vertices: bpy.props.IntProperty(name = "Vertices",
         description = "Number of vertices grease pencil strokes will "\
             "have, when they are converted to geometry. If strokes have less "\
             "points than required, the 'Spread evenly' method is used",
         default = 32,
         min = 3,
         soft_max = 500)
-    delete_strokes = bpy.props.BoolProperty(name="Delete strokes",
+    delete_strokes: bpy.props.BoolProperty(name="Delete strokes",
         description = "Remove Grease Pencil strokes if they have been used "\
             "for Gstretch. WARNING: DOES NOT SUPPORT UNDO",
         default = False)
-    influence = bpy.props.FloatProperty(name = "Influence",
+    influence: bpy.props.FloatProperty(name = "Influence",
         description = "Force of the tool",
         default = 100.0,
         min = 0.0,
         max = 100.0,
         precision = 1,
         subtype = 'PERCENTAGE')
-    lock_x = bpy.props.BoolProperty(name = "Lock X",
+    lock_x: bpy.props.BoolProperty(name = "Lock X",
         description = "Lock editing of the x-coordinate",
         default = False)
-    lock_y = bpy.props.BoolProperty(name = "Lock Y",
+    lock_y: bpy.props.BoolProperty(name = "Lock Y",
         description = "Lock editing of the y-coordinate",
         default = False)
-    lock_z = bpy.props.BoolProperty(name = "Lock Z",
+    lock_z: bpy.props.BoolProperty(name = "Lock Z",
         description = "Lock editing of the z-coordinate",
         default = False)
-    method = bpy.props.EnumProperty(name = "Method",
+    method: bpy.props.EnumProperty(name = "Method",
         items = (("project", "Project", "Project vertices onto the stroke, "\
             "using vertex normals and connected edges"),
             ("irregular", "Spread", "Distribute vertices along the full "\
@@ -3954,18 +3954,18 @@ class Relax(bpy.types.Operator):
     bl_description = "Relax the loop, so it is smoother"
     bl_options = {'REGISTER', 'UNDO'}
 
-    input = bpy.props.EnumProperty(name = "Input",
+    input: bpy.props.EnumProperty(name = "Input",
         items = (("all", "Parallel (all)", "Also use non-selected "\
                 "parallel loops as input"),
             ("selected", "Selection","Only use selected vertices as input")),
         description = "Loops that are relaxed",
         default = 'selected')
-    interpolation = bpy.props.EnumProperty(name = "Interpolation",
+    interpolation: bpy.props.EnumProperty(name = "Interpolation",
         items = (("cubic", "Cubic", "Natural cubic spline, smooth results"),
             ("linear", "Linear", "Simple and fast linear algorithm")),
         description = "Algorithm used for interpolation",
         default = 'cubic')
-    iterations = bpy.props.EnumProperty(name = "Iterations",
+    iterations: bpy.props.EnumProperty(name = "Iterations",
         items = (("1", "1", "One"),
             ("3", "3", "Three"),
             ("5", "5", "Five"),
@@ -3973,7 +3973,7 @@ class Relax(bpy.types.Operator):
             ("25", "25", "Twenty-five")),
         description = "Number of times the loop is relaxed",
         default = "1")
-    regular = bpy.props.BoolProperty(name = "Regular",
+    regular: bpy.props.BoolProperty(name = "Regular",
         description = "Distribute vertices at constant distances along the" \
             "loop",
         default = True)
@@ -4080,31 +4080,31 @@ class Space(bpy.types.Operator):
     bl_description = "Space the vertices in a regular distrubtion on the loop"
     bl_options = {'REGISTER', 'UNDO'}
 
-    influence = bpy.props.FloatProperty(name = "Influence",
+    influence: bpy.props.FloatProperty(name = "Influence",
         description = "Force of the tool",
         default = 100.0,
         min = 0.0,
         max = 100.0,
         precision = 1,
         subtype = 'PERCENTAGE')
-    input = bpy.props.EnumProperty(name = "Input",
+    input: bpy.props.EnumProperty(name = "Input",
         items = (("all", "Parallel (all)", "Also use non-selected "\
                 "parallel loops as input"),
             ("selected", "Selection","Only use selected vertices as input")),
         description = "Loops that are spaced",
         default = 'selected')
-    interpolation = bpy.props.EnumProperty(name = "Interpolation",
+    interpolation: bpy.props.EnumProperty(name = "Interpolation",
         items = (("cubic", "Cubic", "Natural cubic spline, smooth results"),
             ("linear", "Linear", "Vertices are projected on existing edges")),
         description = "Algorithm used for interpolation",
         default = 'cubic')
-    lock_x = bpy.props.BoolProperty(name = "Lock X",
+    lock_x: bpy.props.BoolProperty(name = "Lock X",
         description = "Lock editing of the x-coordinate",
         default = False)
-    lock_y = bpy.props.BoolProperty(name = "Lock Y",
+    lock_y: bpy.props.BoolProperty(name = "Lock Y",
         description = "Lock editing of the y-coordinate",
         default = False)
-    lock_z = bpy.props.BoolProperty(name = "Lock Z",
+    lock_z: bpy.props.BoolProperty(name = "Lock Z",
         description = "Lock editing of the z-coordinate",
         default = False)
 
@@ -4492,151 +4492,151 @@ class LoopToolsProps(bpy.types.PropertyGroup):
     """
 
     # general display properties
-    display_bridge = bpy.props.BoolProperty(name = "Bridge settings",
+    display_bridge: bpy.props.BoolProperty(name = "Bridge settings",
         description = "Display settings of the Bridge tool",
         default = False)
-    display_circle = bpy.props.BoolProperty(name = "Circle settings",
+    display_circle: bpy.props.BoolProperty(name = "Circle settings",
         description = "Display settings of the Circle tool",
         default = False)
-    display_curve = bpy.props.BoolProperty(name = "Curve settings",
+    display_curve: bpy.props.BoolProperty(name = "Curve settings",
         description = "Display settings of the Curve tool",
         default = False)
-    display_flatten = bpy.props.BoolProperty(name = "Flatten settings",
+    display_flatten: bpy.props.BoolProperty(name = "Flatten settings",
         description = "Display settings of the Flatten tool",
         default = False)
-    display_gstretch = bpy.props.BoolProperty(name = "Gstretch settings",
+    display_gstretch: bpy.props.BoolProperty(name = "Gstretch settings",
         description = "Display settings of the Gstretch tool",
         default = False)
-    display_loft = bpy.props.BoolProperty(name = "Loft settings",
+    display_loft: bpy.props.BoolProperty(name = "Loft settings",
         description = "Display settings of the Loft tool",
         default = False)
-    display_relax = bpy.props.BoolProperty(name = "Relax settings",
+    display_relax: bpy.props.BoolProperty(name = "Relax settings",
         description = "Display settings of the Relax tool",
         default = False)
-    display_space = bpy.props.BoolProperty(name = "Space settings",
+    display_space: bpy.props.BoolProperty(name = "Space settings",
         description = "Display settings of the Space tool",
         default = False)
 
     # bridge properties
-    bridge_cubic_strength = bpy.props.FloatProperty(name = "Strength",
+    bridge_cubic_strength: bpy.props.FloatProperty(name = "Strength",
         description = "Higher strength results in more fluid curves",
         default = 1.0,
         soft_min = -3.0,
         soft_max = 3.0)
-    bridge_interpolation = bpy.props.EnumProperty(name = "Interpolation mode",
+    bridge_interpolation: bpy.props.EnumProperty(name = "Interpolation mode",
         items = (('cubic', "Cubic", "Gives curved results"),
             ('linear', "Linear", "Basic, fast, straight interpolation")),
         description = "Interpolation mode: algorithm used when creating "\
             "segments",
         default = 'cubic')
-    bridge_loft = bpy.props.BoolProperty(name = "Loft",
+    bridge_loft: bpy.props.BoolProperty(name = "Loft",
         description = "Loft multiple loops, instead of considering them as "\
             "a multi-input for bridging",
         default = False)
-    bridge_loft_loop = bpy.props.BoolProperty(name = "Loop",
+    bridge_loft_loop: bpy.props.BoolProperty(name = "Loop",
         description = "Connect the first and the last loop with each other",
         default = False)
-    bridge_min_width = bpy.props.IntProperty(name = "Minimum width",
+    bridge_min_width: bpy.props.IntProperty(name = "Minimum width",
         description = "Segments with an edge smaller than this are merged "\
             "(compared to base edge)",
         default = 0,
         min = 0,
         max = 100,
         subtype = 'PERCENTAGE')
-    bridge_mode = bpy.props.EnumProperty(name = "Mode",
+    bridge_mode: bpy.props.EnumProperty(name = "Mode",
         items = (('basic', "Basic", "Fast algorithm"),
                  ('shortest', "Shortest edge", "Slower algorithm with " \
                                                "better vertex matching")),
         description = "Algorithm used for bridging",
         default = 'shortest')
-    bridge_remove_faces = bpy.props.BoolProperty(name = "Remove faces",
+    bridge_remove_faces: bpy.props.BoolProperty(name = "Remove faces",
         description = "Remove faces that are internal after bridging",
         default = True)
-    bridge_reverse = bpy.props.BoolProperty(name = "Reverse",
+    bridge_reverse: bpy.props.BoolProperty(name = "Reverse",
         description = "Manually override the direction in which the loops "\
                       "are bridged. Only use if the tool gives the wrong " \
                       "result",
         default = False)
-    bridge_segments = bpy.props.IntProperty(name = "Segments",
+    bridge_segments: bpy.props.IntProperty(name = "Segments",
         description = "Number of segments used to bridge the gap "\
             "(0 = automatic)",
         default = 1,
         min = 0,
         soft_max = 20)
-    bridge_twist = bpy.props.IntProperty(name = "Twist",
+    bridge_twist: bpy.props.IntProperty(name = "Twist",
         description = "Twist what vertices are connected to each other",
         default = 0)
 
     # circle properties
-    circle_custom_radius = bpy.props.BoolProperty(name = "Radius",
+    circle_custom_radius: bpy.props.BoolProperty(name = "Radius",
         description = "Force a custom radius",
         default = False)
-    circle_fit = bpy.props.EnumProperty(name = "Method",
+    circle_fit: bpy.props.EnumProperty(name = "Method",
         items = (("best", "Best fit", "Non-linear least squares"),
             ("inside", "Fit inside","Only move vertices towards the center")),
         description = "Method used for fitting a circle to the vertices",
         default = 'best')
-    circle_flatten = bpy.props.BoolProperty(name = "Flatten",
+    circle_flatten: bpy.props.BoolProperty(name = "Flatten",
         description = "Flatten the circle, instead of projecting it on the " \
             "mesh",
         default = True)
-    circle_influence = bpy.props.FloatProperty(name = "Influence",
+    circle_influence: bpy.props.FloatProperty(name = "Influence",
         description = "Force of the tool",
         default = 100.0,
         min = 0.0,
         max = 100.0,
         precision = 1,
         subtype = 'PERCENTAGE')
-    circle_lock_x = bpy.props.BoolProperty(name = "Lock X",
+    circle_lock_x: bpy.props.BoolProperty(name = "Lock X",
         description = "Lock editing of the x-coordinate",
         default = False)
-    circle_lock_y = bpy.props.BoolProperty(name = "Lock Y",
+    circle_lock_y: bpy.props.BoolProperty(name = "Lock Y",
         description = "Lock editing of the y-coordinate",
         default = False)
-    circle_lock_z = bpy.props.BoolProperty(name = "Lock Z",
+    circle_lock_z: bpy.props.BoolProperty(name = "Lock Z",
         description = "Lock editing of the z-coordinate",
         default = False)
-    circle_radius = bpy.props.FloatProperty(name = "Radius",
+    circle_radius: bpy.props.FloatProperty(name = "Radius",
         description = "Custom radius for circle",
         default = 1.0,
         min = 0.0,
         soft_max = 1000.0)
-    circle_regular = bpy.props.BoolProperty(name = "Regular",
+    circle_regular: bpy.props.BoolProperty(name = "Regular",
         description = "Distribute vertices at constant distances along the " \
             "circle",
         default = True)
 
     # curve properties
-    curve_boundaries = bpy.props.BoolProperty(name = "Boundaries",
+    curve_boundaries: bpy.props.BoolProperty(name = "Boundaries",
         description = "Limit the tool to work within the boundaries of the "\
             "selected vertices",
         default = False)
-    curve_influence = bpy.props.FloatProperty(name = "Influence",
+    curve_influence: bpy.props.FloatProperty(name = "Influence",
         description = "Force of the tool",
         default = 100.0,
         min = 0.0,
         max = 100.0,
         precision = 1,
         subtype = 'PERCENTAGE')
-    curve_interpolation = bpy.props.EnumProperty(name = "Interpolation",
+    curve_interpolation: bpy.props.EnumProperty(name = "Interpolation",
         items = (("cubic", "Cubic", "Natural cubic spline, smooth results"),
             ("linear", "Linear", "Simple and fast linear algorithm")),
         description = "Algorithm used for interpolation",
         default = 'cubic')
-    curve_lock_x = bpy.props.BoolProperty(name = "Lock X",
+    curve_lock_x: bpy.props.BoolProperty(name = "Lock X",
         description = "Lock editing of the x-coordinate",
         default = False)
-    curve_lock_y = bpy.props.BoolProperty(name = "Lock Y",
+    curve_lock_y: bpy.props.BoolProperty(name = "Lock Y",
         description = "Lock editing of the y-coordinate",
         default = False)
-    curve_lock_z = bpy.props.BoolProperty(name = "Lock Z",
+    curve_lock_z: bpy.props.BoolProperty(name = "Lock Z",
         description = "Lock editing of the z-coordinate",
         default = False)
-    curve_regular = bpy.props.BoolProperty(name = "Regular",
+    curve_regular: bpy.props.BoolProperty(name = "Regular",
         description = "Distribute vertices at constant distances along the " \
             "curve",
         default = True)
-    curve_restriction = bpy.props.EnumProperty(name = "Restriction",
+    curve_restriction: bpy.props.EnumProperty(name = "Restriction",
         items = (("none", "None", "No restrictions on vertex movement"),
             ("extrude", "Extrude only","Only allow extrusions (no "\
                 "indentations)"),
@@ -4646,23 +4646,23 @@ class LoopToolsProps(bpy.types.PropertyGroup):
         default = 'none')
 
     # flatten properties
-    flatten_influence = bpy.props.FloatProperty(name = "Influence",
+    flatten_influence: bpy.props.FloatProperty(name = "Influence",
         description = "Force of the tool",
         default = 100.0,
         min = 0.0,
         max = 100.0,
         precision = 1,
         subtype = 'PERCENTAGE')
-    flatten_lock_x = bpy.props.BoolProperty(name = "Lock X",
+    flatten_lock_x: bpy.props.BoolProperty(name = "Lock X",
         description = "Lock editing of the x-coordinate",
         default = False)
-    flatten_lock_y = bpy.props.BoolProperty(name = "Lock Y",
+    flatten_lock_y: bpy.props.BoolProperty(name = "Lock Y",
         description = "Lock editing of the y-coordinate",
         default = False)
-    flatten_lock_z = bpy.props.BoolProperty(name = "Lock Z",
+    flatten_lock_z: bpy.props.BoolProperty(name = "Lock Z",
         description = "Lock editing of the z-coordinate",
         default = False)
-    flatten_plane = bpy.props.EnumProperty(name = "Plane",
+    flatten_plane: bpy.props.EnumProperty(name = "Plane",
         items = (("best_fit", "Best fit", "Calculate a best fitting plane"),
             ("normal", "Normal", "Derive plane from averaging vertex "\
             "normals"),
@@ -4670,7 +4670,7 @@ class LoopToolsProps(bpy.types.PropertyGroup):
             "viewing angle")),
         description = "Plane on which vertices are flattened",
         default = 'best_fit')
-    flatten_restriction = bpy.props.EnumProperty(name = "Restriction",
+    flatten_restriction: bpy.props.EnumProperty(name = "Restriction",
         items = (("none", "None", "No restrictions on vertex movement"),
             ("bounding_box", "Bounding box", "Vertices are restricted to "\
             "movement inside the bounding box of the selection")),
@@ -4678,7 +4678,7 @@ class LoopToolsProps(bpy.types.PropertyGroup):
         default = 'none')
 
     # gstretch properties
-    gstretch_conversion = bpy.props.EnumProperty(name = "Conversion",
+    gstretch_conversion: bpy.props.EnumProperty(name = "Conversion",
         items = (("distance", "Distance", "Set the distance between vertices "\
             "of the converted grease pencil stroke"),
             ("limit_vertices", "Limit vertices", "Set the minimum and maximum "\
@@ -4691,55 +4691,55 @@ class LoopToolsProps(bpy.types.PropertyGroup):
         description = "If grease pencil strokes are converted to geometry, "\
             "use this simplification method",
         default = 'limit_vertices')
-    gstretch_conversion_distance = bpy.props.FloatProperty(name = "Distance",
+    gstretch_conversion_distance: bpy.props.FloatProperty(name = "Distance",
         description = "Absolute distance between vertices along the converted "\
             "grease pencil stroke",
         default = 0.1,
         min = 0.000001,
         soft_min = 0.01,
         soft_max = 100)
-    gstretch_conversion_max = bpy.props.IntProperty(name = "Max Vertices",
+    gstretch_conversion_max: bpy.props.IntProperty(name = "Max Vertices",
         description = "Maximum number of vertices grease pencil strokes will "\
             "have, when they are converted to geomtery",
         default = 32,
         min = 3,
         soft_max = 500,
         update = gstretch_update_min)
-    gstretch_conversion_min = bpy.props.IntProperty(name = "Min Vertices",
+    gstretch_conversion_min: bpy.props.IntProperty(name = "Min Vertices",
         description = "Minimum number of vertices grease pencil strokes will "\
             "have, when they are converted to geomtery",
         default = 8,
         min = 3,
         soft_max = 500,
         update = gstretch_update_max)
-    gstretch_conversion_vertices = bpy.props.IntProperty(name = "Vertices",
+    gstretch_conversion_vertices: bpy.props.IntProperty(name = "Vertices",
         description = "Number of vertices grease pencil strokes will "\
             "have, when they are converted to geometry. If strokes have less "\
             "points than required, the 'Spread evenly' method is used",
         default = 32,
         min = 3,
         soft_max = 500)
-    gstretch_delete_strokes = bpy.props.BoolProperty(name="Delete strokes",
+    gstretch_delete_strokes: bpy.props.BoolProperty(name="Delete strokes",
         description = "Remove Grease Pencil strokes if they have been used "\
             "for Gstretch. WARNING: DOES NOT SUPPORT UNDO",
         default = False)
-    gstretch_influence = bpy.props.FloatProperty(name = "Influence",
+    gstretch_influence: bpy.props.FloatProperty(name = "Influence",
         description = "Force of the tool",
         default = 100.0,
         min = 0.0,
         max = 100.0,
         precision = 1,
         subtype = 'PERCENTAGE')
-    gstretch_lock_x = bpy.props.BoolProperty(name = "Lock X",
+    gstretch_lock_x: bpy.props.BoolProperty(name = "Lock X",
         description = "Lock editing of the x-coordinate",
         default = False)
-    gstretch_lock_y = bpy.props.BoolProperty(name = "Lock Y",
+    gstretch_lock_y: bpy.props.BoolProperty(name = "Lock Y",
         description = "Lock editing of the y-coordinate",
         default = False)
-    gstretch_lock_z = bpy.props.BoolProperty(name = "Lock Z",
+    gstretch_lock_z: bpy.props.BoolProperty(name = "Lock Z",
         description = "Lock editing of the z-coordinate",
         default = False)
-    gstretch_method = bpy.props.EnumProperty(name = "Method",
+    gstretch_method: bpy.props.EnumProperty(name = "Method",
         items = (("project", "Project", "Project vertices onto the stroke, "\
             "using vertex normals and connected edges"),
             ("irregular", "Spread", "Distribute vertices along the full "\
@@ -4751,18 +4751,18 @@ class LoopToolsProps(bpy.types.PropertyGroup):
         default = 'regular')
 
     # relax properties
-    relax_input = bpy.props.EnumProperty(name = "Input",
+    relax_input: bpy.props.EnumProperty(name = "Input",
         items = (("all", "Parallel (all)", "Also use non-selected "\
                 "parallel loops as input"),
             ("selected", "Selection","Only use selected vertices as input")),
         description = "Loops that are relaxed",
         default = 'selected')
-    relax_interpolation = bpy.props.EnumProperty(name = "Interpolation",
+    relax_interpolation: bpy.props.EnumProperty(name = "Interpolation",
         items = (("cubic", "Cubic", "Natural cubic spline, smooth results"),
             ("linear", "Linear", "Simple and fast linear algorithm")),
         description = "Algorithm used for interpolation",
         default = 'cubic')
-    relax_iterations = bpy.props.EnumProperty(name = "Iterations",
+    relax_iterations: bpy.props.EnumProperty(name = "Iterations",
         items = (("1", "1", "One"),
             ("3", "3", "Three"),
             ("5", "5", "Five"),
@@ -4770,37 +4770,37 @@ class LoopToolsProps(bpy.types.PropertyGroup):
             ("25", "25", "Twenty-five")),
         description = "Number of times the loop is relaxed",
         default = "1")
-    relax_regular = bpy.props.BoolProperty(name = "Regular",
+    relax_regular: bpy.props.BoolProperty(name = "Regular",
         description = "Distribute vertices at constant distances along the" \
             "loop",
         default = True)
 
     # space properties
-    space_influence = bpy.props.FloatProperty(name = "Influence",
+    space_influence: bpy.props.FloatProperty(name = "Influence",
         description = "Force of the tool",
         default = 100.0,
         min = 0.0,
         max = 100.0,
         precision = 1,
         subtype = 'PERCENTAGE')
-    space_input = bpy.props.EnumProperty(name = "Input",
+    space_input: bpy.props.EnumProperty(name = "Input",
         items = (("all", "Parallel (all)", "Also use non-selected "\
                 "parallel loops as input"),
             ("selected", "Selection","Only use selected vertices as input")),
         description = "Loops that are spaced",
         default = 'selected')
-    space_interpolation = bpy.props.EnumProperty(name = "Interpolation",
+    space_interpolation: bpy.props.EnumProperty(name = "Interpolation",
         items = (("cubic", "Cubic", "Natural cubic spline, smooth results"),
             ("linear", "Linear", "Vertices are projected on existing edges")),
         description = "Algorithm used for interpolation",
         default = 'cubic')
-    space_lock_x = bpy.props.BoolProperty(name = "Lock X",
+    space_lock_x: bpy.props.BoolProperty(name = "Lock X",
         description = "Lock editing of the x-coordinate",
         default = False)
-    space_lock_y = bpy.props.BoolProperty(name = "Lock Y",
+    space_lock_y: bpy.props.BoolProperty(name = "Lock Y",
         description = "Lock editing of the y-coordinate",
         default = False)
-    space_lock_z = bpy.props.BoolProperty(name = "Lock Z",
+    space_lock_z: bpy.props.BoolProperty(name = "Lock Z",
         description = "Lock editing of the z-coordinate",
         default = False)
 

@@ -361,12 +361,12 @@ class OPENDENTAL_OT_splint_make(bpy.types.Operator):
         bpy.context.object.modifiers["Remesh"].octree_depth = 6
         bpy.context.object.modifiers["Remesh"].scale = 0.99
         bpy.ops.object.transform_apply()
-        bpy.ops.object.modifier_apply(apply_as="DATA", modifier="Remesh")
+        bpy.ops.object.modifier_apply(modifier="Remesh")
 
         bpy.ops.object.modifier_add(type="SOLIDIFY")
         bpy.context.object.modifiers["Solidify"].thickness = float(context.scene.splint_shell_thickness) + float(context.scene.splint_shell_offset)
         bpy.context.object.modifiers["Solidify"].offset = 0.5
-        bpy.ops.object.modifier_apply(apply_as="DATA", modifier="Solidify")
+        bpy.ops.object.modifier_apply(modifier="Solidify")
 
         bpy.context.object.data.remesh_voxel_size = 0.5
         bpy.context.object.data.use_remesh_fix_poles = True
@@ -378,13 +378,13 @@ class OPENDENTAL_OT_splint_make(bpy.types.Operator):
         bpy.context.object.modifiers["Smooth"].factor = 1
         bpy.context.object.modifiers["Smooth"].iterations = 7
 
-        bpy.ops.object.modifier_apply(apply_as="DATA", modifier="Smooth")
+        bpy.ops.object.modifier_apply(modifier="Smooth")
         #        objs = [ob for ob in bpy.context.scene.objects if ob.type in ('METABALL')]
         #        bpy.ops.object.delete({"selected_objects": objs})
 
         #t1_stop = process_time()
         #print("Elapsed time during the whole program in seconds:", t1_stop - t1_start)
-        if context.scene.splint_base_model is not "":
+        if context.scene.splint_base_model != "":
             ob.select_set(False)
             bpy.data.objects[context.scene.splint_base_model].select_set(True)
             bpy.context.view_layer.objects.active = bpy.data.objects[context.scene.splint_base_model]
@@ -398,7 +398,7 @@ class OPENDENTAL_OT_splint_make(bpy.types.Operator):
             bpy.context.object.modifiers["Solidify"].use_flip_normals = True
             bpy.context.object.modifiers["Solidify"].thickness = float(context.scene.splint_shell_offset)
             bpy.context.object.modifiers["Solidify"].offset = 1.0
-            bpy.ops.object.modifier_apply(apply_as="DATA", modifier="Solidify")
+            bpy.ops.object.modifier_apply(modifier="Solidify")
             bpy.ops.opendental.remesh_model("INVOKE_DEFAULT")
             offset_model.select_set(False)
             ob.select_set(True)
@@ -406,7 +406,7 @@ class OPENDENTAL_OT_splint_make(bpy.types.Operator):
             bpy.ops.object.modifier_add(type="BOOLEAN")
             bpy.context.object.modifiers["Boolean"].operation = "DIFFERENCE"
             bpy.context.object.modifiers["Boolean"].object = offset_model
-            bpy.ops.object.modifier_apply(apply_as="DATA", modifier="Boolean")
+            bpy.ops.object.modifier_apply(modifier="Boolean")
             offset_model.select_set(True)
             ob.select_set(False)
             bpy.context.view_layer.objects.active = offset_model
@@ -432,7 +432,7 @@ class OPENDENTAL_OT_splint_outline_erase(bpy.types.Operator):
     def execute(self, context):
         context.scene.tool_settings.unified_paint_settings.weight = 0.0
 
-        bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Smooth")
+        bpy.ops.object.modifier_apply(modifier="Smooth")
         objs = [ob for ob in bpy.context.scene.objects if ob.type in ('METABALL')]
         for ob in objs:
             ob.select_set(True)
@@ -451,10 +451,10 @@ def register():
 
     
 def unregister():
-    bpy.utils.unregister_class(OPENDENTAL_OT_splint_outline)
-    bpy.utils.unregister_class(OPENDENTAL_OT_splint_make)
-    bpy.utils.unregister_class(OPENDENTAL_OT_splint_outline_paint)
     bpy.utils.unregister_class(OPENDENTAL_OT_splint_outline_erase)
+    bpy.utils.unregister_class(OPENDENTAL_OT_splint_outline_paint)
+    bpy.utils.unregister_class(OPENDENTAL_OT_splint_make)
+    bpy.utils.unregister_class(OPENDENTAL_OT_splint_outline)
 
 
 # def create_particles(name, vertexgroup): #Same process as with material but with a particle system, a bit more complicated

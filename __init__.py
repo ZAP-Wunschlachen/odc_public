@@ -24,8 +24,8 @@
 bl_info = {
     "name": "Open Dental CAD for Blender",
     "author": "Patrick R. Moore DMD, Georgi Talmazov DDS, Issam Dakir DMD, Raúl Ruiz Vera DDS",
-    "version": (1, 1, 0),
-    "blender": (2, 80, 2),
+    "version": (2, 0, 0),
+    "blender": (5, 1, 0),
     "api": 59393,
     "location": "3D View -> UI SIDE PANEL ",
     "description": "Dental CAD Tool Package",
@@ -41,7 +41,7 @@ bl_info = {
 
 #############################################################################################
 #Python imports :
-import bpy, sys, os, platform, inspect, imp
+import bpy, sys, os, platform, inspect
 
 #Blender imports :
 from bpy.types import Operator, AddonPreferences
@@ -50,8 +50,7 @@ from bpy.app.handlers import persistent
 
 #Add Addon path to sys.path :
 addon_path = os.path.dirname(os.path.abspath(__file__))
-if not addon_path in sys.path:
-    sys.path.append(addon_path)
+
 
 
 #############################################################################################
@@ -79,7 +78,7 @@ class ODC_AddonPreferences(AddonPreferences):
 
     addons = bpy.context.preferences.addons
    
-    data_folder = os.path.join(addon_path, "Resources\\data\\")
+    data_folder = os.path.join(addon_path, "Resources", "data")
 
     # addons_folder = bpy.utils.script_paths('addons')[0]
     # data_folder =os.path.join(addons_folder,'odc_public','data')
@@ -304,6 +303,8 @@ def unregister():
 
     for module in reversed(addon_modules):
         module.unregister()
+
+    odcutils.get_settings.cached_settings = None
 
 if __name__ == "__main__":
     register()

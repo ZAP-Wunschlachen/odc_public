@@ -12,8 +12,8 @@ import bpy
 from mathutils import Vector, Matrix
 
 #Addon imports :
-from Addon_utils import odcutils
-from Addon_utils.odcutils import get_settings
+from ..Addon_utils import odcutils
+from ..Addon_utils.odcutils import get_settings
 
 def active_spanning_restoration(context, exclude = [], debug = False):
     '''

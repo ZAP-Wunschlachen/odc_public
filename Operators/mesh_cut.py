@@ -35,14 +35,14 @@ from itertools import chain,combinations
 import bpy
 from mathutils import Vector, Matrix, Quaternion
 from mathutils.geometry import intersect_line_plane, intersect_point_line, distance_point_to_plane, intersect_line_line_2d, intersect_line_line
-import bgl
+from .. import gpu_compat as bgl
 import blf
 import bmesh
 from bpy_extras import view3d_utils
 from bpy_extras.view3d_utils import location_3d_to_region_2d, region_2d_to_vector_3d, region_2d_to_location_3d, region_2d_to_origin_3d
 
 #Addon imports :
-from Addon_utils.common_utilities import bversion
+from ..Addon_utils.common_utilities import bversion
 
 
 def face_neighbors(bmface):

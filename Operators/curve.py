@@ -8,7 +8,7 @@ import time
 
 #Blender imports :
 import bpy
-import bgl
+from .. import gpu_compat as bgl
 import bmesh
 from mathutils import Vector, Matrix
 from mathutils.geometry import intersect_point_line, intersect_line_plane
@@ -16,9 +16,9 @@ from mathutils.bvhtree import BVHTree
 from bpy_extras import view3d_utils
 
 #Addon imports :
-from Operators import bgl_utils, common_drawing
-from Operators.mesh_cut import cross_section_2seeds_ver1, path_between_2_points, grow_selection_to_find_face, flood_selection_faces
-from Addon_utils.common_utilities import bversion
+from ..Operators import bgl_utils, common_drawing
+from ..Operators.mesh_cut import cross_section_2seeds_ver1, path_between_2_points, grow_selection_to_find_face, flood_selection_faces
+from ..Addon_utils.common_utilities import bversion
 
 
 

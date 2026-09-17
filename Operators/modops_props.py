@@ -39,7 +39,7 @@ class ODC_modops_props(bpy.types.PropertyGroup):
     show_box : bpy.props.BoolProperty(description="show or not the popup message box ", default=True)
     # Color material props :
     #########################################################################################
-    no_material_prop = StringProperty(name="No Material", default = "No Color", description="No material_slot found for active object")
+    no_material_prop: StringProperty(name="No Material", default = "No Color", description="No material_slot found for active object")
 
 
 

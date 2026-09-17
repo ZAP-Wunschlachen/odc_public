@@ -5,7 +5,7 @@ import os
 import bpy
 
 #Addon imports :
-from Addon_utils.odcutils import get_settings
+from ..Addon_utils.odcutils import get_settings
 
 
 class SCENE_UL_odc_teeth(bpy.types.UIList):
@@ -570,7 +570,7 @@ def execute_operator(self, context):
 class OPENDENTAL_PT_ODCBridges(bpy.types.Panel):
     """ Bridges Panel"""
 
-    bl_idname = "OPENDENTAL_ODCBridges"
+    bl_idname = "OPENDENTAL_PT_ODCBridges"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"  # blender 2.7 and lower = TOOLS
     bl_category = "ODC"
@@ -849,7 +849,7 @@ class OPENDENTAL_PT_ODCDentures(bpy.types.Panel):
 
 def register():
     
-    #bpy.utils.register_class(SCENE_UL_odc_teeth)
+    bpy.utils.register_class(SCENE_UL_odc_teeth)
     bpy.utils.register_class(SCENE_UL_odc_implants)
     bpy.utils.register_class(SCENE_UL_odc_bridges)
     bpy.utils.register_class(SCENE_UL_odc_splints)
@@ -900,7 +900,24 @@ def register():
     bpy.types.Scene.pre_surveyed = bpy.props.BoolProperty(name="bool_pre_survey", description="A bool property", default = False)
 
 def unregister():
-    
+    del bpy.types.Scene.pre_surveyed
+    del bpy.types.Scene.UNDERCUTS_view_props
+    del bpy.types.Scene.splint_base_model
+    del bpy.types.Scene.splint_shell_offset
+    del bpy.types.Scene.splint_shell_thickness
+    del bpy.types.Scene.splint_mode
+    del bpy.types.Scene.base_trim_mode
+    del bpy.types.Scene.BASE_props
+    del bpy.types.Scene.UNDERCUTS_props
+    del bpy.types.Scene.platform_offset
+    del bpy.types.Scene.platform_height
+    del bpy.types.Scene.platform_diameter
+    del bpy.types.Scene.sleeve_diameter
+    del bpy.types.Scene.implant_lib_list
+    bpy.utils.unregister_class(UNDERCUTS_view_props)
+    bpy.utils.unregister_class(BASE_props)
+    bpy.utils.unregister_class(UNDERCUTS_props)
+    bpy.utils.unregister_class(ImplantTypeListProperties)
     bpy.utils.unregister_class(OPENDENTAL_PT_ODCDentures)
     bpy.utils.unregister_class(OPENDENTAL_PT_ODCOrtho)
     bpy.utils.unregister_class(OPENDENTAL_PT_ODCSplints)
@@ -913,40 +930,6 @@ def unregister():
     bpy.utils.unregister_class(SCENE_UL_odc_bridges)
     bpy.utils.unregister_class(SCENE_UL_odc_implants)
     bpy.utils.unregister_class(SCENE_UL_odc_teeth)
-    
-    
-     #implant library list
-    del bpy.types.Scene.implant_lib_list
-    bpy.utils.unregister_class(ImplantTypeListProperties)
-    #implant sleeve diameter
-    del bpy.types.Scene.sleeve_diameter
-    #implant splint/guide platform diameter, height, offset
-    del bpy.types.Scene.platform_diameter
-    del bpy.types.Scene.platform_height
-    del bpy.types.Scene.platform_offset
-    
-    
-
-    bpy.utils.unregister_class(UNDERCUTS_props)
-    # delete UNDERCUTS_props  on unregister
-    del bpy.types.Scene.UNDERCUTS_props
-    # delete model base props
-    del bpy.types.Scene.BASE_props
-    del bpy.types.Scene.base_trim_mode
-    # delete splint mode state var
-    del bpy.types.Scene.splint_mode
-    # delete splint thickness input
-    del bpy.types.Scene.splint_shell_thickness
-    # delete splint offset input
-    del bpy.types.Scene.splint_shell_offset
-    # delete splint base model selection
-    del bpy.types.Scene.splint_base_model
-
-    bpy.utils.unregister_class(UNDERCUTS_view_props)
-    # $ delete UNDERCUTS_props  on unregister
-    del bpy.types.Scene.UNDERCUTS_view_props
-
-    del bpy.types.Scene.pre_surveyed
 
 
 if __name__ == "__main__":

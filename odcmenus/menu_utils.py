@@ -5,7 +5,7 @@ from math import fmod
 
 #Blender imports :
 import bpy
-import bgl
+from .. import gpu_compat as bgl
 import blf
 from mathutils.geometry import intersect_line_line_2d
 from mathutils import Vector, Matrix
@@ -89,29 +89,26 @@ def plane_get_information(ob):
     scale = ob.scale
     rot = ob.rotation
     
-def image_quad(img,color,verts):
-    img.gl_load(bgl.GL_NEAREST, bgl.GL_NEAREST)
-    bgl.glBindTexture(bgl.GL_TEXTURE_2D, img.bindcode)
-    bgl.glTexParameteri(bgl.GL_TEXTURE_2D, bgl.GL_TEXTURE_MIN_FILTER, bgl.GL_NEAREST)
-    bgl.glTexParameteri(bgl.GL_TEXTURE_2D, bgl.GL_TEXTURE_MAG_FILTER, bgl.GL_NEAREST)
-    bgl.glEnable(bgl.GL_TEXTURE_2D)
-    bgl.glEnable(bgl.GL_BLEND)
-    #bgl.glBlendFunc(bgl.GL_SRC_ALPHA, bgl.GL_ONE_MINUS_SRC_ALPHA)
-    bgl.glColor4f(color[0], color[1], color[2], color[3])
-    bgl.glBegin(bgl.GL_QUADS)
-    #http://h30097.www3.hp.com/docs/base_doc/DOCUMENTATION/V51B_HTML/MAN/MAN3/2025____.HTM
-    bgl.glTexCoord2f(0,0)
-    bgl.glVertex2f(verts[0][0],verts[0][1])
-    bgl.glTexCoord2f(0,1)
-    bgl.glVertex2f(verts[1][0],verts[1][1])
-    bgl.glTexCoord2f(1,1)
-    bgl.glVertex2f(verts[2][0],verts[2][1])
-    bgl.glTexCoord2f(1,0)
-    bgl.glVertex2f(verts[3][0],verts[3][1])
-    bgl.glEnd()
-    bgl.glDisable(bgl.GL_BLEND)
-    bgl.glDisable(bgl.GL_TEXTURE_2D)
-    
+def image_quad(img, color, verts):
+    import gpu
+    from gpu_extras.batch import batch_for_shader
+    shader = gpu.shader.from_builtin('IMAGE_COLOR')
+    texture = gpu.texture.from_image(img)
+    batch = batch_for_shader(shader, 'TRIS', {
+        'pos': [(v[0], v[1]) for v in verts],
+        'texCoord': [(0, 0), (0, 1), (1, 1), (1, 0)],
+    }, indices=[(0, 1, 2), (0, 2, 3)])
+    previous = gpu.state.blend_get()
+    try:
+        gpu.state.blend_set('ALPHA')
+        shader.bind()
+        shader.uniform_sampler('image', texture)
+        shader.uniform_float('color', color)
+        batch.draw(shader)
+    finally:
+        gpu.state.blend_set(previous)
+
+
 def icons_to_blend_data(icondir, filter = ".png"):
     icon_files = [fi for fi in os.listdir(icondir) if fi.endswith(filter) ]
     for fname in icon_files:
@@ -280,7 +277,7 @@ def blf_text_wrap(string, wrap, font, size, dpi, x, y):
     else:
         string += ' '*int(fmod(len(string), wrap))
             
-    blf.size(font, size, dpi)
+    blf.size(font, (size) * (dpi) / 72)
     dimension = blf.dimensions(0, string[0:wrap-1])
 
     for i in range(0,math.ceil(len(string)/wrap)):

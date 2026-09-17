@@ -7,7 +7,7 @@ import bpy
 from mathutils import Vector
 
 #Addon Imports
-from Addon_utils import odcutils
+from ..Addon_utils import odcutils
 
 #Popup message box function :
 
@@ -34,11 +34,11 @@ class OPENDENTAL_OT_survey_model(bpy.types.Operator):
     bl_label = "Survey Model From View"
     bl_options = {"REGISTER", "UNDO"}
 
-    world = bpy.props.BoolProperty(
+    world: bpy.props.BoolProperty(
         default=True,
         name="Use world coordinate for calculation...almost always should be true.",
     )
-    smooth = bpy.props.BoolProperty(
+    smooth: bpy.props.BoolProperty(
         default=True,
         name="Smooth the outline.  Slightly less acuurate in some situations but more accurate in others.  Default True for best results",
     )
@@ -46,7 +46,7 @@ class OPENDENTAL_OT_survey_model(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         # restoration exists and is in scene
-        C0 = context.space_data.type == "VIEW_3D"
+        C0 = context.space_data is not None and context.space_data.type == "VIEW_3D"
         C1 = context.object != None
         if C1:
             C2 = context.object.type == "MESH"
@@ -283,7 +283,7 @@ class OPENDENTAL_OT_blockout_model(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         # restoration exists and is in scene
-        C0 = context.space_data.type == "VIEW_3D"
+        C0 = context.space_data is not None and context.space_data.type == "VIEW_3D"
         C1 = context.object != None
         if C1:
             C2 = context.object.type == "MESH"
@@ -400,6 +400,6 @@ def register():
 
     
 def unregister():
-    bpy.utils.unregister_class(OPENDENTAL_OT_survey_model)
-    bpy.utils.unregister_class(OPENDENTAL_OT_blockout_model)
     bpy.utils.unregister_class(OPENDENTAL_OT_blockout_model_solid)
+    bpy.utils.unregister_class(OPENDENTAL_OT_blockout_model)
+    bpy.utils.unregister_class(OPENDENTAL_OT_survey_model)

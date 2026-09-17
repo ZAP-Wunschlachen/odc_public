@@ -22,16 +22,17 @@ from mathutils.bvhtree import BVHTree
 from bpy_extras import view3d_utils
 
 #Addon imports :
-from Addon_utils.common_utilities import bversion
-from Addon_utils.odcutils import get_settings, obj_list_from_lib, obj_from_lib
+from ..Addon_utils.common_utilities import bversion
+from ..Addon_utils.odcutils import get_settings, obj_list_from_lib, obj_from_lib
 
-import Operators.common_drawing
-import Operators.bgl_utils
-from Operators.mesh_cut import cross_section_seed_ver1, bound_box, edge_loops_from_bmedges
-from Operators.textbox import TextBox
-import odcmenus.menu_utils as menu_utils
+from .. import Operators
 
-
+from ..Operators import common_drawing
+from .. import Operators
+from ..Operators import bgl_utils
+from ..Operators.mesh_cut import cross_section_seed_ver1, bound_box, edge_loops_from_bmedges
+from ..Operators.textbox import TextBox
+from ..odcmenus import menu_utils as menu_utils
 #TODO, better system for tooth # systems
 TOOTH_NUMBERS = [11,12,13,14,15,16,17,18,
                  21,22,23,24,25,26,27,28,
@@ -530,7 +531,7 @@ class OPENDENTAL_OT_simple_ortho_base(bpy.types.Operator):
     bl_label = "Simple model base"
     bl_options = {'REGISTER', 'UNDO'}
     
-    base_height = bpy.props.FloatProperty(name = 'Base Height', default = 10, min = -50, max = 50,  description = 'Base height added in mm')
+    base_height: bpy.props.FloatProperty(name = 'Base Height', default = 10, min = -50, max = 50,  description = 'Base height added in mm')
     
     @classmethod
     def poll(cls, context):
@@ -587,7 +588,7 @@ class OPENDENTAL_OT_setup_root_parenting(bpy.types.Operator):
     bl_label = "Set Root Parents"
     bl_options = {'REGISTER','UNDO'}
     
-    link_to_cast = bpy.props.BoolProperty(default = False)
+    link_to_cast: bpy.props.BoolProperty(default = False)
     @classmethod
     def poll(self,context):
         return context.mode == 'OBJECT'
@@ -754,7 +755,7 @@ class OPENDENTAL_OT_maxillary_view(bpy.types.Operator):
     bl_label = "Show Maxillary Teeth"
     bl_options = {'REGISTER','UNDO'}
 
-    show_master = bpy.props.BoolProperty(default = False)
+    show_master: bpy.props.BoolProperty(default = False)
     
     def execute(self, context):
         for ob in context.scene.objects:
@@ -775,7 +776,7 @@ class OPENDENTAL_OT_mandibular_view(bpy.types.Operator):
     bl_label = "Show Mandibular Teeth"
     bl_options = {'REGISTER','UNDO'}
     
-    show_master = bpy.props.BoolProperty(default = False)
+    show_master: bpy.props.BoolProperty(default = False)
     
     def execute(self, context):
         for ob in context.scene.objects:
@@ -960,9 +961,9 @@ class OPENDENTAL_OT_limit_movements(bpy.types.Operator):
     bl_label = "Limit Physics Movements"
     bl_options = {'REGISTER','UNDO'}
     
-    buc_ling = bpy.props.FloatProperty(name = 'Facial/Lingual', default = 2)
-    mes_dis = bpy.props.FloatProperty(name = 'Mesial/Distal', default = 2)
-    occlusal = bpy.props.FloatProperty(name = 'Occluso/Gingival', default = 0)
+    buc_ling: bpy.props.FloatProperty(name = 'Facial/Lingual', default = 2)
+    mes_dis: bpy.props.FloatProperty(name = 'Mesial/Distal', default = 2)
+    occlusal: bpy.props.FloatProperty(name = 'Occluso/Gingival', default = 0)
     
     @classmethod
     def poll(self,context):
@@ -1019,9 +1020,9 @@ class OPENDENTAL_OT_unlimit_movements(bpy.types.Operator):
     bl_label = "Unlimit Physics Movements"
     bl_options = {'REGISTER','UNDO'}
     
-    buc_ling = bpy.props.FloatProperty(name = 'Facial/Lingual', default = 2)
-    mes_dis = bpy.props.FloatProperty(name = 'Mesial/Distal', default = 2)
-    occlusal = bpy.props.FloatProperty(name = 'Occluso/Gingival', default = 0)
+    buc_ling: bpy.props.FloatProperty(name = 'Facial/Lingual', default = 2)
+    mes_dis: bpy.props.FloatProperty(name = 'Mesial/Distal', default = 2)
+    occlusal: bpy.props.FloatProperty(name = 'Occluso/Gingival', default = 0)
     
     @classmethod
     def poll(self,context):
@@ -1153,24 +1154,24 @@ def register():
     
     
 def unregister():
-    bpy.utils.unregister_class(OPENDENTAL_OT_mandibular_view)
-    bpy.utils.unregister_class(OPENDENTAL_OT_maxillary_view)
-    bpy.utils.unregister_class(OPENDENTAL_OT_left_view)
-    bpy.utils.unregister_class(OPENDENTAL_OT_right_view)
-    bpy.utils.unregister_class(OPENDENTAL_OT_add_bone_roots)
-    bpy.utils.unregister_class(OPENDENTAL_OT_fast_label_teeth)
-    bpy.utils.unregister_class(OPENDENTAL_OT_setup_root_parenting)
-    bpy.utils.unregister_class(OPENDENTAL_OT_set_treatment_keyframe)
-    bpy.utils.unregister_class(OPENDENTAL_OT_adjust_roots)
-    bpy.utils.unregister_class(OPENDENTAL_OT_keep_simulation_result)
-    bpy.utils.unregister_class(OPENDENTAL_OT_unlock_movements)
-    bpy.utils.unregister_class(OPENDENTAL_OT_lock_movements)
-    bpy.utils.unregister_class(OPENDENTAL_OT_limit_movements)
-    bpy.utils.unregister_class(OPENDENTAL_OT_unlimit_movements)
-    bpy.utils.unregister_class(OPENDENTAL_OT_add_forcefields)
-    bpy.utils.unregister_class(OPENDENTAL_OT_physics_setup)
-    bpy.utils.unregister_class(OPENDENTAL_OT_physics_scene)
     bpy.utils.unregister_class(OPENDENTAL_OT_simple_ortho_base)
+    bpy.utils.unregister_class(OPENDENTAL_OT_physics_scene)
+    bpy.utils.unregister_class(OPENDENTAL_OT_physics_setup)
+    bpy.utils.unregister_class(OPENDENTAL_OT_add_forcefields)
+    bpy.utils.unregister_class(OPENDENTAL_OT_unlimit_movements)
+    bpy.utils.unregister_class(OPENDENTAL_OT_limit_movements)
+    bpy.utils.unregister_class(OPENDENTAL_OT_lock_movements)
+    bpy.utils.unregister_class(OPENDENTAL_OT_unlock_movements)
+    bpy.utils.unregister_class(OPENDENTAL_OT_keep_simulation_result)
+    bpy.utils.unregister_class(OPENDENTAL_OT_set_treatment_keyframe)
+    bpy.utils.unregister_class(OPENDENTAL_OT_setup_root_parenting)
+    bpy.utils.unregister_class(OPENDENTAL_OT_adjust_roots)
+    bpy.utils.unregister_class(OPENDENTAL_OT_fast_label_teeth)
+    bpy.utils.unregister_class(OPENDENTAL_OT_add_bone_roots)
+    bpy.utils.unregister_class(OPENDENTAL_OT_right_view)
+    bpy.utils.unregister_class(OPENDENTAL_OT_left_view)
+    bpy.utils.unregister_class(OPENDENTAL_OT_maxillary_view)
+    bpy.utils.unregister_class(OPENDENTAL_OT_mandibular_view)
     
 if __name__ == "__main__":
     register()

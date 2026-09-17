@@ -42,11 +42,11 @@ import sys, os, inspect
 import bpy
 
 #Addon imports :
-from odcmenus import button_data
-from odcmenus import menu_utils
+from ..odcmenus import button_data
+from ..odcmenus import menu_utils
 
 #Addon path :
-addons_folder = os.path.abspath('odc_2')
+addons_folder = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #enums
 rest_types=['CONTOUR','PONTIC','COPING','ANATOMIC COPING']
 rest_enum = []
@@ -135,10 +135,9 @@ class ODCSettings(bpy.types.PropertyGroup):
         
         
         #addons_folder = bpy.utils.script_paths('addons')[0]
-        data_folder =os.path.join(addons_folder,'Resources\\data\\')
-        def_tooth_lib = data_folder + "odc_tooth_library.blend"
-        def_mat_lib = data_folder + "odc_mat_library.blend"
-        print(data_folder)
+        data_folder =os.path.join(addons_folder, 'Resources', 'data')
+        def_tooth_lib = os.path.join(data_folder, "odc_tooth_library.blend")
+        def_mat_lib = os.path.join(data_folder, "odc_materials.blend")
         
         cls.tooth_lib = bpy.props.StringProperty(
             name="Tooth Library",
@@ -408,8 +407,8 @@ class SplintRestorationAdd(bpy.types.Operator):
     bl_label = "Append Splint"
     bl_options = {'REGISTER','UNDO'}
     
-    name = bpy.props.StringProperty(name="Splint Name",default="_Splint")  
-    link_active = bpy.props.BoolProperty(name="Link",description = "Link active object as base model for splint", default = True)
+    name: bpy.props.StringProperty(name="Splint Name",default="_Splint")
+    link_active: bpy.props.BoolProperty(name="Link",description = "Link active object as base model for splint", default = True)
     def invoke(self, context, event): 
         
         
@@ -436,9 +435,9 @@ class OPENDENTAL_OT_add_tooth_restoration(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     
     #We will select a tooth to work on
-    ob_list = bpy.props.EnumProperty(name="Tooth to work on", description="A list of all teeth to chose from", items=teeth_enum, default='0')
-    name = bpy.props.StringProperty(name="Tooth Number",default="")
-    rest_type = bpy.props.EnumProperty(name="Restoration Type", description="The type of restoration for this tooth", items=rest_enum, default='0')
+    ob_list: bpy.props.EnumProperty(name="Tooth to work on", description="A list of all teeth to chose from", items=teeth_enum, default='0')
+    name: bpy.props.StringProperty(name="Tooth Number",default="")
+    rest_type: bpy.props.EnumProperty(name="Restoration Type", description="The type of restoration for this tooth", items=rest_enum, default='0')
     
     #in_bridge = bpy.props.BoolProperty(name="Incude in Bridge", default = False)
     #abutment = bpy.props.BoolProperty(name="Abutment", description="If Pontic Uncheck", default = True)   
@@ -484,9 +483,9 @@ class ImplantRestorationAdd(bpy.types.Operator):
     bl_options = {'REGISTER','UNDO'}
     
     #We will select a tooth to work on
-    ob_list = bpy.props.EnumProperty(name="Implant space to restore", description="A list of all teeth to chose from", items=teeth_enum, default='0')
-    name = bpy.props.StringProperty(name="Tooth Number",default="")
-    rest_type = bpy.props.EnumProperty(name="Restoration Type", description="The type of restoration for this tooth", items=rest_enum, default='0')
+    ob_list: bpy.props.EnumProperty(name="Implant space to restore", description="A list of all teeth to chose from", items=teeth_enum, default='0')
+    name: bpy.props.StringProperty(name="Tooth Number",default="")
+    rest_type: bpy.props.EnumProperty(name="Restoration Type", description="The type of restoration for this tooth", items=rest_enum, default='0')
     
     #in_bridge = bpy.props.BoolProperty(name="Incude in Bridge", default = False)
     #abutment = bpy.props.BoolProperty(name="Abutment", description="If Pontic Uncheck", default = True)   
@@ -603,26 +602,16 @@ def register():
     #bpy.utils.register_class(OPENDENTAL_OT_activate)
     
 def unregister():
-
-    #bpy.utils.unregister_class(ODCProps)
-    ODCProps.unregister()
-    ODCSettings.unregister()
-    
-    
-    ToothRestoration.unregister()
-    ImplantRestoration.unregister()
-    BridgeRestoration.unregister()
-    SplintRestoration.unregister()
-    
-    #functions to add remove class isntances into collections
-    bpy.utils.unregister_class(OPENDENTAL_OT_add_tooth_restoration)
-    bpy.utils.unregister_class(ImplantRestorationAdd)
-    bpy.utils.unregister_class(BridgeRestorationRemove)
-    bpy.utils.unregister_class(ImplantRestorationRemove)
-    bpy.utils.unregister_class(ToothRestorationRemove)
-    bpy.utils.unregister_class(SplintRestorationAdd)
     bpy.utils.unregister_class(SplintRestorationRemove)
-    '''
-if __name__ == "__main__":
-    register()
-    '''
+    bpy.utils.unregister_class(SplintRestorationAdd)
+    bpy.utils.unregister_class(ToothRestorationRemove)
+    bpy.utils.unregister_class(ImplantRestorationRemove)
+    bpy.utils.unregister_class(BridgeRestorationRemove)
+    bpy.utils.unregister_class(ImplantRestorationAdd)
+    bpy.utils.unregister_class(OPENDENTAL_OT_add_tooth_restoration)
+    bpy.utils.unregister_class(SplintRestoration)
+    bpy.utils.unregister_class(BridgeRestoration)
+    bpy.utils.unregister_class(ImplantRestoration)
+    bpy.utils.unregister_class(ToothRestoration)
+    bpy.utils.unregister_class(ODCSettings)
+    bpy.utils.unregister_class(ODCProps)

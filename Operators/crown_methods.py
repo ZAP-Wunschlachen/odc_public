@@ -19,12 +19,13 @@ from mathutils.geometry import intersect_point_line
 from mathutils.bvhtree import BVHTree
 
 #Addon imports :
-import Addon_utils.odcutils
-from Addon_utils.odcutils import offset_bmesh_edge_loop
-from Addon_utils.common_utilities import bversion
+from .. import Addon_utils
+from ..Addon_utils import odcutils
+from ..Addon_utils.odcutils import offset_bmesh_edge_loop
+from ..Addon_utils.common_utilities import bversion
 
-from Operators.bmesh_fns import join_bmesh_map
-from Operators.mesh_cut import edge_loops_from_bmedges, space_evenly_on_path
+from ..Operators.bmesh_fns import join_bmesh_map
+from ..Operators.mesh_cut import edge_loops_from_bmedges, space_evenly_on_path
 
 def pontificate(context, tooth, shell, p_type, offset):
     

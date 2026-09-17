@@ -9,7 +9,8 @@ Created on May 12, 2015
 import sys, os, math, copy, time
 
 #Blender imports :
-import bpy, bmesh, blf, bgl
+import bpy, bmesh, blf
+from .. import gpu_compat as bgl
 from bpy.props import EnumProperty, StringProperty,BoolProperty, IntProperty, FloatVectorProperty, FloatProperty
 from bpy.types import Operator, AddonPreferences
 from bpy_extras.view3d_utils import location_3d_to_region_2d, region_2d_to_vector_3d, region_2d_to_location_3d
@@ -17,10 +18,10 @@ from mathutils import Vector
 from mathutils.geometry import intersect_line_plane, intersect_point_line
 
 #Addon imports :
-import Addon_utils.common_utilities
-import Operators.common_drawing
-
-
+from .. import Addon_utils
+from ..Addon_utils import common_utilities
+from .. import Operators
+from ..Operators import common_drawing
 class TextBox(object):
     
     def __init__(self,context,x,y,width,height,border, margin, message):
@@ -42,7 +43,7 @@ class TextBox(object):
 
         self.text_size = 12
         self.text_dpi = context.user_preferences.system.dpi
-        blf.size(0, self.text_size, self.text_dpi)
+        blf.size(0, (self.text_size) * (self.text_dpi) / 72)
         self.line_height = blf.dimensions(0, 'A')[1]
         self.raw_text = message
         self.text_lines = []
@@ -288,7 +289,7 @@ class TextBox(object):
         common_drawing.draw_outline_or_region('GL_LINE_LOOP', outline, border_color)
         
         dpi = bpy.context.user_preferences.system.dpi
-        blf.size(0, self.text_size, dpi)
+        blf.size(0, (self.text_size) * (dpi) / 72)
         
         if self.is_collapsed:
             txt_x = left + self.border

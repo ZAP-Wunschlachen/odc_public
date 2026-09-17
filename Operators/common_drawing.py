@@ -28,7 +28,7 @@ from collections import deque
 
 #Blender imports :
 import bpy
-import bgl
+from .. import gpu_compat as bgl
 import blf
 import bmesh
 
@@ -38,7 +38,7 @@ from mathutils.geometry import intersect_line_plane, intersect_point_line, dista
 from bpy_extras.view3d_utils import location_3d_to_region_2d, region_2d_to_vector_3d, region_2d_to_location_3d, region_2d_to_origin_3d
 
 #Addon imports :
-from Addon_utils.common_utilities import dprint
+from ..Addon_utils.common_utilities import dprint
 
 
 
@@ -118,7 +118,7 @@ def draw_3d_points_and_index(context, points, color, size):
             continue
     
     bgl.glEnd()
-    blf.size(0, 14, 72)
+    blf.size(0, (14) * (72) / 72)
     for i, coord in enumerate(points_2d):
         blf.position(0,coord[0]+3, coord[1]+3, 0)
         blf.draw(0,str(i))

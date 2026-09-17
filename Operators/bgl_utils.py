@@ -14,7 +14,7 @@ from math import fmod
 
 #Blender Imports
 import bpy
-import bgl
+from .. import gpu_compat as bgl
 import blf
 from mathutils.geometry import intersect_line_line_2d
 from mathutils import Vector, Matrix
@@ -23,8 +23,8 @@ from bpy_extras import view3d_utils
 
 #Addon Imports
 
-from Addon_utils.odcutils import get_settings
-from odcmenus import menu_utils, button_data
+from ..Addon_utils.odcutils import get_settings
+from ..odcmenus import menu_utils, button_data
 
 
 
@@ -114,7 +114,7 @@ def insertion_axis_callback(self,context):
     menu_utils.draw_outline_or_region(bgl.GL_LINE_LOOP, path2)
     
     #put words in the arrows
-    blf.size(0,20,76)
+    blf.size(0, (20) * (76) / 72)
     dimension = blf.dimensions(0,"Mesial")
     blf.position(0,aspect[0]-70-dimension[0]/2,mid[1]-dimension[1]/2,0)
     blf.draw(0,"Mesial")
@@ -128,7 +128,7 @@ def general_func_callback(self,context):
     aspect, mid = menu_utils.view3d_get_size_and_mid(context)
         # draw some text
     blf.position(0, mid[0], mid[1]+100, 0)
-    blf.size(0, 20, 72)
+    blf.size(0, (20) * (72) / 72)
     blf.draw(0, self.message)
     menu_utils.blf_text_wrap(self.help, self.wrap, 0, 12 , 76, 10, aspect[1]-30)
     

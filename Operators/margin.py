@@ -16,13 +16,16 @@ import bmesh
 from mathutils.bvhtree import BVHTree
 
 #Addon imports :
-import Addon_utils.odcutils
-import Operators.bgl_utils
-from Operators.curve import CurveDataManager
-from Operators.textbox import TextBox
-from Operators.mesh_cut import cross_section_seed_ver1, bound_box
-import Operators.common_drawing
-from Addon_utils.common_utilities import bversion
+from .. import Addon_utils
+from ..Addon_utils import odcutils
+from .. import Operators
+from ..Operators import bgl_utils
+from ..Operators.curve import CurveDataManager
+from ..Operators.textbox import TextBox
+from ..Operators.mesh_cut import cross_section_seed_ver1, bound_box
+from .. import Operators
+from ..Operators import common_drawing
+from ..Addon_utils.common_utilities import bversion
 
 #import odc.odcmenus.menu_utils as menu_utils
 #import odc.odcmenus.button_data as button_data
@@ -273,9 +276,9 @@ class OPENDENTAL_OT_walk_around_margin(bpy.types.Operator):
     bl_label = "Walk Around Margin"
     bl_options = {'REGISTER','UNDO'}
     
-    resolution = bpy.props.IntProperty(name="Resolution", description="Number of sample points", default=50, min=0, max=100, options={'ANIMATABLE'})
-    extra = bpy.props.IntProperty(name="Extra", description="Extra Stes", default=4, min=0, max=10, options={'ANIMATABLE'})    
-    search = bpy.props.FloatProperty(name="Width of Search Band", description="", default=1.25, min=.2, max=2, step=5, precision=2, options={'ANIMATABLE'})
+    resolution: bpy.props.IntProperty(name="Resolution", description="Number of sample points", default=50, min=0, max=100, options={'ANIMATABLE'})
+    extra: bpy.props.IntProperty(name="Extra", description="Extra Stes", default=4, min=0, max=10, options={'ANIMATABLE'})
+    search: bpy.props.FloatProperty(name="Width of Search Band", description="", default=1.25, min=.2, max=2, step=5, precision=2, options={'ANIMATABLE'})
     
     def invoke(self, context, event): 
         context.window_manager.invoke_props_dialog(self, width=300) 
@@ -694,7 +697,7 @@ class OPENDENTAL_OT_place_margin_tracer(bpy.types.Operator):
     bl_label = "Place Margin Tracer"
     bl_options = {'REGISTER','UNDO'}
     
-    radius = bpy.props.FloatProperty(
+    radius: bpy.props.FloatProperty(
             name="Tracer Radius",
             default=1,
             min = .2,
@@ -702,7 +705,7 @@ class OPENDENTAL_OT_place_margin_tracer(bpy.types.Operator):
             step = 20,
             precision = 1)
        
-    spokes = bpy.props.IntProperty(
+    spokes: bpy.props.IntProperty(
             name = "Tracer Arms",
             default = 4,
             min = 4,
@@ -1122,12 +1125,9 @@ def register():
 
     
 def unregister():
-    bpy.utils.unregister_class(OPENDENTAL_OT_mark_crown_margin)
-    #bpy.utils.unregister_class(OPENDENTAL_OT_initiate_margin)
-    #bpy.utils.unregister_class(OPENDENTAL_OT_initiate_auto_margin)
-    #bpy.utils.unregister_class(OPENDENTAL_OT_walk_around_margin)
-    bpy.utils.unregister_class(OPENDENTAL_OT_refine_margin)
     bpy.utils.unregister_class(OPENDENTAL_OT_accept_margin)
+    bpy.utils.unregister_class(OPENDENTAL_OT_refine_margin)
+    bpy.utils.unregister_class(OPENDENTAL_OT_mark_crown_margin)
     #bpy.utils.unregister_class(OPENDENTAL_OT_trace_walking)
     #bpy.utils.unregister_class(OPENDENTAL_OT_place_margin_tracer)
 

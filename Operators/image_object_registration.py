@@ -44,7 +44,7 @@ import numpy as np
 
 #Blender imports :
 import bpy
-import bgl
+from .. import gpu_compat as bgl
 import blf
 
 from mathutils import Vector, Matrix
@@ -73,7 +73,7 @@ def draw_typo_2d(color, text):
     # draw some text
     bgl.glColor4f(*color)
     blf.position(font_id, 20, 70, 0)
-    blf.size(font_id, 20, 72)
+    blf.size(font_id, (20) * (72) / 72)
     blf.draw(font_id, text)
 
 #### MATRIX CAMER MATH HELPERS

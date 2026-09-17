@@ -12,8 +12,9 @@ import bpy
 from mathutils import Vector, Matrix
 
 #Addon imports :
-import Addon_utils.odcutils
-from Addon_utils.odcutils import get_settings
+from .. import Addon_utils
+from ..Addon_utils import odcutils
+from ..Addon_utils.odcutils import get_settings
 
 def place_implant(context, implant_space, location,orientation,imp, hardware = True):
     '''
@@ -170,7 +171,7 @@ def implant_outer_cylinder(context, space,
 
     #vert group    
     Cylinder.vertex_groups.clear() 
-    Cylinder.vertex_groups.new("Project")
+    Cylinder.vertex_groups.new(name="Project")
     vert_inds = [v.index for v in Cylinder.data.vertices if v.index%2]
     Cylinder.vertex_groups["Project"].add(vert_inds, 1,'REPLACE')
 
@@ -253,7 +254,7 @@ def implant_inner_cylinder(context, space, thickness = None, debug = False):
     bm.free()
 
     Cylinder.vertex_groups.clear()        
-    Cylinder.vertex_groups.new("Project")
+    Cylinder.vertex_groups.new(name="Project")
     
     #rodd verts added to the "Project Group"
     vert_inds = [v.index for v in Cylinder.data.vertices if v.index%2]
