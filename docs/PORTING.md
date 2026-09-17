@@ -362,3 +362,9 @@ evaluated interior against the triangulated, unscaled preparation sphere. At
 0.119333–0.120000. The test requires maximum error below 0.001 model units and
 checks both settings. This tests distance magnitude on the synthetic sphere, not
 signed clearance, scaled-object compensation, transition width or clinical fit.
+
+The cement-gap fixture also checks positive signed separation along the nearest
+preparation face normals at both tested offsets. All fully weighted Filled Zone
+vertices lie outside the synthetic surface. Holy Zone and Filled Zone memberships
+are nonempty and disjoint. This does not measure the physical Holy Zone width or
+prove absence of face intersections between sampled vertices.

@@ -57,12 +57,19 @@ bvh = BVHTree.FromObject(prep, bpy.context.evaluated_depsgraph_get())
 filled = inside.vertex_groups['Filled Zone'].index
 filled_indices = [v.index for v in inside.data.vertices if any(g.group == filled and g.weight > .99 for g in v.groups)]
 assert filled_indices
+holy = inside.vertex_groups['Holy Zone'].index
+holy_indices = {v.index for v in inside.data.vertices if any(g.group == holy and g.weight > .99 for g in v.groups)}
+assert holy_indices and not holy_indices.intersection(filled_indices)
 for gap in (.07, .12):
     inside.modifiers['Cement Gap'].offset = gap
     bpy.context.view_layer.update()
     evaluated = inside.evaluated_get(bpy.context.evaluated_depsgraph_get())
     mesh = evaluated.to_mesh()
-    distances = [bvh.find_nearest(prep.matrix_world.inverted() @ (evaluated.matrix_world @ mesh.vertices[i].co))[3] for i in filled_indices]
+    points = [prep.matrix_world.inverted() @ (evaluated.matrix_world @ mesh.vertices[i].co) for i in filled_indices]
+    nearest = [bvh.find_nearest(point) for point in points]
+    distances = [result[3] for result in nearest]
+    signed = [(point-result[0]).dot(result[1]) for point, result in zip(points, nearest)]
+    assert min(signed) > 0, 'Cement zone penetrates the preparation surface'
     evaluated.to_mesh_clear()
     print('MEASURED_CEMENT_GAP', gap, min(distances), max(distances), flush=True)
     assert max(abs(distance-gap) for distance in distances) < .001
