@@ -282,3 +282,14 @@ scale. The padded lattice encloses every source vertex, its undeformed evaluated
 result preserves geometry, and moving its control plane changes the evaluated
 mesh. Legacy layers, scene linking and scene update calls are removed. Sheared
 transforms and the complete crown seating workflow remain unverified.
+
+## Crown seating first integration fixture
+
+`tests/test_crown_seating.py` imports bundled tooth 25, accepts a circular margin
+and executes Seat to Margin. Removed scene layers and selection APIs are ported,
+as is the translation matrix multiplication. Modifier-copy detection now compares
+names to names, avoiding accidentally applying the original modifier. The test
+checks that base margin-group vertices lie within 1e-4 Blender units of the target
+vertices, all coordinates are finite and Final Seal targets the margin. Repeated
+seating, influence behavior, evaluated Multires quality, other library teeth and
+anatomical margins remain unverified; this is not a production crown validation.

@@ -659,8 +659,7 @@ class OPENDENTAL_OT_seat_to_margin(bpy.types.Operator):
         dbg = settings.debug
         odcutils.layer_management(context.scene.odc_teeth, debug = False)
         
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
+
         
         #TODO: Scene Preservation recording
         teeth = odcutils.tooth_selection(context)
@@ -697,8 +696,6 @@ class OPENDENTAL_OT_seat_to_margin(bpy.types.Operator):
                 continue
             crown_methods.seat_to_margin_improved(context, sce, tooth, influence = self.influence, debug = dbg) #TODO: debug stuff
   
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
 
         return {'FINISHED'}
     

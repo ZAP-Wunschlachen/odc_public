@@ -910,9 +910,10 @@ def seat_to_margin_improved(context, sce, tooth, influence, debug = False):
     restoration_mx = Restoration.matrix_world
     margin_mx = Margin.matrix_world
     
-    Restoration.hide = False
-    Restoration.select = True
-    sce.objects.active = Restoration
+    Restoration.hide_set(False)
+    bpy.ops.object.select_all(action='DESELECT')
+    Restoration.select_set(True)
+    context.view_layer.objects.active = Restoration
     
     bpy.ops.object.mode_set(mode='EDIT')
     
@@ -1072,7 +1073,7 @@ def seat_to_margin_improved(context, sce, tooth, influence, debug = False):
             
     crown_margin_com = odcutils.get_com(Restoration.data, region_loops[0], restoration_mx)  
     margin_com = odcutils.get_bbox_center(Margin, world = True)
-    delta = restoration_mx.to_3x3().inverted() * (margin_com - crown_margin_com)  #the difference in local coordinates of crown
+    delta = restoration_mx.to_3x3().inverted() @ (margin_com - crown_margin_com)  #the difference in local coordinates of crown
     
     #TODO: is this faster or the old way?
     for ind in region_loops[0]:
@@ -1093,7 +1094,7 @@ def seat_to_margin_improved(context, sce, tooth, influence, debug = False):
     
     current_mods = [mod.name for mod in Restoration.modifiers]
     bpy.ops.object.modifier_copy(modifier = margin)
-    new_mod = [mod.name for mod in Restoration.modifiers if mod not in current_mods]
+    new_mod = [mod.name for mod in Restoration.modifiers if mod.name not in current_mods]
     bpy.ops.object.modifier_apply(modifier=new_mod[0])
 
     bpy.ops.object.editmode_toggle()

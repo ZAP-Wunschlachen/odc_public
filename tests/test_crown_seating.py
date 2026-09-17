@@ -1,0 +1,37 @@
+import sys
+import importlib
+from pathlib import Path
+import bpy
+import addon_utils
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT.parent))
+assert addon_utils.enable(ROOT.name, default_set=True)
+scene = bpy.context.scene
+tooth = scene.odc_teeth.add()
+tooth.name = '25'
+tooth.rest_type = '0'
+assert bpy.ops.opendental.get_crown_form(ob_list='25') == {'FINISHED'}
+axis = bpy.data.objects.new('axis', None)
+scene.collection.objects.link(axis)
+tooth.axis = axis.name
+bpy.ops.curve.primitive_bezier_circle_add(radius=3)
+tooth.margin = bpy.context.object.name
+assert bpy.ops.opendental.accept_margin() == {'FINISHED'}
+assert bpy.ops.opendental.seat_to_margin() == {'FINISHED'}
+print('ODC_CROWN_SEATING_EXECUTED', flush=True)
+import math
+from mathutils.kdtree import KDTree
+crown = bpy.data.objects[tooth.contour]
+margin = bpy.data.objects[tooth.margin]
+tree = KDTree(len(margin.data.vertices))
+for vertex in margin.data.vertices:
+    tree.insert(margin.matrix_world @ vertex.co, vertex.index)
+tree.balance()
+group = crown.vertex_groups[tooth.margin]
+indices = [v.index for v in crown.data.vertices if any(g.group == group.index and g.weight > .99 for g in v.groups)]
+assert indices
+assert max(tree.find(crown.matrix_world @ crown.data.vertices[i].co)[2] for i in indices) < 1e-4
+assert all(math.isfinite(c) for v in crown.data.vertices for c in v.co)
+assert any(m.type == 'SHRINKWRAP' and m.name == 'Final Seal' and m.target == margin for m in crown.modifiers)
+addon_utils.disable(ROOT.name, default_set=True)
+print('ODC_CROWN_SEATING_PASSED', bpy.app.version_string)
