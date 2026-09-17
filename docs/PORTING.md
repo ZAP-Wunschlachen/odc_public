@@ -941,3 +941,7 @@ Ported root-axis empty display settings, collection linking, object visibility/s
 ### Root modal surface placement
 
 Axis helper creation now occurs only after a successful ray hit on the selected tooth. The Blender window test simulates a miss (no helper created), a center click on a cube tooth in top orthographic view (axis at Z=1), and Enter. The resulting root tail is Z=1 and head Z=-15, with helper removal and modal completion verified. Escape rollback and multi-tooth navigation remain open.
+
+### Root modal cancellation
+
+Added session snapshots of existing bone names and axis transforms/display settings. Escape removes newly added bones or a newly created armature and restores existing axis state/removes new axes. The window test now places an axis, cancels, verifies removal of new armature/helper, then restarts, places and commits successfully. Existing-armature cancellation, selection/viewport restoration and shared armature data remain unverified.

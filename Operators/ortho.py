@@ -241,6 +241,8 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
             return {'PASS_THROUGH'}
         
         if nmode in {'finish','cancel'}:
+            if nmode == 'cancel':
+                self.restore_roots(context)
             #clean up callbacks
             bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
             return {'FINISHED'} if nmode == 'finish' else {'CANCELLED'}
@@ -252,6 +254,31 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
         
         return {'RUNNING_MODAL'}
      
+    def restore_roots(self, context):
+        arm = context.scene.objects.get('Roots')
+        if arm is not None:
+            context.view_layer.objects.active = arm
+            arm.select_set(True)
+            if self._original_arm is None:
+                data = arm.data
+                bpy.data.objects.remove(arm, do_unlink=True)
+                if data.users == 0:
+                    bpy.data.armatures.remove(data)
+            else:
+                bpy.ops.object.mode_set(mode='EDIT')
+                for bone in list(arm.data.edit_bones):
+                    if bone.name not in self._original_bones:
+                        arm.data.edit_bones.remove(bone)
+                bpy.ops.object.mode_set(mode='OBJECT')
+        for unit in self.units:
+            name = unit.name + 'root_empty'
+            axis = context.scene.objects.get(name)
+            previous = self._original_axes.get(name)
+            if axis is not None and previous is None:
+                bpy.data.objects.remove(axis, do_unlink=True)
+            elif axis is not None:
+                axis.matrix_world, axis.empty_display_type, axis.empty_display_size = previous
+
     def invoke(self, context, event):
         settings = get_settings()
         dbg = settings.debug
@@ -282,6 +309,14 @@ class OPENDENTAL_OT_add_bone_roots(bpy.types.Operator):
         self.target = self.units[0]
         self.message = "Set axis for %s" %self.target.name
             
+        self._original_arm = context.scene.objects.get('Roots')
+        self._original_bones = set(self._original_arm.data.bones.keys()) if self._original_arm else set()
+        self._original_axes = {}
+        for unit in self.units:
+            axis = context.scene.objects.get(unit.name + 'root_empty')
+            if axis is not None:
+                self._original_axes[axis.name] = (axis.matrix_world.copy(), axis.empty_display_type, axis.empty_display_size)
+
         #check for an armature
         bpy.ops.object.select_all(action = 'DESELECT')
         if context.mode != 'OBJECT':

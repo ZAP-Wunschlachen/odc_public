@@ -8,9 +8,9 @@ from mathutils import Quaternion, Vector
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 phase = 0
-window = region = None
+window = region = area = None
 def run():
-    global phase,window,region
+    global phase,window,region,area
     try:
         if phase == 0:
             assert addon_utils.enable(ROOT.name, default_set=True)
@@ -40,6 +40,17 @@ def run():
             axis = bpy.data.objects.get('11root_empty')
             assert axis is not None
             assert abs(axis.location.z-1) < 1e-4, axis.location[:]
+            for value in ('PRESS','RELEASE'):
+                window.event_simulate(type='ESC',value=value,x=region.x+region.width//2,y=region.y+region.height//2)
+        elif phase == 4:
+            assert bpy.data.objects.get('Roots') is None
+            assert bpy.data.objects.get('11root_empty') is None
+            with bpy.context.temp_override(window=window,area=area,region=region):
+                assert bpy.ops.opendental.add_bone_roots('INVOKE_DEFAULT') == {'RUNNING_MODAL'}
+            for value in ('PRESS','RELEASE'):
+                window.event_simulate(type='LEFTMOUSE',value=value,x=region.x+region.width//2,y=region.y+region.height//2)
+        elif phase == 5:
+            assert bpy.data.objects.get('11root_empty') is not None
             for value in ('PRESS','RELEASE'):
                 window.event_simulate(type='RET',value=value,x=region.x+region.width//2,y=region.y+region.height//2)
         else:
