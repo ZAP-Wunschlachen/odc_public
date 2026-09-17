@@ -64,7 +64,14 @@ forced first-slot replacement, additional slots and face material indices,
 selection, active object, hidden objects, and repeated assignment without duplicate
 material imports. The actual Set Master operator resolves a name collision and
 stores the final object name, assigns the master material and Models collection.
-Preparation segmentation and the other model assignment operators remain pending.
+Set as Prep now supports object assignment, independent master duplication and
+selected-geometry extraction using BMesh. Synthetic tests verify transformed world
+coordinates, preservation of the master, extracted face count and materials,
+actual-name references on collisions, abutment parenting, returning to source edit
+mode in the parallel workflow and safe cancellation for an empty selection.
+The 3D viewport alignment, multi-object edit behavior and complex scan/modifier
+fixtures still require further coverage. Other model assignment operators remain
+pending.
 
 ## Implemented, not yet verified visually
 
@@ -95,6 +102,7 @@ blender --background --factory-startup --python-exit-code 1 --python tests/test_
 blender --background --factory-startup --python-exit-code 1 --python tests/test_crown_import.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_pontic_import.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_dental_materials.py
+blender --background --factory-startup --python-exit-code 1 --python tests/test_preparation_assignment.py
 ```
 
 Tests use synthetic geometry. The port tests do not validate a patient-specific

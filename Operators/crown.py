@@ -112,97 +112,66 @@ class OPENDENTAL_OT_set_as_prep(bpy.types.Operator):
     
     abutment: bpy.props.BoolProperty(name = "abutment", default = False)
     
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and context.mode in {'OBJECT', 'EDIT_MESH'}
+                and hasattr(context.scene, 'odc_teeth')
+                and len(context.scene.odc_teeth) > 0)
+
     def execute(self, context):
+        import bmesh
+        scene = context.scene
+        source = context.object
+        master = scene.objects.get(scene.odc_props.master)
+        if master is None:
+            self.report({'WARNING'}, "Set a master model first")
+            return {'CANCELLED'}
+        tooth = scene.odc_teeth[scene.odc_tooth_index]
         settings = get_settings()
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
-        
-        #grab active tooth the old way
-        sce=bpy.context.scene
-        tooth = odcutils.active_tooth_from_index(sce)
-        a = tooth.name
-        prep_name = str( a + "_Prep")
-        
-        #get master model from scene properties
-        master=sce.odc_props.master
-        Master=bpy.data.objects[master]
-        
-        #keep track of the current objects so new objects
-        #are easily identified.
-        current_objects=list(bpy.data.objects)
-        act_ob = bpy.context.object
-        
-        #this means we are selecting an object to assign
-        if bpy.context.mode == 'OBJECT':
-
-            if act_ob.name != master:
-                act_ob.name = prep_name
-                Prep = act_ob  #need the actual object to parent it
-
-            
-            #rare case, one prep work session, just duplicate the prep to make a master model    
-            if act_ob.name == master:
-                bpy.ops.object.duplicate()                
-            
-            #this will prevent us from messing up any 
-            #abutment/implant relationships. So that we can
-            #adjust implant placement after consideration of
-            #restorative solution. Potentially no longer useful
-            '''
-            if not self.abutment:
-                sce.objects.active = Master
-                Prep.select = True
-                bpy.ops.object.parent_set(type = 'OBJECT')     
-            '''              
-               
-        #this means we are segmenting part of an object    
-        if bpy.context.mode == 'EDIT_MESH':    
-            bpy.ops.mesh.duplicate()
-            bpy.ops.mesh.separate(type='SELECTED')
-            bpy.ops.object.editmode_toggle()
-        
-            bpy.ops.object.select_all(action = 'DESELECT')
-        
-        #identify new object as prep and
-        new_objs = []
-        for ob in sce.objects:
-            if ob not in current_objects:                        
-                new_objs.append(ob)
-                
-        if len(new_objs):
-            Prep = new_objs[0]               
-            Prep.name = prep_name
-
-        #put the property of the working tooth
-        tooth.prep_model = prep_name
-        
-        #make Prep a child of Master
-        odcutils.parent_in_place(Prep, Master)
-        
-        #put the Prep's origin somewhere logical
-        Prep.select = True
-        sce.objects.active = Prep
+        if context.mode == 'EDIT_MESH':
+            # Extract only the active object's selected geometry. This also avoids
+            # duplicating unrelated objects in Blender's multi-object edit mode.
+            edit_mesh = bmesh.from_edit_mesh(source.data)
+            if not any(v.select for v in edit_mesh.verts):
+                self.report({'WARNING'}, "Select preparation geometry first")
+                return {'CANCELLED'}
+            bm = edit_mesh.copy()
+            bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.select], context='VERTS')
+            mesh = bpy.data.meshes.new(tooth.name + '_Prep')
+            bm.to_mesh(mesh)
+            bm.free()
+            for material in source.data.materials:
+                mesh.materials.append(material)
+            prep = source.copy()
+            prep.data = mesh
+            scene.collection.objects.link(prep)
+            bpy.ops.object.mode_set(mode='OBJECT')
+        elif source == master:
+            prep = source.copy()
+            prep.data = source.data.copy()
+            scene.collection.objects.link(prep)
+        else:
+            prep = source
+        prep.name = tooth.name + '_Prep'
+        tooth.prep_model = prep.name
+        if not self.abutment:
+            odcutils.parent_in_place(prep, master)
+        bpy.ops.object.select_all(action='DESELECT')
+        prep.hide_set(False)
+        prep.select_set(True)
+        context.view_layer.objects.active = prep
         bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
-        
-        #TODO: make this dependent on "Parallel or Linear" work flow
         if settings.workflow == '0':
-            Master.hide = True
-        
-            #look down on prep
-            bpy.ops.view3d.viewnumpad(type='TOP', align_active = True)
-            
-        if settings.workflow in {'1','2'}:
-            sce.objects.active = act_ob
-            act_ob.select = True
+            master.hide_set(True)
+            if context.area and context.area.type == 'VIEW_3D':
+                bpy.ops.view3d.view_axis(type='TOP', align_active=True)
+        elif settings.workflow in {'1', '2'}:
+            prep.select_set(False)
+            source.select_set(True)
+            context.view_layer.objects.active = source
             bpy.ops.object.mode_set(mode='EDIT')
-        
-        #layers
-        odcutils.layer_management(sce.odc_teeth) #needs to be a list so it's iterable even if it's one thing.
-        
-        
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
-        context.scene.layers[1] = True
+        odcutils.layer_management(scene.odc_teeth)
         return {'FINISHED'}
 
 class OPENDENTAL_OT_set_mesial(bpy.types.Operator):
