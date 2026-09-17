@@ -56,6 +56,16 @@ review and broader tooth-library fixtures remain outstanding.
 Remaining direct legacy layer accesses elsewhere still need migration; role
 collections alone do not replace those visibility workflows.
 
+## Dental materials and master assignment verified
+
+Role materials are assigned directly through current material slots, including
+when relative paths are enabled. Tests cover preservation of custom materials,
+forced first-slot replacement, additional slots and face material indices,
+selection, active object, hidden objects, and repeated assignment without duplicate
+material imports. The actual Set Master operator resolves a name collision and
+stores the final object name, assigns the master material and Models collection.
+Preparation segmentation and the other model assignment operators remain pending.
+
 ## Implemented, not yet verified visually
 
 A package-local GPU adapter replaces legacy immediate-mode drawing. Image
@@ -84,6 +94,7 @@ blender --background --factory-startup --python-exit-code 1 --python tests/test_
 blender --background --factory-startup --python-exit-code 1 --python tests/test_library_helpers.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_crown_import.py
 blender --background --factory-startup --python-exit-code 1 --python tests/test_pontic_import.py
+blender --background --factory-startup --python-exit-code 1 --python tests/test_dental_materials.py
 ```
 
 Tests use synthetic geometry. The port tests do not validate a patient-specific

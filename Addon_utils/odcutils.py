@@ -1017,51 +1017,33 @@ def material_management(context, odc_items, force = False, debug = False):
                     "splint":"splint",
                     "model":"prep",
                     "master":"master"}
-    if debug:
-        starttime = time.time()
-    
-    if context.preferences.filepaths.use_relative_paths:
-        print('user settings -> file -> uncheck Relative Paths')
-        return
-    
     settings = get_settings()
-    fname = settings.mat_lib
-    if not os.path.isfile(fname):
-        print(fname)
-        print('cant find material dictionary, please see user preferences')
-        return
-                       
-    #here comes the worst if, then, for if, loops logic statement EVER
-    #this iterates through each tooth, implant etc
-    for item in odc_items:  
-        keys = item.keys()  #this will give the property names..eg, "prep_model" or "contour" or "inside"
-        if debug > 1:
-            print(keys)
-        if keys:  #make sure we have started working on the tooth.
-            values = item.values()
-            if debug > 1:
-                print(values)
-            for n in range(0,len(keys)):
-                if keys[n] in material_dictionary.keys() and keys[n] != "":  #make sure we have mapped this property to a material.
-                    if debug > 1:
-                        print(values[n])
-                        
-                    ob = bpy.data.objects.get(item.get(keys[n]))
-                    if ob and not len(ob.material_slots):
-                        if not bpy.data.materials.get(material_dictionary[keys[n]]):
-                            mat_from_lib(settings.mat_lib, material_dictionary[keys[n]])
-                        context.scene.objects.active = ob
-                        was_hidden = ob.hide
-                        if was_hidden:
-                            ob.hide = False
-                        bpy.ops.object.material_slot_add()
-                        ob.material_slots[0].material = bpy.data.materials[material_dictionary[keys[n]]]
-                        if was_hidden:
-                            ob.hide = True
-                        
-    if debug:
-        print("managed materials in %f" % (time.time()-starttime))
-    return
+    items = [odc_items] if isinstance(odc_items, bpy.types.PropertyGroup) else odc_items
+    processed = set()
+    for item in items:
+        for field, material_name in material_dictionary.items():
+            name = getattr(item, field, "")
+            obj = bpy.data.objects.get(name) if name else None
+            if obj is None or obj.as_pointer() in processed:
+                continue
+            materials = getattr(obj.data, "materials", None)
+            if materials is None:
+                continue
+            processed.add(obj.as_pointer())
+            if len(obj.material_slots) and not force:
+                continue
+            material = bpy.data.materials.get(material_name)
+            if material is None:
+                material = mat_from_lib(settings.mat_lib, material_name)
+            # Work directly on slots without changing active object, selection,
+            # visibility, mode or the user's relative-path preference.
+            if len(obj.material_slots):
+                obj.material_slots[0].material = material
+            else:
+                materials.append(material)
+            if debug:
+                print(f"Assigned {material.name} to {obj.name}")
+
 
 def scene_verification(scene, debug=False):
     """Clear missing object references, preserving planning metadata and custom fields."""

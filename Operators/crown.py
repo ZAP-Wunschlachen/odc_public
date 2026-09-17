@@ -78,7 +78,7 @@ class OPENDENTAL_OT_set_master(bpy.types.Operator):
     @classmethod
     def poll(cls,context):
         if not hasattr(context.scene, 'odc_props'): return False
-        condition_1 = context.object != None
+        condition_1 = context.object is not None and context.object.type == 'MESH' and context.mode == 'OBJECT'
         return condition_1
     
     def execute(self, context):        
@@ -96,7 +96,7 @@ class OPENDENTAL_OT_set_master(bpy.types.Operator):
             new_name = "Master_" + ob.name[0:n]
             ob.name = new_name
             
-            bpy.context.scene.odc_props.master = new_name
+            bpy.context.scene.odc_props.master = ob.name
             odcutils.layer_management(context.scene.odc_teeth, debug = False)
             odcutils.material_management(context, [context.scene.odc_props])
         else:
