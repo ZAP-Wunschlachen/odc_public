@@ -89,8 +89,11 @@ The placement helper now uses evaluated scene ray casting and current Empty
 properties. Tests verify surface hits, view-plane fallback on misses, reuse of an
 existing axis, correct world translation/rotation/unit scale under a rotated and
 nonuniformly scaled master, and following subsequent master movement. The modal
-operator calls this helper; its remaining selection, layer, event and cancellation
-handling and GPU display still require migration and interactive verification.
+operator calls this helper. Its selection API, obsolete layer access, previous-tooth
+wraparound and Space event handling have been updated. A tested cancellation
+session restores existing axis transforms/display and removes newly created axes
+while preserving unrelated objects; repeated cleanup is safe. Actual modal events,
+selection behavior and GPU display still require interactive verification.
 This is not yet a completed insertion-axis workflow.
 
 ## Implemented, not yet verified visually

@@ -44,5 +44,30 @@ assert reused == axis and not hit
 normal = rotation @ Vector((0, 0, 1))
 assert abs((axis.matrix_world.translation - center).dot(normal)) < 1e-4
 assert (axis.matrix_world.translation - origin).cross(direction).length < 1e-4
+# Cancellation restores existing transforms/display and removes only created axes.
+Session = importlib.import_module(f'{ROOT.name}.Operators.insertion_axis').AxisSession
+session = Session(scene)
+old_basis = axis.matrix_basis.copy()
+old_inverse = axis.matrix_parent_inverse.copy()
+axis.empty_display_type = 'CUBE'
+axis.empty_display_size = 2
+session.remember(tooth)
+place(bpy.context, tooth, Vector((0, 0, 10)), Vector((0, 0, -1)), rotation, center)
+new_tooth = scene.odc_teeth.add()
+new_tooth.name = '26'
+session.remember(new_tooth)
+created, _ = place(bpy.context, new_tooth, Vector((0, 0, 10)), Vector((0, 0, -1)), rotation, center)
+created_name = created.name
+session.record_created(created)
+unrelated = bpy.data.objects.new('unrelated_session_object', None)
+scene.collection.objects.link(unrelated)
+session.cancel()
+assert created_name not in bpy.data.objects and new_tooth.axis == ''
+assert tooth.axis == axis.name and axis.empty_display_type == 'CUBE'
+assert axis.empty_display_size == 2
+assert all(abs(axis.matrix_basis[r][c] - old_basis[r][c]) < 1e-6 for r in range(4) for c in range(4))
+assert axis.matrix_parent_inverse == old_inverse
+assert unrelated.name in bpy.data.objects
+session.cancel()  # Cleanup is idempotent.
 addon_utils.disable(ROOT.name, default_set=True)
 print('ODC_INSERTION_AXIS_PASSED', bpy.app.version_string)

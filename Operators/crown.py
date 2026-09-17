@@ -307,11 +307,15 @@ class OPENDENTAL_OT_insertion_axis(bpy.types.Operator):
         rv3d = context.space_data.region_3d
         direction = view3d_utils.region_2d_to_vector_3d(context.region, rv3d, coord)
         origin = view3d_utils.region_2d_to_origin_3d(context.region, rv3d, coord)
-        place_axis(context, tooth, origin, direction, rv3d.view_rotation, rv3d.view_location)
+        self.axis_session.remember(tooth)
+        previous = context.scene.objects.get(tooth.axis) if tooth.axis else None
+        axis, _ = place_axis(context, tooth, origin, direction, rv3d.view_rotation, rv3d.view_location)
+        if previous is None:
+            self.axis_session.record_created(axis)
         self.align = rv3d.view_rotation.inverted()
 
     def advance_next_prep(self,context):
-        self.target_index = int(math.fmod(self.target_index +1, len(self.units)))
+        self.target_index = (self.target_index + 1) % len(self.units)
         self.target = self.units[self.target_index]
         self.message = "Set axis for %s" % self.units[self.target_index]
         self.target_box.raw_text = self.message
@@ -319,14 +323,14 @@ class OPENDENTAL_OT_insertion_axis(bpy.types.Operator):
         self.target_box.fit_box_width_to_text_lines()
         tooth = context.scene.odc_teeth[self.target]
         
-        for obj in bpy.data.objects:
-            obj.select = False  
+        for obj in context.view_layer.objects:
+            obj.select_set(False)
         if tooth.prep_model in bpy.data.objects:
-            bpy.data.objects[tooth.prep_model].select = True
-            context.space_data.region_3d.view_location = bpy.data.objects[tooth.prep_model].location
+            bpy.data.objects[tooth.prep_model].select_set(True)
+            context.space_data.region_3d.view_location = bpy.data.objects[tooth.prep_model].matrix_world.translation
               
     def select_prev_unit(self,context):
-        self.target_index = int(math.fmod(self.target_index - 1, len(self.units)))
+        self.target_index = (self.target_index - 1) % len(self.units)
         self.target = self.units[self.target_index]
         self.message = "Set axis for %s" % self.units[self.target_index]
         self.target_box.raw_text = self.message
@@ -334,14 +338,16 @@ class OPENDENTAL_OT_insertion_axis(bpy.types.Operator):
         self.target_box.fit_box_width_to_text_lines()
         tooth = context.scene.odc_teeth[self.target]
         
-        for obj in bpy.data.objects:
-            obj.select = False
+        for obj in context.view_layer.objects:
+            obj.select_set(False)
         if tooth.prep_model in bpy.data.objects:
-            bpy.data.objects[tooth.prep_model].select = True
-            context.space_data.region_3d.view_location = bpy.data.objects[tooth.prep_model].location
+            bpy.data.objects[tooth.prep_model].select_set(True)
+            context.space_data.region_3d.view_location = bpy.data.objects[tooth.prep_model].matrix_world.translation
                        
     def update_selection(self,context):
         selection_targets = odcutils.tooth_selection(context)        
+        if not selection_targets or selection_targets[0].name not in self.units:
+            return
         self.target_index = self.units.index(selection_targets[0].name)
         self.target = self.units[self.target_index]
         self.message = "Set axis for %s" % self.units[self.target_index]
@@ -379,8 +385,8 @@ class OPENDENTAL_OT_insertion_axis(bpy.types.Operator):
             self.advance_next_prep(context)
             return 'main'
         
-        elif event.type == 'SPACEBAR' and event.value == 'PRESS':
-            self.set_axis(context)
+        elif event.type == 'SPACE' and event.value == 'PRESS':
+            self.set_axis(context, event)
             return 'main'
             
         elif event.type in {'ESC'}:
@@ -415,6 +421,8 @@ class OPENDENTAL_OT_insertion_axis(bpy.types.Operator):
             return {'PASS_THROUGH'}
         
         if nmode in {'finish','cancel'}:
+            if nmode == 'cancel':
+                self.axis_session.cancel()
             #clean up callbacks
             bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
             return {'FINISHED'} if nmode == 'finish' else {'CANCELLED'}
@@ -430,7 +438,11 @@ class OPENDENTAL_OT_insertion_axis(bpy.types.Operator):
         settings = get_settings()
         dbg = settings.debug
         odcutils.scene_verification(context.scene, debug = dbg)
-        context.scene.layers[0] = True
+        if context.space_data is None or context.space_data.type != 'VIEW_3D':
+            self.report({'WARNING'}, 'Active space must be a View3d')
+            return {'CANCELLED'}
+        from .insertion_axis import AxisSession
+        self.axis_session = AxisSession(context.scene)
         
         if context.space_data.region_3d.is_perspective:
             #context.space_data.region_3d.is_perspective = False

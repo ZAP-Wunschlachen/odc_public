@@ -28,3 +28,42 @@ def place_axis(context, tooth, origin, direction, rotation, view_center):
     axis.matrix_parent_inverse = axis.parent.matrix_world.inverted() if axis.parent else Matrix.Identity(4)
     axis.matrix_basis = Matrix.LocRotScale(location, rotation, Vector((1, 1, 1)))
     return axis, hit
+
+
+class AxisSession:
+    """Restore only axes touched by this tool when its modal operation is cancelled."""
+    def __init__(self, scene):
+        self.scene = scene
+        self.states = []
+        self.created = []
+
+    def remember(self, tooth):
+        if any(state[0] == tooth.name for state in self.states):
+            return
+        axis = self.scene.objects.get(tooth.axis) if tooth.axis else None
+        state = None if axis is None else (
+            axis, axis.matrix_basis.copy(), axis.matrix_parent_inverse.copy(),
+            axis.rotation_mode, axis.empty_display_type, axis.empty_display_size)
+        self.states.append((tooth.name, tooth.axis, state))
+
+    def record_created(self, axis):
+        if axis not in self.created:
+            self.created.append(axis)
+
+    def cancel(self):
+        for axis in self.created:
+            if axis.name in bpy.data.objects:
+                bpy.data.objects.remove(axis, do_unlink=True)
+        for name, reference, state in self.states:
+            tooth = self.scene.odc_teeth.get(name)
+            if tooth is not None:
+                tooth.axis = reference
+            if state is not None:
+                axis, basis, inverse, mode, display, size = state
+                axis.rotation_mode = mode
+                axis.matrix_parent_inverse = inverse
+                axis.matrix_basis = basis
+                axis.empty_display_type = display
+                axis.empty_display_size = size
+        self.created.clear()
+        self.states.clear()
