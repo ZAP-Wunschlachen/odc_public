@@ -628,3 +628,12 @@ Both operators now poll for the correct area/region. Blender 5.1.2 passes this
 foreground test without tracebacks. The headless runner excludes it explicitly.
 This checks view switching, not clinical cross-section interpretation or every
 other interactive workflow. Full plugin compatibility remains incomplete.
+
+## Bridge selection
+
+Bridge resolution now checks named RNA object roles rather than indexing
+ID-property views or uninitialized variables. It handles absent active objects,
+role exclusions and duplicate matches while preserving member-tooth fallback.
+Blender 5.1.2 passes public bridge definition from two selected units, member
+resolution, direct object role matching, unrelated metadata rejection and list
+selection. The geometry-producing bridge operators remain to be ported.

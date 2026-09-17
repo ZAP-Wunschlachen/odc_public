@@ -15,81 +15,27 @@ from mathutils import Vector, Matrix
 from ..Addon_utils import odcutils
 from ..Addon_utils.odcutils import get_settings
 
-def active_spanning_restoration(context, exclude = [], debug = False):
-    '''
-    TODO: test robustness and implications of this logic
-    looks at addon preferences
-    returns a list,
-    '''
-    sce = context.scene
+def active_spanning_restoration(context, exclude=(), debug=False):
+    """Resolve bridge object roles and selected member teeth without ID-property indexing."""
+    scene = context.scene
+    if not hasattr(scene, 'odc_bridges') or not scene.odc_bridges:
+        return [None]
+    mode = get_settings().behavior_modes[int(get_settings().behavior)]
+    if mode == 'LIST':
+        index = min(scene.odc_bridge_index, len(scene.odc_bridges)-1)
+        return [scene.odc_bridges[index]]
     bridges = []
-
-    if not hasattr(context.scene, 'odc_props'): return [None]
-    if len(context.scene.odc_bridges) == 0: return [None]
-    settings = get_settings()
-    b = settings.behavior
-    behave_mode = settings.behavior_modes[int(b)]
-    
-    if behave_mode == 'LIST':
-        #choose just one tooth in the list
-        if len(sce.odc_bridges):
-            bridge = sce.odc_bridges[sce.odc_bridge_index]
-            bridges.append(bridge)
-        
-    elif behave_mode == 'ACTIVE':
-        if len(sce.odc_bridges):
-            for bridge in context.scene.odc_bridges:
-            
-                prop_keys = bridge.keys()
-                prop_vals = bridge.values()
-                if debug > 1:
-                    print(prop_keys)
-                    print(prop_vals)
-                    
-                ob = context.object
-                if ob.name in prop_vals:
-                    n = prop_vals.index(ob.name)
-                    this_key = prop_keys[n]
-                    
-                    if debug:
-                        print("found the object named %s as the property value: %s in bridge: %s" %(ob.name, this_key, bridge.name))
-                if this_key and (this_key not in exclude):
-                    bridges.append(bridge)
-            
-            tooth = odcutils.tooth_selection(context)[0]
-            for bridge in sce.odc_bridges:
-                if tooth.name in bridge.tooth_string.split(sep=":"):
-                    if debug:
-                        print('found tooth %s in bridge: %s' % (tooth.name, bridge.name))
-                    bridges.append(bridge)
-    
-    elif behave_mode == 'ACTIVE_SELECTED':
-        #make sure the active object has priority by checking that first.
-        if len(sce.odc_bridges):
-            for bridge in context.scene.odc_bridges:
-                prop_keys = bridge.keys()
-                prop_vals = bridge.values()
-            
-                if context.object:
-                    if context.object.name in prop_vals:
-                        n = prop_vals.index(context.object.name)
-                        this_key = prop_keys[n]
-                        if debug:
-                            print("found the object named %s as the property value: %s in bridge: %s" %(ob.name, this_key, bridge.name))
-                        bridges.append(bridge)
-                   
-            
-            teeth = odcutils.tooth_selection(context)
-            if teeth:
-                for tooth in teeth:
-                    for bridge in sce.odc_bridges:
-                        if tooth.name in bridge.tooth_string.split(sep=":"):
-                            if debug:
-                                print('found tooth %s in bridge: %s' % (tooth.name, bridge.name))
-                            if bridge not in bridges:
-                                bridges.append(bridge)
-    if debug > 1:
-        print(bridges)
+    obj = context.object
+    roles = ('axis', 'margin', 'bridge', 'intaglio', 'final_restoration')
+    if obj is not None:
+        for bridge in scene.odc_bridges:
+            if any(role not in exclude and getattr(bridge, role) == obj.name for role in roles):
+                bridges.append(bridge)
+    teeth = odcutils.tooth_selection(context)
+    for tooth in teeth:
+        for bridge in scene.odc_bridges:
+            if tooth.name in bridge.tooth_string.split(':') and bridge not in bridges:
+                bridges.append(bridge)
     return bridges
 
 def bridge_from_selection(context, debug = False):
