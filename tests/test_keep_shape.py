@@ -33,5 +33,21 @@ name = control.name
 assert bpy.ops.opendental.keep_shape() == {'FINISHED'}
 assert name not in bpy.data.objects
 assert bpy.context.object == other and other.select_get()
+# A constraint reference must also keep its target alive after baking.
+control = u.bbox_to_lattice(bpy.context.scene, other)
+constraint = obj.constraints.new('COPY_LOCATION')
+constraint.target = control
+name = control.name
+assert bpy.ops.opendental.keep_shape() == {'FINISHED'}
+assert name in bpy.data.objects and constraint.target == control
+obj.constraints.remove(constraint)
+# Selecting the control as active must not leave a deleted active-object pointer.
+modifier = other.modifiers.new('Lattice again', 'LATTICE')
+modifier.object = control
+control.select_set(True)
+bpy.context.view_layer.objects.active = control
+assert bpy.ops.opendental.keep_shape() == {'FINISHED'}
+assert name not in bpy.data.objects
+assert bpy.context.object == other
 addon_utils.disable(ROOT.name, default_set=True)
 print('ODC_KEEP_SHAPE_PASSED', bpy.app.version_string)

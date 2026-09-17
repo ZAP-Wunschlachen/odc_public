@@ -678,3 +678,12 @@ application. Blender 5.1.2 passes evaluated-to-baked coordinate equivalence, sha
 control preservation and final cleanup. Mixed modifier stacks, Multires/shrinkwrap
 interaction and controls used through constraints or other mechanisms still need
 review; this test establishes the lattice-only workflow.
+
+## Keep Shape reference cleanup
+
+Control cleanup now consults Blender's ID user map rather than only lattice
+modifiers. Object-level constraint references and fake users retain the control;
+collection/scene membership alone does not. If the deleted control was active,
+the processed mesh becomes active. Blender 5.1.2 passes the expanded shared-lattice,
+constraint-target and active-control tests. Scene-level custom references and
+other specialized data-block ownership cases remain unverified.

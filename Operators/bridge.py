@@ -562,10 +562,13 @@ class OPENDENTAL_OT_keep_shape(bpy.types.Operator):
                 if modifier.type == 'MULTIRES':
                     bpy.ops.object.multires_base_apply(modifier=modifier.name)
         for control in controls:
-            # Another object's deformation must keep its shared control.
-            used = any(mod.type == 'LATTICE' and mod.object == control
-                       for obj in bpy.data.objects for mod in obj.modifiers)
-            if not used:
+            # Collection links alone do not require keeping a spent control.
+            # Constraints, parenting, drivers and other ID users do.
+            users = bpy.data.user_map(subset={control}).get(control, set())
+            referenced = control.use_fake_user or any(not isinstance(user, (bpy.types.Collection, bpy.types.Scene)) for user in users)
+            if not referenced:
+                if active == control:
+                    active = next((obj for obj in objects if obj.type == 'MESH'), None)
                 data = control.data
                 bpy.data.objects.remove(control, do_unlink=True)
                 if data.users == 0:
