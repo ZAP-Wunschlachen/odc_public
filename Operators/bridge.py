@@ -253,7 +253,10 @@ class OPENDENTAL_OT_solid_bridge(bpy.types.Operator):
             mods = [mod for mod in Bridge.modifiers]
             for mod in mods:
                 Bridge.modifiers.remove(mod)
+            old_mesh = Bridge.data
             Bridge.data = me
+            if old_mesh.users == 0:
+                bpy.data.meshes.remove(old_mesh)
         
         ### Remove the bottom 3 edge loops
         bridge_bme = bmesh.new()
@@ -279,11 +282,6 @@ class OPENDENTAL_OT_solid_bridge(bpy.types.Operator):
         ### DONE Removing bottom 3 edge loops  ###
         
                 
-        bridge_teeth = [context.scene.odc_teeth[name] for name in odc_bridge.tooth_string.split(sep=":")]
-        intag_objects = [bpy.data.objects.get(tooth.intaglio) for tooth in bridge_teeth if tooth.rest_type != '1']
-        if None in intag_objects:
-            self.report({'ERROR'}, 'Missing Intaglio for some abutments')
-        
         bpy.ops.object.select_all(action = 'DESELECT')
         
         join_obs = []
@@ -305,7 +303,11 @@ class OPENDENTAL_OT_solid_bridge(bpy.types.Operator):
         Bridge.name += '_solid'
         odc_bridge.bridge = Bridge.name
         odc_bridge.final_restoration = Bridge.name
+        temporary_meshes = [obj.data for obj in join_obs]
         bpy.ops.object.join()
+        for mesh in temporary_meshes:
+            if mesh.users == 0:
+                bpy.data.meshes.remove(mesh)
         
         bridge_bme.free()
         bridge_bme = bmesh.new()    

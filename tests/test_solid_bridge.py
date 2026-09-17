@@ -94,7 +94,20 @@ copy = crown.copy()
 copy.data = crown.data.copy()
 bpy.context.scene.collection.objects.link(copy)
 bridge.bridge = copy.name
+# Missing interiors must leave the shell and its modifiers untouched.
+interior_name = tooth.intaglio
+tooth.intaglio = ''
+coordinates = [v.co.copy() for v in copy.data.vertices]
+modifiers = [(m.name,m.type) for m in copy.modifiers]
+count = len(bpy.data.objects)
+assert bpy.ops.opendental.solid_bridge() == {'CANCELLED'}
+assert len(bpy.data.objects) == count
+assert [(m.name,m.type) for m in copy.modifiers] == modifiers
+assert all((v.co-p).length < 1e-6 for v,p in zip(copy.data.vertices,coordinates))
+tooth.intaglio = interior_name
+unused_before = {mesh.name for mesh in bpy.data.meshes if mesh.users == 0}
 assert bpy.ops.opendental.solid_bridge() == {'FINISHED'}
+assert {mesh.name for mesh in bpy.data.meshes if mesh.users == 0} <= unused_before
 solid = bpy.data.objects[bridge.final_restoration]
 import bmesh
 bm = bmesh.new()

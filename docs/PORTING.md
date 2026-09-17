@@ -745,3 +745,13 @@ bridge references. Blender 5.1.2 passes a one-abutment integration fixture using
 seated crown and calculated intaglio, yielding manifold geometry. Multi-unit shells,
 pontics, repeated solidification and temporary mesh cleanup remain unverified.
 This is initial operator coverage, not validation of a complete multi-unit bridge.
+
+## Solidify Bridge input and mesh cleanup
+
+Superseded shell meshes and temporary joined interior meshes are removed when
+unused. Redundant late input checking was removed in favor of the existing
+preflight. Blender 5.1.2 verifies that a missing interior preserves shell vertices,
+modifiers and object count, and that successful assembly introduces no new unused
+mesh data-blocks. The manifold-result check still passes. Multi-unit assembly and
+mid-operation failure rollback remain outstanding; the known native shutdown
+allocation warning is separate from unused mesh data-block accounting.
