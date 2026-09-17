@@ -37,7 +37,7 @@ assert any(m.type == 'SHRINKWRAP' and m.name == 'Final Seal' and m.target == mar
 bpy.ops.mesh.primitive_uv_sphere_add(radius=2.9, location=(0,0,1))
 tooth.prep_model = bpy.context.object.name
 methods = importlib.import_module(f'{ROOT.name}.Operators.crown_methods')
-methods.calc_intaglio(bpy.context, scene, tooth, .2, .07, .2)
+assert bpy.ops.opendental.calculate_inside(chamfer=.2, gap=.07, holy_zone=.2, no_undercuts=True) == {'FINISHED'}
 print('INTAGLIO_PROBE_DONE', tooth.intaglio, flush=True)
 inside = bpy.data.objects[tooth.intaglio]
 assert len(inside.data.polygons) > 0
@@ -50,5 +50,10 @@ evaluated = inside.evaluated_get(bpy.context.evaluated_depsgraph_get())
 mesh = evaluated.to_mesh()
 assert all(math.isfinite(c) for v in mesh.vertices for c in v.co)
 evaluated.to_mesh_clear()
+before_count = len(bpy.data.objects)
+old_inside = tooth.intaglio
+tooth.axis = ''
+assert bpy.ops.opendental.calculate_inside(no_undercuts=True) == {'CANCELLED'}
+assert len(bpy.data.objects) == before_count and tooth.intaglio == old_inside
 addon_utils.disable(ROOT.name, default_set=True)
 print('ODC_INTAGLIO_HELPER_PASSED', bpy.app.version_string)

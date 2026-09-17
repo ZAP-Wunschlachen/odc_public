@@ -347,3 +347,9 @@ new edge indexing have been updated. Initial execution creates the interior.
 The test additionally checks zone groups, cement-gap modifier assignment and
 finite evaluated geometry; exact gap geometry, full operator integration, failure
 cleanup and anatomical fit remain pending.
+
+The intaglio fixture now invokes the registered Calculate Intaglio operator with
+`no_undercuts=True`. Scene layers and viewport pivot access are migrated; required
+object references are checked before generation. The test also verifies missing
+axis cancellation preserves the existing interior. The alternate
+`no_undercuts=False` implementation remains unported and is not validated here.

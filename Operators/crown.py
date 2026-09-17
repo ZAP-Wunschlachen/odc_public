@@ -734,11 +734,9 @@ class OPENDENTAL_OT_calculate_inside(bpy.types.Operator):
         if bpy.context.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode='OBJECT')
         
-        layers_copy = [layer for layer in context.scene.layers]
-        context.scene.layers[0] = True
+
         
-        v3d = bpy.context.space_data
-        v3d.pivot_point = 'MEDIAN_POINT'
+        context.scene.tool_settings.transform_pivot_point = 'MEDIAN_POINT'
             
         sce=bpy.context.scene        
         #master = sce.master_model
@@ -748,13 +746,14 @@ class OPENDENTAL_OT_calculate_inside(bpy.types.Operator):
         
         for tooth in candidates:
             if tooth.rest_type == '1': continue  #pontic
+            if any(not context.scene.objects.get(getattr(tooth, field)) for field in ('prep_model', 'axis', 'contour', 'margin', 'pmargin')):
+                self.report({'WARNING'}, 'Assign preparation, axis, crown and accepted margin first')
+                return {'CANCELLED'}
             if self.no_undercuts:         
                 crown_methods.calc_intaglio(context, sce, tooth, self.chamfer, self.gap, self.holy_zone, debug = dbg) #TODO: institude global debug for addon
             else:
                 crown_methods.calc_intaglio2(context, sce, tooth, self.chamfer, self.gap, self.holy_zone, debug =dbg)
-        for i, layer in enumerate(layers_copy):
-            context.scene.layers[i] = layer
-        context.scene.layers[4] = True
+        odcutils.layer_management(candidates)
         #TODO: good logging print("Finished operationt %s on tooth %s in 3 seconds /n again" % (self.bl_label, tooth.name) )        
         return {'FINISHED'}
     
