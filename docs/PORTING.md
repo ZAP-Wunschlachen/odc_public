@@ -431,3 +431,13 @@ has faces, finite coordinates and exclusively manifold edges. This establishes
 closure only on the synthetic tooth-25 fixture, not freedom from self-intersections,
 clinical fit, repeated-build cleanup or the alternative merge method. The known
 small edit-mode shutdown allocation warning remains.
+
+## Solid restoration, merge method
+
+The alternative merge method uses current active-object, visibility and selection
+APIs. Objects must be unhidden before selection; otherwise a hidden crown was
+omitted from duplication and joining. The parametrized integration test accepts
+`-- 25 0` for the merge method (default remains the bridge method). Blender 5.1.2
+passes the same finite-coordinate, nonempty-face and manifold-edge checks on the
+synthetic fixture. Self-intersections and repeated-build cleanup remain pending.
+The existing small shutdown allocation warning remains.

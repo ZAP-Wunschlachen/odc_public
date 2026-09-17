@@ -84,7 +84,8 @@ old_inside = tooth.intaglio
 tooth.axis = ''
 assert bpy.ops.opendental.calculate_inside(no_undercuts=True) == {'CANCELLED'}
 assert len(bpy.data.objects) == before_count and tooth.intaglio == old_inside
-assert bpy.ops.opendental.make_solid_restoration(method=1) == {'FINISHED'}
+method = int(sys.argv[sys.argv.index('--')+2]) if '--' in sys.argv and len(sys.argv) > sys.argv.index('--')+2 else 1
+assert bpy.ops.opendental.make_solid_restoration(method=method) == {'FINISHED'}
 solid = bpy.data.objects[tooth.solid]
 import bmesh
 bm = bmesh.new()

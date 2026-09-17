@@ -1605,11 +1605,11 @@ def make_solid_restoration(context, tooth, debug = False):
     Intaglio = bpy.data.objects[intaglio]
     
     bpy.ops.object.select_all(action='DESELECT')
-    sce.objects.active = Restoration
-    Restoration.select=True
-    Restoration.hide=False
-    Intaglio.select=True
-    Intaglio.hide=False
+    context.view_layer.objects.active = Restoration
+    Restoration.hide_set(False)
+    Restoration.select_set(True)
+    Intaglio.hide_set(False)
+    Intaglio.select_set(True)
             
     current_objects=list(bpy.data.objects)
 
@@ -1621,8 +1621,8 @@ def make_solid_restoration(context, tooth, debug = False):
     #apply any and all modifiers to both
     for o in bpy.data.objects:
         if o not in current_objects:
-            sce.objects.active=o
-            o.select = True
+            context.view_layer.objects.active=o
+            o.select_set(True)
             n = len(o.modifiers)
             for i in range(0,n):
                 name = o.modifiers[0].name
