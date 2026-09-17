@@ -577,3 +577,13 @@ with the analytic volume of the existing 64-segment polygonal sector. No additio
 API change was needed. Fractions below 0.1 still use the upstream full-circle
 fallback; whether that UI behavior should change requires separate review.
 Splint projection remains untested.
+
+## Guide-cylinder splint projection
+
+The outer-cylinder integration test now creates a plane parallel to the cap in a
+rotated/translated frame and invokes the public operator with a splint reference.
+Blender 5.1.2 evaluates the upper cap from local z=0.1 to z=1.5 against a plane at
+z=2: the existing 0.5 offset keeps it on the source side. Lower-cap coordinates
+and upper-cap x/y coordinates remain unchanged. This establishes the actual
+projection behavior on a plane, not clinical clearance or intersection quality
+against curved splints. No code correction was required for this tested path.

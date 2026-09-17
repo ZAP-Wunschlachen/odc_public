@@ -5,7 +5,7 @@ from pathlib import Path
 import bpy
 import bmesh
 import addon_utils
-from mathutils import Vector
+from mathutils import Vector, Matrix
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 assert addon_utils.enable(ROOT.name, default_set=True)
@@ -58,5 +58,30 @@ for fraction in (.25, .65, .9, 1):
     assigned = {v.index for v in cylinder.data.vertices if any(g.group == group.index for g in v.groups)}
     assert assigned == {v.index for v in cylinder.data.vertices if abs(v.co.z-.1) < 1e-5}
     assert len(bpy.data.objects) == count+1
+# A plane parallel to the cap supplies a known projection distance.
+bpy.context.view_layer.update()
+frame = cylinder.matrix_world.copy()
+bpy.ops.mesh.primitive_plane_add(size=20)
+plane = bpy.context.object
+plane.matrix_world = frame @ Matrix.Translation((0,0,2))
+splint = bpy.context.scene.odc_splints.add()
+splint.name = 'Projection fixture'
+splint.splint = plane.name
+assert bpy.ops.opendental.implant_guide_cylinder(width=6, depth=18) == {'FINISHED'}
+cylinder = bpy.data.objects[space.outer]
+bpy.context.view_layer.update()
+assert cylinder.modifiers['Project'].target == plane
+before = [v.co.copy() for v in cylinder.data.vertices]
+evaluated = cylinder.evaluated_get(bpy.context.evaluated_depsgraph_get())
+mesh = evaluated.to_mesh()
+print('PROJECTED_CAP_Z', sorted({round(v.co.z, 5) for v in mesh.vertices}), flush=True)
+for vertex, original in zip(mesh.vertices, before):
+    if original.z < .05:
+        assert (vertex.co-original).length < 1e-5
+    else:
+        assert abs(vertex.co.z-1.5) < 1e-5
+        assert abs(vertex.co.x-original.x) < 1e-5
+        assert abs(vertex.co.y-original.y) < 1e-5
+evaluated.to_mesh_clear()
 addon_utils.disable(ROOT.name, default_set=True)
 print('ODC_OUTER_CYLINDER_PASSED', bpy.app.version_string)
