@@ -85,7 +85,7 @@ class ODC_AddonPreferences(AddonPreferences):
     def_tooth_lib = os.path.join(data_folder, "odc_tooth_library.blend")
     def_mat_lib = os.path.join(data_folder, "odc_materials.blend")
     def_imp_lib = os.path.join(data_folder, "odc_implants_leone.blend")
-    def_drill_lib = os.path.join(data_folder, "odc_drill_lib.blend")
+    def_drill_lib = os.path.join(data_folder, "odc_drill_library.blend")
     def_ortho_lib = os.path.join(data_folder, "odc_bracket_library.blend")
 
     # enums

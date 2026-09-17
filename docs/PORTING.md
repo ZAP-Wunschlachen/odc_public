@@ -498,3 +498,13 @@ mesh with margin/fill groups is created, reduction target/offset are configured,
 and evaluated coordinates are finite. Measured reduction, explicit curve margins,
 rotated/scaled cases and failure cleanup remain unverified. A small shutdown
 allocation warning is still emitted.
+
+## Implant/drill/orthodontic library prerequisite
+
+The default drill library pointed to nonexistent `odc_drill_lib.blend`; it now
+points to the shipped `odc_drill_library.blend`. The library integration test
+loads every object from all three additional default libraries and checks for
+nonempty mesh content: 45 implant objects, 27 drill/sleeve objects and 23 bracket
+objects load in Blender 5.1.2. This verifies asset access only; placement operators
+still contain obsolete scene updates and collection-as-layer mutations and need
+separate porting and execution tests. Existing user-customized paths are unchanged.

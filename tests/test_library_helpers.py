@@ -16,6 +16,21 @@ settings = utils.get_settings()
 assert common.get_settings() == settings
 assert common.selection_mouse() in (['LEFTMOUSE', 'SHIFT+LEFTMOUSE'], ['RIGHTMOUSE', 'SHIFT+RIGHTMOUSE'])
 
+# Every configured bundled object library must exist and load real mesh assets.
+for field in ('imp_lib', 'drill_lib', 'ortho_lib'):
+    path = getattr(settings, field)
+    assert Path(path).is_file(), (field, path)
+    asset_names = utils.obj_list_from_lib(path)
+    assert asset_names, field
+    loaded_mesh = False
+    for name in asset_names:
+        asset = utils.obj_from_lib(path, name)
+        assert asset is not None
+        if asset.type == 'MESH' and asset.data.vertices:
+            loaded_mesh = True
+    assert loaded_mesh, field
+    print('BUNDLED_LIBRARY_LOADED', field, len(asset_names), flush=True)
+
 names = utils.obj_list_from_lib(settings.tooth_lib)
 assert '25' in names, names
 first = utils.obj_from_lib(settings.tooth_lib, '25')
