@@ -1376,13 +1376,15 @@ class OPENDENTAL_OT_assess_contacts(bpy.types.Operator):
             
     def execute(self, context):
         
-        teeth = odcutils.tooth_selection(context)
-        
-        for tooth in teeth:
-            
-            crown_methods.check_contacts(context, tooth, self.min_d, self.max_d) #yad yada
-        
-        #go into weight paint mode?
+        if self.max_d <= self.min_d:
+            self.report({'WARNING'}, 'Maximum distance must exceed minimum distance')
+            return {'CANCELLED'}
+        changed = False
+        for tooth in odcutils.tooth_selection(context):
+            changed |= crown_methods.check_contacts(context, tooth, self.min_d, self.max_d)
+        if not changed:
+            self.report({'WARNING'}, 'Assign a restoration and a contact target first')
+            return {'CANCELLED'}
         return {'FINISHED'}
 
 class OPENDENTAL_OT_grind_contacts(bpy.types.Operator):

@@ -154,3 +154,14 @@ Run a separate test instance with
 It uses synthetic scene geometry, exercises actual modal dispatch, asserts scene
 results and handler cleanup, then closes that instance. Failure exits nonzero.
 The successful run log was also checked for drawing callback exceptions.
+
+## Crown contact assessment
+
+`tests/test_crown_contact_assessment.py` exercises the registered assessment
+operator with synthetic planes: the actual restoration receives the modifier,
+the library contour stays unchanged, selection stays intact, evaluated weights
+match known distances, repeated assessment updates the same modifier, and moving
+the target updates the result. Invalid distance ranges cancel without mutation.
+The helper now uses native vertex groups and modifier creation without legacy
+selection/edit-mode operators. These checks do not yet validate geometric grinding,
+self-intersections, cyclic dependencies from other workflows or weight-paint UI.

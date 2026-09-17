@@ -1762,56 +1762,32 @@ def make_solid_restoration2(context, tooth, debug = False):
     crown_bme.free()
     intag_bme.free()
                      
-def check_contacts(context, tooth, min_d, max_d, debug = False):
-    '''
-    #TODO: docstring
-    #TODO: pull occlusion and contact preferences from addon preferences
-    '''
-    if bpy.context.mode != 'OBJECT':
-            bpy.ops.object.mode_set(mode='OBJECT')
-    sce=bpy.context.scene
-    ob_dict = {}
-    
-    if tooth.restoration:
-        restoration=tooth.contour  #TODO: back to tooth.restoration
-    elif tooth.contour:
-        restoration=tooth.contour
+def check_contacts(context, tooth, min_d, max_d, debug=False):
+    """Configure independent live distance groups on the actual restoration."""
+    if max_d <= min_d:
+        raise ValueError("Maximum distance must exceed minimum distance")
+    restoration = bpy.data.objects.get(tooth.restoration) or bpy.data.objects.get(tooth.contour)
+    if restoration is None or restoration.type != 'MESH':
+        return False
+    changed = False
+    for field, name in (("opposing", "Occlusion"), ("mesial", "Mesial_check"), ("distal", "Distal_check")):
+        target = bpy.data.objects.get(getattr(tooth, field))
+        if target is None or target == restoration or target.type != 'MESH':
+            continue
+        mod = next((m for m in restoration.modifiers
+                    if m.type == 'VERTEX_WEIGHT_PROXIMITY' and m.vertex_group == name), None)
+        if mod is None:
+            mod = odcutils.add_proximity_mod(restoration, target, min_d, max_d, group_name=name)
+        elif restoration.vertex_groups.get(name) is None:
+            group = restoration.vertex_groups.new(name=name)
+            group.add(list(range(len(restoration.data.vertices))), 0, 'REPLACE')
+        mod.target = target
+        mod.min_dist = min_d
+        mod.max_dist = max_d
+        changed = True
+    return changed
 
-    Restoration=bpy.data.objects[restoration]
-    
-    if tooth.opposing:
-        Opposing = bpy.data.objects[tooth.opposing]
-        ob_dict["Occlusion"] = Opposing
-    if tooth.mesial:
-        Mesial = bpy.data.objects[tooth.mesial]
-        ob_dict["Mesial_check"] = Mesial
-    if tooth.distal:
-        Distal =  bpy.data.objects[tooth.distal]
-        ob_dict["Distal_check"] = Distal
-    
-    sce.objects.active=Restoration
-    Restoration.select=True
-    
-    #check and see if it has vertex group
-    for key in ob_dict.keys():
-        group = Restoration.vertex_groups.get(key)
-        mod = Restoration.modifiers.get(key)
 
-    
-        if (not group) and (not mod):
-            omod = odcutils.add_proximity_mod(Restoration, ob_dict[key], min_d, max_d, group_name = None)
-            omod.name = key
-            Restoration.vertex_groups["Proximity"].name = key
-            omod.vertex_group = key
-    
-        if group and not mod:
-            omod = odcutils.add_proximity_mod(Restoration, ob_dict[key], min_d, max_d, group_name = key)
-    
-        if group and mod: #perhaps I should overwrite them...eeeh, who knows.
-            mod.min_dist = min_d
-            mod.max_dist = max_d
-        
-  
 def register():
     pass
 

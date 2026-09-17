@@ -769,43 +769,24 @@ def add_proximity_mod(ob1, ob2, min_d, max_d, group_name = None, n = None, over 
         over = value to overwrite the Proximity vertex group with first.  None to leave group as is
         
     '''
-    #pre-op setting code
-    
-    #make sure ob1 is how it needs to be
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.scene.objects.active = ob1
-    ob1.select = True
-    
-    #take care of vertex group business
-    group = None
-    if group_name:
-        group = ob1.vertex_groups.get(group_name)
-    if not group:
-        group = ob1.vertex_groups.get("Proximity")
-        if not group:
-            n=len(ob1.vertex_groups)
-            bpy.ops.object.vertex_group_add()
-            ob1.vertex_groups[n].name = "Proximity"
-            bpy.ops.object.mode_set(mode='EDIT')
-            bpy.context.tool_settings.vertex_group_weight = 1
-            bpy.context.tool_settings.mesh_select_mode = [True,False,False]
-            bpy.ops.object.vertex_group_set_active(group = 'Proximity')
-            bpy.ops.mesh.select_all(action='SELECT')
-            bpy.ops.object.vertex_group_assign()
-            bpy.ops.object.mode_set(mode='OBJECT')
-            group = ob1.vertex_groups[n]
-    
-    i=len(ob1.modifiers)
-    bpy.ops.object.modifier_add(type='VERTEX_WEIGHT_PROXIMITY')
-    mod = ob1.modifiers[i]
-    mod.target=ob2
+    if max_d <= min_d:
+        raise ValueError("Maximum distance must exceed minimum distance")
+    group = ob1.vertex_groups.get(group_name or "Proximity")
+    if group is None:
+        group = ob1.vertex_groups.new(name=group_name or "Proximity")
+    if over is not None and len(ob1.data.vertices):
+        group.add(list(range(len(ob1.data.vertices))), float(over), 'REPLACE')
+    mod = ob1.modifiers.new(name=group.name, type='VERTEX_WEIGHT_PROXIMITY')
+    mod.target = ob2
     mod.proximity_mode = 'GEOMETRY'
-    mod.proximity_geometry = {'EDGE','VERTEX','FACE'}
+    mod.proximity_geometry = {'EDGE', 'VERTEX', 'FACE'}
     mod.min_dist = min_d
     mod.max_dist = max_d
-    mod.vertex_group=group.name
-    
+    mod.vertex_group = group.name
+    if n is not None:
+        ob1.modifiers.move(len(ob1.modifiers) - 1, max(0, min(n, len(ob1.modifiers) - 1)))
     return mod
+
 
 def scale_vec_mult(a,b):
     '''
