@@ -520,3 +520,13 @@ passes a public-operator test for two depths on a rotated/translated implant,
 orientation, parenting, stable object count and missing-implant cancellation.
 The search popup, multi-implant load failure rollback and scaled implant cases
 remain untested; drill placement is still pending.
+
+## Drill placement
+
+The drill operator now follows current object/library APIs, with an actual poll
+and retained library enum items. Removed object layers and collection-as-layer
+writes are gone. Replacements are loaded and positioned before the previous drill
+is removed, and implant users are preserved. Blender 5.1.2 passes the public test
+for negative and positive depths on a rotated/translated implant, orientation,
+parenting, stable object count and missing-implant cancellation. Popup interaction,
+scaled implants and multi-implant failure rollback remain unverified.
