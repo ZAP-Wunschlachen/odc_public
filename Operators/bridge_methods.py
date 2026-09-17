@@ -549,7 +549,7 @@ def bridge_loop_2(context, ob, group1, group2, segments, twist, cubic, group3 = 
         
     return
 
-def bridge_loop(context, ob, group1, group2, segments, twist, cubic, group3 = None, debug = False):
+def bridge_loop(context, ob, group1, group2, segments, twist, cubic, group3 = None, debug = False, smooth=3):
     '''
     group3 the group to add the new bridge verts too.
     '''
@@ -582,7 +582,7 @@ def bridge_loop(context, ob, group1, group2, segments, twist, cubic, group3 = No
             bpy.ops.object.vertex_group_set_active(group = group)
             bpy.ops.object.vertex_group_select()
             #bpy.ops.mesh.looptools_circle(custom_radius=False, fit='inside', flatten=True, influence=20, radius=1, regular=True)
-            relax_selected(ob.data, iterations=3)
+            relax_selected(ob.data, iterations=max(0, int(smooth)))
             
         #bpy.ops.object.mode_set(mode='OBJECT')
         #return

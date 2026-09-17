@@ -517,7 +517,7 @@ class OPENDENTAL_OT_bridge_individual(bpy.types.Operator):
         
         [ob_sets, tool_sets, space_sets] = odcutils.scene_preserv(context, debug=dbg) #TODO: global debug
         
-        bridge_methods.bridge_loop(context, Bridge, mes_tooth_distal_connector, dis_tooth_mesial_connector, 2, self.twist, self.bulbous, group3 = "Connectors", debug=True)
+        bridge_methods.bridge_loop(context, Bridge, mes_tooth_distal_connector, dis_tooth_mesial_connector, 2, self.twist, self.bulbous, group3 = "Connectors", debug=True, smooth=self.smooth)
         
         odcutils.scene_reconstruct(context, ob_sets, tool_sets, space_sets, debug=dbg)
         return {'FINISHED'}

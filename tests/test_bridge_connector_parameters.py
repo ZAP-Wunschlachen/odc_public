@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 assert addon_utils.enable(ROOT.name, default_set=True)
 m = importlib.import_module(f'{ROOT.name}.Operators.bridge_methods')
-def build(segments, twist, cubic):
+def build(segments, twist, cubic, smooth=3):
     bm = bmesh.new()
     for x in (-2,2):
         vertices = bmesh.ops.create_cube(bm, size=2)['verts']
@@ -21,8 +21,11 @@ def build(segments, twist, cubic):
     bpy.context.scene.collection.objects.link(obj)
     for name,x in (('A',-1),('B',1)):
         obj.vertex_groups.new(name=name).add([v.index for v in mesh.vertices if abs(v.co.x-x)<1e-6],1,'REPLACE')
-    m.bridge_loop(bpy.context,obj,'A','B',segments,twist,cubic)
+    m.bridge_loop(bpy.context,obj,'A','B',segments,twist,cubic,smooth=smooth)
     return obj
+unsmoothed = build(4,0,.5,smooth=0)
+smoothed = build(4,0,.5,smooth=5)
+assert any((a.co-b.co).length > 1e-5 for a,b in zip(unsmoothed.data.vertices,smoothed.data.vertices))
 base = build(2,0,.5)
 dense = build(4,0,.5)
 assert len(dense.data.vertices) > len(base.data.vertices)

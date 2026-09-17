@@ -791,3 +791,12 @@ and changed geometry with twist and strength, with manifold edges in all fixture
 The existing connected-component surface test also passes. The alternate PATH
 helper, separate UI smooth property, modal parameter interaction and anatomical
 shape quality still require work.
+
+## Connector smoothing control
+
+Bridge Individual now passes its smooth property to the connector helper instead
+of always relaxing three times. The helper preserves three iterations as its
+default for existing callers and accepts zero iterations. Blender 5.1.2 passes
+the parameter test showing different vertex coordinates for zero versus five
+iterations alongside the existing segment/twist/strength checks. Modal UI testing
+and anatomical connector-quality checks remain outstanding.
