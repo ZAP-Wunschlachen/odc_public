@@ -550,3 +550,12 @@ necessary. It also verifies world translation and orientation against the existi
 implant-relative offset formula, plus automatic diameter and stable object count.
 These checks pass for the rotated/translated unit-scale fixture. They do not
 establish anatomical apex conventions or behavior under scaled/parented implants.
+
+## Outer guide cylinder, initial port
+
+The public guide-cylinder operator no longer writes collection entries as layers.
+The helper uses current linking, view-layer updates and quaternion multiplication,
+and clears modifiers through a stable list. Blender 5.1.2 passes round and flattened
+fixtures: measured width, trimmed width and height, manifold edges, complete upper
+projection cap, parenting and stable object count. Wedge geometry, splint projection,
+changed depth on regeneration and transformed-parent cases remain pending.

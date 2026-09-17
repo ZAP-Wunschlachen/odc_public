@@ -130,7 +130,7 @@ def implant_outer_cylinder(context, space,
     if Implant.rotation_mode != 'QUATERNION':
         Implant.rotation_mode = 'QUATERNION'
         Implant.update_tag()
-        context.scene.update()
+        context.view_layer.update()
     
     R = width/2
     H = .1
@@ -144,13 +144,13 @@ def implant_outer_cylinder(context, space,
         Cylinder = bpy.data.objects[space.outer]
         me = Cylinder.data
         if len(Cylinder.modifiers):
-            for mod in Cylinder.modifiers:
+            for mod in list(Cylinder.modifiers):
                 Cylinder.modifiers.remove(mod)
     
     else:
         me = bpy.data.meshes.new(Implant.name + '_GC')
         Cylinder = bpy.data.objects.new(Implant.name + '_GC', me)
-        scene.objects.link(Cylinder)
+        context.collection.objects.link(Cylinder)
         name = Implant.name + '_GC'
         Cylinder.name = name
     
@@ -159,9 +159,9 @@ def implant_outer_cylinder(context, space,
         Cylinder.rotation_quaternion = mx_w.to_quaternion()
         
         Cylinder.update_tag()
-        context.scene.update()
+        context.view_layer.update()
     
-        Trans = Implant.rotation_quaternion * Vector((0,0,-depth))
+        Trans = Implant.rotation_quaternion @ Vector((0,0,-depth))
         Cylinder.matrix_world[0][3] = mx_w[0][3] + Trans[0]
         Cylinder.matrix_world[1][3] = mx_w[1][3] + Trans[1]
         Cylinder.matrix_world[2][3] = mx_w[2][3] + Trans[2]
@@ -176,7 +176,7 @@ def implant_outer_cylinder(context, space,
     Cylinder.vertex_groups["Project"].add(vert_inds, 1,'REPLACE')
 
     Cylinder.update_tag()
-    context.scene.update()
+    context.view_layer.update()
 
     if len(scene.odc_splints):
         splint = scene.odc_splints[scene.odc_splint_index]

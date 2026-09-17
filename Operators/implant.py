@@ -489,8 +489,6 @@ class OPENDENTAL_OT_implant_guide_cylinder(bpy.types.Operator):
         dbg  = settings.debug
         odcutils.scene_verification(context.scene, debug = dbg)
         spaces = odcutils.implant_selection(context)
-        layers_copy = [layer for layer in context.scene.collection.all_objects]
-        context.scene.collection.all_objects[0] = True
         
         if context.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode='OBJECT')
@@ -511,9 +509,6 @@ class OPENDENTAL_OT_implant_guide_cylinder(bpy.types.Operator):
         odcutils.material_management(context, context.scene.odc_implants)
         odcutils.layer_management(context.scene.odc_implants, debug = dbg)
         
-        for i, layer in enumerate(layers_copy):
-            context.scene.collection.all_objects[i] = layer
-        context.scene.collection.all_objects[19] = True
         return {'FINISHED'}
  
 class OPENDENTAL_OT_implant_inner_cylinder(bpy.types.Operator):
