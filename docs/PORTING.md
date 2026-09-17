@@ -817,3 +817,9 @@ The Blender 5.1.2 foreground test now verifies single-unit cancellation without 
 modal handler followed by successful normal invocation, Space execution and Enter.
 Missing-group messaging is guarded in code but not yet exercised by this test;
 neighbor navigation and Escape rollback remain outstanding.
+
+### Bridge connector modal cancellation
+
+The interactive connector now edits a private mesh copy. Escape restores the original mesh datablock and removes the working copy; Enter commits and removes the unused original. Shared original meshes remain intact. Invocation is restricted to Object mode, and the help text now documents the actual Space/Enter/Escape controls.
+
+Validation: `tests/test_bridge_modal.py` passed in a Blender 5.1.2 window with simulated events: invalid single-unit input cancels, Space creates geometry, Escape restores original mesh identity and coordinates with stable mesh count, and a fresh session commits with Enter and stable mesh count. This does not yet verify all bridge navigation or repeated connector selections.

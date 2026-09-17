@@ -393,7 +393,7 @@ class OPENDENTAL_OT_bridge_individual(bpy.types.Operator):
         else:
             condition_1 = False
             
-        return condition_1
+        return condition_1 and context.mode == 'OBJECT'
     
     def mes_distal_determine(self):
         mid_test = int(self.a) - (math.floor(int(self.a)/10))*10
@@ -446,11 +446,11 @@ class OPENDENTAL_OT_bridge_individual(bpy.types.Operator):
         
         
         elif event.type in {'RET'}:
-            bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+            self.finish_session(cancel=False)
             return {'FINISHED'}
         
         elif event.type in {'ESC'}:
-            bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+            self.finish_session(cancel=True)
             return {'CANCELLED'}
         
         '''
@@ -468,6 +468,19 @@ class OPENDENTAL_OT_bridge_individual(bpy.types.Operator):
         '''
 
         return {'RUNNING_MODAL'}
+    def finish_session(self, cancel):
+        bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+        if cancel:
+            working_mesh = self._bridge_object.data
+            self._bridge_object.data = self._original_mesh
+            if working_mesh.users == 0:
+                bpy.data.meshes.remove(working_mesh)
+        elif self._original_mesh.users == 0:
+            original_name = self._original_mesh.name
+            bpy.data.meshes.remove(self._original_mesh)
+            self._bridge_object.data.name = original_name
+        self._original_mesh = None
+
     def invoke(self, context, event):
 
         if context.space_data and context.space_data.type == 'VIEW_3D':
@@ -489,6 +502,10 @@ class OPENDENTAL_OT_bridge_individual(bpy.types.Operator):
                 self.report({'ERROR'}, "No neighboring tooth or I haven't figured out how to deal with non adjacent teeth")
                 return {'CANCELLED'}
             
+            self._bridge_object = bpy.data.objects[self.odc_bridge.bridge]
+            self._original_mesh = self._bridge_object.data
+            self._bridge_object.data = self._original_mesh.copy()
+
             self._handle = bpy.types.SpaceView3D.draw_handler_add(bgl_utils.general_func_callback, (self, context), 'WINDOW', 'POST_PIXEL')
             context.window_manager.modal_handler_add(self)
 
@@ -497,7 +514,7 @@ class OPENDENTAL_OT_bridge_individual(bpy.types.Operator):
             #TODO: International vs Universal
             self.message = "Bridge between %s and %s" % (self.a, self.b)
             
-            help_message = ["Scroll wheel to select connector","SPC to confirm","Leftmouse to confirm and advance","Esc to cancel"]
+            help_message = ["Scroll wheel to select connector","Space to create connector","Enter to finish","Esc to cancel all changes"]
             self.wrap = max([len(string) for string in help_message]) + 5
             self.help = ""
             for message in help_message:

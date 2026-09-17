@@ -32,6 +32,9 @@ obj.vertex_groups['A'].name = '24_Distal Connector'
 obj.vertex_groups['B'].name = '25_Mesial Connector'
 u = importlib.import_module(f'{ROOT.name}.Addon_utils.odcutils')
 u.get_settings().behavior = '0'
+original_mesh = obj.data
+original_coordinates = [tuple(v.co) for v in obj.data.vertices]
+original_mesh_count = len(bpy.data.meshes)
 phase = 0
 window = area = region = None
 def send(kind):
@@ -53,8 +56,21 @@ def run():
             send('SPACE')
         elif phase == 1:
             assert len(obj.data.vertices) > 16
-            send('RET')
+            send('ESC')
         elif phase == 2:
+            assert obj.data == original_mesh
+            assert [tuple(v.co) for v in obj.data.vertices] == original_coordinates
+            assert len(bpy.data.meshes) == original_mesh_count
+            assert not any(op.bl_idname == 'OPENDENTAL_OT_bridge_individual' for op in window.modal_operators)
+            with bpy.context.temp_override(window=window,area=area,region=region):
+                assert bpy.ops.opendental.bridge_individual('INVOKE_DEFAULT') == {'RUNNING_MODAL'}
+            send('SPACE')
+        elif phase == 3:
+            assert len(obj.data.vertices) > 16
+            send('RET')
+        elif phase == 4:
+            assert len(obj.data.vertices) > 16
+            assert len(bpy.data.meshes) == original_mesh_count
             assert not any(op.bl_idname == 'OPENDENTAL_OT_bridge_individual' for op in window.modal_operators)
             print('ODC_BRIDGE_MODAL_PASSED',flush=True)
             bpy.ops.wm.quit_blender()
