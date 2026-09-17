@@ -2187,91 +2187,30 @@ def obj_ray_cast(obj, matrix, ray_origin, ray_target):
         return None, None, None
 
 def reorient_object(ob, orientation):
-    '''
-    This function resest's an objects local coordinates to align with whatever orientation is provided
-    -Only affects rotation, not scale and 
-    args:
-    ob - Blender object
-    orientation - frame of reference which to align local coordinates with type: mathutils Matrix or Quaternion
-    '''
-    sce = bpy.context.scene
-    #cosntraint?
-    
-    mx = ob.matrix_world.copy()
-    loc = ob.location.copy()
-    loc2 = mx.to_translation()
-    
-    print('are these the same?')
-    print(loc)
-    print(loc2)
-    print('is it because of constraints')
-    print(len(ob.constraints))
-    
-    #should we clear the constraint too?
-    
-    #clear parent and keep transformation
-    if ob.parent:
-        Parent = ob.parent
-        ob.parent = None
-        ob.matrix_world = mx
-        reparent = True
+    """Change the object's world orientation while preserving its base geometry."""
+    if not hasattr(ob.data, 'transform'):
+        raise ValueError('Object data does not support coordinate transformation')
+    if isinstance(orientation, Matrix):
+        rotation = orientation.to_quaternion()
+    elif isinstance(orientation, Quaternion):
+        rotation = orientation.copy()
     else:
-        reparent = False
-        
-    #make sure we are consistent in our inputs    
-    if type(orientation) == Matrix:
-        new_mx = orientation.to_3x3()
-        
-    elif type(orientation) == Quaternion:
-        new_mx = orientation.to_matrix()
-        #new_mx.resize()
-        
-    new_imx = new_mx.inverted()
-    
+        raise TypeError('Orientation must be a matrix or quaternion')
+    old_world = ob.matrix_world.copy()
+    desired = Matrix.LocRotScale(old_world.translation, rotation, old_world.to_scale())
+    transform = desired.inverted() @ old_world
+    if ob.data.users > 1:
+        ob.data = ob.data.copy()
     if ob.type == 'MESH':
-        print('Meshes supported')
-        #apply the objects current rotation
-        ob.data.transform(mx.to_3x3().to_4x4())
-        ob.data.transform(new_imx.to_4x4())
-        ob.matrix_world = new_mx.to_4x4()
-        ob.location = loc
-        
+        ob.data.transform(transform, shape_keys=True)
     else:
-        print('non Mesh Object, support not guaranteed')
-        for window in bpy.context.window_manager.windows:
-            screen = window.screen
-            for area in screen.areas:        
-                if area.type == 'VIEW_3D':
-                    for region in area.regions:
-                        if region.type == 'WINDOW':
-                            override = {'object':ob,'window': window, 'screen': screen, 'area': area, 'region': region,'scene':sce, 'active_object':ob, 'selected_editable_objects':[ob]}
-                            #bpy.ops.screen.screen_full_area(override)# Works!
-                            #bpy.ops.screen.back_to_previous(override)# Works!
-                            #bpy.ops.view3d.view_orbit(override)# Works!
-                            #bpy.ops.view3d.view_pan(override)# Now works!
-                            #bpy.ops.view3d.zoom(override, delta=5, mx=0, my=0)# Now works!
-                            break
-                        
-        ob.rotation_mode = 'QUATERNION'
-       
-        bpy.ops.object.transform_apply(override,rotation = True)
-    
-        ob.rotation_quaternion = new_imx.to_quaternion()
-        sce.update()
-        
-        bpy.ops.object.transform_apply(override, rotation = True)
-        ob.rotation_quaternion = new_mx.to_quaternion()
-    
-    #ob.matrix_world = Matrix.identity(4)
-    #ob.data.update()
-    #ob.update_tag()
-    #sce.update()
+        ob.data.transform(transform)
+    ob.rotation_mode = 'QUATERNION'
+    ob.matrix_parent_inverse = ob.parent.matrix_world.inverted() if ob.parent else Matrix.Identity(4)
+    ob.matrix_basis = desired
+    ob.update_tag()
 
-    if reparent:
-        ob.update_tag()
-        sce.update()
-        parent_in_place(ob, Parent)
-        
+
 def silouette_brute_force(context, ob, view, world = True, smooth = True, debug = False):
     '''
     args:

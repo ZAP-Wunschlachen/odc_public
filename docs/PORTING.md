@@ -374,3 +374,13 @@ after the new object and modifiers have been constructed, and removes its mesh
 when unused. The integration fixture verifies stable object count and the updated
 gap setting on the replacement. Required preparation/margin/axis/crown objects
 are excluded from deletion if an old reference is misassigned.
+
+## Local-coordinate reorientation
+
+`tests/test_reorient_object.py` verifies the shared reorientation helper used by
+alternative intaglio construction. Direct data transforms replace legacy context
+overrides and scene updates. A mesh under a rotated/scaled parent retains world
+vertex positions and parent identity while adopting the requested world rotation;
+shared mesh data is copied before modification. Curve control points also retain
+world positions. Constraints and evaluated modifier preservation remain untested,
+and the complete alternative intaglio path is still pending.
