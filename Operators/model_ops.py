@@ -1100,10 +1100,8 @@ def add_square_cutter(context) :
     bpy.ops.mesh.primitive_cube_add(size=120, enter_editmode=False )
 
     frame = bpy.context.view_layer.objects.active
-    for obj in bpy.data.objects :
-        if obj.name == "my_frame_cutter" :
-            obj.name = "my_frame_cutter_old"
     frame.name = "my_frame_cutter"
+    frame['odc_square_target'] = Model
 
 
     # Reshape and align cube :
@@ -1129,7 +1127,9 @@ def add_square_cutter(context) :
 
     # Make cube normals consistent :
 
-    bpy.ops.mesh.normals_make_consistent(inside=False)
+    bm = bmesh.from_edit_mesh(frame.data)
+    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+    bmesh.update_edit_mesh(frame.data)
     bpy.ops.mesh.select_all(action="DESELECT")
     
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -1204,7 +1204,7 @@ class OPENDENTAL_OT_square_cut(bpy.types.Operator):
                 bpy.ops.object.select_all(action="DESELECT")
                 Model.select_set(True)
 
-                cutting_target = Model.name
+                context.scene.ODC_modops_props.cutting_target = Model.name
 
                 bpy.ops.object.hide_view_set(unselected=True)
 
@@ -1227,120 +1227,90 @@ class OPENDENTAL_OT_square_cut(bpy.types.Operator):
 #######################################################################################
 #Square cut confirm operator :
 
-class OPENDENTAL_OT_square_cut_confirm(bpy.types.Operator): 
-    """confirm Square Cut operation"""
+def square_cut_pair(context):
+    frame = context.object
+    if frame is None or frame.get('odc_square_target') is None:
+        candidates = [ob for ob in context.scene.objects if ob.get('odc_square_target') is not None]
+        frame = candidates[0] if len(candidates) == 1 else None
+    target = frame.get('odc_square_target') if frame is not None else None
+    if target is None or target.name not in context.scene.objects or target.type != 'MESH':
+        return None, None
+    return frame, target
 
-    bl_idname = "opendental.square_cut_confirm"
-    bl_label = "Tirm"
-    bl_options = {"REGISTER", "UNDO"}
 
-    def execute(self, context) :
+class OPENDENTAL_OT_square_cut_confirm(bpy.types.Operator):
+    """Apply the square cutter to its recorded target."""
+    bl_idname = 'opendental.square_cut_confirm'
+    bl_label = 'Trim'
+    bl_options = {'REGISTER', 'UNDO'}
 
-        if bpy.context.selected_objects == []:
+    def execute(self, context):
+        frame, model = square_cut_pair(context)
+        if frame is None:
+            self.report({'WARNING'}, 'Select a square cutter with a valid model target')
+            return {'CANCELLED'}
+        if context.mode != 'OBJECT':
+            bpy.ops.object.mode_set(mode='OBJECT')
+        if model.data.users > 1:
+            model.data = model.data.copy()
+        for ob in context.selected_objects:
+            ob.select_set(False)
+        model.hide_set(False)
+        model.select_set(True)
+        context.view_layer.objects.active = model
+        bm = bmesh.new()
+        try:
+            bm.from_mesh(model.data)
+            bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+            bm.to_mesh(model.data)
+        finally:
+            bm.free()
+        modifier = model.modifiers.new('Square Cut', 'BOOLEAN')
+        modifier.operation = 'INTERSECT' if context.scene.ODC_modops_props.cutting_mode == 'Keep inner' else 'DIFFERENCE'
+        modifier.solver = 'EXACT'
+        modifier.object = frame
+        try:
+            bpy.ops.object.modifier_apply(modifier=modifier.name)
+        except RuntimeError as error:
+            model.modifiers.remove(modifier)
+            self.report({'WARNING'}, str(error))
+            return {'CANCELLED'}
+        bm = bmesh.new()
+        try:
+            bm.from_mesh(model.data)
+            bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context='VERTS')
+            bm.to_mesh(model.data)
+        finally:
+            bm.free()
+        model.select_set(False)
+        frame.select_set(True)
+        context.view_layer.objects.active = frame
+        return {'FINISHED'}
 
-            message = " Please select Model !"
-            ShowMessageBox(message=message, icon="COLORSET_02_VEC")
 
-            return {"CANCELLED"}
+class OPENDENTAL_OT_square_cut_exit(bpy.types.Operator):
+    """Remove the square cutter and return to its target."""
+    bl_idname = 'opendental.square_cut_exit'
+    bl_label = 'Exit'
+    bl_options = {'REGISTER', 'UNDO'}
 
-        else:
-            try :
-                cutting_mode = context.scene.ODC_modops_props.cutting_mode
-                
-                bpy.context.tool_settings.mesh_select_mode = (True, False, False)
-                bpy.ops.wm.tool_set_by_id(name="builtin.select")
-                bpy.ops.object.mode_set(mode="OBJECT")
-                frame = bpy.data.objects["my_frame_cutter"]
-                
-                bpy.ops.object.select_all(action="DESELECT")
-                frame.select_set(True)
-                bpy.context.view_layer.objects.active = frame
-                bpy.ops.object.select_all(action='INVERT')
-                Model = bpy.context.selected_objects[0]
-                bpy.context.view_layer.objects.active = Model
-
-                # Make Model normals consitent :
-
-                bpy.ops.object.mode_set(mode="EDIT")
-                bpy.ops.mesh.select_all(action='SELECT')
-                bpy.ops.mesh.normals_make_consistent(inside=False)
-                bpy.ops.mesh.select_all(action='DESELECT')
-                bpy.ops.object.mode_set(mode="OBJECT")
-                
-                # ....Add undo history point...:
-                bpy.ops.ed.undo_push()
-
-                # Add Boolean Modifier :
-                bpy.ops.object.select_all(action="DESELECT")
-                Model.select_set(True)
-                bpy.context.view_layer.objects.active = Model
-
-                bpy.ops.object.modifier_add(type='BOOLEAN')
-                bpy.context.object.modifiers["Boolean"].show_viewport = False
-                bpy.context.object.modifiers["Boolean"].operation = 'DIFFERENCE'
-                bpy.context.object.modifiers["Boolean"].object = frame
-
-                # Apply boolean modifier :
-                if cutting_mode == "Cut inner" :
-                    bpy.ops.object.modifier_apply(modifier="Boolean")
-
-                if cutting_mode == "Keep inner" :
-                    bpy.context.object.modifiers["Boolean"].operation = 'INTERSECT'
-                    bpy.ops.object.modifier_apply(modifier="Boolean")
-
-                # Delete resulting loose geometry :
-
-                bpy.ops.object.mode_set(mode="EDIT")
-                bpy.ops.mesh.select_all(action="SELECT")
-                bpy.ops.mesh.delete_loose()
-                bpy.ops.mesh.select_all(action="DESELECT")
-                bpy.ops.object.mode_set(mode="OBJECT")
-                
-                bpy.ops.object.select_all(action="DESELECT")
-                frame.select_set(True)
-                bpy.context.view_layer.objects.active = frame
-
-            except Exception :
-                pass
-            
-            return {"FINISHED"}
-
-#######################################################################################
-#Square cut exit operator :
-
-class OPENDENTAL_OT_square_cut_exit(bpy.types.Operator): 
-    """Square Cutting Tool Exit"""
-
-    bl_idname = "opendental.square_cut_exit"
-    bl_label = "Exit"
-    bl_options = {"REGISTER", "UNDO"}
-
-    def execute(self, context) :
-
-        # Delete frame :
-        try :
-
-            frame = bpy.data.objects["my_frame_cutter"]
-            bpy.ops.object.select_all(action="DESELECT")
-            frame.select_set(True)
-
-            bpy.ops.object.select_all(action='INVERT')
-            Model = bpy.context.selected_objects[0]
-
-            bpy.ops.object.select_all(action="DESELECT")
-            frame.select_set(True)
-            bpy.context.view_layer.objects.active = frame
-
-            bpy.ops.object.delete(use_global=False, confirm=False)
-
-            bpy.ops.object.select_all(action="DESELECT")
-            Model.select_set(True)
-            bpy.context.view_layer.objects.active = Model
-
-        except Exception :
-            pass
-        
-        return {"FINISHED"}
+    def execute(self, context):
+        frame, model = square_cut_pair(context)
+        if frame is None:
+            self.report({'WARNING'}, 'Select a square cutter with a valid model target')
+            return {'CANCELLED'}
+        if context.mode != 'OBJECT':
+            bpy.ops.object.mode_set(mode='OBJECT')
+        mesh = frame.data
+        bpy.data.objects.remove(frame, do_unlink=True)
+        if mesh.users == 0:
+            bpy.data.meshes.remove(mesh)
+        for ob in context.selected_objects:
+            ob.select_set(False)
+        model.hide_set(False)
+        model.select_set(True)
+        context.view_layer.objects.active = model
+        return {'FINISHED'}
 
 #######################################################################################
 ############################# Model base tools ########################################

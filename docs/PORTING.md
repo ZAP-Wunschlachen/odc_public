@@ -1274,3 +1274,20 @@ unchanged source world geometry, and restored height/show-box settings. The popu
 is suppressed in the test. Failure cleanup of partial output objects, arbitrary
 scan boundaries, actual wall thickness and exceptional-path setting restoration
 have not been separately exercised. This test is excluded from the headless runner.
+
+### Square-cut apply and exit
+
+Square cutters now record an object reference to their target instead of finding
+an arbitrary visible object through selection inversion. Cutter creation no longer
+renames unrelated `my_frame_cutter` objects and uses current BMesh normal correction.
+The modal start writes the intended cutting-target property. Apply uses an enabled
+Exact Boolean with its returned modifier reference, reports failure rather than
+swallowing exceptions, preserves shared source mesh data and removes loose geometry.
+Exit removes only the identified cutter and its unused mesh and reselects the target.
+
+`test_square_cut.py` passes in Blender 5.1.2 for Difference and Intersection of two
+partly overlapping cubes. Both outputs are manifold with volume 4 and lie on the
+expected side; a linked-mesh sibling and a colliding object name are preserved.
+Exit and missing-cutter cancellation are checked. The fixture directly assigns the
+cutter-target reference, so interactive placement, edit-mode cutter adjustment,
+modal cancellation/settings restoration and multiple cutters remain unverified.
