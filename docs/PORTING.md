@@ -1591,3 +1591,17 @@ remaining test passes separately after correction. Crown/pontic import and
 dental-material tests were repeated after the role-map change and pass. The
 aggregate JSON predates the final role correction. Ambiguous shared object
 references across multiple plans remain outside this test's scope.
+
+### Ambiguous shared plan references
+
+`active_odc_item_candidate` now returns no inferred candidate if the selected
+object matches more than one plan. Previously the last matching collection
+entry silently won. The selection wrapper then uses an explicit valid list
+index, or returns an empty selection if that index is stale. Unique matches and
+excluded object roles retain their existing behavior.
+
+The expanded `test_plan_selection.py` failed before this correction and now
+passes for tooth, implant and splint collections, shared references, valid-list
+fallback, stale-list rejection and excluded roles. The existing bridge selection
+test also passes on Blender 5.1.2. This closes the shared-reference ambiguity
+noted in the preceding selection audit.

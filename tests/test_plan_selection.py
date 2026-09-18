@@ -36,6 +36,20 @@ for collection,index,role,select in (
     assert select(bpy.context)==[]
     setattr(scene,index,0)
     assert [x.name for x in select(bpy.context)]==['First']
+    # A shared model cannot identify one plan; use only an explicit valid list choice.
+    setattr(items[0],role,objects[1].name)
+    bpy.context.view_layer.objects.active=objects[1]
+    objects[1].select_set(True)
+    settings.behavior='1'
+    assert utils.active_odc_item_candidate(items,objects[1],[]) is None
+    setattr(scene,index,90)
+    assert select(bpy.context)==[]
+    setattr(scene,index,0)
+    assert [x.name for x in select(bpy.context)]==['First']
+    # Excluded roles must not create a match.
+    assert utils.active_odc_item_candidate(items,objects[1],[role]) is None
+    setattr(items[0],role,objects[0].name)
+    assert utils.active_odc_item_candidate(items,objects[1],[]).name=='Second'
     items.clear()
     for mode in ('0','1','2'):
         settings.behavior=mode

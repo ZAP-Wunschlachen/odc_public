@@ -551,7 +551,7 @@ def active_odc_item_candidate(items, ob, exclude, debug = False):
     objects: list of blender objects
     exclude: properties to exclude for guessing which tooth is being workied on...eg, mesial, distal
     
-    return: ODC Tooth object wich has this Blender Object as one of it's property values
+    return: The unique matching plan, or None if no plan or multiple plans match
     
     iteartes through the props in a property group and tests the object's name agains it
     '''
@@ -561,6 +561,9 @@ def active_odc_item_candidate(items, ob, exclude, debug = False):
             if key not in exclude and getattr(tooth, key, "") == ob.name:
                 if debug:
                     print(f"Object {ob.name} matches {tooth.name}.{key}")
+                if candidate is not None:
+                    # A shared model does not uniquely identify a planned unit.
+                    return None
                 candidate = tooth
                 break
 
