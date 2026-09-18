@@ -1572,3 +1572,22 @@ references, distinct new entries and save/reopen of all plan values. The strict
 141-class/117-operator registration lifecycle test also passes again. Existing
 files that never stored an implant rest_type receive its default value; old
 duplicate records are not automatically merged by this change.
+
+### Shared plan selection
+
+Unified tooth, implant and splint selection around one resolver. Empty lists
+return no selection; stale list indices are not dereferenced or silently
+clamped to a different plan. Object-based matches still work when the list
+index is stale, and ACTIVE_SELECTED also scans selected editable objects when
+there is no active object. The historical `splint_selction` spelling remains
+available. Splint `model` references are now included in the shared object-role
+map, which was necessary for active-model selection to resolve them.
+
+`test_plan_selection.py` passes in Blender 5.1.2 for all three plan types and
+all preference modes, stale indices, active-first ordering, selected objects
+without an active object and valid-list fallback. The complete headless run
+passed 83/84 cases while the missing splint role was being diagnosed; that
+remaining test passes separately after correction. Crown/pontic import and
+dental-material tests were repeated after the role-map change and pass. The
+aggregate JSON predates the final role correction. Ambiguous shared object
+references across multiple plans remain outside this test's scope.

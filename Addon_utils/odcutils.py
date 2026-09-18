@@ -566,150 +566,47 @@ def active_odc_item_candidate(items, ob, exclude, debug = False):
 
     return candidate
 
-def splint_selction(context):
-    '''
-    looks at addon preferences
-    returns a list,
-    '''
-    sce = context.scene
-    splint = None
+def _select_plans(context, collection_name, index_name, require_selected_active=False):
+    """Resolve object-based selection, falling back only to a valid list entry."""
+    scene = context.scene
+    items = getattr(scene, collection_name, None)
+    if items is None or not len(items):
+        return []
     settings = get_settings()
-    b = settings.behavior
-    behave_mode = settings.behavior_modes[int(b)]
-    
-    if behave_mode == 'LIST':
-        #choose just one tooth in the list
-        splint = sce.odc_splints[sce.odc_splint_index]
-        
-        
-    elif behave_mode == 'ACTIVE':
-        #test the active object, if nothing...default to item_list
-        if context.object:
-            ob = context.object
-            tooth = active_odc_item_candidate(sce.odc_splints, ob,[])
-            if tooth:
-                splint = tooth
-    
-    if splint == None:
-        splint = sce.odc_splints[sce.odc_splint_index]
-                    
-    return [splint]
+    mode = settings.behavior_modes[int(settings.behavior)]
+    selected = []
+    active = context.object
+    if mode in {'ACTIVE', 'ACTIVE_SELECTED'}:
+        if active and (not require_selected_active or active.select_get()):
+            item = active_odc_item_candidate(items, active, [])
+            if item is not None:
+                selected.append(item)
+        if mode == 'ACTIVE_SELECTED':
+            for obj in context.selected_editable_objects:
+                if obj == active:
+                    continue
+                item = active_odc_item_candidate(items, obj, [])
+                if item is not None and item not in selected:
+                    selected.append(item)
+    if not selected:
+        index = getattr(scene, index_name)
+        if 0 <= index < len(items):
+            selected.append(items[index])
+    return selected
+
+
+def splint_selction(context):
+    # Retain the historical spelling for callers of the public helper.
+    return _select_plans(context, 'odc_splints', 'odc_splint_index')
+
 
 def tooth_selection(context):
-    '''
-    looks at addon preferences and selected objects in scene
-    returns a list or selected units
-    '''
-    sce = context.scene
-    selected_items = []
+    return _select_plans(context, 'odc_teeth', 'odc_tooth_index', require_selected_active=True)
 
-    if not hasattr(sce, "odc_props"):
-        print('addon may be broken')
-        return selected_items
-    settings = get_settings()
-    b = settings.behavior
-    behave_mode = settings.behavior_modes[int(b)]
-    
-    if behave_mode == 'LIST' and len(context.scene.odc_teeth):
-        #choose just one tooth in the list
-        tooth = sce.odc_teeth[sce.odc_tooth_index]
-        selected_items.append(tooth)
-        
-    elif behave_mode == 'ACTIVE':
-        #test the active object, if nothing...default to item_list
-        if context.object and context.object.select_get():
-            ob = context.object
-            tooth = active_odc_item_candidate(sce.odc_teeth, ob,[])
-            if tooth:
-                selected_items.append(tooth)
-                #sce.odc_tooth_index = sce.odc_teeth.find(tooth.name) #force the active tooth index..seems like a good idea?
 
-    elif behave_mode == 'ACTIVE_SELECTED':
-        #test active object and selected objects
-        if context.object and context.object.select_get():
-            #test the active object
-            ob = context.object
-            tooth = active_odc_item_candidate(sce.odc_teeth, ob,[])
-            if tooth and tooth not in selected_items:
-                selected_items.append(tooth)
-        
-        if context.selected_editable_objects and context.object:
-            obs = [ob for ob in context.selected_editable_objects if ob.name != context.object.name]
-            for ob in obs:
-                tooth = active_odc_item_candidate(sce.odc_teeth, ob,[])
-                if tooth and tooth not in selected_items:
-                    selected_items.append(tooth)
-    
-    if len(selected_items) == 0 and len(context.scene.odc_teeth): #meaning previous method found nothing
-        tooth = sce.odc_teeth[sce.odc_tooth_index]
-        selected_items.append(tooth)                
-    
-    return selected_items
-            
 def implant_selection(context):
-    '''
-    looks at addon preferences
-    returns a list,
-    '''
-    
-    sce = context.scene
-    implants = []
-    if not hasattr(sce, 'odc_props'): return implants
-    if len(context.scene.odc_implants) == 0: return implants
-    
-    settings = get_settings()
-    b = settings.behavior
-    behave_mode = settings.behavior_modes[int(b)]
-    
-    if len(context.scene.odc_implants) == 0:
-        return implants
-    
-    if behave_mode == 'LIST'and len(context.scene.odc_implants):
-        #choose just one tooth in the list
-        implant = sce.odc_implants[sce.odc_implant_index]
-        implants.append(implant)
-        
-    elif behave_mode == 'ACTIVE':
-        #test the active object, if nothing...default to item_list
-        if context.object:
-            ob = context.object
-            implant = active_odc_item_candidate(sce.odc_implants, ob,[])
-            if implant:
-                implants.append(implant)
-                #sce.odc_tooth_index = sce.odc_teeth.find(tooth.name) #force the active tooth index..seems like a good idea?
-    elif behave_mode == 'ACTIVE_SELECTED':
-        #test active object and selected objects
-        if context.object:
-            #test the active object, if nothing...default to item_list
-            ob = context.object
-            implant = active_odc_item_candidate(sce.odc_implants, ob,[])
-            if implant and implant not in implants:
-                implants.append(implant)
-        
-        if context.selected_editable_objects and context.object:
-            obs = [ob for ob in context.selected_editable_objects if ob.name != context.object.name]
-            for ob in obs:
-                implant = active_odc_item_candidate(sce.odc_implants, ob,[])
-                if implant and implant not in implants:
-                    implants.append(implant)
+    return _select_plans(context, 'odc_implants', 'odc_implant_index')
 
-    if len(implants) == 0 and len(context.scene.odc_implants): #meaning previous method found nothing
-        implant = sce.odc_implants[sce.odc_implant_index]
-        implants.append(implant) 
-                           
-    return implants
-
-    '''    
-    if context.object:
-        tooth_candidates = active_odc_item_candidate(sce.odc_teeth, [context.selected_editable_objects],[])
-        if tooth_candidates:
-            tooth = sce.odc_teeth[tooth_candidates[0]]
-            sce.odc_tooth_index = sce.odc_teeth.find(tooth.name) #force the active tooth index..seems like a good idea?
-    if not tooth:
-        self.report({'WARNING'},"I'm not sure which tooth you want, guessing based on active tooth in list")
-        tooth = sce.odc_teeth[sce.odc_tooth_index]
-    return tooth 
-    '''
 
 def add_proximity_mod(ob1, ob2, min_d, max_d, group_name = None, n = None, over = 0):
     '''
@@ -993,7 +890,7 @@ def scene_verification(scene, debug=False):
 
 # Roles formerly assigned to Blender's twenty scene layers.
 OBJECT_ROLE_COLLECTIONS = {
-    "opposing": "Models", "axis": "Insertion Axes", "mesial": "Adjacent Teeth", "distal": "Adjacent Teeth",
+    "model": "Models", "opposing": "Models", "axis": "Insertion Axes", "mesial": "Adjacent Teeth", "distal": "Adjacent Teeth",
     "prep_model": "Preparations", "margin": "Margins and Intaglio",
     "pmargin": "Margins and Intaglio", "bubble": "Margins and Intaglio",
     "intaglio": "Margins and Intaglio", "restoration": "Restorations",
