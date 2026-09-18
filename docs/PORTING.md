@@ -1558,3 +1558,17 @@ the surviving body's field remains FORCE, the survivor stays stationary across
 30 frames and source objects remain intact. The original two-body dynamics test
 also passes again. This check covers deletion before replay, not undoing a
 mid-playback deletion or restoring an unlinked body.
+
+### Implant plan creation
+
+The New Implant Placement operator now resolves the explicit name or selected
+tooth before adding a record and cancels duplicate names without modifying the
+existing plan. The offered `rest_type` value previously had no RNA property on
+ImplantRestoration; it is now a registered enum, so the dialog choice persists.
+
+`test_implant_plan_add.py` passes on Blender 5.1.2 for custom names, tooth-enum
+selection, repeated explicit/default names, preserved existing model/drill-hole
+references, distinct new entries and save/reopen of all plan values. The strict
+141-class/117-operator registration lifecycle test also passes again. Existing
+files that never stored an implant rest_type receive its default value; old
+duplicate records are not automatically merged by this change.

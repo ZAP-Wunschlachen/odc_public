@@ -260,6 +260,7 @@ class ImplantRestoration(bpy.types.PropertyGroup):
         bpy.types.Scene.odc_implant_index = bpy.props.IntProperty(name = "Working Implant Index", min=0, default=0, update=index_update)#, update=update_func)
         
         cls.name = bpy.props.StringProperty(name="Tooth Number",default="")
+        cls.rest_type = bpy.props.EnumProperty(name="Restoration Type", items=rest_enum, default='0')
         cls.implant = bpy.props.StringProperty(name="Implant Model",default="")
         cls.implant_lib_path = bpy.props.StringProperty(name="Implant Path",default="")
         cls.outer = bpy.props.StringProperty(name="Outer Cylinder",default="")
@@ -496,26 +497,17 @@ class ImplantRestorationAdd(bpy.types.Operator):
         return {'RUNNING_MODAL'}
     
     def execute(self, context):
-
-        my_item = bpy.context.scene.odc_implants.add()
-        indx = int(self.properties.ob_list)   
-        print(indx)
-        
-        if not self.properties.name: #eg, it was invoked
-            self.properties.name = str(teeth[int(self.properties.ob_list)])
-        #my_item.abutment = self.properties.abutment
-        my_item.name = self.properties.name
-        my_item.rest_type = self.properties.rest_type
-        
-        #my_item.in_bridge = self.properties.in_bridge
-        #import odc
-        #if not odc.odc_restricted_registration:
-           # from . import crown, implant
-            #crown.post_register2()
-           # implant.post_register2()
-            #odc.odc_restricted_registration = True
+        name = self.name or str(teeth[int(self.ob_list)])
+        plans = context.scene.odc_implants
+        if name in plans:
+            self.report({'WARNING'}, 'That implant position is already planned')
+            return {'CANCELLED'}
+        item = plans.add()
+        item.name = name
+        item.rest_type = self.rest_type
         return {'FINISHED'}
-    
+
+
 def remove_plan_entry(context, collection_name, index_name):
     items = getattr(context.scene, collection_name)
     index = getattr(context.scene, index_name)
