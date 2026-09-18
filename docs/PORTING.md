@@ -1389,3 +1389,13 @@ contains the original Coming Soon placeholder; populated-state instructions are 
 yet fully tested. `test_crown_report.py` passes headlessly for numeric/custom names,
 stored contour values and replacement of stale report text. Help UI is excluded from
 the headless runner.
+
+### Populated help plans
+
+`test_help_plans.py` passes in Blender 5.1.2 with completed crown roles,
+implant dimensions, a crown/pontic bridge and deleted bridge members. Bridge
+help now recognizes the current `Final Seal` shrinkwrap only when enabled and
+targeting the margin, excludes pontics from margin acceptance requirements,
+and reports missing/empty plan members instead of raising a handler exception.
+This validates help status reporting, not clinical geometry or the unfinished
+surgical-guide help content.

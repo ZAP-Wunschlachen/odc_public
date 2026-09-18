@@ -273,7 +273,14 @@ def implant_help_text(implant):
 def bridge_help_text(bridge):
     msg = 'Bridge: ' + bridge.name + '\n'
     
-    teeth = [bpy.context.scene.odc_teeth[nm] for nm in bridge.tooth_string.split(sep=":")]
+    names = [name for name in bridge.tooth_string.split(":") if name]
+    plans = bpy.context.scene.odc_teeth
+    missing = [name for name in names if name not in plans]
+    if missing:
+        return msg + 'Missing planned units: ' + ', '.join(missing) + '\nPlease update the bridge plan.\n'
+    teeth = [plans[name] for name in names]
+    if not teeth:
+        return msg + 'Please add tooth units to the bridge plan.\n'
     msg += 'There are %i tooth units' % len(teeth)
     msg += '\n'
     
@@ -298,7 +305,7 @@ def bridge_help_text(bridge):
         msg += 'DONE \n'
         
     msg += '3.Accept Margins:'
-    all_pmargins = [tooth.pmargin not in bpy.data.objects for tooth in teeth]
+    all_pmargins = [tooth.rest_type != '1' and tooth.pmargin not in bpy.data.objects for tooth in teeth]
     if any(all_pmargins):
         msg += ' \nNot all Margins finalized. \n Please "Refine Margin" (optional)\nPlease "Accept Margin" (mandatory)\n'
     else:
@@ -311,8 +318,10 @@ def bridge_help_text(bridge):
         if tooth.rest_type == '1': return True #this is a pontic
         if tooth.margin not in bpy.data.objects: return False
         Crown = bpy.data.objects[tooth.contour]
-        if 'Shrinkwrap' not in Crown.modifiers: return False
-        return True
+        return any(mod.type == 'SHRINKWRAP'
+                   and mod.name in {'Final Seal', 'Shrinkwrap'}
+                   and mod.target == bpy.data.objects[tooth.margin]
+                   and mod.show_viewport for mod in Crown.modifiers)
            
     all_seated = [not is_seated(tooth) for tooth in teeth]
     if any(all_seated):
