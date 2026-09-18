@@ -441,6 +441,45 @@ def tag_redraw_view3d_imgeditor(context):
                     if region.type == 'WINDOW':
                         region.tag_redraw()
                         
+def projection_from_correspondences(points_3d, pixels):
+    """Normalized DLT for at least six paired, non-coplanar correspondences."""
+    world = np.asarray(points_3d, dtype=float)
+    image = np.asarray(pixels, dtype=float)
+    if world.ndim != 2 or world.shape[1] != 3 or image.shape != (len(world), 2) or len(world) < 6:
+        raise ValueError('Select at least six matching model and image points')
+    if not np.isfinite(world).all() or not np.isfinite(image).all():
+        raise ValueError('Point coordinates must be finite')
+
+    def normalize(points):
+        center = points.mean(axis=0)
+        centered = points - center
+        rms = np.sqrt(np.mean(np.sum(centered ** 2, axis=1)))
+        if rms <= np.finfo(float).eps:
+            raise ValueError('Select distinct points spread across the model and image')
+        factor = np.sqrt(points.shape[1]) / rms
+        transform = np.eye(points.shape[1] + 1)
+        transform[:-1, :-1] *= factor
+        transform[:-1, -1] = -factor * center
+        return np.column_stack((centered * factor, np.ones(len(points)))), transform
+
+    xyz, world_transform = normalize(world)
+    uv, image_transform = normalize(image)
+    if np.linalg.matrix_rank(xyz) < 4:
+        raise ValueError('Model points must not all lie in one plane')
+    rows = []
+    for point, (u, v, _) in zip(xyz, uv):
+        rows.append(np.concatenate((point, np.zeros(4), -u * point)))
+        rows.append(np.concatenate((np.zeros(4), point, -v * point)))
+    _, values, vectors = np.linalg.svd(np.asarray(rows), full_matrices=False)
+    if values[-2] <= values[0] * 1e-10:
+        raise ValueError('Point pairs do not determine a unique camera')
+    projection = np.linalg.inv(image_transform) @ vectors[-1].reshape(3, 4) @ world_transform
+    projection /= np.linalg.norm(projection[2, :3])
+    if np.linalg.det(projection[:, :3]) < 0:
+        projection = -projection
+    return projection
+
+
 class VIEW3D_OT_image_view3d_modal(bpy.types.Operator):
     """Click on Image and On Object"""
     bl_idname = "view3d.img_obj_register"
@@ -628,146 +667,13 @@ class VIEW3D_OT_image_view3d_modal(bpy.types.Operator):
         return 'wait'
     
     def build_matrix(self):
-        
-        #make sure we have enough points
-        if len(self.pixel_coords) < 6:
-            print('not enough image points')
-            return
-        elif len(self.points_3d) < 6:
-            print('not enough 3d points')
-            return
-        
-        
-        
-        #make corresponding lists, assumes the user selected in same order
-        #at a minimum, ensure lists are same size
-        L = min(len(self.points_3d),len(self.pixel_coords))
-        pts_3d = self.points_3d[0:L]
-        pts_2d = self.pixel_coords[0:L]
-        
-        #calculate origin center.  TODO, use numpy instead of dumb for loops
-        orig_3d = Vector((0,0,0))
-        orig_2d = Vector((0,0))
-        
-        for v in pts_3d:
-            orig_3d += 1/L * v
-            
-        for px in pts_2d:
-            orig_2d += 1/L * px
-            
-        #move the data to the center
-        #pts_3d = [v - orig_3d for v in pts_3d]
-        #pts_2d = [v - orig_2d for v in pts_2d]
-        
-        #scale so that mean distance to center is sqrt(3) and sqrt(2)
-        RMS_2d = (sum([v.length**2 for v in pts_2d]))**.5
-        RMS_3d = (sum([v.length**2 for v in pts_3d]))**.5
-        
-        #pts_3d = [3**.5/RMS_3d * v for v in pts_3d]
-        #pts_2d = [2**.5/RMS_2d * v for v in pts_2d]
-        
-        print('The RMS Factors')
-        print((3**.5/RMS_3d, 2**.5/RMS_2d))
-        #Now, check that the centroid and the RMS values are correclty scaled for sanity
-        #Check the centroid
-        #orig_3d_check = Vector((0,0,0))
-        #orig_2d_check = Vector((0,0))
-        
-        #for v in pts_3d:
-        #    orig_3d_check += v
-            
-        #for px in pts_2d:
-        #    orig_2d_check += px
-            
-        #orig_3d_check *= 1/L
-        #orig_2d_check *= 1/L
-        #print('CHECK THE CENTROID TRANSLATION WAS CORRECT')
-        #print(orig_3d_check, orig_2d_check)
-        
-        #Check the RMS
-        #RMS_2d_check = (sum([v.length**2 for v in pts_2d]))**.5
-        #RMS_3d_check = (sum([v.length**2 for v in pts_3d]))**.5
-        
-        #print('CHECK THE RMS SCALING WAS CORRECT')
-        #print((RMS_2d_check, 2**.5))
-        #print((RMS_3d_check, 3**.5))
-        
-        mx_rows = []
-        for i in range(0,L):
-            X,Y,Z,W = pts_3d[i].to_4d()
-            x,y,w = pts_2d[i].to_3d()
-            
-            r0 = np.array([0,0,0,0,-X*w, -Y*w, -Z*w, -W*w, X*y, Y*y, Z*y,W*y])
-            r1 = np.array([X*w, Y*w, Z*w, W*w, 0, 0, 0, 0, -X*x, -Y*x, -Z*x, -W*x])
-            
-            mx_rows.append(r0)
-            mx_rows.append(r1)
-        
-        #will try mx_rows.reverse() next
-        A = np.vstack(mx_rows)
-        
-        #print(mx_rows[0])
-        #print(A[:][0])
-        
-        u, s, vh = np.linalg.svd(A, full_matrices = False)
-        
-        #print(u.shape, vh.shape, s.shape)
-        
-        '''
-        New in version 1.8.0.
+        try:
+            projection = projection_from_correspondences(self.points_3d, self.pixel_coords)
+        except ValueError as error:
+            self.report({'WARNING'}, str(error))
+            return None
+        return get_blender_camera_from_3x4_P(projection, 1)
 
-        The SVD is commonly written as a = U S V.H. The v returned by this function is V.H and u = U.
-        If U is a unitary matrix, it means that it satisfies U.H = inv(U).
-        The rows of v are the eigenvectors of a.H a. The columns of u are the eigenvectors of a a.H.
-        For row i in v and column i in u, the corresponding eigenvalue is s[i]**2.
-        If a is a matrix object (as opposed to an ndarray), then so are all the return values
-        '''
-        
-        #rows of v are the eigen vectors....! (I reckon)
-        
-        best_s = min(s)
-        #print('the minimum value of s is %f' % best_s)
-        n = np.nonzero(s==best_s)[0][0]
-        print('EIGENVALUES')
-        print(s)
-        
-        print('SOLUTION FOR P from vh')
-        P_vector_v = vh[n,:]
-        print(P_vector_v)
-        
-        P_v_list = [P_vector_v[0:4],
-                    P_vector_v[4:8], 
-                    P_vector_v[8:12]]
-        P_v = Matrix(P_v_list)
-        
-        
-        print('SOLUTION FOR P from U')
-        P_vector_u = u[:,n]
-        print(P_vector_u)
-        
-        #P_u_list = [P_vector_u[0:3],
-        #            P_vector_u[3:6], 
-        #            P_vector_u[6:9],
-        #           P_vector_u[9:12]]
-        P_u_list = [P_vector_u[0:4],
-                    P_vector_u[4:8], 
-                    P_vector_u[8:12]]
-        P_u = Matrix(P_u_list)
-        
-        print('Calculated from SVD Eigenvector')
-        print(P_u)
-        cam = bpy.data.objects.get('Test Camera')
-        if cam:    
-            P, K, RT = get_3x4_P_matrix_from_blender(cam)
-            print('Calculated from Test Camera')
-            print(P)
-            
-    
-        get_blender_camera_from_3x4_P(P_u, 1) 
-        #get_blender_camera_from_3x4_P(P_v, 1) 
-        
-        
-        
     def invoke(self, context, event):
        
         #collect all the 3d_view regions

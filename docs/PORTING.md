@@ -1076,3 +1076,19 @@ The isolated headless suite ran 67 cases with 67 passes after the splint changes
 the new camera test was run separately afterward. This excludes foreground UI
 regressions and does not resolve previously documented physics dependency-cycle
 or native allocation warnings.
+
+### Image registration correspondence solver
+
+Replaced the incomplete point-fitting implementation with normalized DLT. The
+previous code extended 2D vectors with a zero homogeneous coordinate and used a
+left singular vector to construct the camera. The solver now uses homogeneous
+ones and the right null-space vector, normalizes image/world coordinates, and
+rejects insufficient, unmatched, nonfinite, coplanar or rank-deficient point pairs.
+The operator's build step reports invalid inputs without creating a camera.
+
+`test_image_correspondences.py` passes in Blender 5.1.2: six and eight exact point
+pairs recover projections for all eight reference points, reconstructed cameras
+match Blender's reference projection, and coordinates scaled by 1000 and translated
+by millions remain stable. Degenerate input cases and the operator build-method
+entry point are covered. This does not yet test interactive clicks, noisy manual
+correspondences, or camera reconstruction with off-center principal points/skew.
