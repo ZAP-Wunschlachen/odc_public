@@ -13,7 +13,7 @@ def send(kind,region,x=None,y=None):
     for value in ('PRESS','RELEASE'):
         bpy.context.window.event_simulate(type=kind,value=value,x=region.x+x,y=region.y+y)
 def run():
-    global phase,area,region,editor,imgregion,state,objects_before,m
+    global phase,area,region,editor,imgregion,state,objects_before,m,reference,points,pixels,preview_name
     try:
         if phase==0:
             assert addon_utils.enable(ROOT.name,default_set=True)
@@ -43,6 +43,7 @@ def run():
                 bpy.ops.image.view_all()
             with bpy.context.temp_override(area=area,region=region):
                 assert bpy.ops.view3d.img_obj_register('INVOKE_DEFAULT')=={'RUNNING_MODAL'}
+            area.tag_redraw();editor.tag_redraw()
             objects_before=set(bpy.data.objects)
         elif phase==2:
             send('LEFTMOUSE',region)
@@ -59,9 +60,55 @@ def run():
         elif phase==5:
             assert set(bpy.data.objects)==objects_before
             send('ESC',region)
-        else:
+        elif phase==6:
             assert not any(op.bl_idname=='VIEW3D_OT_image_view3d_modal' for op in bpy.context.window.modal_operators)
             assert set(bpy.data.objects)==objects_before
+            scene=bpy.context.scene
+            scene.render.resolution_x=256;scene.render.resolution_y=256
+            scene.render.resolution_percentage=100
+            bpy.ops.object.camera_add(location=(3,-4,15),rotation=(.1,.2,.3))
+            reference=bpy.context.object
+            reference.data.lens=45
+            scene.camera=reference
+            bpy.context.view_layer.update()
+            points=[Vector((x,y,z)) for x in (-2,2) for y in (-2,2) for z in (-1,3)]
+            pixels=[m.project_by_object_utils(reference,p) for p in points]
+            scene.render.resolution_x=1024;scene.render.resolution_y=768
+            objects_before=set(bpy.data.objects)
+        elif phase in {7,13}:
+            with bpy.context.temp_override(area=area,region=region):
+                assert bpy.ops.view3d.img_obj_register('INVOKE_DEFAULT')=={'RUNNING_MODAL'}
+            area.tag_redraw();editor.tag_redraw()
+        elif phase in {8,14}:
+            state.points_3d=[p.copy() for p in points]
+            state.pixel_coords=[p.copy() for p in pixels]
+            send('M',region)
+        elif phase in {9,15}:
+            assert len(set(bpy.data.objects)-objects_before)==1
+            preview=bpy.context.scene.camera
+            assert preview!=reference
+            assert preview.data.background_images[0].image==editor.spaces.active.image
+            for point,pixel in zip(points,pixels):
+                assert (m.project_by_object_utils(preview,point)-pixel).length<.01
+            preview_name=preview.name
+            send('M',region)
+        elif phase in {10,16}:
+            assert len(set(bpy.data.objects)-objects_before)==1,'Preview accumulated cameras'
+            assert bpy.context.scene.camera!=reference
+            send('ESC' if phase==10 else 'RET',region)
+        elif phase==11:
+            assert set(bpy.data.objects)==objects_before
+            assert bpy.context.scene.camera==reference
+            assert bpy.context.scene.render.resolution_x==1024
+            assert bpy.context.scene.render.resolution_y==768
+        elif phase==12:
+            assert not any(op.bl_idname=='VIEW3D_OT_image_view3d_modal' for op in bpy.context.window.modal_operators)
+        else:
+            assert not any(op.bl_idname=='VIEW3D_OT_image_view3d_modal' for op in bpy.context.window.modal_operators)
+            assert len(set(bpy.data.objects)-objects_before)==1
+            assert bpy.context.scene.camera!=reference
+            assert bpy.context.scene.render.resolution_x==256
+            assert bpy.context.scene.render.resolution_y==256
             print('ODC_IMAGE_REGISTRATION_MODAL_PASSED',flush=True)
             bpy.ops.wm.quit_blender()
             return None

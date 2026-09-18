@@ -472,8 +472,7 @@ class VIEW3D_OT_image_view3d_modal(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        #TODO, some nice poling
-        return True
+        return context.window is not None and context.mode == 'OBJECT'
 
     def modal(self, context, event):
         
@@ -493,6 +492,11 @@ class VIEW3D_OT_image_view3d_modal(bpy.types.Operator):
             bpy.types.SpaceView3D.draw_handler_remove(self._handle3d, 'WINDOW')
             bpy.types.SpaceImageEditor.draw_handler_remove(self._handle_image, 'WINDOW')
             
+            if nmode == 'cancel':
+                self.discard_preview()
+                context.scene.camera = self.original_camera
+                for name, value in self.original_render.items():
+                    setattr(context.scene.render, name, value)
             return {'FINISHED'} if nmode == 'finish' else {'CANCELLED'}
         
         if nmode: self.mode = nmode
@@ -646,6 +650,8 @@ class VIEW3D_OT_image_view3d_modal(bpy.types.Operator):
                                
             return 'wait'
         
+        elif event.type in {'RET', 'NUMPAD_ENTER'} and event.value == 'PRESS':
+            return 'finish' if self.build_matrix() is not None else 'wait'
         elif event.type == 'ESC':
             return 'cancel'
         
@@ -655,10 +661,30 @@ class VIEW3D_OT_image_view3d_modal(bpy.types.Operator):
         try:
             projection = projection_from_correspondences(self.points_3d, self.pixel_coords)
             image = self.imgeditor_area.spaces.active.image
-            return get_blender_camera_from_3x4_P(projection, 1, tuple(image.size))
+            camera = get_blender_camera_from_3x4_P(projection, 1, tuple(image.size))
+            previous = getattr(self, 'preview_camera', None)
+            if previous is not None and previous.name in bpy.data.objects:
+                data = previous.data
+                bpy.data.objects.remove(previous, do_unlink=True)
+                if data.users == 0:
+                    bpy.data.cameras.remove(data)
+            self.preview_camera = camera
+            camera.data.show_background_images = True
+            background = camera.data.background_images.new()
+            background.image = image
+            return camera
         except ValueError as error:
             self.report({'WARNING'}, str(error))
             return None
+
+    def discard_preview(self):
+        camera = self.preview_camera
+        if camera is not None and camera.name in bpy.data.objects:
+            data = camera.data
+            bpy.data.objects.remove(camera, do_unlink=True)
+            if data.users == 0:
+                bpy.data.cameras.remove(data)
+        self.preview_camera = None
 
     def invoke(self, context, event):
        
@@ -690,6 +716,10 @@ class VIEW3D_OT_image_view3d_modal(bpy.types.Operator):
             self.report({'WARNING'}, 'Open a 3D View and an Image Editor with a loaded image in this window')
             return {'CANCELLED'}
 
+        self.preview_camera = None
+        self.original_camera = context.scene.camera
+        self.original_render = {name: getattr(context.scene.render, name) for name in (
+            'resolution_x', 'resolution_y', 'resolution_percentage', 'pixel_aspect_x', 'pixel_aspect_y')}
         self.mouse_screen_coord = (0,0)
         context.window_manager.modal_handler_add(self)
         

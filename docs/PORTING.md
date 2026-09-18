@@ -1123,3 +1123,20 @@ Blender's reference within 0.01 pixels. Invalid matrix/scale/size inputs preserv
 objects and render settings. The correspondence and operator-build tests also
 pass with the explicit image-size path. Nonzero skew is rejected because Blender's
 camera model cannot reproduce it directly; noisy manual fitting remains unverified.
+
+### Image registration preview and completion lifecycle
+
+M builds/replaces one preview camera and attaches the loaded image as a camera
+background. Enter builds and accepts the fitted camera. Escape removes the preview
+object and unused camera data, then restores the original scene camera, resolution,
+render percentage and pixel aspect. Invocation is restricted to Object Mode with a
+window. This module remains outside normal add-on registration pending the remaining
+interactive/input checks.
+
+The foreground modal test now performs preview/re-preview/cancel and a fresh
+preview/re-preview/Enter sequence. It verifies one output camera, reference-image
+attachment, fitted projections, restoration after cancellation and persistence after
+confirmation. The point-pair build test also passes. The fit portion injects exact
+synthetic correspondences into the running operator; only the earlier single-point
+picks use simulated clicks. Full manually clicked fitting, noisy correspondences,
+changing/closing editors mid-session and deletion of referenced objects remain open.
