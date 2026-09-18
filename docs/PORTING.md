@@ -1228,3 +1228,18 @@ initially selected object is unchanged, and Escape on a subsequent session leave
 world geometry unchanged and exits the modal operator. The informational popup is
 suppressed in this automated test; popup interaction, cursor/tool restoration,
 parented models and constraints are not covered. Both tests are foreground-only.
+
+### Model solid base workflow
+
+Create a Solid Base Dental Model now uses the bundled boundary relaxation helper
+and BMesh normal recalculation instead of the unregistered external LoopTools and
+removed normals_make_consistent operators. Polling requires a mesh in Object Mode
+and a 3D view region.
+
+`test_model_base.py` passes in a foreground Blender 5.1.2 window both in the default
+orientation and with `-- --tilted` (model and view rotated together). A translated
+open-bottom cube produces a separate, manifold positive-volume mesh with a base
+exactly 3 units below its original minimum in view coordinates. The original world
+geometry and the top extent remain unchanged. This test does not cover arbitrary
+scan boundaries, scale-dependent relaxation, multiple holes, source-origin/settings
+restoration or the failure path. It is excluded from the headless runner.

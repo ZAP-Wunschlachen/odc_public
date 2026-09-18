@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-UI_TESTS = {'test_axis_modal', 'test_margin_modal', 'test_curve_manager', 'test_overlay_gpu', 'test_implant_views', 'test_bridge_modal', 'test_root_modal', 'test_label_modal', 'test_bracket_manager', 'test_bracket_modal', 'test_image_registration_modal', 'test_retopo_sculpt', 'test_view_to_z', 'test_align_front', 'test_center_model'}
+UI_TESTS = {'test_axis_modal', 'test_margin_modal', 'test_curve_manager', 'test_overlay_gpu', 'test_implant_views', 'test_bridge_modal', 'test_root_modal', 'test_label_modal', 'test_bracket_manager', 'test_bracket_modal', 'test_image_registration_modal', 'test_retopo_sculpt', 'test_view_to_z', 'test_align_front', 'test_center_model', 'test_model_base'}
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--blender', required=True)
 args = parser.parse_args()

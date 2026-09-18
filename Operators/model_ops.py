@@ -1355,6 +1355,12 @@ class OPENDENTAL_OT_model_base(bpy.types.Operator):
     bl_label = "Create a solid base Dental Model."
     bl_options = {"REGISTER", "UNDO"}
 
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and context.mode == 'OBJECT' and context.area is not None
+                and context.area.type == 'VIEW_3D' and context.region_data is not None)
+
     def execute(self, context):
 
         base_height_prop = context.scene.ODC_modops_props.base_height
@@ -1424,8 +1430,8 @@ class OPENDENTAL_OT_model_base(bpy.types.Operator):
 
             # Relax border loop :
             bpy.ops.mesh.remove_doubles(threshold=0.1)
-            bpy.ops.mesh.looptools_relax(input="selected", interpolation="cubic",
-            iterations="3", regular=True)
+            from .mesh_loop_tools import relax_selected
+            relax_selected(Model_base.data, iterations=3)
 
             # Make some calcul of average z_cordinate of border vertices :
 
@@ -1469,7 +1475,9 @@ class OPENDENTAL_OT_model_base(bpy.types.Operator):
             bpy.ops.mesh.fill_holes(sides=100)
 
             bpy.ops.mesh.select_all(action="SELECT")
-            bpy.ops.mesh.normals_make_consistent(inside=False)
+            bm = bmesh.from_edit_mesh(Model_base.data)
+            bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+            bmesh.update_edit_mesh(Model_base.data)
             bpy.ops.mesh.select_all(action="DESELECT")
             bpy.ops.object.mode_set(mode="OBJECT")
 
