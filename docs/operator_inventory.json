@@ -11,7 +11,9 @@
     "class": "OPENDENTAL_OT_center_all_objects",
     "bl_idname": "opendental.center_objects",
     "bl_label": "Center All Objects",
-    "test_status": "pending"
+    "test_status": "tested_blender_5_1_2",
+    "test_file": "tests/test_center_objects.py",
+    "test_scope": "Empty scene, shared meshes, nested transformed parents, stale excluded transforms, visibility/selection preservation and repeat centering"
   },
   {
     "module": "Operators/crown.py",

@@ -35,40 +35,71 @@ lib_teeth = []
 lib_teeth_enum = []
     
 class OPENDENTAL_OT_center_all_objects(bpy.types.Operator):
-    '''Use With Caution especially if objects are parented.'''
+    """Center the scene while preserving object origins and relative placement."""
     bl_idname = "opendental.center_objects"
     bl_label = "Center All Objects"
-    bl_options = {'REGISTER','UNDO'}
-    
-    def execute(self,context):
-        #sce = bpy.context.scene #2.79
-        #gather all the objects
-        objects = [ob for ob in bpy.context.scene.objects] #don't want this to update #2.79 sce.objects
-        
-        #put all their origins at their medianpoint
-        bpy.ops.object.select_all(action='DESELECT')
-        for ob in objects:
-            #sce.objects.active_object = ob #2.79
-            bpy.context.view_layer.objects.active = ob
-            ob.hide_set(False)
-            ob.select_set(state=True)
-            bpy.ops.object.origin_set(type = 'ORIGIN_GEOMETRY', center = 'BOUNDS')
-            ob.select_set(state=False)
-            
-        #calculate the median point of all the objects
-        Med = Vector((0,0,0))
-        for ob in objects:
-            Med += ob.location
-        Med = 1/len(objects)*Med
-        print(Med)
-        
-        #Move everyone
-        bpy.ops.object.select_all(action = 'SELECT')
-        bpy.ops.transform.translate(value = (-Med[0], -Med[1], -Med[2]))
-        
-        #celebrate                           
-        return{'FINISHED'}
-        
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        return context.mode == 'OBJECT'
+
+    def execute(self, context):
+        objects = list(context.scene.objects)
+        if not objects:
+            self.report({'WARNING'}, 'There are no objects to center')
+            return {'CANCELLED'}
+        # Excluded collections may retain stale world matrices. Evaluate all
+        # scene objects temporarily, restoring visibility even if evaluation fails.
+        layers = []
+        def collect(layer):
+            layers.append(layer)
+            for child in layer.children:
+                collect(child)
+        collect(context.view_layer.layer_collection)
+        layer_state = [(layer, layer.exclude, layer.hide_viewport) for layer in layers]
+        collection_state = [(collection, collection.hide_viewport)
+                            for collection in context.scene.collection.children_recursive]
+        object_state = [(obj, obj.hide_viewport) for obj in objects]
+        try:
+            for layer, _, _ in layer_state:
+                layer.exclude = False
+                layer.hide_viewport = False
+            for collection, _ in collection_state:
+                collection.hide_viewport = False
+            for obj, _ in object_state:
+                obj.hide_viewport = False
+            context.view_layer.update()
+            centers = []
+            for obj in objects:
+                bounds = [Vector(corner) for corner in obj.bound_box]
+                if obj.type in {'MESH', 'CURVE', 'SURFACE', 'FONT', 'META', 'LATTICE'} and any(
+                        corner != Vector((-1, -1, -1)) for corner in bounds):
+                    center = obj.matrix_world @ (sum(bounds, Vector()) / len(bounds))
+                else:
+                    center = obj.matrix_world.translation.copy()
+                centers.append(center)
+            center = sum(centers, Vector()) / len(centers)
+            translation = Matrix.Translation(-center)
+            # Descendants inherit exactly one translation from their scene root.
+            # Moving all objects independently would translate parented units twice.
+            scene_objects = set(objects)
+            roots = [(obj, obj.matrix_world.copy()) for obj in objects
+                     if obj.parent not in scene_objects]
+            for obj, world in roots:
+                obj.matrix_world = translation @ world
+            context.view_layer.update()
+        finally:
+            for obj, hidden in object_state:
+                obj.hide_viewport = hidden
+            for collection, hidden in collection_state:
+                collection.hide_viewport = hidden
+            for layer, excluded, hidden in layer_state:
+                layer.exclude = excluded
+                layer.hide_viewport = hidden
+            context.view_layer.update()
+        return {'FINISHED'}
+
 class OPENDENTAL_OT_set_master(bpy.types.Operator):
     ''''''
     bl_idname='opendental.set_master'

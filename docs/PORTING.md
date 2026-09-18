@@ -1444,3 +1444,21 @@ A tooth can have one pending crown type and an independent implant plan. Choosin
 an existing unit updates its type in place; unselected existing plans remain.
 Cancellation changes no plan data. Multi-window/area closure and addon disable
 while the modal is running remain untested.
+
+### Center All Objects
+
+The centering operator now computes the mean of object bounding-box centers in
+world space (origins for non-geometric objects), then translates scene roots
+once. It preserves origins and mesh data rather than resetting origins as a
+side effect. Descendants retain their local placement; this avoids averaging
+parent-relative locations as though they were world coordinates. Empty scenes
+cancel safely and execution is limited to Object Mode.
+
+Excluded collections may have stale world transforms. Visibility/exclusion
+flags are temporarily enabled for evaluation and restored in a finally block.
+`test_center_objects.py` passes on Blender 5.1.2 for shared meshes, nested rotated
+and scaled parents, a hidden child, an excluded mesh whose location changed
+while excluded, preserved selection/active object/visibility, and a second
+centering with no further movement. All world matrices are checked against one
+common translation and local vertex data remains unchanged. Animated or
+constraint-driven roots and linked read-only scenes are not covered by this test.
