@@ -985,3 +985,7 @@ Expanded creation/bake coverage to teeth 11, 16, 25 and 36. Tooth 11 passes; too
 Keep now captures the evaluated Multires surface before selection/lock changes, applies Hook/Laplacian modifiers, and reshapes Multires from that reference. Temporary reference objects/meshes are removed and viewport subdivision level is restored. Capture raises to total subdivision level and disables modifiers after Multires when needed.
 
 The unchanged strict creation/deformation/bake test now passes teeth 11, 16, 25 and 36 at tolerance 1e-4; the shared-control Keep test also passes. Diagnostic reshape errors were below 1e-6. The small shutdown allocation warning persists. Lower viewport levels, additional trailing modifiers, shared source meshes and mid-application failures require further coverage.
+
+### Static bracket placement
+
+Ported static bracket placement to retained dynamic library enums, returned library object identity, current collection/cursor APIs and matrix multiplication. Object-mode polling and selection validation added; non-view contexts use identity orientation. `test_static_bracket.py` passes with two bundled library assets at cursor (3,4,5) and preservation of a preexisting same-name object. View orientation, search popup and interactive surface placement remain unverified.

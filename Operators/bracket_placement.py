@@ -689,65 +689,39 @@ class OPENDENTAL_OT_place_bracket(bpy.types.Operator):
         return {'RUNNING_MODAL'}
     
 class OPENDENTAL_OT_place_bracket_static(bpy.types.Operator):
-    '''Places bracket or swaps existing bracket with new bracket of your choice'''
+    """Place a library bracket at the cursor with the current view orientation."""
     bl_idname = "opendental.place_static_bracket"
     bl_label = "Place Bracket Static"
-    bl_options = {'REGISTER','UNDO'}
+    bl_options = {'REGISTER', 'UNDO'}
     bl_property = "ob"
+    _items = []
 
     def item_cb(self, context):
-        return [(obj.name, obj.name, '') for obj in self.objs]
- 
-    objs: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
-    
-    ob: bpy.props.EnumProperty(name="Bracket Library Objects",
-                                 description="A List of the ortho library", 
-                                 items=item_cb)
-    
-    def invoke(self, context, event): 
-        self.objs.clear()
-        settings = get_settings()
-        libpath = settings.ortho_lib
-        assets = obj_list_from_lib(libpath)
-       
-        for asset_object_name in assets:
-            self.objs.add().name = asset_object_name
-           
+        type(self)._items = [(name, name, '') for name in obj_list_from_lib(get_settings().ortho_lib)]
+        return type(self)._items
+
+    ob: bpy.props.EnumProperty(name="Bracket Library Objects", items=item_cb)
+
+    @classmethod
+    def poll(cls, context):
+        return context.mode == 'OBJECT'
+
+    def invoke(self, context, event):
         context.window_manager.invoke_search_popup(self)
         return {'FINISHED'}
-    
+
     def execute(self, context):
         settings = get_settings()
-        dbg = settings.debug
-        #if bpy.context.mode != 'OBJECT':
-        #    bpy.ops.object.mode_set(mode = 'OBJECT')
-        
-        sce = context.scene
-          
-        world_mx = Matrix.Identity(4)
-            
-        world_mx[0][3]=sce.cursor_location[0]
-        world_mx[1][3]=sce.cursor_location[1]
-        world_mx[2][3]=sce.cursor_location[2]
-                                        
-        #is this more memory friendly than listing all objects?
-        current_obs = [ob.name for ob in bpy.data.objects]
-                
-        #link the new implant from the library
-        obj_from_lib(settings.ortho_lib,self.ob)
-                
-        #this is slightly more robust than trusting we don't have duplicate names.
-        for ob in bpy.data.objects:
-            if ob.name not in current_obs:
-                Bracket = ob
-                        
-        sce.objects.link(Bracket)
-        rv3d = context.region_data
-        view_mx = rv3d.view_rotation.to_matrix()
-    
-        Bracket.matrix_world = world_mx * view_mx.to_4x4()              
+        if not self.ob or self.ob not in obj_list_from_lib(settings.ortho_lib):
+            self.report({'WARNING'}, 'Select a bracket from the library')
+            return {'CANCELLED'}
+        bracket = obj_from_lib(settings.ortho_lib, self.ob)
+        context.collection.objects.link(bracket)
+        rotation = context.region_data.view_rotation.to_matrix().to_4x4() if context.region_data else Matrix.Identity(4)
+        bracket.matrix_world = Matrix.Translation(context.scene.cursor.location) @ rotation
         return {'FINISHED'}
-     
+
+
 def register():
     bpy.utils.register_class(OPENDENTAL_OT_place_bracket)
     bpy.utils.register_class(OPENDENTAL_OT_place_bracket_static)
