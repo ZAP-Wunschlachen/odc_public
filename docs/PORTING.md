@@ -1291,3 +1291,18 @@ expected side; a linked-mesh sibling and a colliding object name are preserved.
 Exit and missing-cutter cancellation are checked. The fixture directly assigns the
 cutter-target reference, so interactive placement, edit-mode cutter adjustment,
 modal cancellation/settings restoration and multiple cutters remain unverified.
+
+### Interactive square-cutter placement
+
+The square-cut modal now defers scene mutations until Enter. Escape during view
+alignment therefore leaves geometry, mesh identity, selection, hidden state,
+snapping and the previous cutting-target value unchanged. Confirmation resolves
+the recorded target, creates the cutter, and handles only key press events.
+
+`test_square_cut_modal.py` passes in foreground Blender 5.1.2 with simulated Escape
+and Enter events. It checks cancellation state preservation, one generated mesh
+with the correct target reference, preservation of a pre-existing cutter-name
+collision, and subsequent Exit cleanup. The informational popup is suppressed in
+the automated test. Editing/deforming the generated cutter and restoring visibility
+or snapping after an accepted cutting session remain unverified. The test is
+excluded from the headless runner.

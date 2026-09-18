@@ -1148,81 +1148,43 @@ def add_square_cutter(context) :
 #######################################################################################
 #Square cut modal operator :
 
-class OPENDENTAL_OT_square_cut(bpy.types.Operator): 
-    """Square Cutting Tool add"""
+class OPENDENTAL_OT_square_cut(bpy.types.Operator):
+    """Align the view, then create a cutter for the active model."""
+    bl_idname = 'opendental.square_cut'
+    bl_label = 'Square Cut'
+    bl_options = {'REGISTER', 'UNDO'}
 
-    bl_idname = "opendental.square_cut"
-    bl_label = "Square Cut"
-    bl_options = {"REGISTER", "UNDO"}
-
+    @classmethod
+    def poll(cls, context):
+        return (context.mode == 'OBJECT' and context.object is not None
+                and context.object.type == 'MESH' and context.area is not None
+                and context.area.type == 'VIEW_3D' and context.region_data is not None)
 
     def modal(self, context, event):
-
-        if event.type == "RET":
-            if event.value == ("PRESS"):
-                
-                add_square_cutter(context)
-
-            return {"FINISHED"}
-
-        elif event.type == ("ESC"):
-
-            return {"CANCELLED"}
-
-
-        else :
-
-            # allow navigation
-            return {"PASS_THROUGH"}
-
-        
-
-        return {"RUNNING_MODAL"}
-
+        if event.type == 'ESC' and event.value == 'PRESS':
+            return {'CANCELLED'}
+        if event.type in {'RET', 'NUMPAD_ENTER'} and event.value == 'PRESS':
+            model = context.scene.objects.get(self.target_name)
+            if model is None:
+                self.report({'WARNING'}, 'The cutting target no longer exists')
+                return {'CANCELLED'}
+            for obj in context.selected_objects:
+                obj.select_set(False)
+            model.hide_set(False)
+            model.select_set(True)
+            context.view_layer.objects.active = model
+            context.scene.ODC_modops_props.cutting_target = model.name
+            bpy.ops.object.hide_view_set(unselected=True)
+            context.tool_settings.use_snap = False
+            add_square_cutter(context)
+            return {'FINISHED'}
+        return {'PASS_THROUGH'}
 
     def invoke(self, context, event):
-
-        if bpy.context.selected_objects == []:
-
-            message = " Please select Model !"
-            ShowMessageBox(message=message, icon="COLORSET_02_VEC")
-
-            return {"CANCELLED"}
-
-        else:
-
-            if context.space_data.type == "VIEW_3D":
-
-                
-                cutting_target = context.scene.ODC_modops_props.cutting_target
-
-                # Hide everything but model :
-
-                bpy.ops.object.mode_set(mode="OBJECT")
-
-                Model = bpy.context.view_layer.objects.active
-                bpy.ops.object.select_all(action="DESELECT")
-                Model.select_set(True)
-
-                context.scene.ODC_modops_props.cutting_target = Model.name
-
-                bpy.ops.object.hide_view_set(unselected=True)
-
-                bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
-                bpy.context.scene.tool_settings.use_snap = False
-
-                message = " Please align Model to the Cutting View and click 'ENTER' !"
-                ShowMessageBox(message=message, icon="COLORSET_02_VEC")
-                
-                context.window_manager.modal_handler_add(self)
-
-                return {"RUNNING_MODAL"}
-
-            else:
-
-                self.report({"WARNING"}, "Active space must be a View3d")
-
-                return {"CANCELLED"}
+        self.target_name = context.object.name
+        ShowMessageBox(message="Align the cutting view, then press Enter. Escape cancels.", icon='COLORSET_02_VEC')
+        context.window_manager.modal_handler_add(self)
+        return {'RUNNING_MODAL'}
 
 #######################################################################################
 #Square cut confirm operator :
