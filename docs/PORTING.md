@@ -1802,3 +1802,21 @@ running headless; the probe supplies an existing screen area. These three stages
 have no tracebacks, dependency cycles or shutdown allocation warnings. This is an
 installation/lifecycle check, not a rerun of all geometry or UI tests against the
 installed copy. The user's normal Blender profile is not modified by the runner.
+
+### Repeat Physics Setup with existing movement joints
+
+`test_physics_setup_repeat.py` exposed that rerunning Physics Setup discarded the
+existing rigid-body world collections and removed/re-added selected bodies. This
+could disconnect movement joints and unselected teeth. Setup now retains an
+existing world and uses Blender's idempotent rigid-body add operation to update
+selected bodies without clearing their joint references.
+
+The regression creates two bodies with independent 0.5-unit vertical bounds and
+runs setup three times with alternating single-body selection. It checks body and
+constraint collection identity, body membership, passive collision-free anchors,
+unchanged joint targets and object count, and actual bounded motion over 60 frames
+per attempt. All nine physics tests pass after the change without tracebacks or
+dependency cycles, including prior field dynamics, save/reopen and rebuild tests.
+This resolves the earlier repeat-setup gap; complex multi-tooth contact behavior
+and fresh-process persistence of the complete constrained simulation remain
+separate verification cases.

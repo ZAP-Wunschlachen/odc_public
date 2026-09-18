@@ -932,11 +932,9 @@ class OPENDENTAL_OT_physics_setup(bpy.types.Operator):
     def execute(self, context):
 
         context.scene.use_gravity = False
-        #clear existing rigidbody
-        if context.scene.rigidbody_world:
-            bpy.ops.rigidbody.world_remove()
-            bpy.ops.rigidbody.world_add()
-        else:
+        # Retain existing body/joint collections when setup is repeated. Removing
+        # the world disconnects unselected teeth and their movement anchors.
+        if context.scene.rigidbody_world is None:
             bpy.ops.rigidbody.world_add()
 
         #potentially adjust these values
@@ -952,11 +950,9 @@ class OPENDENTAL_OT_physics_setup(bpy.types.Operator):
         for ob in obs:
             context.view_layer.objects.active = ob
             ob.select_set(True)
-            if not ob.rigid_body:
-                bpy.ops.rigidbody.object_add()
-            else:
-                bpy.ops.rigidbody.object_remove()
-                bpy.ops.rigidbody.object_add()
+            # Adding an existing rigid body updates its type and membership
+            # without clearing joints that reference it.
+            bpy.ops.rigidbody.object_add(type='ACTIVE')
 
 
             ob.lock_rotations_4d = True
