@@ -1605,3 +1605,16 @@ passes for tooth, implant and splint collections, shared references, valid-list
 fallback, stale-list rejection and excluded roles. The existing bridge selection
 test also passes on Blender 5.1.2. This closes the shared-reference ambiguity
 noted in the preceding selection audit.
+
+### Treatment keyframes and visibility
+
+Treatment staging now resolves teeth from the current view layer and uses full
+viewport visibility instead of checking only the per-object hide flag. This
+prevents objects disabled globally, hidden through a collection or excluded from
+the view layer from receiving treatment keyframes.
+
+The expanded `test_ortho_staging.py` failed on hidden-object animation before
+the correction and now passes in Blender 5.1.2. It verifies location endpoints,
+quaternion, axis-angle and Euler rotation endpoints, visible prefixed tooth
+names, all three additional hiding cases, and the existing quadrant/jaw view
+checks. Local-view isolation and animation export remain outside this test.

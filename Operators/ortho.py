@@ -765,13 +765,13 @@ class OPENDENTAL_OT_set_treatment_keyframe(bpy.types.Operator):
         #find obs
         obs = []
         for num in TOOTH_NUMBERS:
-            ob = context.scene.objects.get(str(num))
-            if ob != None and not ob.hide_get():
+            ob = context.view_layer.objects.get(str(num))
+            if ob != None and ob.visible_get(view_layer=context.view_layer):
                 obs.append(ob)
                 continue
 
             for ob in context.view_layer.objects:
-                if ob.name.startswith(str(num)) and not ob.hide_get():
+                if ob.name.startswith(str(num)) and ob.visible_get(view_layer=context.view_layer):
                     obs.append(ob)
 
         if not obs:
