@@ -673,7 +673,9 @@
     "class": "OPENDENTAL_OT_fill",
     "bl_idname": "opendental.fill",
     "bl_label": "Fill Holes",
-    "test_status": "pending"
+    "test_status": "tested_execution_blender_5_1_2",
+    "test_file": "tests/test_fill_holes.py",
+    "test_scope": "Object/Edit Mode selected-boundary filling, closed cube topology/volume, shared mesh isolation, empty selection cancellation and missing/non-mesh polling"
   },
   {
     "module": "Operators/model_ops.py",

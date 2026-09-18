@@ -1839,3 +1839,24 @@ checks explicitly requesting Keep Orientation after the default operation causes
 no additional movement. This supersedes the earlier unresolved Keep Orientation
 note. Child-object world positions, constraints and all supported non-mesh data
 types are not established by this mesh regression.
+
+### Registered entry-point audit and Fill Holes
+
+A fresh strict-registration audit found 118 operators. An AST scan found direct
+operator calls in tests for 107; manual inspection resolved ten more through the
+parameterized plan-removal, quadrant-visibility and help-overlay tests. The sole
+remaining execution gap was `opendental.fill`; earlier text matching had confused
+other occurrences of "fill" with coverage. Entry-point references establish
+candidate coverage only, not correctness of every option or geometry workflow.
+
+The new Fill Holes regression exercises actual mesh operations. The operator now
+polls for an active selected mesh in Object/Edit mode, reads live BMesh selection
+when editing, cancels if fewer than two vertices are selected, separates shared
+mesh data before mutation, and returns Blender's actual edge/face-add result.
+Successful execution intentionally remains in Edit Mode, as before. It fills the
+selected boundary; it does not automatically close every hole in a mesh.
+
+`test_fill_holes.py` passes a selected open cube becoming a closed manifold of
+volume 8, unchanged shared sibling geometry, no-selection cancellation, missing
+and non-mesh context rejection, and a live Edit-mode boundary producing area 4.
+`test_poll_contexts.py` and `test_model_workflows.py` also pass after the change.

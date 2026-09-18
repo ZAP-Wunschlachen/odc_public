@@ -337,29 +337,26 @@ class OPENDENTAL_OT_fill(bpy.types.Operator):
     bl_label = "Fill Holes"
     bl_options = {"REGISTER", "UNDO"}
 
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and context.object.select_get() and context.mode in {'OBJECT', 'EDIT_MESH'})
+
     def execute(self, context):
-
-        if bpy.context.selected_objects == []:
-
-            message = " Please select Model !"
-            ShowMessageBox(message=message, icon="COLORSET_02_VEC")
-
-            return {"CANCELLED"}
-
-        else:
-            
-            ####### Get model to clean ####### 
-            bpy.ops.object.mode_set(mode="OBJECT")
-            Model = bpy.context.view_layer.objects.active
-            bpy.ops.object.select_all(action="DESELECT")
-            Model.select_set(True)
-
-            bpy.ops.object.mode_set(mode="EDIT")
-            bpy.context.tool_settings.mesh_select_mode = (True, False, False)
-            bpy.ops.mesh.edge_face_add()
-            
-
-            return {"FINISHED"}
+        model = context.object
+        vertices = (bmesh.from_edit_mesh(model.data).verts if context.mode == 'EDIT_MESH'
+                    else model.data.vertices)
+        if sum(vertex.select for vertex in vertices) < 2:
+            self.report({'WARNING'}, 'Select the boundary vertices or edges to fill')
+            return {'CANCELLED'}
+        bpy.ops.object.mode_set(mode='OBJECT')
+        bpy.ops.object.select_all(action='DESELECT')
+        model.select_set(True)
+        if model.data.users > 1:
+            model.data = model.data.copy()
+        bpy.ops.object.mode_set(mode='EDIT')
+        context.tool_settings.mesh_select_mode = (True, False, False)
+        return bpy.ops.mesh.edge_face_add()
 
 #######################################################################################
 #Retopo smooth operator :
