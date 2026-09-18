@@ -45,224 +45,80 @@ class OPENDENTAL_OT_survey_model(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        # restoration exists and is in scene
-        C0 = context.space_data is not None and context.space_data.type == "VIEW_3D"
-        C1 = context.object != None
-        if C1:
-            C2 = context.object.type == "MESH"
-        else:
-            C2 = False
-        return C0 and C1 and C2
+        return (context.mode == 'OBJECT' and context.object is not None
+                and context.object.type == 'MESH' and context.object.select_get()
+                and context.area is not None and context.area.type == 'VIEW_3D'
+                and context.region_data is not None)
 
     def execute(self, context):
-
-        colorprop = context.scene.UNDERCUTS_view_props.colorprop
-
-        context.scene.UNDERCUTS_view_props.survey_quaternion = context.space_data.region_3d.view_rotation
-
-        bpy.types.Scene.pre_surveyed = True
-        
-        
-        if bpy.context.selected_objects == []:
-
-            message = " Please select the Model to survey !"
-            ShowMessageBox(message=message, icon="COLORSET_02_VEC")
-
-            return {"CANCELLED"}
-
-        elif colorprop == "No color selected" :
-
-            message = " Please select a color for the survey zone !"
-            ShowMessageBox(message=message, icon="COLORSET_01_VEC")
-
-            return {"CANCELLED"}
-
-        else:
-
-            # ...........................Prepare scene settings : ..............................................
-
-            # bpy.ops.view3d.snap_cursor_to_center()
-            bpy.context.scene.transform_orientation_slots[0].type = "GLOBAL"
-            bpy.context.scene.tool_settings.transform_pivot_point = "ACTIVE_ELEMENT"
-            bpy.context.scene.tool_settings.use_snap = False
-            bpy.context.tool_settings.mesh_select_mode = (False, False, True)
-            bpy.ops.object.mode_set(mode = 'OBJECT')
-
-            # Get active Object :..........................................................
-
-            Model = bpy.context.view_layer.objects.active
-            Model_name = Model.name
-
-            if not f"_survey({colorprop})" in Model_name : 
-
-                # Remove old survey model and silhouette :
-                for obj in bpy.data.objects :
-
-                    if obj.name.endswith((f"_survey({colorprop})", f"_survey({colorprop})_silhouette"))  :
-                        
-                        bpy.ops.object.hide_view_clear()
-                        bpy.ops.object.select_all(action="DESELECT")
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-
-                        bpy.ops.object.delete(use_global=False, confirm=False)
-            
-                # duplicate Model :
-
-                bpy.ops.object.select_all(action="DESELECT")
-                Model.select_set(True)
-                bpy.context.view_layer.objects.active = Model
-                bpy.ops.object.duplicate_move()
-                Model_Survey = bpy.context.view_layer.objects.active
-                mesh_Survey = Model_Survey.data 
-                bpy.ops.object.select_all(action="DESELECT")
-                Model_Survey.select_set(True)
-
-                # Rename Model_Survey :
-            
-                if "_solid_base" in Model_name :
-                    Model_Survey.name = Model_name.replace("_solid_base", "_")
-
-                Model_Survey.name += f"survey({colorprop})"
-                mesh_Survey.name = f"{Model_Survey.name}_mesh"
-                
-            else :
-
-                Model_Survey = context.active_object
-                mesh_Survey = Model_Survey.data
-
-                # Remove old silhouette object :
-                for obj in bpy.data.objects :
-
-                    if obj.name.endswith(f"_survey({colorprop})_silhouette")  :
-                        
-                        bpy.ops.object.hide_view_clear()
-                        bpy.ops.object.select_all(action="DESELECT")
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-
-                        bpy.ops.object.delete(use_global=False, confirm=False)
-            
-                
-            # Model_Survey add material :
-
-            bpy.ops.object.select_all(action="DESELECT")
-            Model_Survey.select_set(True)
-            bpy.context.view_layer.objects.active = Model_Survey
-
-            for _ in range(1,len(Model_Survey.material_slots)) :
-                
-                bpy.ops.object.material_slot_remove()
-
-
-            mat_list = []
-
-            for mat in bpy.data.materials:
-
-                mat_list.append(mat.name)
-
-            #if  Model.material_slot
-
-
-            if not "my_Neutral" in mat_list:
-
-                Model_mat = bpy.data.materials.new("my_Neutral")
-                Model_mat.diffuse_color = [0.8, 0.8, 0.8, 1]
-
-            else:
-
-                Model_mat = bpy.data.materials["my_Neutral"]
-
-            mesh_Survey.materials.append(Model_mat)
-
-            
-
-            survey_matname = f"survey_materiel({colorprop})"
-            survey_matcolor = color[colorprop]
-
-            if not survey_matname in mat_list:
-
-                Survey_mat = bpy.data.materials.new(survey_matname)
-                Survey_mat.diffuse_color = survey_matcolor
-                Survey_mat.roughness = 0.4
-
-            else:
-
-                Survey_mat = bpy.data.materials[survey_matname]
-
-            mesh_Survey.materials.append(Survey_mat)
-            Model_Survey.active_material_index = 1
-
-
-            
-            # #############################____Surveying____###############################
-
-            global survey_faces_index_list
-            
-            survey_faces_index_list = []
-            
-
-            bpy.ops.object.select_all(action="DESELECT")
-            Model_Survey.select_set(True)
-            bpy.context.view_layer.objects.active = Model_Survey
-
-            ob = Model_Survey
-            world_view = context.space_data.region_3d.view_rotation @ Vector((0,0,1))
-            local_view = ob.matrix_world.inverted().to_quaternion() @ world_view
-
-            bpy.context.tool_settings.mesh_select_mode = (False, False, True)
-
-            for f in ob.data.polygons:
-
-                if f.normal.dot(local_view) < -0.000001:
-                    survey_faces_index_list.append(f.index)
-
-            
-            # 4_# select survey faces :
-
-            # ....Deselect everything first
-            bpy.ops.object.mode_set(mode="EDIT")
-            bpy.ops.mesh.select_all(action="DESELECT")
-
-            # ....it seems we can only select faces during object mode
-            bpy.ops.object.mode_set(mode="OBJECT")
-
-            for i in survey_faces_index_list:
-                face = ob.data.polygons[i]
-                face.select = True
-
-            # Remove old vertex groups :
-
-            ob.vertex_groups.clear()
-            
-            # Add vertex group :
-
-            bpy.ops.object.mode_set(mode = 'EDIT')
-            bpy.context.tool_settings.mesh_select_mode = (True, False, False)
-            Model_Survey.vertex_groups.new(name=f"my_survey_vgroup({colorprop})")
-            bpy.ops.object.vertex_group_assign()
-            bpy.ops.object.material_slot_assign()
-            bpy.ops.object.mode_set(mode = 'OBJECT')
-            
-            bpy.ops.object.select_all(action="DESELECT")
-            Model_Survey.select_set(True)
-
-
-            ob = Model_Survey
-            view = context.space_data.region_3d.view_rotation @ Vector((0, 0, 1))
-            odcutils.silouette_brute_force(
-                context, ob, view, self.world, self.smooth #, debug=dbg
-            )
-            silhouette = bpy.context.view_layer.objects.active
-            bpy.ops.object.mode_set(mode = 'OBJECT')
-            bpy.ops.object.select_all(action="DESELECT")
-            silhouette.select_set(True)
-            Model_Survey.select_set(True)
-            bpy.context.view_layer.objects.active = Model_Survey
-            bpy.ops.object.hide_view_set(unselected=True)
-            silhouette.select_set(False)
-            
-        return {"FINISHED"}
+        props = context.scene.UNDERCUTS_view_props
+        color_name = props.colorprop
+        if color_name == 'No color selected':
+            self.report({'WARNING'}, 'Choose a survey color first')
+            return {'CANCELLED'}
+        source = context.object
+        original = source.get('odc_survey_source')
+        if isinstance(original, bpy.types.Object) and original.name in context.scene.objects:
+            source = original
+        previous = [obj for obj in context.scene.objects
+                    if obj.get('odc_survey_source') == source
+                    and obj.get('odc_survey_color') == color_name]
+        context.view_layer.update()
+        survey = source.copy()
+        survey.data = source.data.copy()
+        survey.name = source.name + '_survey(' + color_name + ')'
+        context.collection.objects.link(survey)
+        survey.hide_viewport = False
+        survey['odc_survey_source'] = source
+        survey['odc_survey_color'] = color_name
+        survey.vertex_groups.clear()
+        survey.data.materials.clear()
+        for name, rgba in (('my_Neutral', (.8,.8,.8,1)),
+                           ('survey_materiel(' + color_name + ')', color[color_name])):
+            material = bpy.data.materials.get(name)
+            if material is None:
+                material = bpy.data.materials.new(name)
+                material.diffuse_color = rgba
+                material.roughness = .4
+            survey.data.materials.append(material)
+        context.view_layer.update()
+        rotation = context.region_data.view_rotation.copy()
+        direction = rotation @ Vector((0,0,1))
+        local = (survey.matrix_world.inverted().to_3x3() @ direction).normalized()
+        vertices = set()
+        for face in survey.data.polygons:
+            face.material_index = int(face.normal.dot(local) < -1e-6)
+            if face.material_index:
+                vertices.update(face.vertices)
+        group = survey.vertex_groups.new(name='my_survey_vgroup(' + color_name + ')')
+        if vertices:
+            group.add(list(vertices), 1, 'REPLACE')
+        try:
+            silhouette = odcutils.silouette_brute_force(context, survey, direction, self.world, self.smooth)
+        except Exception:
+            mesh = survey.data
+            bpy.data.objects.remove(survey, do_unlink=True)
+            if mesh.users == 0:
+                bpy.data.meshes.remove(mesh)
+            raise
+        silhouette['odc_survey_owner'] = survey
+        for old in previous:
+            owned = [obj for obj in context.scene.objects if obj.get('odc_survey_owner') == old]
+            for obj in owned + [old]:
+                mesh = obj.data
+                bpy.data.objects.remove(obj, do_unlink=True)
+                if isinstance(mesh, bpy.types.Mesh) and mesh.users == 0:
+                    bpy.data.meshes.remove(mesh)
+        props.survey_quaternion = rotation
+        context.scene.pre_surveyed = True
+        for obj in context.selected_objects:
+            obj.select_set(False)
+        source.hide_set(True)
+        survey.hide_set(False)
+        silhouette.hide_set(False)
+        survey.select_set(True)
+        context.view_layer.objects.active = survey
+        return {'FINISHED'}
 
 class OPENDENTAL_OT_blockout_model(bpy.types.Operator):
     """Calculates silhouette of object which surveys convexities AND concavities from the current view axis"""

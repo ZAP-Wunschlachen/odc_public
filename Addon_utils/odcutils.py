@@ -2093,117 +2093,42 @@ def reorient_object(ob, orientation):
     ob.update_tag()
 
 
-def silouette_brute_force(context, ob, view, world = True, smooth = True, debug = False):
-    '''
-    args:
-      ob - mesh object
-      view - Mathutils Vector
-      
-    return:
-       new mesh of type Mesh (not BMesh)
-    '''
-    if debug:
-        start = time.time()
-        
-    #careful, this can get expensive with multires
-    me = ob.to_mesh()  #2.79   to_mesh(context.scene, True, 'RENDER') 
-    bme = bmesh.new()
-    bme.from_mesh(me)
-    bme.normal_update()
-    
-    #keep track of the world matrix
-    mx = ob.matrix_world
-    
-    if world:
-        #meaning the vector is in world coords
-        #we need to take it back into local
-        i_mx = mx.inverted()
-        view = i_mx.to_quaternion() @ view
-    
-    if debug:
-        face_time = time.time()
-        print("took %f to initialze the bmesh" % (face_time - start))
-        
-    face_directions = [[0]] * len(bme.faces)
-    
-    for f in bme.faces:
-        if debug > 1:
-            print(f.normal)
-        
-        face_directions[f.index] = f.normal.dot(view)
-    
-    
-    if debug:
-        edge_time = time.time()
-        print("%f seconds to test the faces" % (edge_time - face_time))
-        
-        if debug > 2:
-            print(face_directions)
-            
-    delete_edges = []
-    keep_verts = set()
-    
-    for ed in bme.edges:
-        if len(ed.link_faces) == 2:
-            silhouette = face_directions[ed.link_faces[0].index] * face_directions[ed.link_faces[1].index]
-            if silhouette < 0:
-                keep_verts.add(ed.verts[0])
-                keep_verts.add(ed.verts[1])
-            else:
-                delete_edges.append(ed)
-    if debug > 1:
-        print("%i edges to be delted" % len(delete_edges))
-        print("%i verts to be deleted" % (len(bme.verts) - len(keep_verts)))
-    if debug:
-        delete_time = time.time()
-        print("%f seconds to test the edges" % (delete_time - edge_time))
-        
-    delete_verts = set(bme.verts) - keep_verts
-    delete_verts = list(delete_verts)
-    
-    
-    #https://svn.blender.org/svnroot/bf-blender/trunk/blender/source/blender/bmesh/intern/bmesh_operator_api.h
-    bmesh.ops.delete(bme, geom = bme.faces, context = 'FACES_ONLY')
-    bmesh.ops.delete(bme, geom = delete_verts, context = 'VERTS')
-    #bmesh.ops.delete(bme, geom = delete_edges, context = 2)  #presuming the delte enum is 0 = verts, 1 = edges, 2 = faces?  who knows.
-    
-    new_me = bpy.data.meshes.new(ob.name + '_silhouette')
-    bme.to_mesh(new_me)
-    bme.free()
-    
-    obj = bpy.data.objects.new(new_me.name, new_me)
+def silouette_brute_force(context, ob, view, world=True, smooth=True, debug=False):
+    """Create the edge boundary between back-facing and other evaluated faces."""
+    evaluated = ob.evaluated_get(context.evaluated_depsgraph_get())
+    mesh = evaluated.to_mesh()
+    bm = bmesh.new()
+    try:
+        bm.from_mesh(mesh)
+        bm.normal_update()
+        direction = Vector(view)
+        if world:
+            direction = ob.matrix_world.inverted().to_3x3() @ direction
+        if direction.length_squared == 0:
+            raise ValueError('Survey direction must not be zero')
+        direction.normalize()
+        back = {face: face.normal.dot(direction) < -1e-6 for face in bm.faces}
+        edges = [edge for edge in bm.edges if len(edge.link_faces) == 2
+                 and back[edge.link_faces[0]] != back[edge.link_faces[1]]]
+        vertices = list({vertex for edge in edges for vertex in edge.verts})
+        indices = {vertex: index for index, vertex in enumerate(vertices)}
+        coordinates = [vertex.co.copy() for vertex in vertices]
+        pairs = [(indices[edge.verts[0]], indices[edge.verts[1]]) for edge in edges]
+    finally:
+        bm.free()
+        evaluated.to_mesh_clear()
+    mesh = bpy.data.meshes.new(ob.name + '_silhouette')
+    mesh.from_pydata(coordinates, pairs, [])
+    obj = bpy.data.objects.new(mesh.name, mesh)
     context.collection.objects.link(obj)
-    
-    obj.select_set(state=True) #2.79 obj.select = True
-    context.view_layer.objects.active = obj
-    
     if world:
-        obj.matrix_world = mx
-        
+        obj.matrix_world = ob.matrix_world.copy()
     if smooth:
-        mod = obj.modifiers.new('Smooth', 'SMOOTH')
-        mod.iterations = 10
-    
-        mod2 = obj.modifiers.new('Wrap','SHRINKWRAP')
-        mod2.target = ob
-    
-    if debug:
-        print("finished in %f seconds" % (time.time() - start))
-    obj.select_set(state=False)
-    return
+        obj.modifiers.new('Smooth', 'SMOOTH').iterations = 10
+        obj.modifiers.new('Wrap', 'SHRINKWRAP').target = ob
+    context.view_layer.objects.active = obj
+    return obj
 
-    '''
-    for i in range(0,res):
-      
-        angle = 2 * math.pi/res * (i + 1)
-        sin = math.sin(angle/2)
-        cos = math.cos(angle/2)
-    
-        quat = Quaternion((cos, sin*axis[0], sin*axis[1], sin*axis[2]))
-        
-        ob.rotation_quaternion = ob.rotation_quaternion * 
-        
-    '''
 
 def bezier_to_mesh(crv_obj, name, n_points=200):
     """Resample one un-beveled curve into a local-space wire mesh."""

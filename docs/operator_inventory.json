@@ -916,7 +916,9 @@
     "class": "OPENDENTAL_OT_survey_model",
     "bl_idname": "opendental.view_silhouette_survey",
     "bl_label": "Survey Model From View",
-    "test_status": "pending"
+    "test_status": "partial_geometry_test_blender_5_1_2",
+    "test_file": "tests/test_survey_model.py",
+    "test_scope": "World-space unsmoothed cube survey, nonuniform transform, repeat from source/preview, foreign-name preservation and per-scene state"
   },
   {
     "module": "Operators/blockout_undercuts.py",

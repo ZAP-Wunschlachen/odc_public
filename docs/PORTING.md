@@ -1618,3 +1618,27 @@ the correction and now passes in Blender 5.1.2. It verifies location endpoints,
 quaternion, axis-angle and Euler rotation endpoints, visible prefixed tooth
 names, all three additional hiding cases, and the existing quadrant/jaw view
 checks. Local-view isolation and animation export remain outside this test.
+
+### Public undercut survey
+
+An audit of the 117 registered operators identified the survey/blockout entry
+points as missing direct tests (text-reference checks were used only to locate
+gaps, not to infer coverage). `view_silhouette_survey` now owns its results through
+source/color and survey/silhouette references. Repeating it replaces only its
+own prior output, not every similarly named object in the file. It works on an
+independent mesh, assigns survey faces/materials directly, and stores the survey
+state on the current scene instead of overwriting the Scene RNA definition.
+
+The silhouette helper now reads evaluated geometry and clears its temporary
+mesh. It constructs only edges separating backward-facing from other faces,
+including tangential faces, and transforms the view direction with the full
+inverse linear transform so nonuniform scale is respected.
+
+`test_survey_model.py` passes in Blender 5.1.2 for a cube, a rotated/nonuniformly
+scaled cube, repeat invocation from the resulting preview, exact world-space
+silhouette edges, survey material assignments, preserved original data/groups/
+materials, foreign objects with colliding names, missing-color cancellation and
+independent state in another scene. These cases use `world=True, smooth=False`;
+smoothed results, concave/deformed inputs, singular transforms and the two public
+blockout operators still need further verification. Untagged legacy survey
+objects are deliberately not removed based only on their names.
