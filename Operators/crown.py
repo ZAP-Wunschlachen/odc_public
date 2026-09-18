@@ -567,6 +567,16 @@ class CBGetCrownForm(bpy.types.Operator):
             return {'CANCELLED'}
         sce.collection.objects.link(ob)
         ob.location = sce.cursor.location
+        if tooth is not None and tooth.rest_type == '1' and crown_methods.dundee_cervical.is_dundee(ob):
+            try:
+                crown_methods.dundee_cervical.close_pontic(ob)
+            except ValueError as error:
+                mesh = ob.data
+                bpy.data.objects.remove(ob, do_unlink=True)
+                if mesh.users == 0:
+                    bpy.data.meshes.remove(mesh)
+                self.report({'WARNING'}, str(error))
+                return {'CANCELLED'}
         # Do not discard the previous restoration until its replacement loaded.
         if tooth is not None and tooth.restoration:
             old_ob = bpy.data.objects.get(tooth.restoration)
@@ -595,46 +605,49 @@ class CBGetCrownForm(bpy.types.Operator):
                 tooth.restoration = ob.name
         
             if tooth.rest_type == '1':
-                print('pontic!')
-                bpy.ops.object.select_all(action='DESELECT')
-                ob.select_set(True)
-                context.view_layer.objects.active = ob
-                bpy.ops.object.mode_set(mode='EDIT')
-                bpy.ops.mesh.select_all(action='DESELECT')
-                bpy.ops.mesh.select_non_manifold()
-                flatten_selected(ob.data)
-                bpy.ops.transform.translate(value = (0,0,-1))
+                if ob.get('odc_topology') == 'closed_pontic':
+                    pass
+                else:
+                    print('pontic!')
+                    bpy.ops.object.select_all(action='DESELECT')
+                    ob.select_set(True)
+                    context.view_layer.objects.active = ob
+                    bpy.ops.object.mode_set(mode='EDIT')
+                    bpy.ops.mesh.select_all(action='DESELECT')
+                    bpy.ops.mesh.select_non_manifold()
+                    flatten_selected(ob.data)
+                    bpy.ops.transform.translate(value = (0,0,-1))
             
-                bpy.ops.object.mode_set(mode= 'OBJECT')
-                eds = [ed for ed in ob.data.edges if ed.select]
-                odcutils.fill_loop_scale(ob, eds, .3, debug = False)
+                    bpy.ops.object.mode_set(mode= 'OBJECT')
+                    eds = [ed for ed in ob.data.edges if ed.select]
+                    odcutils.fill_loop_scale(ob, eds, .3, debug = False)
             
-                bpy.ops.object.mode_set(mode='EDIT')
-                bpy.ops.mesh.select_more()
-                bpy.ops.mesh.select_more()
+                    bpy.ops.object.mode_set(mode='EDIT')
+                    bpy.ops.mesh.select_more()
+                    bpy.ops.mesh.select_more()
             
-                #new vertex group for smoothin after multires.
-                n = len(ob.vertex_groups)
-                bpy.ops.object.vertex_group_assign_new()
-                ob.vertex_groups[n].name = 'Smooth'
+                    #new vertex group for smoothin after multires.
+                    n = len(ob.vertex_groups)
+                    bpy.ops.object.vertex_group_assign_new()
+                    ob.vertex_groups[n].name = 'Smooth'
             
-                bpy.ops.mesh.remove_doubles()
-                #this operator causes multires data to get screwed up!
-                #bpy.ops.mesh.relax(iterations=10)
-                #dont do this either...we will make new functions
-                #to control the bottom of the pontic
-                #bpy.ops.mesh.vertices_smooth(repeat = 5)
-                bpy.ops.object.mode_set(mode='OBJECT')
+                    bpy.ops.mesh.remove_doubles()
+                    #this operator causes multires data to get screwed up!
+                    #bpy.ops.mesh.relax(iterations=10)
+                    #dont do this either...we will make new functions
+                    #to control the bottom of the pontic
+                    #bpy.ops.mesh.vertices_smooth(repeat = 5)
+                    bpy.ops.object.mode_set(mode='OBJECT')
             
-                #add a smooth modifier to attempt to mitigate
-                #the funky result when changing base mesh topology
-                n = len(ob.modifiers)
-                bpy.ops.object.modifier_add(type = 'SMOOTH')
-                mod = ob.modifiers[n]
-                mod.name = 'Smooth'        
-                mod.vertex_group = 'Smooth'
-                mod.iterations = 30
-                mod.factor = 2    
+                    #add a smooth modifier to attempt to mitigate
+                    #the funky result when changing base mesh topology
+                    n = len(ob.modifiers)
+                    bpy.ops.object.modifier_add(type = 'SMOOTH')
+                    mod = ob.modifiers[n]
+                    mod.name = 'Smooth'
+                    mod.vertex_group = 'Smooth'
+                    mod.iterations = 30
+                    mod.factor = 2
             
         #fill the bottom if it's a pontic
         
@@ -710,7 +723,11 @@ class OPENDENTAL_OT_seat_to_margin(bpy.types.Operator):
             
             if not (condition_1 and condition_2 and condition_3):
                 continue
-            crown_methods.seat_to_margin_improved(context, sce, tooth, influence = self.influence, debug = dbg) #TODO: debug stuff
+            try:
+                crown_methods.seat_to_margin_improved(context, sce, tooth, influence = self.influence, debug = dbg)
+            except ValueError as error:
+                self.report({'WARNING'}, str(error))
+                return {'CANCELLED'}
   
 
         return {'FINISHED'}
@@ -804,7 +821,11 @@ class OPENDENTAL_OT_crown_cervical_convergence(bpy.types.Operator):
         tooth = odcutils.tooth_selection(context)[0]
         
         angle = self.ang
-        crown_methods.cervical_convergence_improved(context, tooth, angle, selected = False, debug = dbg)
+        try:
+            crown_methods.cervical_convergence_improved(context, tooth, angle, selected = False, debug = dbg)
+        except ValueError as error:
+            self.report({'WARNING'}, str(error))
+            return {'CANCELLED'}
         
         odcutils.layer_management(context.scene.odc_teeth, debug = False)
         return{'FINISHED'}
@@ -841,10 +862,14 @@ class OPENDENTAL_make_solid_restoration(bpy.types.Operator):
         teeth = odcutils.tooth_selection(context)
         
         for tooth in teeth:
-            if self.method == 0:
-                crown_methods.make_solid_restoration(context, tooth, debug = dbg)
-            else:
-                crown_methods.make_solid_restoration2(context, tooth, debug = dbg)
+            try:
+                if self.method == 0:
+                    crown_methods.make_solid_restoration(context, tooth, debug = dbg)
+                else:
+                    crown_methods.make_solid_restoration2(context, tooth, debug = dbg)
+            except ValueError as error:
+                self.report({'WARNING'}, str(error))
+                return {'CANCELLED'}
         
         odcutils.layer_management(context.scene.odc_teeth, debug = False)
             
@@ -1176,8 +1201,13 @@ class OPENDENTAL_OT_pointic_from_crown(bpy.types.Operator):
             for tooth in teeth:
                 if tooth.contour and tooth.contour in bpy.data.objects:
                     shell = bpy.data.objects[tooth.contour]
-                    tooth.rest_type = '1'  #change the rest type to pontic
-                    crown_methods.pontificate(context, tooth, shell, self.p_types[int(self.p_type)], self.offset)
+                    try:
+                        crown_methods.pontificate(context, tooth, shell, self.p_types[int(self.p_type)], self.offset)
+                    except ValueError as error:
+                        odcutils.scene_reconstruct(context, ob_sets, tool_sets, space_sets, debug=dbg)
+                        self.report({'WARNING'}, str(error))
+                        return {'CANCELLED'}
+                    tooth.rest_type = '1'
                        
                             
                         

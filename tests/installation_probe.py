@@ -25,10 +25,13 @@ for field in ('tooth_lib', 'mat_lib', 'imp_lib', 'drill_lib', 'ortho_lib'):
         assert source.objects or source.materials, library
 # Load a real bundled tooth from the installed path, not the checkout.
 with bpy.data.libraries.load(prefs.tooth_lib) as (source, target):
-    assert '11' in source.objects
+    assert set(source.objects) == {f'{q}{n}' for q in (1, 2, 3, 4) for n in range(1, 9)}
     target.objects = ['11']
 tooth = target.objects[0]
 assert tooth is not None and tooth.type == 'MESH' and len(tooth.data.vertices) > 0
+assert tooth.get('odc_library') == 'dundee' and tooth.get('License') == 'CC BY 4.0'
+assert all(tooth.vertex_groups.get(name) for name in ('CEJ', 'CervicalBlend', 'AnatomyProtected'))
+assert tooth.asset_data is not None
 bpy.context.scene.collection.objects.link(tooth)
 assert bpy.ops.opendental.draw_arch_curve.get_rna_type()
 assert bpy.ops.opendental.teeth_to_arch.get_rna_type()

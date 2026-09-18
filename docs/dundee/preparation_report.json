@@ -1,0 +1,2581 @@
+[
+  {
+    "fdi": 21,
+    "vertices": 10445,
+    "triangles": 20648,
+    "boundary_edges": 240,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 8.5,
+    "uniform_scale": 26.563048557414405,
+    "bounds": [
+      [
+        -4.6509216995418745,
+        -4.290785221642788,
+        -1.3066934452859456
+      ],
+      [
+        3.849078300458125,
+        4.438945299727483,
+        9.106811175650384
+      ]
+    ],
+    "origin_mean_cej_error_mm": 8.854033455166194e-16,
+    "protected_vertices": 8025,
+    "cervical_band_mm": 3.0,
+    "snapped_new_cut_vertices": 8,
+    "maximum_cut_snap_mm": 0.007982171723004465,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 240,
+        "centroid": [
+          -8.178642948071986e-16,
+          5.368390916989559e-16,
+          5.989421921389256e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 2420,
+        "centroid": [
+          -0.10796936369514366,
+          -0.45914600281501244,
+          1.189161426018902
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 8025,
+        "centroid": [
+          -0.7433811802120159,
+          -1.4103628897811225,
+          6.052076867085283
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 2420,
+        "centroid": [
+          -0.10796936369514366,
+          -0.45914600281501244,
+          1.189161426018902
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 17,
+        "centroid": [
+          3.8423214389254157,
+          -2.316977254171949,
+          6.2521218719760006
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Mesial Connector": {
+        "count": 92,
+        "centroid": [
+          3.807583867996172,
+          -2.278814551758651,
+          6.313660431757006
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 23,
+        "centroid": [
+          -4.638282039750833,
+          -1.003602114160146,
+          6.1676134226720345
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Distal Connector": {
+        "count": 117,
+        "centroid": [
+          -4.594779841631718,
+          -0.9902458303780395,
+          6.190209244105022
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Incisal Edge": {
+        "count": 377,
+        "centroid": [
+          -0.4783783474522206,
+          -2.2086138778733497,
+          8.929533940453668
+        ],
+        "evidence": "coronal ridge/extreme region; canine compatibility alias"
+      },
+      "Palatinal Face": {
+        "count": 74,
+        "centroid": [
+          -0.05092295368495153,
+          -0.4361034454756407,
+          5.633996468485534
+        ],
+        "evidence": "Palatal Surface"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        21502
+      ],
+      "clipped_component_vertex_counts": [
+        10453
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 10453,
+          "triangles": 20661,
+          "boundary_edges": 243,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 22,
+    "vertices": 13210,
+    "triangles": 26126,
+    "boundary_edges": 292,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 6.5,
+    "uniform_scale": 20.94604135613694,
+    "bounds": [
+      [
+        -4.201574470284697,
+        -3.4835434709238093,
+        -1.9494071992452449
+      ],
+      [
+        2.2984255297153013,
+        3.04030606254366,
+        7.413489089346298
+      ]
+    ],
+    "origin_mean_cej_error_mm": 4.4320093995452667e-16,
+    "protected_vertices": 8733,
+    "cervical_band_mm": 2.965395635738519,
+    "snapped_new_cut_vertices": 4,
+    "maximum_cut_snap_mm": 0.00771558851059886,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 292,
+        "centroid": [
+          -6.083413833562501e-17,
+          9.604189589736799e-16,
+          -7.041551512348596e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 4477,
+        "centroid": [
+          -0.39370165999655754,
+          -0.48124335446506894,
+          1.264484183694546
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 8733,
+        "centroid": [
+          -1.1065473280446725,
+          -1.4034872200181077,
+          4.690790767209677
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 4477,
+        "centroid": [
+          -0.39370165999655754,
+          -0.48124335446506894,
+          1.264484183694546
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 37,
+        "centroid": [
+          2.289047730734798,
+          -1.0591497867116968,
+          3.3391320731743224
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Mesial Connector": {
+        "count": 191,
+        "centroid": [
+          2.255358237202078,
+          -1.047901982696637,
+          3.355850301318809
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 38,
+        "centroid": [
+          -4.188546370222031,
+          -0.6032186603534969,
+          4.3512268364312146
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Distal Connector": {
+        "count": 186,
+        "centroid": [
+          -4.139611219713382,
+          -0.5863588261703007,
+          4.354923798155344
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Incisal Edge": {
+        "count": 366,
+        "centroid": [
+          -0.5542181699487194,
+          -1.9937157434211963,
+          7.232758307641792
+        ],
+        "evidence": "coronal ridge/extreme region; canine compatibility alias"
+      },
+      "Palatinal Face": {
+        "count": 73,
+        "centroid": [
+          0.29511727810268684,
+          2.6300049071133165,
+          1.5933212079793018
+        ],
+        "evidence": "Cingulum"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        25110
+      ],
+      "clipped_component_vertex_counts": [
+        13214
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 13214,
+          "triangles": 26133,
+          "boundary_edges": 293,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 23,
+    "vertices": 21188,
+    "triangles": 42061,
+    "boundary_edges": 313,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 7.5,
+    "uniform_scale": 26.79823300377857,
+    "bounds": [
+      [
+        -3.4057433815986986,
+        -4.1747416107907425,
+        -1.0908590379273961
+      ],
+      [
+        4.094256618401301,
+        4.103075992979403,
+        10.045720206358949
+      ]
+    ],
+    "origin_mean_cej_error_mm": 1.0064398207844416e-15,
+    "protected_vertices": 15919,
+    "cervical_band_mm": 3.0,
+    "snapped_new_cut_vertices": 27,
+    "maximum_cut_snap_mm": 0.007624657424436649,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 313,
+        "centroid": [
+          7.945366054825401e-16,
+          -1.5606969036264182e-16,
+          1.1655568239355477e-15
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 5269,
+        "centroid": [
+          0.08570629818631546,
+          -0.08928984025518238,
+          1.376566813121675
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 15919,
+        "centroid": [
+          0.51758734692713,
+          -0.22107724124579248,
+          5.9525492448106805
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 5269,
+        "centroid": [
+          0.08570629818631546,
+          -0.08928984025518238,
+          1.376566813121675
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 40,
+        "centroid": [
+          2.7347434320578268,
+          -3.092444605151633,
+          7.000482537827918
+        ],
+        "evidence": "Mesial Contact Point"
+      },
+      "Mesial Connector": {
+        "count": 203,
+        "centroid": [
+          2.7425340496003088,
+          -3.0173252009807876,
+          6.978705852200945
+        ],
+        "evidence": "Mesial Contact Point; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 54,
+        "centroid": [
+          -2.8736504054886614,
+          1.996278867436371,
+          6.50014586561874
+        ],
+        "evidence": "Distal Contact Point"
+      },
+      "Distal Connector": {
+        "count": 252,
+        "centroid": [
+          -2.810693108458515,
+          1.9701948200494672,
+          6.476908353230876
+        ],
+        "evidence": "Distal Contact Point; broader editable patch"
+      },
+      "Incisal Edge": {
+        "count": 77,
+        "centroid": [
+          -0.10406909842880621,
+          -1.0275616702527492,
+          9.892752466839962
+        ],
+        "evidence": "coronal ridge/extreme region; canine compatibility alias"
+      },
+      "Cusp Tip": {
+        "count": 77,
+        "centroid": [
+          -0.10406909842880621,
+          -1.0275616702527492,
+          9.892752466839962
+        ],
+        "evidence": "canine cusp region"
+      },
+      "Palatinal Face": {
+        "count": 156,
+        "centroid": [
+          1.8431301006435457,
+          1.8976257395756726,
+          5.636618586055406
+        ],
+        "evidence": "Longitudinal Ridge"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        47986
+      ],
+      "clipped_component_vertex_counts": [
+        21215
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 21215,
+          "triangles": 42101,
+          "boundary_edges": 327,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 24,
+    "vertices": 10391,
+    "triangles": 20444,
+    "boundary_edges": 336,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 7.0,
+    "uniform_scale": 22.151364988924367,
+    "bounds": [
+      [
+        -3.0593785288537565,
+        -4.22696812937493,
+        -0.7247302459977456
+      ],
+      [
+        3.9406214711462435,
+        4.531483266094622,
+        6.578947049681142
+      ]
+    ],
+    "origin_mean_cej_error_mm": 2.4413635927232765e-15,
+    "protected_vertices": 6567,
+    "cervical_band_mm": 2.6315788198724572,
+    "snapped_new_cut_vertices": 14,
+    "maximum_cut_snap_mm": 0.005183998593375635,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 336,
+        "centroid": [
+          -1.1022928601635483e-15,
+          7.2156236012654335e-16,
+          -9.384027946236442e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 3824,
+        "centroid": [
+          0.08000977124622272,
+          0.16450854340463056,
+          1.1800756349761992
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 6567,
+        "centroid": [
+          0.2983700855981161,
+          0.028362102565850325,
+          4.349289219696783
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 3824,
+        "centroid": [
+          0.08000977124622272,
+          0.16450854340463056,
+          1.1800756349761992
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 22,
+        "centroid": [
+          3.840815521086195,
+          -0.9869520954945181,
+          3.852909477162761
+        ],
+        "evidence": "Mesial Contact Point"
+      },
+      "Mesial Connector": {
+        "count": 126,
+        "centroid": [
+          3.778933642406467,
+          -0.9880139200638864,
+          3.8700061995365194
+        ],
+        "evidence": "Mesial Contact Point; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 17,
+        "centroid": [
+          -2.02355092032798,
+          -2.9828936225238016,
+          4.777966224073296
+        ],
+        "evidence": "Distal Contact Point"
+      },
+      "Distal Connector": {
+        "count": 96,
+        "centroid": [
+          -1.9857661141844243,
+          -2.906608871820915,
+          4.767400905354864
+        ],
+        "evidence": "Distal Contact Point; broader editable patch"
+      },
+      "Buccal Cusp": {
+        "count": 16,
+        "centroid": [
+          0.7881149676062713,
+          -2.283106736447945,
+          6.528660190377911
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 7862"
+      },
+      "Middle Fissure": {
+        "count": 75,
+        "centroid": [
+          1.1342159620996395,
+          0.559586443021089,
+          4.0787715245190315
+        ],
+        "evidence": "geometry-derived central occlusal valley proposal"
+      },
+      "Palatinal Cusp": {
+        "count": 18,
+        "centroid": [
+          0.17488538577098253,
+          2.977871814633262,
+          5.468318024578383
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 1637"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        26486
+      ],
+      "clipped_component_vertex_counts": [
+        10405
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 10405,
+          "triangles": 20464,
+          "boundary_edges": 344,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 25,
+    "vertices": 8601,
+    "triangles": 16935,
+    "boundary_edges": 265,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 7.0,
+    "uniform_scale": 21.22767741590305,
+    "bounds": [
+      [
+        -2.8936032617198446,
+        -3.6454623609367354,
+        -0.8963566700332004
+      ],
+      [
+        4.10639673828017,
+        4.741021032237758,
+        6.819414168904202
+      ]
+    ],
+    "origin_mean_cej_error_mm": 2.116161111482882e-15,
+    "protected_vertices": 5471,
+    "cervical_band_mm": 2.727765667561681,
+    "snapped_new_cut_vertices": 4,
+    "maximum_cut_snap_mm": 0.007873736268677049,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 265,
+        "centroid": [
+          -1.4076790048077457e-15,
+          6.979741732171739e-16,
+          2.714809509272081e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 3130,
+        "centroid": [
+          0.07785434733814903,
+          0.2497563988273345,
+          1.2262507553592539
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 5471,
+        "centroid": [
+          0.5667517814481908,
+          0.6774215580548371,
+          4.639405529541965
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 3130,
+        "centroid": [
+          0.07785434733814903,
+          0.2497563988273345,
+          1.2262507553592539
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 15,
+        "centroid": [
+          3.969782865831726,
+          -0.17944822319168824,
+          3.725342396145398
+        ],
+        "evidence": "Mesial Contact Point"
+      },
+      "Mesial Connector": {
+        "count": 97,
+        "centroid": [
+          3.923004230149541,
+          -0.18080010092642856,
+          3.747555978103664
+        ],
+        "evidence": "Mesial Contact Point; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 17,
+        "centroid": [
+          -1.6045254223368497,
+          -2.161713635455186,
+          5.072998301497157
+        ],
+        "evidence": "Distal Contact Point"
+      },
+      "Distal Connector": {
+        "count": 89,
+        "centroid": [
+          -1.5616568220691163,
+          -2.111168292759259,
+          5.037097968745222
+        ],
+        "evidence": "Distal Contact Point; broader editable patch"
+      },
+      "Buccal Cusp": {
+        "count": 14,
+        "centroid": [
+          1.4380943811217073,
+          -1.2760815976402122,
+          6.780622854283338
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 6164"
+      },
+      "Middle Fissure": {
+        "count": 69,
+        "centroid": [
+          0.2925396700562524,
+          0.9279012486135998,
+          4.98376772626303
+        ],
+        "evidence": "Mesio-Distal Fissure"
+      },
+      "Palatinal Cusp": {
+        "count": 19,
+        "centroid": [
+          -0.1445039614188457,
+          3.06603432040755,
+          5.911076017404295
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 1577"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        21802
+      ],
+      "clipped_component_vertex_counts": [
+        8605
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 8605,
+          "triangles": 16943,
+          "boundary_edges": 265,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 26,
+    "vertices": 19989,
+    "triangles": 39559,
+    "boundary_edges": 417,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.2,
+    "nominal_md_mm": 10.0,
+    "uniform_scale": 24.845464281815403,
+    "bounds": [
+      [
+        -4.96991083142866,
+        -5.717095910880741,
+        -0.4452554057180333
+      ],
+      [
+        5.03008916857134,
+        6.006162587554727,
+        7.958887138741321
+      ]
+    ],
+    "origin_mean_cej_error_mm": 2.19802271771006e-15,
+    "protected_vertices": 15501,
+    "cervical_band_mm": 3.0,
+    "snapped_new_cut_vertices": 22,
+    "maximum_cut_snap_mm": 0.007143098505315999,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 417,
+        "centroid": [
+          6.581465987705963e-16,
+          -1.8711384693202876e-15,
+          1.7016098096248277e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 4488,
+        "centroid": [
+          -0.028021112286147495,
+          -0.033624396793768926,
+          1.2861136707583432
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 15501,
+        "centroid": [
+          0.15115078355081363,
+          0.0318997953117149,
+          5.935910038079723
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 4488,
+        "centroid": [
+          -0.028021112286147495,
+          -0.033624396793768926,
+          1.2861136707583432
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 39,
+        "centroid": [
+          5.020562829173368,
+          -1.1145872697612726,
+          5.418152069365455
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Mesial Connector": {
+        "count": 191,
+        "centroid": [
+          4.977246492500995,
+          -1.1049385856952874,
+          5.499015725601681
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 23,
+        "centroid": [
+          -4.964996173731893,
+          -0.14795351392455106,
+          4.765816848849393
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Distal Connector": {
+        "count": 107,
+        "centroid": [
+          -4.94466242200289,
+          -0.13944177410264422,
+          4.800892930275566
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Mesiobuccal Cusp": {
+        "count": 29,
+        "centroid": [
+          2.253182938118536,
+          -3.607737578453684,
+          7.7027029312869
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 6195"
+      },
+      "Distobuccal Cusp": {
+        "count": 27,
+        "centroid": [
+          -2.525366927527323,
+          -2.848768439280643,
+          7.927332256021851
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 14442"
+      },
+      "Middle Fissure": {
+        "count": 110,
+        "centroid": [
+          2.397120136387689,
+          -0.2988340342576899,
+          5.703932853088776
+        ],
+        "evidence": "geometry-derived central occlusal valley proposal"
+      },
+      "Palatinal Cusp": {
+        "count": 23,
+        "centroid": [
+          1.6363243723293237,
+          3.0645436035723,
+          7.546766561438142
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 7150"
+      },
+      "Cusp of Carabelli": {
+        "count": 7,
+        "centroid": [
+          2.08884074044578,
+          5.982722835572774,
+          4.711250292990651
+        ],
+        "evidence": "Cusp of Carabelli source annotation"
+      }
+    },
+    "cleanup": {
+      "external_texture_preparation": true
+    }
+  },
+  {
+    "fdi": 27,
+    "vertices": 12104,
+    "triangles": 23816,
+    "boundary_edges": 390,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 9.0,
+    "uniform_scale": 10.504124711370379,
+    "bounds": [
+      [
+        -4.280500191591055,
+        -4.458700091890159,
+        -0.6674254723207296
+      ],
+      [
+        4.719499808408945,
+        5.313193184855353,
+        6.809893293557394
+      ]
+    ],
+    "origin_mean_cej_error_mm": 2.8032014629420268e-15,
+    "protected_vertices": 7971,
+    "cervical_band_mm": 2.7239573174229577,
+    "snapped_new_cut_vertices": 15,
+    "maximum_cut_snap_mm": 0.007430538200081665,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 390,
+        "centroid": [
+          -1.2229533625101724e-15,
+          -1.7726560959848333e-15,
+          -2.2887674661503225e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 4133,
+        "centroid": [
+          0.10469613618793679,
+          0.24956609007214725,
+          1.2141485976125517
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 7971,
+        "centroid": [
+          0.24867691525121569,
+          0.40912765253617916,
+          4.781154344242167
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 4133,
+        "centroid": [
+          0.10469613618793679,
+          0.24956609007214725,
+          1.2141485976125517
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 19,
+        "centroid": [
+          4.71175785183557,
+          -0.9804067704700508,
+          4.320448414093131
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Mesial Connector": {
+        "count": 100,
+        "centroid": [
+          4.682842268810545,
+          -0.9759238631168528,
+          4.323862357804721
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 24,
+        "centroid": [
+          -4.2677795141065875,
+          0.8136154856779573,
+          3.835802862954559
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Distal Connector": {
+        "count": 124,
+        "centroid": [
+          -4.218341578099006,
+          0.8072541118599356,
+          3.8315941572879137
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Mesiobuccal Cusp": {
+        "count": 13,
+        "centroid": [
+          2.6042662905264597,
+          -2.044244588081768,
+          6.777669455547274
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 8880"
+      },
+      "Distobuccal Cusp": {
+        "count": 14,
+        "centroid": [
+          -1.6304627570954613,
+          -2.4709366044405523,
+          5.362543200287185
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 9283"
+      },
+      "Middle Fissure": {
+        "count": 48,
+        "centroid": [
+          -2.1589385989065137,
+          0.39284447310764686,
+          4.454216764926505
+        ],
+        "evidence": "geometry-derived central occlusal valley proposal"
+      },
+      "Palatinal Cusp": {
+        "count": 18,
+        "centroid": [
+          -0.18098537318354124,
+          3.4011007654977297,
+          6.4992908124418
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 2048"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        28222
+      ],
+      "clipped_component_vertex_counts": [
+        12119
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 12119,
+          "triangles": 23840,
+          "boundary_edges": 396,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 28,
+    "vertices": 11644,
+    "triangles": 22937,
+    "boundary_edges": 349,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 8.5,
+    "uniform_scale": 10.023055940364763,
+    "bounds": [
+      [
+        -3.861078511568753,
+        -4.787224965635668,
+        -0.4969148665438375
+      ],
+      [
+        4.638921488431247,
+        4.646124181774722,
+        6.51766609598147
+      ]
+    ],
+    "origin_mean_cej_error_mm": 1.3678786691789588e-15,
+    "protected_vertices": 7726,
+    "cervical_band_mm": 2.607066438392588,
+    "snapped_new_cut_vertices": 28,
+    "maximum_cut_snap_mm": 0.00786810267471762,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 349,
+        "centroid": [
+          -1.5040499886612435e-15,
+          -3.6646903277025225e-16,
+          3.025278213233593e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 3918,
+        "centroid": [
+          0.010774033323017696,
+          0.02819676690709487,
+          1.1103266486454666
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 7726,
+        "centroid": [
+          0.8215190454635245,
+          -0.27141070928967825,
+          4.72159006346804
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 3918,
+        "centroid": [
+          0.010774033323017696,
+          0.02819676690709487,
+          1.1103266486454666
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 21,
+        "centroid": [
+          4.633761821978748,
+          -0.770832812938824,
+          3.500831584223281
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Mesial Connector": {
+        "count": 113,
+        "centroid": [
+          4.610078778886531,
+          -0.7525231955867053,
+          3.5215034276515103
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 18,
+        "centroid": [
+          -3.834219672237668,
+          0.869799331112323,
+          2.962555771122846
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Distal Connector": {
+        "count": 99,
+        "centroid": [
+          -3.808853636344305,
+          0.8838038617264842,
+          2.943413929486642
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Mesiobuccal Cusp": {
+        "count": 15,
+        "centroid": [
+          1.9751116921845022,
+          -2.265662469223123,
+          6.496757964992186
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 8189"
+      },
+      "Distobuccal Cusp": {
+        "count": 25,
+        "centroid": [
+          -0.9094774367737897,
+          -2.440022357788935,
+          5.564903978357073
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 8364"
+      },
+      "Middle Fissure": {
+        "count": 82,
+        "centroid": [
+          1.8229399912956854,
+          0.26841689792397116,
+          4.943830999897116
+        ],
+        "evidence": "geometry-derived central occlusal valley proposal"
+      },
+      "Palatinal Cusp": {
+        "count": 26,
+        "centroid": [
+          0.589440365870745,
+          2.8436540337511764,
+          6.359257334907091
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 2030"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        25446
+      ],
+      "clipped_component_vertex_counts": [
+        11672
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 11672,
+          "triangles": 22977,
+          "boundary_edges": 365,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 31,
+    "vertices": 10661,
+    "triangles": 21090,
+    "boundary_edges": 230,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.14,
+    "nominal_md_mm": 5.0,
+    "uniform_scale": 20.80107340439025,
+    "bounds": [
+      [
+        -2.619966651963667,
+        -3.0402789245217727,
+        -1.3403204474209345
+      ],
+      [
+        2.380033348036333,
+        3.5538705849695154,
+        7.596561062753446
+      ]
+    ],
+    "origin_mean_cej_error_mm": 1.3129586931735067e-15,
+    "protected_vertices": 7133,
+    "cervical_band_mm": 3.0,
+    "snapped_new_cut_vertices": 13,
+    "maximum_cut_snap_mm": 0.007839166640920795,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 230,
+        "centroid": [
+          -2.1432131431894326e-16,
+          3.562367792058111e-16,
+          -7.761907059118485e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 3528,
+        "centroid": [
+          -0.03521402336545313,
+          0.4252393142131321,
+          1.3470038763204333
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 7133,
+        "centroid": [
+          0.03284494802284224,
+          1.6713027468645976,
+          5.111906943502153
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 3528,
+        "centroid": [
+          -0.03521402336545313,
+          0.4252393142131321,
+          1.3470038763204333
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 49,
+        "centroid": [
+          2.361333499762205,
+          1.9468913330160966,
+          5.123777847314575
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Mesial Connector": {
+        "count": 253,
+        "centroid": [
+          2.2780176421071854,
+          1.9648500910420943,
+          5.145295683920838
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 32,
+        "centroid": [
+          -2.598792247524195,
+          1.2699002546028255,
+          5.579307875030301
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Distal Connector": {
+        "count": 193,
+        "centroid": [
+          -2.5178057530051308,
+          1.2505698445377986,
+          5.597649538723014
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Incisal Edge": {
+        "count": 409,
+        "centroid": [
+          0.007885896991122538,
+          2.1656450593834435,
+          7.422774898817462
+        ],
+        "evidence": "coronal ridge/extreme region; canine compatibility alias"
+      },
+      "Palatinal Face": {
+        "count": 165,
+        "centroid": [
+          0.49454694679391376,
+          0.13045213999854455,
+          4.300179029184268
+        ],
+        "evidence": "Lingual Surface"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        23102
+      ],
+      "clipped_component_vertex_counts": [
+        10674
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 10624,
+          "triangles": 20966,
+          "boundary_edges": 284,
+          "boundary_loops": 3,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 1,
+          "euler": -1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        },
+        {
+          "threshold": 0.14,
+          "vertices": 10674,
+          "triangles": 21110,
+          "boundary_edges": 236,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 32,
+    "vertices": 10226,
+    "triangles": 20207,
+    "boundary_edges": 243,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 5.5,
+    "uniform_scale": 22.812979139465682,
+    "bounds": [
+      [
+        -2.452123303079821,
+        -3.1859355305251986,
+        -1.6710593117652799
+      ],
+      [
+        3.047876696920179,
+        3.560476276937494,
+        7.811592105664111
+      ]
+    ],
+    "origin_mean_cej_error_mm": 1.5012369041713948e-15,
+    "protected_vertices": 7006,
+    "cervical_band_mm": 3.0,
+    "snapped_new_cut_vertices": 6,
+    "maximum_cut_snap_mm": 0.00466018026750279,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 243,
+        "centroid": [
+          2.9605947323337506e-16,
+          -8.370076465486777e-16,
+          8.77213254024815e-17
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 3220,
+        "centroid": [
+          0.19654367613050938,
+          0.5249856813911199,
+          1.2288722619648802
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 7006,
+        "centroid": [
+          0.47364167319521777,
+          1.964776211067683,
+          5.203810433746066
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 3220,
+        "centroid": [
+          0.19654367613050938,
+          0.5249856813911199,
+          1.2288722619648802
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 52,
+        "centroid": [
+          3.0102323038014256,
+          2.427971275346188,
+          6.6754582720086875
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Mesial Connector": {
+        "count": 273,
+        "centroid": [
+          2.8832209090656824,
+          2.4558394221449653,
+          6.691679941564734
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 29,
+        "centroid": [
+          -2.427496446427171,
+          2.073222705816582,
+          5.688255410581121
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Distal Connector": {
+        "count": 154,
+        "centroid": [
+          -2.3430579667188667,
+          2.0667973640779516,
+          5.689113118021312
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Incisal Edge": {
+        "count": 459,
+        "centroid": [
+          0.5300723064130287,
+          2.5784096416714677,
+          7.635292725331434
+        ],
+        "evidence": "coronal ridge/extreme region; canine compatibility alias"
+      },
+      "Palatinal Face": {
+        "count": 67,
+        "centroid": [
+          0.5887984853453518,
+          -2.578639137255296,
+          2.7725029424406
+        ],
+        "evidence": "Cingulum"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        24102
+      ],
+      "clipped_component_vertex_counts": [
+        10232
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 10232,
+          "triangles": 20216,
+          "boundary_edges": 246,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 33,
+    "vertices": 9442,
+    "triangles": 18601,
+    "boundary_edges": 281,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 7.0,
+    "uniform_scale": 26.34032793385879,
+    "bounds": [
+      [
+        -3.732160652993808,
+        -3.329094276907101,
+        -1.256945537612541
+      ],
+      [
+        3.2678393470061913,
+        4.0264900770421965,
+        8.683932508980064
+      ]
+    ],
+    "origin_mean_cej_error_mm": 4.3485596294022744e-15,
+    "protected_vertices": 6273,
+    "cervical_band_mm": 3.0,
+    "snapped_new_cut_vertices": 11,
+    "maximum_cut_snap_mm": 0.00713274919598621,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 281,
+        "centroid": [
+          -3.413639477851015e-16,
+          2.1809363330714818e-16,
+          8.816593165306181e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 3169,
+        "centroid": [
+          -0.29108806240422125,
+          0.2730609302184286,
+          1.4065440450436577
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 6273,
+        "centroid": [
+          -0.38502610124161385,
+          0.6497747329727321,
+          5.321568148506586
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 3169,
+        "centroid": [
+          -0.29108806240422125,
+          0.2730609302184286,
+          1.4065440450436577
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 25,
+        "centroid": [
+          2.911206511723585,
+          1.0680018760850358,
+          3.9072662056576153
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Mesial Connector": {
+        "count": 121,
+        "centroid": [
+          2.85200137838339,
+          1.0236374375095605,
+          3.8915471925070424
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 20,
+        "centroid": [
+          -3.721275174157713,
+          0.0598004882895448,
+          3.9320410555986953
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Distal Connector": {
+        "count": 104,
+        "centroid": [
+          -3.677050049615701,
+          0.06079499040496439,
+          3.922428398652887
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Incisal Edge": {
+        "count": 58,
+        "centroid": [
+          -0.35550275190977915,
+          1.3334837695938118,
+          8.534787309127672
+        ],
+        "evidence": "coronal ridge/extreme region; canine compatibility alias"
+      },
+      "Cusp Tip": {
+        "count": 58,
+        "centroid": [
+          -0.35550275190977915,
+          1.3334837695938118,
+          8.534787309127672
+        ],
+        "evidence": "canine cusp region"
+      },
+      "Palatinal Face": {
+        "count": 104,
+        "centroid": [
+          0.5962138253631081,
+          0.039889637364640435,
+          5.442510939210876
+        ],
+        "evidence": "Lingual Surface"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        23838,
+        3694
+      ],
+      "clipped_component_vertex_counts": [
+        9453
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 9453,
+          "triangles": 18617,
+          "boundary_edges": 287,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 34,
+    "vertices": 9607,
+    "triangles": 18927,
+    "boundary_edges": 285,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 7.0,
+    "uniform_scale": 21.090046058850742,
+    "bounds": [
+      [
+        -3.498555744702206,
+        -3.5184901570221103,
+        -0.8196905639855365
+      ],
+      [
+        3.501444255297794,
+        3.653565546029036,
+        6.245395610037881
+      ]
+    ],
+    "origin_mean_cej_error_mm": 1.554027720802641e-15,
+    "protected_vertices": 6083,
+    "cervical_band_mm": 2.4981582440151526,
+    "snapped_new_cut_vertices": 19,
+    "maximum_cut_snap_mm": 0.006622328965205642,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 285,
+        "centroid": [
+          5.282324285584955e-16,
+          1.4647152886282768e-16,
+          5.921189464667501e-17
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 3524,
+        "centroid": [
+          0.008691490293041197,
+          -0.019188799534689355,
+          1.086618584313293
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 6083,
+        "centroid": [
+          -0.14783343181041242,
+          0.0020305585990881745,
+          3.969932582622405
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 3524,
+        "centroid": [
+          0.008691490293041197,
+          -0.019188799534689355,
+          1.086618584313293
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 31,
+        "centroid": [
+          2.550639117520257,
+          -1.5366220988578065,
+          3.9153263465837176
+        ],
+        "evidence": "Mesial Contact Point"
+      },
+      "Mesial Connector": {
+        "count": 159,
+        "centroid": [
+          2.4666814986684282,
+          -1.522663896456599,
+          3.94236341817622
+        ],
+        "evidence": "Mesial Contact Point; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 29,
+        "centroid": [
+          -1.9653057764322548,
+          2.2531836757803094,
+          4.283761051404565
+        ],
+        "evidence": "Distal Contact Point"
+      },
+      "Distal Connector": {
+        "count": 155,
+        "centroid": [
+          -1.9416088645259382,
+          2.1148690799542145,
+          4.235778318926348
+        ],
+        "evidence": "Distal Contact Point; broader editable patch"
+      },
+      "Buccal Cusp": {
+        "count": 19,
+        "centroid": [
+          0.6866323809852083,
+          0.5068552446616684,
+          6.199820927691513
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 5406"
+      },
+      "Middle Fissure": {
+        "count": 65,
+        "centroid": [
+          -1.7316118275802896,
+          -0.22415754621088987,
+          3.6398494792443574
+        ],
+        "evidence": "geometry-derived central occlusal valley proposal"
+      },
+      "Palatinal Cusp": {
+        "count": 21,
+        "centroid": [
+          -1.571647712034807,
+          -2.327890534764067,
+          4.679150934006199
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 1439"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        23634
+      ],
+      "clipped_component_vertex_counts": [
+        9626
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 9626,
+          "triangles": 18957,
+          "boundary_edges": 293,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 35,
+    "vertices": 8319,
+    "triangles": 16347,
+    "boundary_edges": 289,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 7.0,
+    "uniform_scale": 10.269477469158474,
+    "bounds": [
+      [
+        -3.7471365381541006,
+        -4.297578135109685,
+        -0.5430628705709515
+      ],
+      [
+        3.2528634618458994,
+        3.4608708867408438,
+        6.204022621559686
+      ]
+    ],
+    "origin_mean_cej_error_mm": 1.7225122090184025e-15,
+    "protected_vertices": 5411,
+    "cervical_band_mm": 2.4816090486238744,
+    "snapped_new_cut_vertices": 23,
+    "maximum_cut_snap_mm": 0.0070544620446172995,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 289,
+        "centroid": [
+          -1.075648605173162e-17,
+          5.301410982639156e-16,
+          -1.0841001299280941e-15
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 2908,
+        "centroid": [
+          -0.2326126654281322,
+          -0.2810016135811394,
+          1.0405033696750638
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 5411,
+        "centroid": [
+          -0.26138078594340614,
+          -0.6163508590601008,
+          4.121468766561074
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 2908,
+        "centroid": [
+          -0.2326126654281322,
+          -0.2810016135811394,
+          1.0405033696750638
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 19,
+        "centroid": [
+          3.1314548868401424,
+          -0.3785620577332724,
+          3.6927738151713707
+        ],
+        "evidence": "Mesial Contact Point"
+      },
+      "Mesial Connector": {
+        "count": 100,
+        "centroid": [
+          3.0897952939392814,
+          -0.4122667677291247,
+          3.710824210943275
+        ],
+        "evidence": "Mesial Contact Point; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 19,
+        "centroid": [
+          -2.3072701011616092,
+          2.329419598523867,
+          3.636773227547157
+        ],
+        "evidence": "Distal Contact Point"
+      },
+      "Distal Connector": {
+        "count": 100,
+        "centroid": [
+          -2.2868720512934435,
+          2.2814754960931616,
+          3.6769715961904086
+        ],
+        "evidence": "Distal Contact Point; broader editable patch"
+      },
+      "Buccal Cusp": {
+        "count": 17,
+        "centroid": [
+          0.7682053712830514,
+          0.7968345276983322,
+          6.172693465378593
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 5448"
+      },
+      "Middle Fissure": {
+        "count": 39,
+        "centroid": [
+          0.7378099770109909,
+          -1.8655842029216267,
+          3.9281667211515856
+        ],
+        "evidence": "geometry-derived central occlusal valley proposal"
+      },
+      "Palatinal Cusp": {
+        "count": 19,
+        "centroid": [
+          -0.8935918589238343,
+          -3.0576857594418203,
+          5.037166523402879
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 1351"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        24010
+      ],
+      "clipped_component_vertex_counts": [
+        8342
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 8342,
+          "triangles": 16381,
+          "boundary_edges": 301,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 36,
+    "vertices": 12564,
+    "triangles": 24793,
+    "boundary_edges": 333,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 11.0,
+    "uniform_scale": 9.9499248860351,
+    "bounds": [
+      [
+        -5.7888050356048355,
+        -5.984453382451477,
+        -0.4772547622752674
+      ],
+      [
+        5.2111949643951645,
+        4.975687234643281,
+        6.763343006195411
+      ]
+    ],
+    "origin_mean_cej_error_mm": 1.015947615305096e-15,
+    "protected_vertices": 9172,
+    "cervical_band_mm": 2.7053372024781646,
+    "snapped_new_cut_vertices": 24,
+    "maximum_cut_snap_mm": 0.007662656130231434,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 333,
+        "centroid": [
+          4.080819766189765e-16,
+          1.1215586350867947e-15,
+          1.3336012307809688e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 3392,
+        "centroid": [
+          -0.19207739433985876,
+          -0.17063681743545198,
+          1.1535405453010497
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 9172,
+        "centroid": [
+          -0.44605201597377164,
+          -0.9241715539733316,
+          4.824347585198011
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 3392,
+        "centroid": [
+          -0.19207739433985876,
+          -0.17063681743545198,
+          1.1535405453010497
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 11,
+        "centroid": [
+          5.187906400393886,
+          -0.5228997688076915,
+          3.1866128941434027
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Mesial Connector": {
+        "count": 67,
+        "centroid": [
+          5.1433290862294845,
+          -0.5023731013689874,
+          3.170373779015075
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 17,
+        "centroid": [
+          -5.761759466719844,
+          -0.3153695795549042,
+          3.1559157648489147
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Distal Connector": {
+        "count": 79,
+        "centroid": [
+          -5.727743218851196,
+          -0.3211075326855093,
+          3.1729339995364465
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Mesiobuccal Cusp": {
+        "count": 10,
+        "centroid": [
+          2.773627242136116,
+          0.07002132767072924,
+          6.4573876743115886
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 7494"
+      },
+      "Distobuccal Cusp": {
+        "count": 20,
+        "centroid": [
+          -0.2991995100809659,
+          1.926638581152218,
+          6.726803286370712
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 9472"
+      },
+      "Middle Fissure": {
+        "count": 97,
+        "centroid": [
+          1.6166173446549352,
+          -2.4823780751740157,
+          4.134637937191899
+        ],
+        "evidence": "geometry-derived central occlusal valley proposal"
+      },
+      "Palatinal Cusp": {
+        "count": 13,
+        "centroid": [
+          0.08942729602427679,
+          -4.803905758117452,
+          6.314289796497172
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 1137"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        27594
+      ],
+      "clipped_component_vertex_counts": [
+        12588
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 12588,
+          "triangles": 24829,
+          "boundary_edges": 345,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 37,
+    "vertices": 11576,
+    "triangles": 22792,
+    "boundary_edges": 358,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 10.5,
+    "uniform_scale": 10.940724832281457,
+    "bounds": [
+      [
+        -4.843893515242607,
+        -5.11722781674528,
+        -1.3891583634624216
+      ],
+      [
+        5.656106484757393,
+        5.430144644497173,
+        7.1612689500591165
+      ]
+    ],
+    "origin_mean_cej_error_mm": 3.3112589623481552e-15,
+    "protected_vertices": 7947,
+    "cervical_band_mm": 2.8645075800236466,
+    "snapped_new_cut_vertices": 13,
+    "maximum_cut_snap_mm": 0.007196313646907651,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 358,
+        "centroid": [
+          -4.455777770339176e-15,
+          1.5660967246807375e-15,
+          2.4685405798928064e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 3629,
+        "centroid": [
+          0.06469196384419239,
+          -0.023393651557478093,
+          1.25893060400312
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 7947,
+        "centroid": [
+          0.3239413222235718,
+          -0.122410406177192,
+          5.053006295573885
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 3629,
+        "centroid": [
+          0.06469196384419239,
+          -0.023393651557478093,
+          1.25893060400312
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 16,
+        "centroid": [
+          5.637898697598777,
+          0.8266242863042711,
+          4.289934303587821
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Mesial Connector": {
+        "count": 79,
+        "centroid": [
+          5.577418061620265,
+          0.8184521393606907,
+          4.302999162003681
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 19,
+        "centroid": [
+          -4.838969543704636,
+          0.4378231756149026,
+          3.956366722325907
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Distal Connector": {
+        "count": 84,
+        "centroid": [
+          -4.821533320029529,
+          0.41635595060882136,
+          3.9781534655478503
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Mesiobuccal Cusp": {
+        "count": 13,
+        "centroid": [
+          3.7351726746883664,
+          1.6802876661607704,
+          6.105420454703201
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 7790"
+      },
+      "Distobuccal Cusp": {
+        "count": 17,
+        "centroid": [
+          -1.5952905858481012,
+          2.230794117509094,
+          6.285932469948862
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 8236"
+      },
+      "Middle Fissure": {
+        "count": 27,
+        "centroid": [
+          0.6561255859496855,
+          -0.3090590759292764,
+          4.609410386107178
+        ],
+        "evidence": "geometry-derived central occlusal valley proposal"
+      },
+      "Palatinal Cusp": {
+        "count": 13,
+        "centroid": [
+          2.4317139649380226,
+          -3.170148087219948,
+          6.9234067964376935
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 2318"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        27478
+      ],
+      "clipped_component_vertex_counts": [
+        11589
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 11589,
+          "triangles": 22811,
+          "boundary_edges": 365,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  },
+  {
+    "fdi": 38,
+    "vertices": 11645,
+    "triangles": 22941,
+    "boundary_edges": 347,
+    "boundary_loops": 1,
+    "boundary_bad_degree": 0,
+    "nonmanifold_edges_excluding_boundary": 0,
+    "degenerate_faces": 0,
+    "euler": 1,
+    "inconsistent_winding_edges": 0,
+    "nonadjacent_self_intersections": 0,
+    "threshold": 0.12,
+    "nominal_md_mm": 10.0,
+    "uniform_scale": 11.64885119657303,
+    "bounds": [
+      [
+        -5.237782136180357,
+        -5.97884932530078,
+        -1.0964650917346492
+      ],
+      [
+        4.762217863819647,
+        5.35156469274502,
+        7.063048108960332
+      ]
+    ],
+    "origin_mean_cej_error_mm": 5.67127627623785e-16,
+    "protected_vertices": 8102,
+    "cervical_band_mm": 2.825219243584133,
+    "snapped_new_cut_vertices": 9,
+    "maximum_cut_snap_mm": 0.0076574424047402,
+    "source_enamel_vertices_moved": 0,
+    "groups": {
+      "CEJ": {
+        "count": 347,
+        "centroid": [
+          -3.6858124621561394e-16,
+          2.4828042279801773e-16,
+          4.613664557664195e-16
+        ],
+        "evidence": "ordered boundary at source crown/root transition"
+      },
+      "CervicalBlend": {
+        "count": 3543,
+        "centroid": [
+          -0.053221910583245546,
+          -0.31414859915781235,
+          1.1661202461890452
+        ],
+        "evidence": "quintic taper of metric surface distance from CEJ"
+      },
+      "AnatomyProtected": {
+        "count": 8102,
+        "centroid": [
+          -0.05168151345836395,
+          -1.2497401771572576,
+          4.986391801627174
+        ],
+        "evidence": "outside prepared cervical deformation band"
+      },
+      "Cervical Band": {
+        "count": 3543,
+        "centroid": [
+          -0.053221910583245546,
+          -0.31414859915781235,
+          1.1661202461890452
+        ],
+        "evidence": "editable cervical band"
+      },
+      "Mesial Contact": {
+        "count": 13,
+        "centroid": [
+          4.754991108944709,
+          0.9661633742355884,
+          3.2100294118177426
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Mesial Connector": {
+        "count": 72,
+        "centroid": [
+          4.727224777451458,
+          0.9630017743135318,
+          3.2153146393416807
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Distal Contact": {
+        "count": 14,
+        "centroid": [
+          -5.227048556148494,
+          -1.6883371502412114,
+          4.1474850894262145
+        ],
+        "evidence": "geometric proximal extremum in coronal height range"
+      },
+      "Distal Connector": {
+        "count": 71,
+        "centroid": [
+          -5.186062425747085,
+          -1.687189877012949,
+          4.158659244920264
+        ],
+        "evidence": "geometric proximal extremum in coronal height range; broader editable patch"
+      },
+      "Mesiobuccal Cusp": {
+        "count": 15,
+        "centroid": [
+          2.9306460809173105,
+          0.06732295929348459,
+          7.038534896036027
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 7270"
+      },
+      "Distobuccal Cusp": {
+        "count": 22,
+        "centroid": [
+          -0.8880511709535983,
+          1.5495011266521879,
+          6.403988911614911
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 8549"
+      },
+      "Middle Fissure": {
+        "count": 41,
+        "centroid": [
+          -0.27262834162910415,
+          -1.1303822716687115,
+          4.736122559039527
+        ],
+        "evidence": "geometry-derived central occlusal valley proposal"
+      },
+      "Palatinal Cusp": {
+        "count": 15,
+        "centroid": [
+          0.945474654694687,
+          -4.685296129588344,
+          6.42548424025935
+        ],
+        "evidence": "Reviewed local cusp maximum on unchanged source mesh; vertex 1622"
+      }
+    },
+    "cleanup": {
+      "source_component_vertex_counts": [
+        25610
+      ],
+      "clipped_component_vertex_counts": [
+        11654
+      ],
+      "color_scalar_smoothing_steps": 4,
+      "geometry_smoothing": false,
+      "threshold_attempts": [
+        {
+          "threshold": 0.12,
+          "vertices": 11654,
+          "triangles": 22956,
+          "boundary_edges": 350,
+          "boundary_loops": 1,
+          "boundary_bad_degree": 0,
+          "nonmanifold_edges_excluding_boundary": 0,
+          "degenerate_faces": 0,
+          "euler": 1,
+          "inconsistent_winding_edges": 0,
+          "nonadjacent_self_intersections": 0
+        }
+      ]
+    }
+  }
+]

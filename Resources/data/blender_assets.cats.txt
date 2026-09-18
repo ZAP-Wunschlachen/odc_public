@@ -1,0 +1,11 @@
+# Blender Asset Catalog Definition File
+VERSION 1
+
+80ed3996-873a-57bf-b061-cfe33a9b7c33:Dundee/mandibular/canine:Dundee-mandibular-canine
+06cd1264-9178-5568-9a2b-85f2aac11a42:Dundee/mandibular/incisor:Dundee-mandibular-incisor
+f2ea21e3-1c65-5f9e-a5cd-378695ccf1b0:Dundee/mandibular/molar:Dundee-mandibular-molar
+978081ff-4ecc-5bb5-8338-f12889964d67:Dundee/mandibular/premolar:Dundee-mandibular-premolar
+9772abe7-393c-5f11-a23e-4febaf020a18:Dundee/maxillary/canine:Dundee-maxillary-canine
+98f698ae-da20-5502-8fbc-df415abf7c5f:Dundee/maxillary/incisor:Dundee-maxillary-incisor
+1c3577e6-bb04-5d96-9443-c878d3929fe0:Dundee/maxillary/molar:Dundee-maxillary-molar
+d0b42bff-734f-575d-b07e-529ed1987c9e:Dundee/maxillary/premolar:Dundee-maxillary-premolar

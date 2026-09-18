@@ -6,6 +6,9 @@ import addon_utils
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 assert addon_utils.enable(ROOT.name, default_set=True)
+# This fixture intentionally exercises the original ring/Multires workflow.
+settings = importlib.import_module(f'{ROOT.name}.Addon_utils.odcutils').get_settings()
+settings.tooth_lib = str(ROOT / 'Resources/data/legacy/odc_tooth_library_legacy.blend')
 asset = sys.argv[sys.argv.index('--')+1] if '--' in sys.argv else '25'
 scene = bpy.context.scene
 tooth = scene.odc_teeth.add()

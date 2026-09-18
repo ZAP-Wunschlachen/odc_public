@@ -1,0 +1,27 @@
+{
+  "catalogue": "Dundee prepared permanent crowns",
+  "blender": "5.1.2",
+  "date": "2026-09-18",
+  "runtime_library": "Resources/data/odc_tooth_library.blend",
+  "runtime_sha256": "610fa7663dcce6d3868a0c3a56014aca755420d06553053d04a6eebaf1e911cb",
+  "fdi_count": 32,
+  "independent_left_models": 16,
+  "derived_right_mirrors": 16,
+  "asset_previews": 32,
+  "source_license": "CC BY 4.0",
+  "source_identity_review_fdi": [
+    31,
+    32,
+    41,
+    42
+  ],
+  "six_degree_convergence_safely_refused_fdi": [
+    12,
+    22,
+    32,
+    35,
+    42,
+    45
+  ],
+  "installation_restart_removal_passed": true
+}

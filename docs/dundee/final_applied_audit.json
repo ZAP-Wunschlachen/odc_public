@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "library": "work/dundee_catalog/final_library.blend",
+  "reference": "work/dundee_catalog/dundee_tooth_library_staging.blend",
+  "objects_checked": 32,
+  "reviewed_anchors_checked": 54,
+  "cusp_anchors_checked": 52,
+  "fossa_anchors_checked": 2,
+  "all_anchors_present_in_correct_groups": true,
+  "maximum_anchor_position_error_mm": 2.403534207242525e-07,
+  "maximum_group_peak_above_reviewed_anchor_mm": 0.0,
+  "all_vertex_coordinates_exactly_identical_to_staging": true,
+  "all_oriented_triangle_geometry_identical_to_staging": true,
+  "all_cervical_protected_group_memberships_and_weights_exactly_identical": true,
+  "fossa_28_and_18_groups_unchanged": true,
+  "protected_group_names_checked": [
+    "AnatomyProtected",
+    "CEJ",
+    "Cervical Band",
+    "CervicalBlend"
+  ],
+  "all32_topology_checks_passed": true,
+  "mirrored_pairs_checked": 16,
+  "failures": [],
+  "details": "final_applied_audit_details.json",
+  "verification_script": "verify_dundee_library.py",
+  "visual_anchor_review": "upper_reviewed_peaks.jpg and lower_reviewed_peaks.jpg; no new rendering needed because geometry is identical."
+}

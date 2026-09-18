@@ -2,14 +2,19 @@
 
 This ZAP-Wunschlachen fork adapts Open Dental CAD to **Blender 5.1.2**.
 The port preserves all 117 operators and eight panels registered by the upstream
-version and adds the repaired arch-curve drawing tool. The installed package has
-passed 97 background and 26 foreground test cases on Blender 5.1.2, together with
+version and adds the repaired arch-curve drawing tool. The base port was validated
+with 97 background and 26 foreground test cases on Blender 5.1.2, together with
 installation, fresh-process startup and removal. See [the verification report](docs/VERIFICATION.md)
 for evidence and limitations. These software checks do not establish clinical
 suitability or manufacturing readiness of a restoration.
 
 The add-on includes tools for crowns, bridges, implants, splints, dentures,
-orthodontic setup and model preparation, together with the original asset libraries.
+orthodontic setup and model preparation. Its default tooth catalogue now contains
+32 prepared Dundee crowns (16 original left anatomies and 16 mirrored counterparts),
+with roots removed, canonical axes, cervical deformation groups and asset previews.
+The previous tooth libraries remain in `Resources/data/legacy/`.
+See the [Dundee catalogue guide](docs/DUNDEE_CATALOG.md) for attribution, use,
+reproducible generation, validation and the flagged lower-incisor source labels.
 
 ## Build and install
 

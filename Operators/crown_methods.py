@@ -26,8 +26,11 @@ from ..Addon_utils.common_utilities import bversion
 
 from ..Operators.bmesh_fns import join_bmesh_map
 from ..Operators.mesh_cut import edge_loops_from_bmedges, space_evenly_on_path
+from ..Operators import dundee_cervical
 
 def pontificate(context, tooth, shell, p_type, offset):
+    if dundee_cervical.is_dundee(shell):
+        dundee_cervical.close_pontic(shell)
     
     bpy.ops.object.mode_set(mode= 'OBJECT')
     bpy.ops.object.select_all(action = 'DESELECT')
@@ -740,6 +743,8 @@ def calc_intaglio2(context, sce, tooth, chamfer, gap, holy_zone, debug = False):
  
 
 def cervical_convergence_improved(context, tooth, angle, selected = False, debug = False):
+    if dundee_cervical.is_dundee(bpy.data.objects.get(tooth.contour)):
+        return dundee_cervical.converge(context, tooth, angle)
     
     if debug:
         start = time.time()
@@ -912,6 +917,8 @@ def cervical_convergence_improved(context, tooth, angle, selected = False, debug
 
 
 def seat_to_margin_improved(context, sce, tooth, influence, debug = False):
+    if dundee_cervical.is_dundee(bpy.data.objects.get(tooth.contour)):
+        return dundee_cervical.seat(context, tooth, influence)
     if debug:
         start = time.time()
         
@@ -1586,6 +1593,8 @@ def seat_to_margin(context, sce, tooth, influence, debug = False):
         print("seated to margin in %f seconds" % duration)
 
 def make_solid_restoration(context, tooth, debug = False):
+    if dundee_cervical.is_dundee(bpy.data.objects.get(tooth.contour)):
+        return dundee_cervical.make_solid(context, tooth)
     
     if debug:
         start = time.time()
@@ -1679,6 +1688,8 @@ def make_solid_restoration(context, tooth, debug = False):
 
 
 def make_solid_restoration2(context, tooth, debug = False):
+    if dundee_cervical.is_dundee(bpy.data.objects.get(tooth.contour)):
+        return dundee_cervical.make_solid(context, tooth)
     
     if debug:
         start = time.time()

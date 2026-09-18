@@ -1,0 +1,26 @@
+[
+  {
+    "fdi": "12",
+    "reason": "The requested fit introduces a 81.7 degree cervical crease (previously 1.9)"
+  },
+  {
+    "fdi": "22",
+    "reason": "The requested fit introduces a 81.7 degree cervical crease (previously 1.9)"
+  },
+  {
+    "fdi": "32",
+    "reason": "The requested fit folds the cervical surface (100.1 degree face rotation); pre-position the crown"
+  },
+  {
+    "fdi": "35",
+    "reason": "The requested fit introduces a 79.4 degree cervical crease (previously 0.9)"
+  },
+  {
+    "fdi": "42",
+    "reason": "The requested fit folds the cervical surface (100.1 degree face rotation); pre-position the crown"
+  },
+  {
+    "fdi": "45",
+    "reason": "The requested fit introduces a 79.4 degree cervical crease (previously 0.9)"
+  }
+]

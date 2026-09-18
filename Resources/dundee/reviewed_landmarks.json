@@ -1,0 +1,557 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-09-18",
+  "scope": "Group membership anchors only, no source geometry edits. Apply matching Y reflection to right counterparts; vertex indices remain identical for their mirrored copies.",
+  "reference_geometry": "Generated prepared/<FDI>.npz; build_dundee_catalog.py",
+  "reference_mesh_array_sha256": {
+    "24": "1ab39c8a9cbdf7ff43cda05160dfc222328d0acdca651482768bbe086cbacb9e",
+    "25": "debccbfec3714a021f525011d2617e731707e8eb8c00f3578c8c2c470a3f186b",
+    "26": "7eae2965ff94adf98d5c91376a73a337e9d18e2483e41cc246a4694d023a5034",
+    "27": "cf0ede3eab9c086a04b81ddde73c2f764db40b911d5f64df4813c9c954b15bda",
+    "28": "0259c1ed92fa36e946f38089266753e36170b17dcc99ef6affc8b813f35ed273",
+    "34": "b4104b97d5fab15051e3de986a1a8084e06ef49b95701925ea25891ed0cdd335",
+    "35": "d573effaa7c69e4694eab8c680849c67a95fbc42066e3fb839db65e140349599",
+    "36": "67d14cf91d00ab8f4116c93b708c961f23aebb803e3d6f68679e997e9c032192",
+    "37": "ce197dc3bf324df72e2c2230897a222492c1bb196560653426f875155c9e453c",
+    "38": "f71e9a6baa2705d367bad0fff0e09c86d1fbde846c5f4dbd8db091c4be21b117"
+  },
+  "visual_evidence": [
+    "upper_reviewed_peaks.jpg",
+    "lower_reviewed_peaks.jpg"
+  ],
+  "anchors": {
+    "24": {
+      "Buccal Cusp": {
+        "prepared_vertex_index": 7862,
+        "prepared_coordinate_mm": [
+          0.7980279620111185,
+          -2.2912698061112717,
+          6.578947049681142
+        ],
+        "source_vertex_index": 21592,
+        "source_world_coordinate": [
+          0.8548127412796023,
+          -3.3182270526885986,
+          1.5783733129501343
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.03031728893895469
+      },
+      "Palatinal Cusp": {
+        "prepared_vertex_index": 1637,
+        "prepared_coordinate_mm": [
+          0.20332223587804718,
+          3.0249035245462057,
+          5.493323645387294
+        ],
+        "source_vertex_index": 3914,
+        "source_world_coordinate": [
+          0.6148197054862977,
+          -3.291379690170288,
+          1.6273826360702517
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.016324362550379945
+      }
+    },
+    "25": {
+      "Buccal Cusp": {
+        "prepared_vertex_index": 6164,
+        "prepared_coordinate_mm": [
+          1.4298636309116703,
+          -1.29698039353872,
+          6.819414168904202
+        ],
+        "source_vertex_index": 13067,
+        "source_world_coordinate": [
+          1.0490096807479858,
+          -3.2506861686706543,
+          1.6874756813049314
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 3.0110256510340605e-08
+      },
+      "Palatinal Cusp": {
+        "prepared_vertex_index": 1577,
+        "prepared_coordinate_mm": [
+          -0.12729684702710936,
+          3.0730344498644633,
+          5.941641966339822
+        ],
+        "source_vertex_index": 2026,
+        "source_world_coordinate": [
+          0.8431456685066223,
+          -3.17733097076416,
+          1.7288260459899905
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 1.5878366976807e-07
+      }
+    },
+    "26": {
+      "Mesiobuccal Cusp": {
+        "prepared_vertex_index": 6195,
+        "prepared_coordinate_mm": [
+          2.2585659844003243,
+          -3.6138057200585996,
+          7.729816766050927
+        ],
+        "source_vertex_index": 11946,
+        "source_world_coordinate": [
+          0.8452692804334954,
+          -0.3550187239725773,
+          -2.0833202686030723
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.00045284774648379766
+      },
+      "Distobuccal Cusp": {
+        "prepared_vertex_index": 14442,
+        "prepared_coordinate_mm": [
+          -2.5157603098879124,
+          -2.8552419663342983,
+          7.958887138741321
+        ],
+        "source_vertex_index": 12411,
+        "source_world_coordinate": [
+          0.6531083998745998,
+          -0.3855500010346647,
+          -2.0925400750873515
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.038643398659534256
+      },
+      "Palatinal Cusp": {
+        "prepared_vertex_index": 7150,
+        "prepared_coordinate_mm": [
+          1.632393523669482,
+          3.0515681929577996,
+          7.5676931067488376
+        ],
+        "source_vertex_index": 12084,
+        "source_world_coordinate": [
+          0.8200665933905673,
+          -0.6232919925826085,
+          -2.076794986665768
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": -1.2674115268396235e-07
+      }
+    },
+    "27": {
+      "Mesiobuccal Cusp": {
+        "prepared_vertex_index": 8880,
+        "prepared_coordinate_mm": [
+          2.608714452010841,
+          -2.0436202272601642,
+          6.809893293557394
+        ],
+        "source_vertex_index": 21366,
+        "source_world_coordinate": [
+          2.6417291164398193,
+          -4.5071258544921875,
+          3.4718611240386963
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.2048908902981168
+      },
+      "Distobuccal Cusp": {
+        "prepared_vertex_index": 9283,
+        "prepared_coordinate_mm": [
+          -1.6574892942054575,
+          -2.468618265497015,
+          5.3929009185551
+        ],
+        "source_vertex_index": 22915,
+        "source_world_coordinate": [
+          2.6821892261505127,
+          -4.100980281829834,
+          3.606759786605835
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.021302198004562456
+      },
+      "Palatinal Cusp": {
+        "prepared_vertex_index": 2048,
+        "prepared_coordinate_mm": [
+          -0.16847600263403273,
+          3.4103426177805813,
+          6.537046266004225
+        ],
+        "source_vertex_index": 4561,
+        "source_world_coordinate": [
+          2.1225080490112305,
+          -4.242735385894775,
+          3.4978363513946533
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.06795866529621719
+      }
+    },
+    "28": {
+      "Mesiobuccal Cusp": {
+        "prepared_vertex_index": 8189,
+        "prepared_coordinate_mm": [
+          2.0201995891676208,
+          -2.2784762667827874,
+          6.51766609598147
+        ],
+        "source_vertex_index": 18659,
+        "source_world_coordinate": [
+          3.0842590332031254,
+          -2.264172077178955,
+          4.057379245758057
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.8223040049170169
+      },
+      "Distobuccal Cusp": {
+        "prepared_vertex_index": 8364,
+        "prepared_coordinate_mm": [
+          -0.9242695252370335,
+          -2.4407142187403235,
+          5.583032494089972
+        ],
+        "source_vertex_index": 19241,
+        "source_world_coordinate": [
+          3.1004455089569096,
+          -1.970402479171753,
+          4.150627613067627
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.39758098652161245
+      },
+      "Palatinal Cusp": {
+        "prepared_vertex_index": 2030,
+        "prepared_coordinate_mm": [
+          0.5946677968985267,
+          2.8683316441916897,
+          6.393675016526631
+        ],
+        "source_vertex_index": 4223,
+        "source_world_coordinate": [
+          2.5707621574401855,
+          -2.1219468116760254,
+          4.06974983215332
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.0033838025373729153
+      },
+      "Middle Fissure": {
+        "prepared_vertex_index": 5057,
+        "prepared_coordinate_mm": [
+          1.7940352338161742,
+          0.2902606382828471,
+          4.862887257606262
+        ],
+        "source_vertex_index": 10645,
+        "source_world_coordinate": [
+          2.8279762268066406,
+          -2.241607666015625,
+          4.222476482391357
+        ],
+        "anchor_role": "existing local minimum in central fissure region",
+        "verification": "Local minimum and anatomically in the central fissure depression in neutral occlusal/oblique views. Existing group already contains this point; no Fossa correction needed.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.45,
+        "retain_existing_group": true
+      }
+    },
+    "34": {
+      "Buccal Cusp": {
+        "prepared_vertex_index": 5406,
+        "prepared_coordinate_mm": [
+          0.6828789181027541,
+          0.503340028621205,
+          6.245395610037881
+        ],
+        "source_vertex_index": 12793,
+        "source_world_coordinate": [
+          0.6964812278747559,
+          -2.6799144744873047,
+          1.4534204006195068
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": -5.036250971812706e-08
+      },
+      "Palatinal Cusp": {
+        "prepared_vertex_index": 1439,
+        "prepared_coordinate_mm": [
+          -1.5278252392616285,
+          -2.3469184238818612,
+          4.718391346074404
+        ],
+        "source_vertex_index": 2600,
+        "source_world_coordinate": [
+          0.5613341331481934,
+          -2.575092315673828,
+          1.3810163736343384
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.4154247513783593
+      }
+    },
+    "35": {
+      "Buccal Cusp": {
+        "prepared_vertex_index": 5448,
+        "prepared_coordinate_mm": [
+          0.7854685608850658,
+          0.7881674306010438,
+          6.204022621559686
+        ],
+        "source_vertex_index": 14667,
+        "source_world_coordinate": [
+          1.778031587600708,
+          -5.786342144012451,
+          3.363436222076416
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.061595177101677834
+      },
+      "Palatinal Cusp": {
+        "prepared_vertex_index": 1351,
+        "prepared_coordinate_mm": [
+          -0.9005183504851133,
+          -3.1260807077145043,
+          5.063926363116961
+        ],
+        "source_vertex_index": 1779,
+        "source_world_coordinate": [
+          1.396878004074097,
+          -5.622167587280273,
+          3.252418279647827
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.36594071400807415
+      }
+    },
+    "36": {
+      "Mesiobuccal Cusp": {
+        "prepared_vertex_index": 7494,
+        "prepared_coordinate_mm": [
+          2.7691043160945794,
+          0.04015153599283068,
+          6.493684950497636
+        ],
+        "source_vertex_index": 12699,
+        "source_world_coordinate": [
+          1.0880440473556519,
+          -5.098302841186523,
+          4.118435382843018
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.05646914544392523
+      },
+      "Distobuccal Cusp": {
+        "prepared_vertex_index": 9472,
+        "prepared_coordinate_mm": [
+          -0.3227684952380347,
+          1.919998306092339,
+          6.763343006195411
+        ],
+        "source_vertex_index": 19298,
+        "source_world_coordinate": [
+          1.2769747972488403,
+          -4.787559509277344,
+          4.14553689956665
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.40424028021274516
+      },
+      "Palatinal Cusp": {
+        "prepared_vertex_index": 1137,
+        "prepared_coordinate_mm": [
+          0.09271632518503278,
+          -4.809482728224586,
+          6.361152257699734
+        ],
+        "source_vertex_index": 1154,
+        "source_world_coordinate": [
+          0.6006399393081665,
+          -4.829317092895508,
+          4.1051154136657715
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 8.561111108917885e-08
+      }
+    },
+    "37": {
+      "Mesiobuccal Cusp": {
+        "prepared_vertex_index": 7790,
+        "prepared_coordinate_mm": [
+          3.738723005825774,
+          1.7078915208518677,
+          6.128559207167512
+        ],
+        "source_vertex_index": 20639,
+        "source_world_coordinate": [
+          2.4801747798919678,
+          -4.075819969177246,
+          3.573437690734863
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.2937060348652656
+      },
+      "Distobuccal Cusp": {
+        "prepared_vertex_index": 8236,
+        "prepared_coordinate_mm": [
+          -1.59417554075843,
+          2.2313518702132287,
+          6.316864805818063
+        ],
+        "source_vertex_index": 22266,
+        "source_world_coordinate": [
+          2.528019905090332,
+          -3.58838438987732,
+          3.590649127960205
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.10066636145160768
+      },
+      "Palatinal Cusp": {
+        "prepared_vertex_index": 2318,
+        "prepared_coordinate_mm": [
+          2.4348104219354507,
+          -3.169053933512912,
+          6.962305134535234
+        ],
+        "source_vertex_index": 3871,
+        "source_world_coordinate": [
+          2.034414052963257,
+          -3.956640243530274,
+          3.649643421173096
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.09118945002595691
+      }
+    },
+    "38": {
+      "Mesiobuccal Cusp": {
+        "prepared_vertex_index": 7270,
+        "prepared_coordinate_mm": [
+          2.9270096661112532,
+          0.09531409562497335,
+          7.063048108960332
+        ],
+        "source_vertex_index": 11726,
+        "source_world_coordinate": [
+          2.1468849182128906,
+          -2.6125781536102295,
+          4.2314276695251465
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.13214419736975547
+      },
+      "Distobuccal Cusp": {
+        "prepared_vertex_index": 8549,
+        "prepared_coordinate_mm": [
+          -0.8994716915231075,
+          1.5569084450362944,
+          6.423057618444269
+        ],
+        "source_vertex_index": 15706,
+        "source_world_coordinate": [
+          2.2723560333251953,
+          -2.284092426300049,
+          4.176487445831299
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.5208440449884586
+      },
+      "Palatinal Cusp": {
+        "prepared_vertex_index": 1622,
+        "prepared_coordinate_mm": [
+          0.9451793348568208,
+          -4.721392267952817,
+          6.457090683897513
+        ],
+        "source_vertex_index": 1622,
+        "source_world_coordinate": [
+          1.7333929538726802,
+          -2.4424471855163574,
+          4.179409027099609
+        ],
+        "anchor_role": "local cusp height maximum",
+        "verification": "Strict graph ascent from original annotated cusp region ends at this vertex; no higher original vertex within0.4mm. Anatomical cusp identity and tip placement checked in neutral occlusal, buccal, lingual and oblique views.",
+        "geometry_modified": false,
+        "suggested_patch_radius_mm": 0.38,
+        "source_group_height_gain_mm": 0.14981348129131167
+      }
+    }
+  }
+}

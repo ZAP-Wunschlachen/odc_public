@@ -1,0 +1,1441 @@
+{
+  "schema_version": 1,
+  "library": "work/dundee_catalog/final_library.blend",
+  "reference": "work/dundee_catalog/dundee_tooth_library_staging.blend",
+  "geometry_objects_checked": 32,
+  "objects": {
+    "11": {
+      "vertices": 10445,
+      "triangles": 20648,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 240,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 7.72929833837771e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "07996827aa94a0ad70246e655867ed37ec03fa39811cb9bd5895209c6cc8fc09",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "21"
+    },
+    "12": {
+      "vertices": 13210,
+      "triangles": 26126,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 292,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 4.2752319821281604e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "bcd98f12d7983d7265b6fb4c2fd04e5a6b1f84e8052745a3daeeb5bc477d1357",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "22"
+    },
+    "13": {
+      "vertices": 21188,
+      "triangles": 42061,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 313,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 4.068843837276773e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "99d7f4fead052ff25c53fe2fea70ec17eda66846983f9d0534994b210dcd4cfa",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "23"
+    },
+    "14": {
+      "vertices": 10391,
+      "triangles": 20444,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 336,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 4.043887485639169e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "2b1d37194313125b632ab3dae51d971ecc3414d6394900102d00e6be7c98c960",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "24"
+    },
+    "15": {
+      "vertices": 8601,
+      "triangles": 16935,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 265,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 2.553239755173348e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "b8badce208dae10170ced1469ab68e4c24a3bd35c16bfb467fd451d9b1a3d861",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "25"
+    },
+    "16": {
+      "vertices": 19989,
+      "triangles": 39559,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 417,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 5.232583585180693e-10,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "ed8456ecd597cdbac37b30f29a437252fe73085ca83416c3b11a6fc95d6b00a3",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "26"
+    },
+    "17": {
+      "vertices": 12104,
+      "triangles": 23816,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 390,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 1.1937513260958414e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "1e54c3ed6b0950f07680ed6f5a2a56df3a79886e806f48ac58340b8e4c6bd1d0",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "27"
+    },
+    "18": {
+      "vertices": 11644,
+      "triangles": 22937,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 349,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 2.023248084305745e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "22e34c92f81ff387102bea8ae1e69c81de6e3d206fc5becc5f993ef7683bea2e",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "28"
+    },
+    "21": {
+      "vertices": 10445,
+      "triangles": 20648,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 240,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 7.72929833837771e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "2a56cf9c49d578b4d47a0da6310fb9c55149e0f2802c8bc9109e230e59e53626",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "22": {
+      "vertices": 13210,
+      "triangles": 26126,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 292,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 4.2752319821281604e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "5dc62cfe0db91722e0529505e58f33546e3a3ce3e1a7d2b6f13fd05201fe0f85",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "23": {
+      "vertices": 21188,
+      "triangles": 42061,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 313,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 4.068843837276773e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "6e54b78259fb24ee0cedef90f9c3da864099fe7d95d171aa6469186ae91862cc",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "24": {
+      "vertices": 10391,
+      "triangles": 20444,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 336,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 4.043887485639169e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "edf62814ca2e0e7bcce5c611a9768130ad5f226b7decb7e948134f9b33a1511f",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "25": {
+      "vertices": 8601,
+      "triangles": 16935,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 265,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 2.553239755173348e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "abbda1a5c7604ba723eb6d587c58b7b7ba93aabbfb18af024464f53ae58a3c86",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "26": {
+      "vertices": 19989,
+      "triangles": 39559,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 417,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 5.232583585180693e-10,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "6ec8c57cb3e7aed9c1aaff6c842d9365da9ddd22700007dd51556ee5fc7c8818",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "27": {
+      "vertices": 12104,
+      "triangles": 23816,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 390,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 1.1937513260958414e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "eb28b8dfc69c67ae1509a5af073eb983b41fae014f14bf5580852077ec7197be",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "28": {
+      "vertices": 11644,
+      "triangles": 22937,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 349,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 2.023248084305745e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "c2a1e56de30d2cf56b62adab79b8d443050ac60ff71efc169d9d619cf3f036a4",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "31": {
+      "vertices": 10661,
+      "triangles": 21090,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 230,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 4.687819687222312e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "359c5e7cc7e9d756330bbe6ce29138f7581f6cd8974564b65b5ab7852b5393e1",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "32": {
+      "vertices": 10226,
+      "triangles": 20207,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 243,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 6.714938345198452e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "bae20292cdee4e28e035fc1c457b35e0d29a51ce9a55029d428e8169cbbee128",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "33": {
+      "vertices": 9442,
+      "triangles": 18601,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 281,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 1.6113775088034538e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "5e90d1d6be36e22284b04282e3b95bc4c82719d48db781a22d24f4465d87d3fb",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "34": {
+      "vertices": 9607,
+      "triangles": 18927,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 285,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 5.754031404299354e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "1570a9bb0a4d2b07eb731d74f197652c898118bddac140b340bbdd96f938e833",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "35": {
+      "vertices": 8319,
+      "triangles": 16347,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 289,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 9.213888815790848e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "60abe76ccad41c8a58f8e38f66b979cb5748d624291bff8deb3acbf8a197ff0e",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "36": {
+      "vertices": 12564,
+      "triangles": 24793,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 333,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 1.3479000290355082e-08,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "ffd5222c0ac770a881f883082ec6124addb47b8a33bd1db1fa632e8df2ec4552",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "37": {
+      "vertices": 11576,
+      "triangles": 22792,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 358,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 6.1809941155192085e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "82aaf29f5cc3a6a21e1da5e71a7168c989c45a8bf27bafbfdb77644e0cbfb8d3",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "38": {
+      "vertices": 11645,
+      "triangles": 22941,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 347,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 5.4918315631035754e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "37d26ee9ff4064be2c2c77bc0c658f7e11b4a79d7991c44ad5a9c4bbe384b17e",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      }
+    },
+    "41": {
+      "vertices": 10661,
+      "triangles": 21090,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 230,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 4.687819687222312e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "aac6e9f5718f48f7b2ba205b41cf058ce6e0275846754bbf186552f6cf6eca04",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "31"
+    },
+    "42": {
+      "vertices": 10226,
+      "triangles": 20207,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 243,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 6.714938345198452e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "af76b206f926732e63b4e532978f29ca3531c0d7c54fa62bc615df9cc1a26aa7",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "32"
+    },
+    "43": {
+      "vertices": 9442,
+      "triangles": 18601,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 281,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 1.6113775088034538e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "717331e80cf347038176e76e3c4adf2691676d9bacebf2db45238f36ad3c1e27",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "33"
+    },
+    "44": {
+      "vertices": 9607,
+      "triangles": 18927,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 285,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 5.754031404299354e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "eb271b9c314c1e856fa51009e345faf67758d41c93d7ea20ef85314fe9da68b8",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "34"
+    },
+    "45": {
+      "vertices": 8319,
+      "triangles": 16347,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 289,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 9.213888815790848e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "43b50a1445e34779e8c697d3e2948b50cd2f6c2794cfe04999bd489c6237c9ff",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "35"
+    },
+    "46": {
+      "vertices": 12564,
+      "triangles": 24793,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 333,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 1.3479000290355082e-08,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "4d25562ecea9968bff36a5569d811ec5228f6fbe5a6c5912ddddf9abdce6c568",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "36"
+    },
+    "47": {
+      "vertices": 11576,
+      "triangles": 22792,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 358,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 6.1809941155192085e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "a5c61c444a8010858d8d7f862f11db2eebec4ae4eab2545a6dc7a2cdd39a2de7",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "37"
+    },
+    "48": {
+      "vertices": 11645,
+      "triangles": 22941,
+      "components": 1,
+      "euler": 1,
+      "boundary_edges": 347,
+      "boundary_degree_errors": 0,
+      "boundary_equals_CEJ": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "nonadjacent_self_intersections": 0,
+      "finite_coordinates": true,
+      "identity_transform": true,
+      "CEJ_origin_error_mm": 5.4918315631035754e-09,
+      "asset_marked": true,
+      "reference_comparison": {
+        "vertex_coordinates_exactly_identical": true,
+        "oriented_triangle_geometry_identical": true,
+        "vertex_array_sha256": "b1b8a8824b90e8a42990dd223106a189d049370c670b310e0e62ef1d5c602bd3",
+        "cervical_and_protected_groups_identical": {
+          "CEJ": true,
+          "CervicalBlend": true,
+          "AnatomyProtected": true,
+          "Cervical Band": true
+        },
+        "Middle_Fissure_unchanged": true
+      },
+      "exact_reflection_of": "38"
+    }
+  },
+  "anchors": [
+    {
+      "fdi": 24,
+      "group": "Buccal Cusp",
+      "index": 7862,
+      "anchor_in_group": true,
+      "position_error_mm": 4.353626693683679e-08,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 24,
+      "group": "Palatinal Cusp",
+      "index": 1637,
+      "anchor_in_group": true,
+      "position_error_mm": 1.5801857583949989e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 14,
+      "group": "Buccal Cusp",
+      "index": 7862,
+      "anchor_in_group": true,
+      "position_error_mm": 4.353626693683679e-08,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 14,
+      "group": "Palatinal Cusp",
+      "index": 1637,
+      "anchor_in_group": true,
+      "position_error_mm": 1.5801857583949989e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 25,
+      "group": "Buccal Cusp",
+      "index": 6164,
+      "anchor_in_group": true,
+      "position_error_mm": 6.723041964474798e-08,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 25,
+      "group": "Palatinal Cusp",
+      "index": 1577,
+      "anchor_in_group": true,
+      "position_error_mm": 1.7565471748208144e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 15,
+      "group": "Buccal Cusp",
+      "index": 6164,
+      "anchor_in_group": true,
+      "position_error_mm": 6.723041964474798e-08,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 15,
+      "group": "Palatinal Cusp",
+      "index": 1577,
+      "anchor_in_group": true,
+      "position_error_mm": 1.7565471748208144e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 26,
+      "group": "Mesiobuccal Cusp",
+      "index": 6195,
+      "anchor_in_group": true,
+      "position_error_mm": 1.7614667005137473e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 26,
+      "group": "Distobuccal Cusp",
+      "index": 14442,
+      "anchor_in_group": true,
+      "position_error_mm": 1.2752712451811213e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 26,
+      "group": "Palatinal Cusp",
+      "index": 7150,
+      "anchor_in_group": true,
+      "position_error_mm": 1.5466639396631394e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 16,
+      "group": "Mesiobuccal Cusp",
+      "index": 6195,
+      "anchor_in_group": true,
+      "position_error_mm": 1.7614667005137473e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 16,
+      "group": "Distobuccal Cusp",
+      "index": 14442,
+      "anchor_in_group": true,
+      "position_error_mm": 1.2752712451811213e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 16,
+      "group": "Palatinal Cusp",
+      "index": 7150,
+      "anchor_in_group": true,
+      "position_error_mm": 1.5466639396631394e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 27,
+      "group": "Mesiobuccal Cusp",
+      "index": 8880,
+      "anchor_in_group": true,
+      "position_error_mm": 2.2863086376735252e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 27,
+      "group": "Distobuccal Cusp",
+      "index": 9283,
+      "anchor_in_group": true,
+      "position_error_mm": 1.1393296823582135e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 27,
+      "group": "Palatinal Cusp",
+      "index": 2048,
+      "anchor_in_group": true,
+      "position_error_mm": 1.828431702247106e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 17,
+      "group": "Mesiobuccal Cusp",
+      "index": 8880,
+      "anchor_in_group": true,
+      "position_error_mm": 2.2863086376735252e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 17,
+      "group": "Distobuccal Cusp",
+      "index": 9283,
+      "anchor_in_group": true,
+      "position_error_mm": 1.1393296823582135e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 17,
+      "group": "Palatinal Cusp",
+      "index": 2048,
+      "anchor_in_group": true,
+      "position_error_mm": 1.828431702247106e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 28,
+      "group": "Mesiobuccal Cusp",
+      "index": 8189,
+      "anchor_in_group": true,
+      "position_error_mm": 2.403534207242525e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 28,
+      "group": "Distobuccal Cusp",
+      "index": 8364,
+      "anchor_in_group": true,
+      "position_error_mm": 1.527666370632531e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 28,
+      "group": "Palatinal Cusp",
+      "index": 2030,
+      "anchor_in_group": true,
+      "position_error_mm": 1.6823714229227225e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 28,
+      "group": "Middle Fissure",
+      "index": 5057,
+      "anchor_in_group": true,
+      "position_error_mm": 1.3048954589093794e-07,
+      "anchor_role": "existing local minimum in central fissure region"
+    },
+    {
+      "fdi": 18,
+      "group": "Mesiobuccal Cusp",
+      "index": 8189,
+      "anchor_in_group": true,
+      "position_error_mm": 2.403534207242525e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 18,
+      "group": "Distobuccal Cusp",
+      "index": 8364,
+      "anchor_in_group": true,
+      "position_error_mm": 1.527666370632531e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 18,
+      "group": "Palatinal Cusp",
+      "index": 2030,
+      "anchor_in_group": true,
+      "position_error_mm": 1.6823714229227225e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 18,
+      "group": "Middle Fissure",
+      "index": 5057,
+      "anchor_in_group": true,
+      "position_error_mm": 1.3048954589093794e-07,
+      "anchor_role": "existing local minimum in central fissure region"
+    },
+    {
+      "fdi": 34,
+      "group": "Buccal Cusp",
+      "index": 5406,
+      "anchor_in_group": true,
+      "position_error_mm": 5.565472614130378e-08,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 34,
+      "group": "Palatinal Cusp",
+      "index": 1439,
+      "anchor_in_group": true,
+      "position_error_mm": 1.0746973098576507e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 44,
+      "group": "Buccal Cusp",
+      "index": 5406,
+      "anchor_in_group": true,
+      "position_error_mm": 5.565472614130378e-08,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 44,
+      "group": "Palatinal Cusp",
+      "index": 1439,
+      "anchor_in_group": true,
+      "position_error_mm": 1.0746973098576507e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 35,
+      "group": "Buccal Cusp",
+      "index": 5448,
+      "anchor_in_group": true,
+      "position_error_mm": 2.1516560075381463e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 35,
+      "group": "Palatinal Cusp",
+      "index": 1351,
+      "anchor_in_group": true,
+      "position_error_mm": 1.4987498443358132e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 45,
+      "group": "Buccal Cusp",
+      "index": 5448,
+      "anchor_in_group": true,
+      "position_error_mm": 2.1516560075381463e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 45,
+      "group": "Palatinal Cusp",
+      "index": 1351,
+      "anchor_in_group": true,
+      "position_error_mm": 1.4987498443358132e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 36,
+      "group": "Mesiobuccal Cusp",
+      "index": 7494,
+      "anchor_in_group": true,
+      "position_error_mm": 1.9621679468901467e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 36,
+      "group": "Distobuccal Cusp",
+      "index": 9472,
+      "anchor_in_group": true,
+      "position_error_mm": 1.5057792898014994e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 36,
+      "group": "Palatinal Cusp",
+      "index": 1137,
+      "anchor_in_group": true,
+      "position_error_mm": 1.760255298730583e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 46,
+      "group": "Mesiobuccal Cusp",
+      "index": 7494,
+      "anchor_in_group": true,
+      "position_error_mm": 1.9621679468901467e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 46,
+      "group": "Distobuccal Cusp",
+      "index": 9472,
+      "anchor_in_group": true,
+      "position_error_mm": 1.5057792898014994e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 46,
+      "group": "Palatinal Cusp",
+      "index": 1137,
+      "anchor_in_group": true,
+      "position_error_mm": 1.760255298730583e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 37,
+      "group": "Mesiobuccal Cusp",
+      "index": 7790,
+      "anchor_in_group": true,
+      "position_error_mm": 1.1532941649005701e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 37,
+      "group": "Distobuccal Cusp",
+      "index": 8236,
+      "anchor_in_group": true,
+      "position_error_mm": 1.665334374738432e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 37,
+      "group": "Palatinal Cusp",
+      "index": 2318,
+      "anchor_in_group": true,
+      "position_error_mm": 1.198165808919712e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 47,
+      "group": "Mesiobuccal Cusp",
+      "index": 7790,
+      "anchor_in_group": true,
+      "position_error_mm": 1.1532941649005701e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 47,
+      "group": "Distobuccal Cusp",
+      "index": 8236,
+      "anchor_in_group": true,
+      "position_error_mm": 1.665334374738432e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 47,
+      "group": "Palatinal Cusp",
+      "index": 2318,
+      "anchor_in_group": true,
+      "position_error_mm": 1.198165808919712e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 38,
+      "group": "Mesiobuccal Cusp",
+      "index": 7270,
+      "anchor_in_group": true,
+      "position_error_mm": 2.3822900536821075e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 38,
+      "group": "Distobuccal Cusp",
+      "index": 8549,
+      "anchor_in_group": true,
+      "position_error_mm": 7.63209757167839e-08,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 38,
+      "group": "Palatinal Cusp",
+      "index": 1622,
+      "anchor_in_group": true,
+      "position_error_mm": 2.0506652493106818e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 48,
+      "group": "Mesiobuccal Cusp",
+      "index": 7270,
+      "anchor_in_group": true,
+      "position_error_mm": 2.3822900536821075e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 48,
+      "group": "Distobuccal Cusp",
+      "index": 8549,
+      "anchor_in_group": true,
+      "position_error_mm": 7.63209757167839e-08,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    },
+    {
+      "fdi": 48,
+      "group": "Palatinal Cusp",
+      "index": 1622,
+      "anchor_in_group": true,
+      "position_error_mm": 2.0506652493106818e-07,
+      "anchor_role": "local cusp height maximum",
+      "group_max_above_anchor_mm": 0.0
+    }
+  ],
+  "failures": [],
+  "anchors_checked": 54,
+  "passed": true
+}

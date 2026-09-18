@@ -1,0 +1,20 @@
+[
+  {
+    "stage": "install",
+    "passed": true,
+    "returncode": 0,
+    "shutdown_allocation_warning": false
+  },
+  {
+    "stage": "restart",
+    "passed": true,
+    "returncode": 0,
+    "shutdown_allocation_warning": false
+  },
+  {
+    "stage": "remove",
+    "passed": true,
+    "returncode": 0,
+    "shutdown_allocation_warning": false
+  }
+]

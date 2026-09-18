@@ -1,0 +1,3531 @@
+{
+  "objects": {
+    "11": {
+      "vertices": 10445,
+      "faces": 20648,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 240,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          4.223935926953951e-09,
+          6.472691893577576e-09,
+          -6.83940015733242e-11
+        ],
+        "CervicalBlend": [
+          -0.10796936374900416,
+          0.45914600313369813,
+          1.1891614268606645
+        ],
+        "AnatomyProtected": [
+          -0.7433811804584178,
+          1.4103628891557956,
+          6.052076870496399
+        ],
+        "Cervical Band": [
+          -0.10796936374900416,
+          0.45914600313369813,
+          1.1891614268606645
+        ],
+        "Mesial Contact": [
+          3.8423214659971348,
+          2.3169772344477035,
+          6.252121897304759
+        ],
+        "Mesial Connector": [
+          3.8075838710950767,
+          2.2788145464399587,
+          6.313660460969676
+        ],
+        "Distal Contact": [
+          -4.638282091721244,
+          1.0036021108212678,
+          6.167613361192786
+        ],
+        "Distal Connector": [
+          -4.5947798745245,
+          0.9902458296627061,
+          6.1902092297871905
+        ],
+        "Incisal Edge": [
+          -0.4783783467021457,
+          2.2086138801169963,
+          8.929533968553619
+        ],
+        "Palatinal Face": [
+          -0.050922952617543774,
+          0.4361034436403094,
+          5.633996480220073
+        ]
+      },
+      "groups": {
+        "CEJ": 240,
+        "CervicalBlend": 2420,
+        "AnatomyProtected": 8025,
+        "Cervical Band": 2420,
+        "Mesial Contact": 17,
+        "Mesial Connector": 92,
+        "Distal Contact": 23,
+        "Distal Connector": 117,
+        "Incisal Edge": 377,
+        "Palatinal Face": 74
+      },
+      "boundary_centroid": [
+        4.223935926953951e-09,
+        6.472691893577576e-09,
+        -6.83940015733242e-11
+      ],
+      "bounds": [
+        [
+          -4.650921821594238,
+          -4.438945293426514,
+          -1.306693434715271
+        ],
+        [
+          3.849078416824341,
+          4.290785312652588,
+          9.1068115234375
+        ]
+      ],
+      "signed_open_shell_volume": 296.4975276233991,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "21",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "12": {
+      "vertices": 13210,
+      "faces": 26126,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 292,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -1.9072976014385484e-09,
+          3.079424471887824e-09,
+          2.2708961408432216e-09
+        ],
+        "CervicalBlend": [
+          -0.3937016592747905,
+          0.48124335455913736,
+          1.2644841835610667
+        ],
+        "AnatomyProtected": [
+          -1.106547327210108,
+          1.4034872200549102,
+          4.690790768233714
+        ],
+        "Cervical Band": [
+          -0.3937016592747905,
+          0.48124335455913736,
+          1.2644841835610667
+        ],
+        "Mesial Contact": [
+          2.289047737379332,
+          1.0591497872326825,
+          3.339132089872618
+        ],
+        "Mesial Connector": [
+          2.2553582391189657,
+          1.0479019808519574,
+          3.355850303360305
+        ],
+        "Distal Contact": [
+          -4.188546356401946,
+          0.6032186621113828,
+          4.351226812914798
+        ],
+        "Distal Connector": [
+          -4.13961120318341,
+          0.5863588252580494,
+          4.354923780246447
+        ],
+        "Incisal Edge": [
+          -0.5542181695937408,
+          1.9937157399667418,
+          7.232758301854785
+        ],
+        "Palatinal Face": [
+          0.2951172770906801,
+          -2.6300049187385874,
+          1.5933212025524819
+        ]
+      },
+      "groups": {
+        "CEJ": 292,
+        "CervicalBlend": 4477,
+        "AnatomyProtected": 8733,
+        "Cervical Band": 4477,
+        "Mesial Contact": 37,
+        "Mesial Connector": 191,
+        "Distal Contact": 38,
+        "Distal Connector": 186,
+        "Incisal Edge": 366,
+        "Palatinal Face": 73
+      },
+      "boundary_centroid": [
+        -1.9072976014385484e-09,
+        3.079424471887824e-09,
+        2.2708961408432216e-09
+      ],
+      "bounds": [
+        [
+          -4.201574325561523,
+          -3.0403060913085938,
+          -1.9494072198867798
+        ],
+        [
+          2.2984254360198975,
+          3.4835433959960938,
+          7.413488864898682
+        ]
+      ],
+      "signed_open_shell_volume": 138.17931699304668,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "22",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "13": {
+      "vertices": 21188,
+      "faces": 42061,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 313,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -3.68958464064918e-09,
+          1.713871575011232e-09,
+          7.1411315625468e-11
+        ],
+        "CervicalBlend": [
+          0.08570629827616162,
+          0.08928984027332128,
+          1.3765668127685387
+        ],
+        "AnatomyProtected": [
+          0.5175873454729848,
+          0.22107724186277014,
+          5.952549243806048
+        ],
+        "Cervical Band": [
+          0.08570629827616162,
+          0.08928984027332128,
+          1.3765668127685387
+        ],
+        "Mesial Contact": [
+          2.734743428230286,
+          3.092444622516632,
+          7.000482523441315
+        ],
+        "Mesial Connector": [
+          2.742534047864341,
+          3.0173252063431764,
+          6.978705850140802
+        ],
+        "Distal Contact": [
+          -2.87365041397236,
+          -1.9962788577432986,
+          6.500145832697551
+        ],
+        "Distal Connector": [
+          -2.8106931164151145,
+          -1.9701948118588282,
+          6.4769083393944635
+        ],
+        "Incisal Edge": [
+          -0.10406909928983682,
+          1.0275616746444207,
+          9.892752511160714
+        ],
+        "Cusp Tip": [
+          -0.10406909928983682,
+          1.0275616746444207,
+          9.892752511160714
+        ],
+        "Palatinal Face": [
+          1.8431300994677422,
+          -1.897625745871128,
+          5.636618562233754
+        ]
+      },
+      "groups": {
+        "CEJ": 313,
+        "CervicalBlend": 5269,
+        "AnatomyProtected": 15919,
+        "Cervical Band": 5269,
+        "Mesial Contact": 40,
+        "Mesial Connector": 203,
+        "Distal Contact": 54,
+        "Distal Connector": 252,
+        "Incisal Edge": 77,
+        "Cusp Tip": 77,
+        "Palatinal Face": 156
+      },
+      "boundary_centroid": [
+        -3.68958464064918e-09,
+        1.713871575011232e-09,
+        7.1411315625468e-11
+      ],
+      "bounds": [
+        [
+          -3.405743360519409,
+          -4.103075981140137,
+          -1.090859055519104
+        ],
+        [
+          4.094256401062012,
+          4.174741744995117,
+          10.045720100402832
+        ]
+      ],
+      "signed_open_shell_volume": 314.46345854990847,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "23",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "14": {
+      "vertices": 10391,
+      "faces": 20444,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 336,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          3.736377471969241e-09,
+          -1.546660704272134e-09,
+          1.8709605293614525e-11
+        ],
+        "CervicalBlend": [
+          0.08000977143716402,
+          -0.16450854357554592,
+          1.1800756337103913
+        ],
+        "AnatomyProtected": [
+          0.29837008555979855,
+          -0.028362103091871663,
+          4.349289221216849
+        ],
+        "Cervical Band": [
+          0.08000977143716402,
+          -0.16450854357554592,
+          1.1800756337103913
+        ],
+        "Mesial Contact": [
+          3.8408155224540015,
+          0.9869520962238312,
+          3.852909489111467
+        ],
+        "Mesial Connector": [
+          3.778933648079161,
+          0.9880139223403401,
+          3.870006211220272
+        ],
+        "Distal Contact": [
+          -2.023550917120541,
+          2.9828936352449307,
+          4.777966218836167
+        ],
+        "Distal Connector": [
+          -1.9857661128044128,
+          2.9066088646650314,
+          4.767400905489922
+        ],
+        "Buccal Cusp": [
+          1.1930182735125223,
+          2.4016583283742268,
+          6.396494293212891
+        ],
+        "Middle Fissure": [
+          1.134215961297353,
+          -0.5595864448944727,
+          4.078771514892578
+        ],
+        "Palatinal Cusp": [
+          0.3797914907336235,
+          -3.3855566524323963,
+          5.351173173813593
+        ]
+      },
+      "groups": {
+        "CEJ": 336,
+        "CervicalBlend": 3824,
+        "AnatomyProtected": 6567,
+        "Cervical Band": 3824,
+        "Mesial Contact": 22,
+        "Mesial Connector": 126,
+        "Distal Contact": 17,
+        "Distal Connector": 96,
+        "Buccal Cusp": 15,
+        "Middle Fissure": 75,
+        "Palatinal Cusp": 21
+      },
+      "boundary_centroid": [
+        3.736377471969241e-09,
+        -1.546660704272134e-09,
+        1.8709605293614525e-11
+      ],
+      "bounds": [
+        [
+          -3.0593786239624023,
+          -4.531483173370361,
+          -0.7247302532196045
+        ],
+        [
+          3.9406213760375977,
+          4.226968288421631,
+          6.578947067260742
+        ]
+      ],
+      "signed_open_shell_volume": 202.77446781588972,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "24",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "15": {
+      "vertices": 8601,
+      "faces": 16935,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 265,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          1.8204720515125203e-09,
+          1.7203109444312329e-09,
+          4.954240724163236e-10
+        ],
+        "CervicalBlend": [
+          0.07785434712776348,
+          -0.2497563977871602,
+          1.2262507555357567
+        ],
+        "AnatomyProtected": [
+          0.5667517811814576,
+          -0.6774215575489987,
+          4.639405533243764
+        ],
+        "Cervical Band": [
+          0.07785434712776348,
+          -0.2497563977871602,
+          1.2262507555357567
+        ],
+        "Mesial Contact": [
+          3.9697828610738117,
+          0.17944822426264484,
+          3.7253424167633056
+        ],
+        "Mesial Connector": [
+          3.923004233960024,
+          0.18080009985235088,
+          3.7475559908090177
+        ],
+        "Distal Contact": [
+          -1.6045254258548511,
+          2.1617136141833138,
+          5.0729982993182015
+        ],
+        "Distal Connector": [
+          -1.5616568206401353,
+          2.1111682921313166,
+          5.037097963054529
+        ],
+        "Buccal Cusp": [
+          1.2598961762019567,
+          1.3417880620275224,
+          6.749511003494263
+        ],
+        "Middle Fissure": [
+          0.2925396698385315,
+          -0.9279012455456499,
+          4.983767737513003
+        ],
+        "Palatinal Cusp": [
+          0.16926096982665753,
+          -3.2395704921923185,
+          5.860269119865016
+        ]
+      },
+      "groups": {
+        "CEJ": 265,
+        "CervicalBlend": 3130,
+        "AnatomyProtected": 5471,
+        "Cervical Band": 3130,
+        "Mesial Contact": 15,
+        "Mesial Connector": 97,
+        "Distal Contact": 17,
+        "Distal Connector": 89,
+        "Buccal Cusp": 14,
+        "Middle Fissure": 69,
+        "Palatinal Cusp": 19
+      },
+      "boundary_centroid": [
+        1.8204720515125203e-09,
+        1.7203109444312329e-09,
+        4.954240724163236e-10
+      ],
+      "bounds": [
+        [
+          -2.8936033248901367,
+          -4.741021156311035,
+          -0.8963566422462463
+        ],
+        [
+          4.106396675109863,
+          3.6454622745513916,
+          6.819414138793945
+        ]
+      ],
+      "signed_open_shell_volume": 204.56241348135336,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "25",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "16": {
+      "vertices": 19989,
+      "faces": 39559,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 417,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -3.3500812036528003e-10,
+          -3.872833458139456e-10,
+          -1.0761263449754504e-10
+        ],
+        "CervicalBlend": [
+          -0.028021110294710674,
+          0.03362439821953015,
+          1.2861136706520044
+        ],
+        "AnatomyProtected": [
+          0.1511507840721454,
+          -0.031899794222885615,
+          5.935910037529637
+        ],
+        "Cervical Band": [
+          -0.028021110294710674,
+          0.03362439821953015,
+          1.2861136706520044
+        ],
+        "Mesial Contact": [
+          5.020562868851882,
+          1.1145872657115643,
+          5.418152038867657
+        ],
+        "Mesial Connector": [
+          4.977246509172529,
+          1.104938585408695,
+          5.499015720726932
+        ],
+        "Distal Contact": [
+          -4.964996130570121,
+          0.14795351282531477,
+          4.76581683366195
+        ],
+        "Distal Connector": [
+          -4.944662423891442,
+          0.13944177460752288,
+          4.800892936849149
+        ],
+        "Mesiobuccal Cusp": [
+          1.940762996673584,
+          3.847884178161621,
+          7.647963136434555
+        ],
+        "Distobuccal Cusp": [
+          -3.010667715753828,
+          2.841398707457951,
+          7.759605969701495
+        ],
+        "Middle Fissure": [
+          2.397120137648149,
+          0.29883403460368174,
+          5.703932861848311
+        ],
+        "Palatinal Cusp": [
+          1.6802889162843877,
+          -3.276986501433633,
+          7.5209596157073975
+        ],
+        "Cusp of Carabelli": [
+          2.088840740067618,
+          -5.982722895486014,
+          4.711250305175781
+        ]
+      },
+      "groups": {
+        "CEJ": 417,
+        "CervicalBlend": 4488,
+        "AnatomyProtected": 15501,
+        "Cervical Band": 4488,
+        "Mesial Contact": 39,
+        "Mesial Connector": 191,
+        "Distal Contact": 23,
+        "Distal Connector": 107,
+        "Mesiobuccal Cusp": 32,
+        "Distobuccal Cusp": 28,
+        "Middle Fissure": 110,
+        "Palatinal Cusp": 22,
+        "Cusp of Carabelli": 7
+      },
+      "boundary_centroid": [
+        -3.3500812036528003e-10,
+        -3.872833458139456e-10,
+        -1.0761263449754504e-10
+      ],
+      "bounds": [
+        [
+          -4.969910621643066,
+          -6.006162643432617,
+          -0.4452553987503052
+        ],
+        [
+          5.030089378356934,
+          5.717095851898193,
+          7.958887100219727
+        ]
+      ],
+      "signed_open_shell_volume": 571.2256394037202,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "26",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "17": {
+      "vertices": 12104,
+      "faces": 23816,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 390,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          8.644583897712903e-10,
+          7.283420134813358e-10,
+          -3.8376012339423865e-10
+        ],
+        "CervicalBlend": [
+          0.10469613415129372,
+          -0.24956608999543017,
+          1.2141485977664053
+        ],
+        "AnatomyProtected": [
+          0.24867691565749714,
+          -0.4091276519984664,
+          4.781154343361329
+        ],
+        "Cervical Band": [
+          0.10469613415129372,
+          -0.24956608999543017,
+          1.2141485977664053
+        ],
+        "Mesial Contact": [
+          4.7117578355889576,
+          0.9804067737177798,
+          4.320448423686781
+        ],
+        "Mesial Connector": [
+          4.682842268943786,
+          0.9759238622337579,
+          4.323862345218658
+        ],
+        "Distal Contact": [
+          -4.267779489358266,
+          -0.813615490992864,
+          3.8358028630415597
+        ],
+        "Distal Connector": [
+          -4.218341558210311,
+          -0.8072541116947128,
+          3.8315941556807487
+        ],
+        "Mesiobuccal Cusp": [
+          2.5840806790760587,
+          2.7755924463272095,
+          6.405544723783221
+        ],
+        "Distobuccal Cusp": [
+          -1.990420797291924,
+          2.68866369303535,
+          5.173271684085622
+        ],
+        "Middle Fissure": [
+          -2.1589385867118835,
+          -0.3928444729147789,
+          4.454216778278351
+        ],
+        "Palatinal Cusp": [
+          -0.7710368282654706,
+          -3.692260644015144,
+          6.328932537752039
+        ]
+      },
+      "groups": {
+        "CEJ": 390,
+        "CervicalBlend": 4133,
+        "AnatomyProtected": 7971,
+        "Cervical Band": 4133,
+        "Mesial Contact": 19,
+        "Mesial Connector": 100,
+        "Distal Contact": 24,
+        "Distal Connector": 124,
+        "Mesiobuccal Cusp": 14,
+        "Distobuccal Cusp": 17,
+        "Middle Fissure": 48,
+        "Palatinal Cusp": 17
+      },
+      "boundary_centroid": [
+        8.644583897712903e-10,
+        7.283420134813358e-10,
+        -3.8376012339423865e-10
+      ],
+      "bounds": [
+        [
+          -4.280500411987305,
+          -5.313193321228027,
+          -0.6674254536628723
+        ],
+        [
+          4.719499588012695,
+          4.458700180053711,
+          6.8098931312561035
+        ]
+      ],
+      "signed_open_shell_volume": 340.78118990652933,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "27",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "18": {
+      "vertices": 11644,
+      "faces": 22937,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 349,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          9.540052161175748e-10,
+          1.783923040488388e-09,
+          3.202255270884167e-11
+        ],
+        "CervicalBlend": [
+          0.010774032133311696,
+          -0.02819676612047109,
+          1.1103266495818782
+        ],
+        "AnatomyProtected": [
+          0.8215190449010759,
+          0.2714107093385575,
+          4.721590063129408
+        ],
+        "Cervical Band": [
+          0.010774032133311696,
+          -0.02819676612047109,
+          1.1103266495818782
+        ],
+        "Mesial Contact": [
+          4.633761769249325,
+          0.770832808244796,
+          3.5008315926506404
+        ],
+        "Mesial Connector": [
+          4.610078756788136,
+          0.7525231978336794,
+          3.5215034358269346
+        ],
+        "Distal Contact": [
+          -3.83421966764662,
+          -0.8697993291748894,
+          2.962555766105652
+        ],
+        "Distal Connector": [
+          -3.8088536358842946,
+          -0.8838038601056494,
+          2.94341393191405
+        ],
+        "Mesiobuccal Cusp": [
+          3.0452167352040607,
+          3.619719314575195,
+          5.463082885742187
+        ],
+        "Distobuccal Cusp": [
+          -1.8425086169015794,
+          3.342928954533168,
+          4.905117261977423
+        ],
+        "Middle Fissure": [
+          1.8229399919509888,
+          -0.26841689877371055,
+          4.9438310251003355
+        ],
+        "Palatinal Cusp": [
+          0.3568603870985301,
+          -3.167794113573821,
+          6.300595635953157
+        ]
+      },
+      "groups": {
+        "CEJ": 349,
+        "CervicalBlend": 3918,
+        "AnatomyProtected": 7726,
+        "Cervical Band": 3918,
+        "Mesial Contact": 21,
+        "Mesial Connector": 113,
+        "Distal Contact": 18,
+        "Distal Connector": 99,
+        "Mesiobuccal Cusp": 15,
+        "Distobuccal Cusp": 21,
+        "Middle Fissure": 82,
+        "Palatinal Cusp": 23
+      },
+      "boundary_centroid": [
+        9.540052161175748e-10,
+        1.783923040488388e-09,
+        3.202255270884167e-11
+      ],
+      "bounds": [
+        [
+          -3.8610785007476807,
+          -4.646124362945557,
+          -0.4969148635864258
+        ],
+        [
+          4.63892126083374,
+          4.787224769592285,
+          6.517665863037109
+        ]
+      ],
+      "signed_open_shell_volume": 317.231371098259,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "28",
+      "issues": [
+        "Distobuccal Cusp_below_fossa"
+      ],
+      "max_mirror_deviation": 0.0
+    },
+    "21": {
+      "vertices": 10445,
+      "faces": 20648,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 240,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          4.223935926953951e-09,
+          -6.472691893577576e-09,
+          -6.83940015733242e-11
+        ],
+        "CervicalBlend": [
+          -0.10796936374900416,
+          -0.45914600313369813,
+          1.1891614268606645
+        ],
+        "AnatomyProtected": [
+          -0.7433811804584178,
+          -1.4103628891557956,
+          6.052076870496399
+        ],
+        "Cervical Band": [
+          -0.10796936374900416,
+          -0.45914600313369813,
+          1.1891614268606645
+        ],
+        "Mesial Contact": [
+          3.8423214659971348,
+          -2.3169772344477035,
+          6.252121897304759
+        ],
+        "Mesial Connector": [
+          3.8075838710950767,
+          -2.2788145464399587,
+          6.313660460969676
+        ],
+        "Distal Contact": [
+          -4.638282091721244,
+          -1.0036021108212678,
+          6.167613361192786
+        ],
+        "Distal Connector": [
+          -4.5947798745245,
+          -0.9902458296627061,
+          6.1902092297871905
+        ],
+        "Incisal Edge": [
+          -0.4783783467021457,
+          -2.2086138801169963,
+          8.929533968553619
+        ],
+        "Palatinal Face": [
+          -0.050922952617543774,
+          -0.4361034436403094,
+          5.633996480220073
+        ]
+      },
+      "groups": {
+        "CEJ": 240,
+        "CervicalBlend": 2420,
+        "AnatomyProtected": 8025,
+        "Cervical Band": 2420,
+        "Mesial Contact": 17,
+        "Mesial Connector": 92,
+        "Distal Contact": 23,
+        "Distal Connector": 117,
+        "Incisal Edge": 377,
+        "Palatinal Face": 74
+      },
+      "boundary_centroid": [
+        4.223935926953951e-09,
+        -6.472691893577576e-09,
+        -6.83940015733242e-11
+      ],
+      "bounds": [
+        [
+          -4.650921821594238,
+          -4.290785312652588,
+          -1.306693434715271
+        ],
+        [
+          3.849078416824341,
+          4.438945293426514,
+          9.1068115234375
+        ]
+      ],
+      "signed_open_shell_volume": 296.4975276233991,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "22": {
+      "vertices": 13210,
+      "faces": 26126,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 292,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -1.9072976014385484e-09,
+          -3.079424471887824e-09,
+          2.2708961408432216e-09
+        ],
+        "CervicalBlend": [
+          -0.3937016592747905,
+          -0.48124335455913736,
+          1.2644841835610667
+        ],
+        "AnatomyProtected": [
+          -1.106547327210108,
+          -1.4034872200549102,
+          4.690790768233714
+        ],
+        "Cervical Band": [
+          -0.3937016592747905,
+          -0.48124335455913736,
+          1.2644841835610667
+        ],
+        "Mesial Contact": [
+          2.289047737379332,
+          -1.0591497872326825,
+          3.339132089872618
+        ],
+        "Mesial Connector": [
+          2.2553582391189657,
+          -1.0479019808519574,
+          3.355850303360305
+        ],
+        "Distal Contact": [
+          -4.188546356401946,
+          -0.6032186621113828,
+          4.351226812914798
+        ],
+        "Distal Connector": [
+          -4.13961120318341,
+          -0.5863588252580494,
+          4.354923780246447
+        ],
+        "Incisal Edge": [
+          -0.5542181695937408,
+          -1.9937157399667418,
+          7.232758301854785
+        ],
+        "Palatinal Face": [
+          0.2951172770906801,
+          2.6300049187385874,
+          1.5933212025524819
+        ]
+      },
+      "groups": {
+        "CEJ": 292,
+        "CervicalBlend": 4477,
+        "AnatomyProtected": 8733,
+        "Cervical Band": 4477,
+        "Mesial Contact": 37,
+        "Mesial Connector": 191,
+        "Distal Contact": 38,
+        "Distal Connector": 186,
+        "Incisal Edge": 366,
+        "Palatinal Face": 73
+      },
+      "boundary_centroid": [
+        -1.9072976014385484e-09,
+        -3.079424471887824e-09,
+        2.2708961408432216e-09
+      ],
+      "bounds": [
+        [
+          -4.201574325561523,
+          -3.4835433959960938,
+          -1.9494072198867798
+        ],
+        [
+          2.2984254360198975,
+          3.0403060913085938,
+          7.413488864898682
+        ]
+      ],
+      "signed_open_shell_volume": 138.17931699304668,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "23": {
+      "vertices": 21188,
+      "faces": 42061,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 313,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -3.68958464064918e-09,
+          -1.713871575011232e-09,
+          7.1411315625468e-11
+        ],
+        "CervicalBlend": [
+          0.08570629827616162,
+          -0.08928984027332128,
+          1.3765668127685387
+        ],
+        "AnatomyProtected": [
+          0.5175873454729848,
+          -0.22107724186277014,
+          5.952549243806048
+        ],
+        "Cervical Band": [
+          0.08570629827616162,
+          -0.08928984027332128,
+          1.3765668127685387
+        ],
+        "Mesial Contact": [
+          2.734743428230286,
+          -3.092444622516632,
+          7.000482523441315
+        ],
+        "Mesial Connector": [
+          2.742534047864341,
+          -3.0173252063431764,
+          6.978705850140802
+        ],
+        "Distal Contact": [
+          -2.87365041397236,
+          1.9962788577432986,
+          6.500145832697551
+        ],
+        "Distal Connector": [
+          -2.8106931164151145,
+          1.9701948118588282,
+          6.4769083393944635
+        ],
+        "Incisal Edge": [
+          -0.10406909928983682,
+          -1.0275616746444207,
+          9.892752511160714
+        ],
+        "Cusp Tip": [
+          -0.10406909928983682,
+          -1.0275616746444207,
+          9.892752511160714
+        ],
+        "Palatinal Face": [
+          1.8431300994677422,
+          1.897625745871128,
+          5.636618562233754
+        ]
+      },
+      "groups": {
+        "CEJ": 313,
+        "CervicalBlend": 5269,
+        "AnatomyProtected": 15919,
+        "Cervical Band": 5269,
+        "Mesial Contact": 40,
+        "Mesial Connector": 203,
+        "Distal Contact": 54,
+        "Distal Connector": 252,
+        "Incisal Edge": 77,
+        "Cusp Tip": 77,
+        "Palatinal Face": 156
+      },
+      "boundary_centroid": [
+        -3.68958464064918e-09,
+        -1.713871575011232e-09,
+        7.1411315625468e-11
+      ],
+      "bounds": [
+        [
+          -3.405743360519409,
+          -4.174741744995117,
+          -1.090859055519104
+        ],
+        [
+          4.094256401062012,
+          4.103075981140137,
+          10.045720100402832
+        ]
+      ],
+      "signed_open_shell_volume": 314.46345854990847,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "24": {
+      "vertices": 10391,
+      "faces": 20444,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 336,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          3.736377471969241e-09,
+          1.546660704272134e-09,
+          1.8709605293614525e-11
+        ],
+        "CervicalBlend": [
+          0.08000977143716402,
+          0.16450854357554592,
+          1.1800756337103913
+        ],
+        "AnatomyProtected": [
+          0.29837008555979855,
+          0.028362103091871663,
+          4.349289221216849
+        ],
+        "Cervical Band": [
+          0.08000977143716402,
+          0.16450854357554592,
+          1.1800756337103913
+        ],
+        "Mesial Contact": [
+          3.8408155224540015,
+          -0.9869520962238312,
+          3.852909489111467
+        ],
+        "Mesial Connector": [
+          3.778933648079161,
+          -0.9880139223403401,
+          3.870006211220272
+        ],
+        "Distal Contact": [
+          -2.023550917120541,
+          -2.9828936352449307,
+          4.777966218836167
+        ],
+        "Distal Connector": [
+          -1.9857661128044128,
+          -2.9066088646650314,
+          4.767400905489922
+        ],
+        "Buccal Cusp": [
+          1.1930182735125223,
+          -2.4016583283742268,
+          6.396494293212891
+        ],
+        "Middle Fissure": [
+          1.134215961297353,
+          0.5595864448944727,
+          4.078771514892578
+        ],
+        "Palatinal Cusp": [
+          0.3797914907336235,
+          3.3855566524323963,
+          5.351173173813593
+        ]
+      },
+      "groups": {
+        "CEJ": 336,
+        "CervicalBlend": 3824,
+        "AnatomyProtected": 6567,
+        "Cervical Band": 3824,
+        "Mesial Contact": 22,
+        "Mesial Connector": 126,
+        "Distal Contact": 17,
+        "Distal Connector": 96,
+        "Buccal Cusp": 15,
+        "Middle Fissure": 75,
+        "Palatinal Cusp": 21
+      },
+      "boundary_centroid": [
+        3.736377471969241e-09,
+        1.546660704272134e-09,
+        1.8709605293614525e-11
+      ],
+      "bounds": [
+        [
+          -3.0593786239624023,
+          -4.226968288421631,
+          -0.7247302532196045
+        ],
+        [
+          3.9406213760375977,
+          4.531483173370361,
+          6.578947067260742
+        ]
+      ],
+      "signed_open_shell_volume": 202.77446781588972,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "25": {
+      "vertices": 8601,
+      "faces": 16935,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 265,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          1.8204720515125203e-09,
+          -1.7203109444312329e-09,
+          4.954240724163236e-10
+        ],
+        "CervicalBlend": [
+          0.07785434712776348,
+          0.2497563977871602,
+          1.2262507555357567
+        ],
+        "AnatomyProtected": [
+          0.5667517811814576,
+          0.6774215575489987,
+          4.639405533243764
+        ],
+        "Cervical Band": [
+          0.07785434712776348,
+          0.2497563977871602,
+          1.2262507555357567
+        ],
+        "Mesial Contact": [
+          3.9697828610738117,
+          -0.17944822426264484,
+          3.7253424167633056
+        ],
+        "Mesial Connector": [
+          3.923004233960024,
+          -0.18080009985235088,
+          3.7475559908090177
+        ],
+        "Distal Contact": [
+          -1.6045254258548511,
+          -2.1617136141833138,
+          5.0729982993182015
+        ],
+        "Distal Connector": [
+          -1.5616568206401353,
+          -2.1111682921313166,
+          5.037097963054529
+        ],
+        "Buccal Cusp": [
+          1.2598961762019567,
+          -1.3417880620275224,
+          6.749511003494263
+        ],
+        "Middle Fissure": [
+          0.2925396698385315,
+          0.9279012455456499,
+          4.983767737513003
+        ],
+        "Palatinal Cusp": [
+          0.16926096982665753,
+          3.2395704921923185,
+          5.860269119865016
+        ]
+      },
+      "groups": {
+        "CEJ": 265,
+        "CervicalBlend": 3130,
+        "AnatomyProtected": 5471,
+        "Cervical Band": 3130,
+        "Mesial Contact": 15,
+        "Mesial Connector": 97,
+        "Distal Contact": 17,
+        "Distal Connector": 89,
+        "Buccal Cusp": 14,
+        "Middle Fissure": 69,
+        "Palatinal Cusp": 19
+      },
+      "boundary_centroid": [
+        1.8204720515125203e-09,
+        -1.7203109444312329e-09,
+        4.954240724163236e-10
+      ],
+      "bounds": [
+        [
+          -2.8936033248901367,
+          -3.6454622745513916,
+          -0.8963566422462463
+        ],
+        [
+          4.106396675109863,
+          4.741021156311035,
+          6.819414138793945
+        ]
+      ],
+      "signed_open_shell_volume": 204.56241348135336,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "26": {
+      "vertices": 19989,
+      "faces": 39559,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 417,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -3.3500812036528003e-10,
+          3.872833458139456e-10,
+          -1.0761263449754504e-10
+        ],
+        "CervicalBlend": [
+          -0.028021110294710674,
+          -0.03362439821953015,
+          1.2861136706520044
+        ],
+        "AnatomyProtected": [
+          0.1511507840721454,
+          0.031899794222885615,
+          5.935910037529637
+        ],
+        "Cervical Band": [
+          -0.028021110294710674,
+          -0.03362439821953015,
+          1.2861136706520044
+        ],
+        "Mesial Contact": [
+          5.020562868851882,
+          -1.1145872657115643,
+          5.418152038867657
+        ],
+        "Mesial Connector": [
+          4.977246509172529,
+          -1.104938585408695,
+          5.499015720726932
+        ],
+        "Distal Contact": [
+          -4.964996130570121,
+          -0.14795351282531477,
+          4.76581683366195
+        ],
+        "Distal Connector": [
+          -4.944662423891442,
+          -0.13944177460752288,
+          4.800892936849149
+        ],
+        "Mesiobuccal Cusp": [
+          1.940762996673584,
+          -3.847884178161621,
+          7.647963136434555
+        ],
+        "Distobuccal Cusp": [
+          -3.010667715753828,
+          -2.841398707457951,
+          7.759605969701495
+        ],
+        "Middle Fissure": [
+          2.397120137648149,
+          -0.29883403460368174,
+          5.703932861848311
+        ],
+        "Palatinal Cusp": [
+          1.6802889162843877,
+          3.276986501433633,
+          7.5209596157073975
+        ],
+        "Cusp of Carabelli": [
+          2.088840740067618,
+          5.982722895486014,
+          4.711250305175781
+        ]
+      },
+      "groups": {
+        "CEJ": 417,
+        "CervicalBlend": 4488,
+        "AnatomyProtected": 15501,
+        "Cervical Band": 4488,
+        "Mesial Contact": 39,
+        "Mesial Connector": 191,
+        "Distal Contact": 23,
+        "Distal Connector": 107,
+        "Mesiobuccal Cusp": 32,
+        "Distobuccal Cusp": 28,
+        "Middle Fissure": 110,
+        "Palatinal Cusp": 22,
+        "Cusp of Carabelli": 7
+      },
+      "boundary_centroid": [
+        -3.3500812036528003e-10,
+        3.872833458139456e-10,
+        -1.0761263449754504e-10
+      ],
+      "bounds": [
+        [
+          -4.969910621643066,
+          -5.717095851898193,
+          -0.4452553987503052
+        ],
+        [
+          5.030089378356934,
+          6.006162643432617,
+          7.958887100219727
+        ]
+      ],
+      "signed_open_shell_volume": 571.2256394037202,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "27": {
+      "vertices": 12104,
+      "faces": 23816,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 390,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          8.644583897712903e-10,
+          -7.283420134813358e-10,
+          -3.8376012339423865e-10
+        ],
+        "CervicalBlend": [
+          0.10469613415129372,
+          0.24956608999543017,
+          1.2141485977664053
+        ],
+        "AnatomyProtected": [
+          0.24867691565749714,
+          0.4091276519984664,
+          4.781154343361329
+        ],
+        "Cervical Band": [
+          0.10469613415129372,
+          0.24956608999543017,
+          1.2141485977664053
+        ],
+        "Mesial Contact": [
+          4.7117578355889576,
+          -0.9804067737177798,
+          4.320448423686781
+        ],
+        "Mesial Connector": [
+          4.682842268943786,
+          -0.9759238622337579,
+          4.323862345218658
+        ],
+        "Distal Contact": [
+          -4.267779489358266,
+          0.813615490992864,
+          3.8358028630415597
+        ],
+        "Distal Connector": [
+          -4.218341558210311,
+          0.8072541116947128,
+          3.8315941556807487
+        ],
+        "Mesiobuccal Cusp": [
+          2.5840806790760587,
+          -2.7755924463272095,
+          6.405544723783221
+        ],
+        "Distobuccal Cusp": [
+          -1.990420797291924,
+          -2.68866369303535,
+          5.173271684085622
+        ],
+        "Middle Fissure": [
+          -2.1589385867118835,
+          0.3928444729147789,
+          4.454216778278351
+        ],
+        "Palatinal Cusp": [
+          -0.7710368282654706,
+          3.692260644015144,
+          6.328932537752039
+        ]
+      },
+      "groups": {
+        "CEJ": 390,
+        "CervicalBlend": 4133,
+        "AnatomyProtected": 7971,
+        "Cervical Band": 4133,
+        "Mesial Contact": 19,
+        "Mesial Connector": 100,
+        "Distal Contact": 24,
+        "Distal Connector": 124,
+        "Mesiobuccal Cusp": 14,
+        "Distobuccal Cusp": 17,
+        "Middle Fissure": 48,
+        "Palatinal Cusp": 17
+      },
+      "boundary_centroid": [
+        8.644583897712903e-10,
+        -7.283420134813358e-10,
+        -3.8376012339423865e-10
+      ],
+      "bounds": [
+        [
+          -4.280500411987305,
+          -4.458700180053711,
+          -0.6674254536628723
+        ],
+        [
+          4.719499588012695,
+          5.313193321228027,
+          6.8098931312561035
+        ]
+      ],
+      "signed_open_shell_volume": 340.78118990652933,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "28": {
+      "vertices": 11644,
+      "faces": 22937,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 349,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          9.540052161175748e-10,
+          -1.783923040488388e-09,
+          3.202255270884167e-11
+        ],
+        "CervicalBlend": [
+          0.010774032133311696,
+          0.02819676612047109,
+          1.1103266495818782
+        ],
+        "AnatomyProtected": [
+          0.8215190449010759,
+          -0.2714107093385575,
+          4.721590063129408
+        ],
+        "Cervical Band": [
+          0.010774032133311696,
+          0.02819676612047109,
+          1.1103266495818782
+        ],
+        "Mesial Contact": [
+          4.633761769249325,
+          -0.770832808244796,
+          3.5008315926506404
+        ],
+        "Mesial Connector": [
+          4.610078756788136,
+          -0.7525231978336794,
+          3.5215034358269346
+        ],
+        "Distal Contact": [
+          -3.83421966764662,
+          0.8697993291748894,
+          2.962555766105652
+        ],
+        "Distal Connector": [
+          -3.8088536358842946,
+          0.8838038601056494,
+          2.94341393191405
+        ],
+        "Mesiobuccal Cusp": [
+          3.0452167352040607,
+          -3.619719314575195,
+          5.463082885742187
+        ],
+        "Distobuccal Cusp": [
+          -1.8425086169015794,
+          -3.342928954533168,
+          4.905117261977423
+        ],
+        "Middle Fissure": [
+          1.8229399919509888,
+          0.26841689877371055,
+          4.9438310251003355
+        ],
+        "Palatinal Cusp": [
+          0.3568603870985301,
+          3.167794113573821,
+          6.300595635953157
+        ]
+      },
+      "groups": {
+        "CEJ": 349,
+        "CervicalBlend": 3918,
+        "AnatomyProtected": 7726,
+        "Cervical Band": 3918,
+        "Mesial Contact": 21,
+        "Mesial Connector": 113,
+        "Distal Contact": 18,
+        "Distal Connector": 99,
+        "Mesiobuccal Cusp": 15,
+        "Distobuccal Cusp": 21,
+        "Middle Fissure": 82,
+        "Palatinal Cusp": 23
+      },
+      "boundary_centroid": [
+        9.540052161175748e-10,
+        -1.783923040488388e-09,
+        3.202255270884167e-11
+      ],
+      "bounds": [
+        [
+          -3.8610785007476807,
+          -4.787224769592285,
+          -0.4969148635864258
+        ],
+        [
+          4.63892126083374,
+          4.646124362945557,
+          6.517665863037109
+        ]
+      ],
+      "signed_open_shell_volume": 317.231371098259,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": [
+        "Distobuccal Cusp_below_fossa"
+      ]
+    },
+    "31": {
+      "vertices": 10661,
+      "faces": 21090,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 230,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          4.361778416711351e-09,
+          -9.556179461271867e-10,
+          -1.4273530763128529e-09
+        ],
+        "CervicalBlend": [
+          -0.035214023165060435,
+          0.4252393131970999,
+          1.347003877000833
+        ],
+        "AnatomyProtected": [
+          0.03284494726049546,
+          1.6713027475571673,
+          5.111906942337873
+        ],
+        "Cervical Band": [
+          -0.035214023165060435,
+          0.4252393131970999,
+          1.347003877000833
+        ],
+        "Mesial Contact": [
+          2.361333506447928,
+          1.946891339457765,
+          5.123777817706673
+        ],
+        "Mesial Connector": [
+          2.2780176434121113,
+          1.9648500940074092,
+          5.145295678391287
+        ],
+        "Distal Contact": [
+          -2.5987922474741936,
+          1.2699002511799335,
+          5.579307898879051
+        ],
+        "Distal Connector": [
+          -2.5178057616238765,
+          1.2505698444929765,
+          5.5976495421612205
+        ],
+        "Incisal Edge": [
+          0.00788589585361852,
+          2.1656450633606292,
+          7.422774907137771
+        ],
+        "Palatinal Face": [
+          0.4945469454241296,
+          0.13045213963081495,
+          4.300179039348255
+        ]
+      },
+      "groups": {
+        "CEJ": 230,
+        "CervicalBlend": 3528,
+        "AnatomyProtected": 7133,
+        "Cervical Band": 3528,
+        "Mesial Contact": 49,
+        "Mesial Connector": 253,
+        "Distal Contact": 32,
+        "Distal Connector": 193,
+        "Incisal Edge": 409,
+        "Palatinal Face": 165
+      },
+      "boundary_centroid": [
+        4.361778416711351e-09,
+        -9.556179461271867e-10,
+        -1.4273530763128529e-09
+      ],
+      "bounds": [
+        [
+          -2.619966745376587,
+          -3.040278911590576,
+          -1.3403204679489136
+        ],
+        [
+          2.380033254623413,
+          3.553870677947998,
+          7.596560955047607
+        ]
+      ],
+      "signed_open_shell_volume": 110.33798026674921,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "32": {
+      "vertices": 10226,
+      "faces": 20207,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 243,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          2.2229098488764507e-10,
+          -6.6112404988135825e-09,
+          1.1543321726008207e-09
+        ],
+        "CervicalBlend": [
+          0.1965436761954139,
+          0.5249856804694217,
+          1.2288722630537958
+        ],
+        "AnatomyProtected": [
+          0.4736416728901926,
+          1.9647762108907367,
+          5.203810433438939
+        ],
+        "Cervical Band": [
+          0.1965436761954139,
+          0.5249856804694217,
+          1.2288722630537958
+        ],
+        "Mesial Contact": [
+          3.010232301858755,
+          2.4279712667832007,
+          6.67545826618488
+        ],
+        "Mesial Connector": [
+          2.88322090665936,
+          2.4558394217229154,
+          6.691679944048871
+        ],
+        "Distal Contact": [
+          -2.4274964579220475,
+          2.0732227029471564,
+          5.688255392271897
+        ],
+        "Distal Connector": [
+          -2.343057977688777,
+          2.06679736019729,
+          5.689113106046404
+        ],
+        "Incisal Edge": [
+          0.5300723052596823,
+          2.5784096432147723,
+          7.635292712899335
+        ],
+        "Palatinal Face": [
+          0.5887984842489432,
+          -2.578639144328103,
+          2.772502941871757
+        ]
+      },
+      "groups": {
+        "CEJ": 243,
+        "CervicalBlend": 3220,
+        "AnatomyProtected": 7006,
+        "Cervical Band": 3220,
+        "Mesial Contact": 52,
+        "Mesial Connector": 273,
+        "Distal Contact": 29,
+        "Distal Connector": 154,
+        "Incisal Edge": 459,
+        "Palatinal Face": 67
+      },
+      "boundary_centroid": [
+        2.2229098488764507e-10,
+        -6.6112404988135825e-09,
+        1.1543321726008207e-09
+      ],
+      "bounds": [
+        [
+          -2.4521234035491943,
+          -3.1859354972839355,
+          -1.6710593700408936
+        ],
+        [
+          3.0478765964508057,
+          3.560476303100586,
+          7.811592102050781
+        ]
+      ],
+      "signed_open_shell_volume": 121.3944722463852,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "33": {
+      "vertices": 9442,
+      "faces": 18601,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 281,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -5.427191159903367e-11,
+          -1.5643567801370315e-09,
+          -3.8259626230311137e-10
+        ],
+        "CervicalBlend": [
+          -0.2910880610496235,
+          0.27306093231699335,
+          1.4065440437861836
+        ],
+        "AnatomyProtected": [
+          -0.3850261000536476,
+          0.6497747325617723,
+          5.321568148093951
+        ],
+        "Cervical Band": [
+          -0.2910880610496235,
+          0.27306093231699335,
+          1.4065440437861836
+        ],
+        "Mesial Contact": [
+          2.9112065029144287,
+          1.0680018734931946,
+          3.9072662162780762
+        ],
+        "Mesial Connector": [
+          2.8520013813144907,
+          1.0236374371307941,
+          3.891547195182359
+        ],
+        "Distal Contact": [
+          -3.7212751626968386,
+          0.059800487384200095,
+          3.932041072845459
+        ],
+        "Distal Connector": [
+          -3.6770500380259294,
+          0.060794990456018314,
+          3.9224284016169033
+        ],
+        "Incisal Edge": [
+          -0.35550275163981937,
+          1.333483772031192,
+          8.534787326023496
+        ],
+        "Cusp Tip": [
+          -0.35550275163981937,
+          1.333483772031192,
+          8.534787326023496
+        ],
+        "Palatinal Face": [
+          0.5962138271962221,
+          0.03988963715360464,
+          5.442510957901295
+        ]
+      },
+      "groups": {
+        "CEJ": 281,
+        "CervicalBlend": 3169,
+        "AnatomyProtected": 6273,
+        "Cervical Band": 3169,
+        "Mesial Contact": 25,
+        "Mesial Connector": 121,
+        "Distal Contact": 20,
+        "Distal Connector": 104,
+        "Incisal Edge": 58,
+        "Cusp Tip": 58,
+        "Palatinal Face": 104
+      },
+      "boundary_centroid": [
+        -5.427191159903367e-11,
+        -1.5643567801370315e-09,
+        -3.8259626230311137e-10
+      ],
+      "bounds": [
+        [
+          -3.7321605682373047,
+          -3.329094171524048,
+          -1.2569454908370972
+        ],
+        [
+          3.2678394317626953,
+          4.026490211486816,
+          8.683932304382324
+        ]
+      ],
+      "signed_open_shell_volume": 208.60859679098778,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "34": {
+      "vertices": 9607,
+      "faces": 18927,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 285,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          3.895215820847896e-09,
+          4.231799067112438e-09,
+          1.67474673505415e-10
+        ],
+        "CervicalBlend": [
+          0.008691489330788775,
+          -0.01918879820514369,
+          1.086618585158353
+        ],
+        "AnatomyProtected": [
+          -0.1478334318998093,
+          0.0020305587316537285,
+          3.969932580785925
+        ],
+        "Cervical Band": [
+          0.008691489330788775,
+          -0.01918879820514369,
+          1.086618585158353
+        ],
+        "Mesial Contact": [
+          2.5506391294540895,
+          -1.5366221012607697,
+          3.9153263568878174
+        ],
+        "Mesial Connector": [
+          2.466681495402594,
+          -1.522663896188796,
+          3.942363418123257
+        ],
+        "Distal Contact": [
+          -1.965305759988982,
+          2.253183673168051,
+          4.28376108202441
+        ],
+        "Distal Connector": [
+          -1.941608859646705,
+          2.114869078513115,
+          4.23577832406567
+        ],
+        "Buccal Cusp": [
+          0.8321782444652758,
+          0.6966061827383543,
+          6.16324143660696
+        ],
+        "Middle Fissure": [
+          -1.7316118295376117,
+          -0.2241575456224382,
+          3.639849486717811
+        ],
+        "Palatinal Cusp": [
+          -0.520567854642868,
+          -2.9529207706451417,
+          4.113747854232788
+        ]
+      },
+      "groups": {
+        "CEJ": 285,
+        "CervicalBlend": 3524,
+        "AnatomyProtected": 6083,
+        "Cervical Band": 3524,
+        "Mesial Contact": 31,
+        "Mesial Connector": 159,
+        "Distal Contact": 29,
+        "Distal Connector": 155,
+        "Buccal Cusp": 19,
+        "Middle Fissure": 65,
+        "Palatinal Cusp": 25
+      },
+      "boundary_centroid": [
+        3.895215820847896e-09,
+        4.231799067112438e-09,
+        1.67474673505415e-10
+      ],
+      "bounds": [
+        [
+          -3.4985556602478027,
+          -3.5184900760650635,
+          -0.8196905851364136
+        ],
+        [
+          3.5014443397521973,
+          3.6535656452178955,
+          6.245395660400391
+        ]
+      ],
+      "signed_open_shell_volume": 148.07365655272613,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "35": {
+      "vertices": 8319,
+      "faces": 16347,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 289,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -5.280985706405244e-09,
+          -7.547257680793947e-09,
+          -2.140994586540341e-10
+        ],
+        "CervicalBlend": [
+          -0.23261266608759817,
+          -0.28100161359558073,
+          1.0405033701904716
+        ],
+        "AnatomyProtected": [
+          -0.26138078552610367,
+          -0.6163508576476935,
+          4.121468765372997
+        ],
+        "Cervical Band": [
+          -0.23261266608759817,
+          -0.28100161359558073,
+          1.0405033701904716
+        ],
+        "Mesial Contact": [
+          3.1314548818688643,
+          -0.3785620608219975,
+          3.6927738189697266
+        ],
+        "Mesial Connector": [
+          3.089795286655426,
+          -0.4122667686920613,
+          3.710824227333069
+        ],
+        "Distal Contact": [
+          -2.3072701065163863,
+          2.3294196128845215,
+          3.6367732474678443
+        ],
+        "Distal Connector": [
+          -2.286872053146362,
+          2.2814755034446716,
+          3.676971619129181
+        ],
+        "Buccal Cusp": [
+          1.2105085849761963,
+          1.0977482000986736,
+          5.992831643422445
+        ],
+        "Middle Fissure": [
+          0.7378099736494895,
+          -1.8655842053584564,
+          3.9281667318099585
+        ],
+        "Palatinal Cusp": [
+          -0.920699360469977,
+          -3.917646735906601,
+          4.442047715187073
+        ]
+      },
+      "groups": {
+        "CEJ": 289,
+        "CervicalBlend": 2908,
+        "AnatomyProtected": 5411,
+        "Cervical Band": 2908,
+        "Mesial Contact": 19,
+        "Mesial Connector": 100,
+        "Distal Contact": 19,
+        "Distal Connector": 100,
+        "Buccal Cusp": 15,
+        "Middle Fissure": 39,
+        "Palatinal Cusp": 24
+      },
+      "boundary_centroid": [
+        -5.280985706405244e-09,
+        -7.547257680793947e-09,
+        -2.140994586540341e-10
+      ],
+      "bounds": [
+        [
+          -3.7471365928649902,
+          -4.29757833480835,
+          -0.5430628657341003
+        ],
+        [
+          3.2528634071350098,
+          3.4608709812164307,
+          6.204022407531738
+        ]
+      ],
+      "signed_open_shell_volume": 177.73614347388187,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "36": {
+      "vertices": 12564,
+      "faces": 24793,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 333,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -8.552505805327728e-09,
+          1.0417947719047019e-08,
+          -6.677275215899264e-11
+        ],
+        "CervicalBlend": [
+          -0.19207739656677697,
+          -0.1706368189585054,
+          1.153540545697953
+        ],
+        "AnatomyProtected": [
+          -0.4460520151937537,
+          -0.924171554553074,
+          4.824347584620866
+        ],
+        "Cervical Band": [
+          -0.19207739656677697,
+          -0.1706368189585054,
+          1.153540545697953
+        ],
+        "Mesial Contact": [
+          5.187906395305287,
+          -0.5228997739878568,
+          3.1866128661415796
+        ],
+        "Mesial Connector": [
+          5.143329072354445,
+          -0.5023731023295602,
+          3.170373756494095
+        ],
+        "Distal Contact": [
+          -5.761759505552404,
+          -0.31536957665401344,
+          3.1559157792259667
+        ],
+        "Distal Connector": [
+          -5.727743233306499,
+          -0.32110753199203484,
+          3.172933994969235
+        ],
+        "Mesiobuccal Cusp": [
+          3.2377231554551558,
+          0.4331644976680929,
+          6.278353517705744
+        ],
+        "Distobuccal Cusp": [
+          0.19481358968187124,
+          2.8203935874135873,
+          6.094339947951467
+        ],
+        "Middle Fissure": [
+          1.6166173404025048,
+          -2.482378084634997,
+          4.134637940790236
+        ],
+        "Palatinal Cusp": [
+          0.18749170247465372,
+          -4.475770314534505,
+          6.256705697377523
+        ]
+      },
+      "groups": {
+        "CEJ": 333,
+        "CervicalBlend": 3392,
+        "AnatomyProtected": 9172,
+        "Cervical Band": 3392,
+        "Mesial Contact": 11,
+        "Mesial Connector": 67,
+        "Distal Contact": 17,
+        "Distal Connector": 79,
+        "Mesiobuccal Cusp": 11,
+        "Distobuccal Cusp": 19,
+        "Middle Fissure": 97,
+        "Palatinal Cusp": 15
+      },
+      "boundary_centroid": [
+        -8.552505805327728e-09,
+        1.0417947719047019e-08,
+        -6.677275215899264e-11
+      ],
+      "bounds": [
+        [
+          -5.78880500793457,
+          -5.984453201293945,
+          -0.4772547483444214
+        ],
+        [
+          5.21119499206543,
+          4.975687026977539,
+          6.76334285736084
+        ]
+      ],
+      "signed_open_shell_volume": 435.68642212666896,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "37": {
+      "vertices": 11576,
+      "faces": 22792,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 358,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -5.967748564714826e-09,
+          -3.850160364332146e-10,
+          -1.5628269181571194e-09
+        ],
+        "CervicalBlend": [
+          0.06469196228109779,
+          -0.023393652740941396,
+          1.2589306033777932
+        ],
+        "AnatomyProtected": [
+          0.32394132123689284,
+          -0.1224104059611631,
+          5.053006296669655
+        ],
+        "Cervical Band": [
+          0.06469196228109779,
+          -0.023393652740941396,
+          1.2589306033777932
+        ],
+        "Mesial Contact": [
+          5.637898683547974,
+          0.8266242891550064,
+          4.289934262633324
+        ],
+        "Mesial Connector": [
+          5.577418049679527,
+          0.8184521359662655,
+          4.302999137323114
+        ],
+        "Distal Contact": [
+          -4.8389695318121655,
+          0.4378231771682438,
+          3.956366727226659
+        ],
+        "Distal Connector": [
+          -4.821533345040821,
+          0.4163559526579255,
+          3.9781534643400285
+        ],
+        "Mesiobuccal Cusp": [
+          4.3078342351046475,
+          2.58168888092041,
+          5.595732082020152
+        ],
+        "Distobuccal Cusp": [
+          -1.0166555362589218,
+          3.0080434995539047,
+          6.063423325033749
+        ],
+        "Middle Fissure": [
+          0.6561255852381388,
+          -0.30905907715862635,
+          4.609410374252884
+        ],
+        "Palatinal Cusp": [
+          3.0834430914658766,
+          -2.9894056503589335,
+          6.701487211080698
+        ]
+      },
+      "groups": {
+        "CEJ": 358,
+        "CervicalBlend": 3629,
+        "AnatomyProtected": 7947,
+        "Cervical Band": 3629,
+        "Mesial Contact": 16,
+        "Mesial Connector": 79,
+        "Distal Contact": 19,
+        "Distal Connector": 84,
+        "Mesiobuccal Cusp": 11,
+        "Distobuccal Cusp": 17,
+        "Middle Fissure": 27,
+        "Palatinal Cusp": 13
+      },
+      "boundary_centroid": [
+        -5.967748564714826e-09,
+        -3.850160364332146e-10,
+        -1.5628269181571194e-09
+      ],
+      "bounds": [
+        [
+          -4.843893527984619,
+          -5.117228031158447,
+          -1.3891583681106567
+        ],
+        [
+          5.656106472015381,
+          5.430144786834717,
+          7.161269187927246
+        ]
+      ],
+      "signed_open_shell_volume": 466.74278159089505,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "38": {
+      "vertices": 11645,
+      "faces": 22941,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 347,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -1.3956418985592186e-09,
+          5.228289266141072e-09,
+          9.366904280714756e-10
+        ],
+        "CervicalBlend": [
+          -0.053221910724964704,
+          -0.3141485992890372,
+          1.1661202460941387
+        ],
+        "AnatomyProtected": [
+          -0.0516815129964152,
+          -1.249740178205526,
+          4.9863917995782225
+        ],
+        "Cervical Band": [
+          -0.053221910724964704,
+          -0.3141485992890372,
+          1.1661202460941387
+        ],
+        "Mesial Contact": [
+          4.754991054534912,
+          0.9661633739104638,
+          3.2100294003119836
+        ],
+        "Mesial Connector": [
+          4.727224747339885,
+          0.9630017727613449,
+          3.2153146233823566
+        ],
+        "Distal Contact": [
+          -5.227048601422991,
+          -1.6883371727807182,
+          4.14748511995588
+        ],
+        "Distal Connector": [
+          -5.186062443424278,
+          -1.6871898753542296,
+          4.158659253321903
+        ],
+        "Mesiobuccal Cusp": [
+          2.1778061389923096,
+          0.5645407544715064,
+          6.825605017798288
+        ],
+        "Distobuccal Cusp": [
+          -2.4208911736806233,
+          2.5165601412455243,
+          5.686681461334229
+        ],
+        "Middle Fissure": [
+          -0.27262834034769273,
+          -1.1303822688940095,
+          4.736122561664116
+        ],
+        "Palatinal Cusp": [
+          0.11453192637247198,
+          -4.716038619770723,
+          6.140538916868322
+        ]
+      },
+      "groups": {
+        "CEJ": 347,
+        "CervicalBlend": 3543,
+        "AnatomyProtected": 8102,
+        "Cervical Band": 3543,
+        "Mesial Contact": 13,
+        "Mesial Connector": 72,
+        "Distal Contact": 14,
+        "Distal Connector": 71,
+        "Mesiobuccal Cusp": 14,
+        "Distobuccal Cusp": 15,
+        "Middle Fissure": 41,
+        "Palatinal Cusp": 17
+      },
+      "boundary_centroid": [
+        -1.3956418985592186e-09,
+        5.228289266141072e-09,
+        9.366904280714756e-10
+      ],
+      "bounds": [
+        [
+          -5.237782001495361,
+          -5.978849411010742,
+          -1.0964651107788086
+        ],
+        [
+          4.762217998504639,
+          5.351564884185791,
+          7.063047885894775
+        ]
+      ],
+      "signed_open_shell_volume": 459.72819956862963,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "left",
+      "mirrored_from": null,
+      "issues": []
+    },
+    "41": {
+      "vertices": 10661,
+      "faces": 21090,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 230,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          4.361778416711351e-09,
+          9.556179461271867e-10,
+          -1.4273530763128529e-09
+        ],
+        "CervicalBlend": [
+          -0.035214023165060435,
+          -0.4252393131970999,
+          1.347003877000833
+        ],
+        "AnatomyProtected": [
+          0.03284494726049546,
+          -1.6713027475571673,
+          5.111906942337873
+        ],
+        "Cervical Band": [
+          -0.035214023165060435,
+          -0.4252393131970999,
+          1.347003877000833
+        ],
+        "Mesial Contact": [
+          2.361333506447928,
+          -1.946891339457765,
+          5.123777817706673
+        ],
+        "Mesial Connector": [
+          2.2780176434121113,
+          -1.9648500940074092,
+          5.145295678391287
+        ],
+        "Distal Contact": [
+          -2.5987922474741936,
+          -1.2699002511799335,
+          5.579307898879051
+        ],
+        "Distal Connector": [
+          -2.5178057616238765,
+          -1.2505698444929765,
+          5.5976495421612205
+        ],
+        "Incisal Edge": [
+          0.00788589585361852,
+          -2.1656450633606292,
+          7.422774907137771
+        ],
+        "Palatinal Face": [
+          0.4945469454241296,
+          -0.13045213963081495,
+          4.300179039348255
+        ]
+      },
+      "groups": {
+        "CEJ": 230,
+        "CervicalBlend": 3528,
+        "AnatomyProtected": 7133,
+        "Cervical Band": 3528,
+        "Mesial Contact": 49,
+        "Mesial Connector": 253,
+        "Distal Contact": 32,
+        "Distal Connector": 193,
+        "Incisal Edge": 409,
+        "Palatinal Face": 165
+      },
+      "boundary_centroid": [
+        4.361778416711351e-09,
+        9.556179461271867e-10,
+        -1.4273530763128529e-09
+      ],
+      "bounds": [
+        [
+          -2.619966745376587,
+          -3.553870677947998,
+          -1.3403204679489136
+        ],
+        [
+          2.380033254623413,
+          3.040278911590576,
+          7.596560955047607
+        ]
+      ],
+      "signed_open_shell_volume": 110.33798026674921,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "31",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "42": {
+      "vertices": 10226,
+      "faces": 20207,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 243,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          2.2229098488764507e-10,
+          6.6112404988135825e-09,
+          1.1543321726008207e-09
+        ],
+        "CervicalBlend": [
+          0.1965436761954139,
+          -0.5249856804694217,
+          1.2288722630537958
+        ],
+        "AnatomyProtected": [
+          0.4736416728901926,
+          -1.9647762108907367,
+          5.203810433438939
+        ],
+        "Cervical Band": [
+          0.1965436761954139,
+          -0.5249856804694217,
+          1.2288722630537958
+        ],
+        "Mesial Contact": [
+          3.010232301858755,
+          -2.4279712667832007,
+          6.67545826618488
+        ],
+        "Mesial Connector": [
+          2.88322090665936,
+          -2.4558394217229154,
+          6.691679944048871
+        ],
+        "Distal Contact": [
+          -2.4274964579220475,
+          -2.0732227029471564,
+          5.688255392271897
+        ],
+        "Distal Connector": [
+          -2.343057977688777,
+          -2.06679736019729,
+          5.689113106046404
+        ],
+        "Incisal Edge": [
+          0.5300723052596823,
+          -2.5784096432147723,
+          7.635292712899335
+        ],
+        "Palatinal Face": [
+          0.5887984842489432,
+          2.578639144328103,
+          2.772502941871757
+        ]
+      },
+      "groups": {
+        "CEJ": 243,
+        "CervicalBlend": 3220,
+        "AnatomyProtected": 7006,
+        "Cervical Band": 3220,
+        "Mesial Contact": 52,
+        "Mesial Connector": 273,
+        "Distal Contact": 29,
+        "Distal Connector": 154,
+        "Incisal Edge": 459,
+        "Palatinal Face": 67
+      },
+      "boundary_centroid": [
+        2.2229098488764507e-10,
+        6.6112404988135825e-09,
+        1.1543321726008207e-09
+      ],
+      "bounds": [
+        [
+          -2.4521234035491943,
+          -3.560476303100586,
+          -1.6710593700408936
+        ],
+        [
+          3.0478765964508057,
+          3.1859354972839355,
+          7.811592102050781
+        ]
+      ],
+      "signed_open_shell_volume": 121.3944722463852,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "32",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "43": {
+      "vertices": 9442,
+      "faces": 18601,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 281,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -5.427191159903367e-11,
+          1.5643567801370315e-09,
+          -3.8259626230311137e-10
+        ],
+        "CervicalBlend": [
+          -0.2910880610496235,
+          -0.27306093231699335,
+          1.4065440437861836
+        ],
+        "AnatomyProtected": [
+          -0.3850261000536476,
+          -0.6497747325617723,
+          5.321568148093951
+        ],
+        "Cervical Band": [
+          -0.2910880610496235,
+          -0.27306093231699335,
+          1.4065440437861836
+        ],
+        "Mesial Contact": [
+          2.9112065029144287,
+          -1.0680018734931946,
+          3.9072662162780762
+        ],
+        "Mesial Connector": [
+          2.8520013813144907,
+          -1.0236374371307941,
+          3.891547195182359
+        ],
+        "Distal Contact": [
+          -3.7212751626968386,
+          -0.059800487384200095,
+          3.932041072845459
+        ],
+        "Distal Connector": [
+          -3.6770500380259294,
+          -0.060794990456018314,
+          3.9224284016169033
+        ],
+        "Incisal Edge": [
+          -0.35550275163981937,
+          -1.333483772031192,
+          8.534787326023496
+        ],
+        "Cusp Tip": [
+          -0.35550275163981937,
+          -1.333483772031192,
+          8.534787326023496
+        ],
+        "Palatinal Face": [
+          0.5962138271962221,
+          -0.03988963715360464,
+          5.442510957901295
+        ]
+      },
+      "groups": {
+        "CEJ": 281,
+        "CervicalBlend": 3169,
+        "AnatomyProtected": 6273,
+        "Cervical Band": 3169,
+        "Mesial Contact": 25,
+        "Mesial Connector": 121,
+        "Distal Contact": 20,
+        "Distal Connector": 104,
+        "Incisal Edge": 58,
+        "Cusp Tip": 58,
+        "Palatinal Face": 104
+      },
+      "boundary_centroid": [
+        -5.427191159903367e-11,
+        1.5643567801370315e-09,
+        -3.8259626230311137e-10
+      ],
+      "bounds": [
+        [
+          -3.7321605682373047,
+          -4.026490211486816,
+          -1.2569454908370972
+        ],
+        [
+          3.2678394317626953,
+          3.329094171524048,
+          8.683932304382324
+        ]
+      ],
+      "signed_open_shell_volume": 208.60859679098778,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "33",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "44": {
+      "vertices": 9607,
+      "faces": 18927,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 285,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          3.895215820847896e-09,
+          -4.231799067112438e-09,
+          1.67474673505415e-10
+        ],
+        "CervicalBlend": [
+          0.008691489330788775,
+          0.01918879820514369,
+          1.086618585158353
+        ],
+        "AnatomyProtected": [
+          -0.1478334318998093,
+          -0.0020305587316537285,
+          3.969932580785925
+        ],
+        "Cervical Band": [
+          0.008691489330788775,
+          0.01918879820514369,
+          1.086618585158353
+        ],
+        "Mesial Contact": [
+          2.5506391294540895,
+          1.5366221012607697,
+          3.9153263568878174
+        ],
+        "Mesial Connector": [
+          2.466681495402594,
+          1.522663896188796,
+          3.942363418123257
+        ],
+        "Distal Contact": [
+          -1.965305759988982,
+          -2.253183673168051,
+          4.28376108202441
+        ],
+        "Distal Connector": [
+          -1.941608859646705,
+          -2.114869078513115,
+          4.23577832406567
+        ],
+        "Buccal Cusp": [
+          0.8321782444652758,
+          -0.6966061827383543,
+          6.16324143660696
+        ],
+        "Middle Fissure": [
+          -1.7316118295376117,
+          0.2241575456224382,
+          3.639849486717811
+        ],
+        "Palatinal Cusp": [
+          -0.520567854642868,
+          2.9529207706451417,
+          4.113747854232788
+        ]
+      },
+      "groups": {
+        "CEJ": 285,
+        "CervicalBlend": 3524,
+        "AnatomyProtected": 6083,
+        "Cervical Band": 3524,
+        "Mesial Contact": 31,
+        "Mesial Connector": 159,
+        "Distal Contact": 29,
+        "Distal Connector": 155,
+        "Buccal Cusp": 19,
+        "Middle Fissure": 65,
+        "Palatinal Cusp": 25
+      },
+      "boundary_centroid": [
+        3.895215820847896e-09,
+        -4.231799067112438e-09,
+        1.67474673505415e-10
+      ],
+      "bounds": [
+        [
+          -3.4985556602478027,
+          -3.6535656452178955,
+          -0.8196905851364136
+        ],
+        [
+          3.5014443397521973,
+          3.5184900760650635,
+          6.245395660400391
+        ]
+      ],
+      "signed_open_shell_volume": 148.07365655272613,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "34",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "45": {
+      "vertices": 8319,
+      "faces": 16347,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 289,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -5.280985706405244e-09,
+          7.547257680793947e-09,
+          -2.140994586540341e-10
+        ],
+        "CervicalBlend": [
+          -0.23261266608759817,
+          0.28100161359558073,
+          1.0405033701904716
+        ],
+        "AnatomyProtected": [
+          -0.26138078552610367,
+          0.6163508576476935,
+          4.121468765372997
+        ],
+        "Cervical Band": [
+          -0.23261266608759817,
+          0.28100161359558073,
+          1.0405033701904716
+        ],
+        "Mesial Contact": [
+          3.1314548818688643,
+          0.3785620608219975,
+          3.6927738189697266
+        ],
+        "Mesial Connector": [
+          3.089795286655426,
+          0.4122667686920613,
+          3.710824227333069
+        ],
+        "Distal Contact": [
+          -2.3072701065163863,
+          -2.3294196128845215,
+          3.6367732474678443
+        ],
+        "Distal Connector": [
+          -2.286872053146362,
+          -2.2814755034446716,
+          3.676971619129181
+        ],
+        "Buccal Cusp": [
+          1.2105085849761963,
+          -1.0977482000986736,
+          5.992831643422445
+        ],
+        "Middle Fissure": [
+          0.7378099736494895,
+          1.8655842053584564,
+          3.9281667318099585
+        ],
+        "Palatinal Cusp": [
+          -0.920699360469977,
+          3.917646735906601,
+          4.442047715187073
+        ]
+      },
+      "groups": {
+        "CEJ": 289,
+        "CervicalBlend": 2908,
+        "AnatomyProtected": 5411,
+        "Cervical Band": 2908,
+        "Mesial Contact": 19,
+        "Mesial Connector": 100,
+        "Distal Contact": 19,
+        "Distal Connector": 100,
+        "Buccal Cusp": 15,
+        "Middle Fissure": 39,
+        "Palatinal Cusp": 24
+      },
+      "boundary_centroid": [
+        -5.280985706405244e-09,
+        7.547257680793947e-09,
+        -2.140994586540341e-10
+      ],
+      "bounds": [
+        [
+          -3.7471365928649902,
+          -3.4608709812164307,
+          -0.5430628657341003
+        ],
+        [
+          3.2528634071350098,
+          4.29757833480835,
+          6.204022407531738
+        ]
+      ],
+      "signed_open_shell_volume": 177.73614347388187,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "35",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "46": {
+      "vertices": 12564,
+      "faces": 24793,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 333,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -8.552505805327728e-09,
+          -1.0417947719047019e-08,
+          -6.677275215899264e-11
+        ],
+        "CervicalBlend": [
+          -0.19207739656677697,
+          0.1706368189585054,
+          1.153540545697953
+        ],
+        "AnatomyProtected": [
+          -0.4460520151937537,
+          0.924171554553074,
+          4.824347584620866
+        ],
+        "Cervical Band": [
+          -0.19207739656677697,
+          0.1706368189585054,
+          1.153540545697953
+        ],
+        "Mesial Contact": [
+          5.187906395305287,
+          0.5228997739878568,
+          3.1866128661415796
+        ],
+        "Mesial Connector": [
+          5.143329072354445,
+          0.5023731023295602,
+          3.170373756494095
+        ],
+        "Distal Contact": [
+          -5.761759505552404,
+          0.31536957665401344,
+          3.1559157792259667
+        ],
+        "Distal Connector": [
+          -5.727743233306499,
+          0.32110753199203484,
+          3.172933994969235
+        ],
+        "Mesiobuccal Cusp": [
+          3.2377231554551558,
+          -0.4331644976680929,
+          6.278353517705744
+        ],
+        "Distobuccal Cusp": [
+          0.19481358968187124,
+          -2.8203935874135873,
+          6.094339947951467
+        ],
+        "Middle Fissure": [
+          1.6166173404025048,
+          2.482378084634997,
+          4.134637940790236
+        ],
+        "Palatinal Cusp": [
+          0.18749170247465372,
+          4.475770314534505,
+          6.256705697377523
+        ]
+      },
+      "groups": {
+        "CEJ": 333,
+        "CervicalBlend": 3392,
+        "AnatomyProtected": 9172,
+        "Cervical Band": 3392,
+        "Mesial Contact": 11,
+        "Mesial Connector": 67,
+        "Distal Contact": 17,
+        "Distal Connector": 79,
+        "Mesiobuccal Cusp": 11,
+        "Distobuccal Cusp": 19,
+        "Middle Fissure": 97,
+        "Palatinal Cusp": 15
+      },
+      "boundary_centroid": [
+        -8.552505805327728e-09,
+        -1.0417947719047019e-08,
+        -6.677275215899264e-11
+      ],
+      "bounds": [
+        [
+          -5.78880500793457,
+          -4.975687026977539,
+          -0.4772547483444214
+        ],
+        [
+          5.21119499206543,
+          5.984453201293945,
+          6.76334285736084
+        ]
+      ],
+      "signed_open_shell_volume": 435.68642212666896,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "36",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "47": {
+      "vertices": 11576,
+      "faces": 22792,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 358,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -5.967748564714826e-09,
+          3.850160364332146e-10,
+          -1.5628269181571194e-09
+        ],
+        "CervicalBlend": [
+          0.06469196228109779,
+          0.023393652740941396,
+          1.2589306033777932
+        ],
+        "AnatomyProtected": [
+          0.32394132123689284,
+          0.1224104059611631,
+          5.053006296669655
+        ],
+        "Cervical Band": [
+          0.06469196228109779,
+          0.023393652740941396,
+          1.2589306033777932
+        ],
+        "Mesial Contact": [
+          5.637898683547974,
+          -0.8266242891550064,
+          4.289934262633324
+        ],
+        "Mesial Connector": [
+          5.577418049679527,
+          -0.8184521359662655,
+          4.302999137323114
+        ],
+        "Distal Contact": [
+          -4.8389695318121655,
+          -0.4378231771682438,
+          3.956366727226659
+        ],
+        "Distal Connector": [
+          -4.821533345040821,
+          -0.4163559526579255,
+          3.9781534643400285
+        ],
+        "Mesiobuccal Cusp": [
+          4.3078342351046475,
+          -2.58168888092041,
+          5.595732082020152
+        ],
+        "Distobuccal Cusp": [
+          -1.0166555362589218,
+          -3.0080434995539047,
+          6.063423325033749
+        ],
+        "Middle Fissure": [
+          0.6561255852381388,
+          0.30905907715862635,
+          4.609410374252884
+        ],
+        "Palatinal Cusp": [
+          3.0834430914658766,
+          2.9894056503589335,
+          6.701487211080698
+        ]
+      },
+      "groups": {
+        "CEJ": 358,
+        "CervicalBlend": 3629,
+        "AnatomyProtected": 7947,
+        "Cervical Band": 3629,
+        "Mesial Contact": 16,
+        "Mesial Connector": 79,
+        "Distal Contact": 19,
+        "Distal Connector": 84,
+        "Mesiobuccal Cusp": 11,
+        "Distobuccal Cusp": 17,
+        "Middle Fissure": 27,
+        "Palatinal Cusp": 13
+      },
+      "boundary_centroid": [
+        -5.967748564714826e-09,
+        3.850160364332146e-10,
+        -1.5628269181571194e-09
+      ],
+      "bounds": [
+        [
+          -4.843893527984619,
+          -5.430144786834717,
+          -1.3891583681106567
+        ],
+        [
+          5.656106472015381,
+          5.117228031158447,
+          7.161269187927246
+        ]
+      ],
+      "signed_open_shell_volume": 466.74278159089505,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "37",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    },
+    "48": {
+      "vertices": 11645,
+      "faces": 22941,
+      "components": 1,
+      "euler": 1,
+      "boundary_vertices": 347,
+      "boundary_in_CEJ_exact": true,
+      "nonmanifold_nonboundary_edges": 0,
+      "degenerate_faces": 0,
+      "inconsistent_winding_edges": 0,
+      "self_intersection_pairs": [],
+      "loose_vertices": 0,
+      "object_identity_transform": true,
+      "finite_vertices": true,
+      "centroids": {
+        "CEJ": [
+          -1.3956418985592186e-09,
+          -5.228289266141072e-09,
+          9.366904280714756e-10
+        ],
+        "CervicalBlend": [
+          -0.053221910724964704,
+          0.3141485992890372,
+          1.1661202460941387
+        ],
+        "AnatomyProtected": [
+          -0.0516815129964152,
+          1.249740178205526,
+          4.9863917995782225
+        ],
+        "Cervical Band": [
+          -0.053221910724964704,
+          0.3141485992890372,
+          1.1661202460941387
+        ],
+        "Mesial Contact": [
+          4.754991054534912,
+          -0.9661633739104638,
+          3.2100294003119836
+        ],
+        "Mesial Connector": [
+          4.727224747339885,
+          -0.9630017727613449,
+          3.2153146233823566
+        ],
+        "Distal Contact": [
+          -5.227048601422991,
+          1.6883371727807182,
+          4.14748511995588
+        ],
+        "Distal Connector": [
+          -5.186062443424278,
+          1.6871898753542296,
+          4.158659253321903
+        ],
+        "Mesiobuccal Cusp": [
+          2.1778061389923096,
+          -0.5645407544715064,
+          6.825605017798288
+        ],
+        "Distobuccal Cusp": [
+          -2.4208911736806233,
+          -2.5165601412455243,
+          5.686681461334229
+        ],
+        "Middle Fissure": [
+          -0.27262834034769273,
+          1.1303822688940095,
+          4.736122561664116
+        ],
+        "Palatinal Cusp": [
+          0.11453192637247198,
+          4.716038619770723,
+          6.140538916868322
+        ]
+      },
+      "groups": {
+        "CEJ": 347,
+        "CervicalBlend": 3543,
+        "AnatomyProtected": 8102,
+        "Cervical Band": 3543,
+        "Mesial Contact": 13,
+        "Mesial Connector": 72,
+        "Distal Contact": 14,
+        "Distal Connector": 71,
+        "Mesiobuccal Cusp": 14,
+        "Distobuccal Cusp": 15,
+        "Middle Fissure": 41,
+        "Palatinal Cusp": 17
+      },
+      "boundary_centroid": [
+        -1.3956418985592186e-09,
+        -5.228289266141072e-09,
+        9.366904280714756e-10
+      ],
+      "bounds": [
+        [
+          -5.237782001495361,
+          -5.351564884185791,
+          -1.0964651107788086
+        ],
+        [
+          4.762217998504639,
+          5.978849411010742,
+          7.063047885894775
+        ]
+      ],
+      "signed_open_shell_volume": 459.72819956862963,
+      "asset_marked": true,
+      "license": "CC BY 4.0",
+      "side": "right",
+      "mirrored_from": "38",
+      "issues": [],
+      "max_mirror_deviation": 0.0
+    }
+  },
+  "issues": [
+    {
+      "fdi": 18,
+      "issues": [
+        "Distobuccal Cusp_below_fossa"
+      ]
+    },
+    {
+      "fdi": 28,
+      "issues": [
+        "Distobuccal Cusp_below_fossa"
+      ]
+    }
+  ],
+  "object_count": 32
+}

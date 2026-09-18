@@ -1,4 +1,5 @@
 import sys
+import importlib
 import math
 from pathlib import Path
 import bpy
@@ -7,6 +8,9 @@ from mathutils import Vector
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 assert addon_utils.enable(ROOT.name, default_set=True)
+# This fixture intentionally exercises the original ring/Multires workflow.
+settings = importlib.import_module(f'{ROOT.name}.Addon_utils.odcutils').get_settings()
+settings.tooth_lib = str(ROOT / 'Resources/data/legacy/odc_tooth_library_legacy.blend')
 scene = bpy.context.scene
 tooth = scene.odc_teeth.add()
 tooth.name = '25'
