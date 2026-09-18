@@ -1,0 +1,25 @@
+{
+  "upstream": "99496cb",
+  "current_revision": "703a6608d3facab4e09bb0e1577f6c2d0002e84d",
+  "blender": "5.1.2",
+  "scope": {
+    "operators": {
+      "upstream_count": 117,
+      "current_count": 118,
+      "missing": [],
+      "added": [
+        "opendental.draw_arch_curve"
+      ],
+      "renamed": {}
+    },
+    "panels": {
+      "upstream_count": 8,
+      "current_count": 8,
+      "missing": [],
+      "added": [],
+      "renamed": {
+        "OPENDENTAL_ODCBridges": "OPENDENTAL_PT_ODCBridges"
+      }
+    }
+  }
+}

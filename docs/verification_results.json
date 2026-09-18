@@ -1,0 +1,50 @@
+{
+  "blender": "5.1.2",
+  "runtime_revision": "703a6608d3facab4e09bb0e1577f6c2d0002e84d",
+  "full_suite_archive_sha256": "ec87289eb7237b6839caaf181de459244b4ba090e01dbddd34e86475e1e80ea7",
+  "installed_suite_results": [
+    {
+      "stage": "install",
+      "passed": true,
+      "returncode": 0,
+      "shutdown_allocation_warning": false
+    },
+    {
+      "stage": "restart",
+      "passed": true,
+      "returncode": 0,
+      "shutdown_allocation_warning": false
+    },
+    {
+      "stage": "installed_headless",
+      "passed": true,
+      "cases": 97,
+      "passed_cases": 97,
+      "shutdown_allocation_warnings": 15
+    },
+    {
+      "stage": "installed_foreground",
+      "passed": true,
+      "cases": 26,
+      "passed_cases": 26,
+      "shutdown_allocation_warnings": 0
+    },
+    {
+      "stage": "remove",
+      "passed": true,
+      "returncode": 0,
+      "shutdown_allocation_warning": false
+    }
+  ],
+  "registration": {
+    "classes": 142,
+    "operators": 118,
+    "panels": 8
+  },
+  "scope_audit": "upstream_scope.json",
+  "limitations": [
+    "Synthetic geometry and scripted UI cases are not clinical validation.",
+    "15 headless cases emit shutdown allocation warnings.",
+    "Upstream-disabled experiments are not exposed as supported UI tools."
+  ]
+}

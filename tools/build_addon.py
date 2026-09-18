@@ -5,7 +5,7 @@ import subprocess
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-RUNTIME_DIRS = {'Addon_utils', 'Operators', 'Panels', 'Resources', 'odcmenus'}
+RUNTIME_DIRS = {'Addon_utils', 'Operators', 'Panels', 'Resources', 'odcmenus', 'docs'}
 RUNTIME_FILES = {'__init__.py', 'gpu_compat.py', 'README.md'}
 
 def build(output):

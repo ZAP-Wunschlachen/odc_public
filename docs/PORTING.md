@@ -1,11 +1,14 @@
-# Blender 5.1 port — in progress
+# Blender 5.1 port — engineering log
 
 Target: Blender 5.1.2 / Python 3.13.9 on macOS. Source: upstream commit
 `99496cb` in `patmo141/odc_public`; development takes place on `blender-5.1`
 in the `ZAP-Wunschlachen/odc_public` fork.
 
-The scope remains the entire add-on. This is not yet a finished or validated
-release. Loading successfully is only the first verification gate.
+Current status and scope evidence are in [VERIFICATION.md](VERIFICATION.md).
+This file is a chronological engineering log: early counts and "remaining" notes
+are historical snapshots, often superseded by later entries. They are not the
+current release checklist. The source declaration inventory links current passing
+tests separately from upstream-disabled experimental declarations.
 
 ## Verified so far
 

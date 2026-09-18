@@ -1,10 +1,12 @@
 # Open Dental CAD — Blender 5.1 port
 
 This ZAP-Wunschlachen fork adapts Open Dental CAD to **Blender 5.1.2**.
-The port is still being verified; a working installation and passing tests do not
-establish that every dental workflow is finished or that a restoration is ready
-for manufacture. See [the verification notes](docs/PORTING.md) for tested behavior
-and remaining gaps.
+The port preserves all 117 operators and eight panels registered by the upstream
+version and adds the repaired arch-curve drawing tool. The installed package has
+passed 97 background and 26 foreground test cases on Blender 5.1.2, together with
+installation, fresh-process startup and removal. See [the verification report](docs/VERIFICATION.md)
+for evidence and limitations. These software checks do not establish clinical
+suitability or manufacturing readiness of a restoration.
 
 The add-on includes tools for crowns, bridges, implants, splints, dentures,
 orthodontic setup and model preparation, together with the original asset libraries.
@@ -22,8 +24,8 @@ button) to select the ZIP, then enable **Open Dental CAD for Blender** in Add-on
 The tools appear in the 3D View sidebar under **ODC**. Library paths default to the
 bundled files in the installed add-on's `Resources/data` directory.
 
-The builder packages tracked runtime files, the README and bundled resources. It
-excludes the Git repository, test fixtures, generated test results and local files.
+The builder packages tracked runtime files, documentation and bundled resources.
+It excludes Git metadata, the test harness, generated test logs and untracked local files.
 It reads the current contents of tracked files, so commit or review local changes
 before distributing a build. The archive is a legacy add-on, not an Extensions
 Platform package.

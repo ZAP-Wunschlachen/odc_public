@@ -4,1004 +4,1738 @@
     "class": "OPENDENTAL_OT_addon_prefs_odc",
     "bl_idname": "opendental.odc_addon_pref",
     "bl_label": "ODC Preferences Display",
-    "test_status": "tested_execution_blender_5_1_2",
+    "test_status": "passing_test_references_blender_5_1_2",
     "test_file": "tests/test_preferences_report.py",
-    "test_scope": "Direct report execution, actual library paths and selection/workflow settings, no scene mutation"
+    "test_scope": "Direct report execution, actual library paths and selection/workflow settings, no scene mutation",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_preferences_report.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_center_all_objects",
     "bl_idname": "opendental.center_objects",
     "bl_label": "Center All Objects",
-    "test_status": "tested_blender_5_1_2",
+    "test_status": "passing_test_references_blender_5_1_2",
     "test_file": "tests/test_center_objects.py",
-    "test_scope": "Empty scene, shared meshes, nested transformed parents, stale excluded transforms, visibility/selection preservation and repeat centering"
+    "test_scope": "Empty scene, shared meshes, nested transformed parents, stale excluded transforms, visibility/selection preservation and repeat centering",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_center_objects.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_set_master",
     "bl_idname": "opendental.set_master",
     "bl_label": "Set Master",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_dental_materials.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_set_as_prep",
     "bl_idname": "opendental.set_as_prep",
     "bl_label": "Set as Prep",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_preparation_assignment.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_set_mesial",
     "bl_idname": "opendental.set_mesial",
     "bl_label": "Set Mesial",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_reference_assignment.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_set_distal",
     "bl_idname": "opendental.set_distal",
     "bl_label": "Set Distal",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_reference_assignment.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_set_opposing",
     "bl_idname": "opendental.set_opposing",
     "bl_label": "Set Opposing",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_reference_assignment.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "ViewToZ",
     "bl_idname": "view3d.view_to_z",
     "bl_label": "View to Z",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_view_to_z.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_insertion_axis",
     "bl_idname": "opendental.insertion_axis",
     "bl_label": "Insertion Axis",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_axis_modal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "CBGetCrownForm",
     "bl_idname": "opendental.get_crown_form",
     "bl_label": "Get Crown Form",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_alternate_intaglio.py",
+      "tests/test_cervical_convergence.py",
+      "tests/test_crown_import.py",
+      "tests/test_crown_seating.py",
+      "tests/test_intaglio_helper.py",
+      "tests/test_pontic_conversion.py",
+      "tests/test_pontic_import.py",
+      "tests/test_prebridge.py",
+      "tests/test_prep_from_crown.py",
+      "tests/test_solid_bridge.py",
+      "tests/test_solid_restoration.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_seat_to_margin",
     "bl_idname": "opendental.seat_to_margin",
     "bl_label": "Seat to Margin",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_alternate_intaglio.py",
+      "tests/test_crown_seating.py",
+      "tests/test_intaglio_helper.py",
+      "tests/test_prebridge.py",
+      "tests/test_solid_bridge.py",
+      "tests/test_solid_restoration.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_calculate_inside",
     "bl_idname": "opendental.calculate_inside",
     "bl_label": "Calculate Intaglio",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_alternate_intaglio.py",
+      "tests/test_intaglio_helper.py",
+      "tests/test_solid_bridge.py",
+      "tests/test_solid_restoration.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_crown_cervical_convergence",
     "bl_idname": "opendental.cervical_convergence",
     "bl_label": "Angle Cervical Convergence",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_cervical_convergence.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_make_solid_restoration",
     "bl_idname": "opendental.make_solid_restoration",
     "bl_label": "Make Solid Restoration",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_solid_restoration.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_plan_restorations",
     "bl_idname": "opendental.plan_restorations",
     "bl_label": "Plan Restorations",
-    "test_status": "tested_interactive_blender_5_1_2",
+    "test_status": "passing_test_references_blender_5_1_2",
     "test_file": "tests/test_plan_restorations_modal.py",
-    "test_scope": "Selection, type reassignment, implants, Enter/outside-click commit, Escape/right-click removal, existing references, undo/redo"
+    "test_scope": "Selection, type reassignment, implants, Enter/outside-click commit, Escape/right-click removal, existing references, undo/redo",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_plan_restorations_modal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_prep_from_crown",
     "bl_idname": "opendental.prep_from_crown",
     "bl_label": "Prep From Crown",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_prep_from_crown.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_lattice_deform",
     "bl_idname": "opendental.lattice_deform",
     "bl_label": "Crown Lattice",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_control_lattice.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_pointic_from_crown",
     "bl_idname": "opendental.pontic_from_crown",
     "bl_label": "Pontic From Crown",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_pontic_conversion.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_manufacture_restoration",
     "bl_idname": "opendental.manufacture_restoration",
     "bl_label": "Manufacture Restoration",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_manufacture_restoration.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_assess_contacts",
     "bl_idname": "opendental.asses_contacts",
     "bl_label": "Asses Contacts",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_crown_contact_assessment.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_grind_contacts",
     "bl_idname": "opendental.grind_contacts",
     "bl_label": "Grind Contacts",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_contact_adjustment.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_grind_occlusion",
     "bl_idname": "opendental.grind_occlusion",
     "bl_label": "Grind Occlusion",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_contact_adjustment.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_teeth_arch",
     "bl_idname": "opendental.teeth_to_arch",
     "bl_label": "Teeth to Arch",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_arch_curve_modal.py",
+      "tests/test_arch_variants.py",
+      "tests/test_mirrored_arch_repeat.py",
+      "tests/test_teeth_to_curve.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/crown.py",
     "class": "OPENDENTAL_OT_occlusal_scheme_to_curve",
     "bl_idname": "opendental.occlusal_scheme",
     "bl_label": "Arch Plan Occlusion",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_occlusal_scheme.py",
+      "tests/test_occlusal_variants.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/loops_tools.py",
     "class": "Bridge",
     "bl_idname": "mesh.looptools_bridge",
     "bl_label": "Bridge / Loft",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/loops_tools.py",
     "class": "Circle",
     "bl_idname": "mesh.looptools_circle",
     "bl_label": "Circle",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/loops_tools.py",
     "class": "Curve",
     "bl_idname": "mesh.looptools_curve",
     "bl_label": "Curve",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/loops_tools.py",
     "class": "Flatten",
     "bl_idname": "mesh.looptools_flatten",
     "bl_label": "Flatten",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/loops_tools.py",
     "class": "GStretch",
     "bl_idname": "mesh.looptools_gstretch",
     "bl_label": "Gstretch",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/loops_tools.py",
     "class": "Relax",
     "bl_idname": "mesh.looptools_relax",
     "bl_label": "Relax",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/loops_tools.py",
     "class": "Space",
     "bl_idname": "mesh.looptools_space",
     "bl_label": "Space",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_add_bone_roots",
     "bl_idname": "opendental.add_bone_roots",
     "bl_label": "Add bone roots",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_root_modal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_fast_label_teeth",
     "bl_idname": "opendental.fast_label_teeth",
     "bl_label": "Fast Label Teeth",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_label_modal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_simple_ortho_base",
     "bl_idname": "opendental.simple_base",
     "bl_label": "Simple model base",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_ortho_base.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_setup_root_parenting",
     "bl_idname": "opendental.set_roots_parents",
     "bl_label": "Set Root Parents",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_root_parenting.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_adjust_roots",
     "bl_idname": "opendental.adjust_bone_roots",
     "bl_label": "Adjust Roots",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_root_parenting.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_set_treatment_keyframe",
     "bl_idname": "opendental.set_treatment_keyframe",
     "bl_label": "Set Treatment Keyframe",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_ortho_staging.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_maxillary_view",
     "bl_idname": "opendental.show_max_teeth",
     "bl_label": "Show Maxillary Teeth",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_ortho_staging.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_mandibular_view",
     "bl_idname": "opendental.show_man_teeth",
     "bl_label": "Show Mandibular Teeth",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_ortho_staging.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_right_view",
     "bl_idname": "opendental.show_right_teeth",
     "bl_label": "Show Right Teeth",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_ortho_staging.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_left_view",
     "bl_idname": "opendental.show_left_teeth",
     "bl_label": "Show Left Teeth",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_ortho_staging.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_physics_scene",
     "bl_idname": "opendental.add_physics_scene",
     "bl_label": "Physics Scene for Simulation",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_physics_deleted_body.py",
+      "tests/test_physics_dynamics.py",
+      "tests/test_physics_limit_lifecycle.py",
+      "tests/test_physics_scene.py",
+      "tests/test_physics_setup_repeat.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_physics_setup",
     "bl_idname": "opendental.physics_sim_setup",
     "bl_label": "Setup Physics for Simulation",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_physics_deleted_body.py",
+      "tests/test_physics_dynamics.py",
+      "tests/test_physics_limit_lifecycle.py",
+      "tests/test_physics_scene.py",
+      "tests/test_physics_setup_repeat.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_add_forcefields",
     "bl_idname": "opendental.add_forcefields",
     "bl_label": "Add Forcefields All",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_physics_deleted_body.py",
+      "tests/test_physics_dynamics.py",
+      "tests/test_physics_scene.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_limit_movements",
     "bl_idname": "opendental.limit_physics_movements",
     "bl_label": "Limit Physics Movements",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_physics_limit_dynamics.py",
+      "tests/test_physics_limit_lifecycle.py",
+      "tests/test_physics_limits.py",
+      "tests/test_physics_setup_repeat.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_unlimit_movements",
     "bl_idname": "opendental.unlimit_physics_movements",
     "bl_label": "Unlimit Physics Movements",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_physics_limit_dynamics.py",
+      "tests/test_physics_limits.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_lock_movements",
     "bl_idname": "opendental.lock_physics_movements",
     "bl_label": "Lock Physics Movements",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_physics_limits.py",
+      "tests/test_physics_lock.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_unlock_movements",
     "bl_idname": "opendental.unlock_physics_movements",
     "bl_label": "Unlock Physics Movements",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_physics_limits.py",
+      "tests/test_physics_lock.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/ortho.py",
     "class": "OPENDENTAL_OT_keep_simulation_result",
     "bl_idname": "opendental.keep_simulation_results",
     "bl_label": "Keep Simulation Results",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_physics_dynamics.py",
+      "tests/test_physics_scene.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/occlusion.py",
     "class": "OPENDENTAL_OT_check_clearance",
     "bl_idname": "opendental.check_clearance",
     "bl_label": "Check Clearance",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/library_screenshots.py",
     "class": "SceneObjectThumbnails",
     "bl_idname": "wm.scene_objects_thumbnails",
     "bl_label": "Scene Object Thumbnails",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/denture_base.py",
     "class": "OPENDENTAL_OT_prepare_meta_scaffold",
     "bl_idname": "opendental.meta_scaffold_create",
     "bl_label": "Create Meta Scaffold",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_meta_surface.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/denture_base.py",
     "class": "OPENDENTAL_OT_meta_offset_surface",
     "bl_idname": "opendental.meta_offset_surface",
     "bl_label": "Create Meta Surface",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_meta_surface.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/denture_base.py",
     "class": "OPENDENTAL_OT_meta_rim_from_curve",
     "bl_idname": "opendental.meta_rim_from_curve",
     "bl_label": "Create Meta Wax Rim",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_meta_rim.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/denture_base.py",
     "class": "OPENDENTAL_OT_meta_custom_tray",
     "bl_idname": "opendental.meta_custom_tray",
     "bl_label": "Create Meta Custom Tray",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_meta_surface.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/denture_base.py",
     "class": "OPENDENTAL_OT_simple_offset_surface",
     "bl_idname": "opendental.simple_offset_surface",
     "bl_label": "Simple Meta Surface",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_simple_offset_surface.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/denture_base.py",
     "class": "OPENDENTAL_OT_boolean_intaglio",
     "bl_idname": "opendental.denture_boolean_intaglio",
     "bl_label": "Create Meta Surface",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_denture_boolean.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/bridge.py",
     "class": "OPENDENTAL_OT_bridge_from_selected",
     "bl_idname": "opendental.define_bridge",
     "bl_label": "Units to Bridge",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_bridge_selection.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/bridge.py",
     "class": "OPENDENTAL_OT_bridge_prebridge",
     "bl_idname": "opendental.make_prebridge",
     "bl_label": "Make Pre-Bridge",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_prebridge.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/bridge.py",
     "class": "OPENDENTAL_OT_bridge_boolean",
     "bl_idname": "opendental.bridge_boolean",
     "bl_label": "Boolean Bridge",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_boolean_bridge.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/bridge.py",
     "class": "OPENDENTAL_OT_solid_bridge",
     "bl_idname": "opendental.solid_bridge",
     "bl_label": "Solidify Bridge",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_solid_bridge.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/bridge.py",
     "class": "OPENDENTAL_OT_bridge_keep_arch_plan",
     "bl_idname": "opendental.arch_plan_keep",
     "bl_label": "Keep Arch Plan",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_arch_curve_modal.py",
+      "tests/test_arch_variants.py",
+      "tests/test_keep_arch_plan.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/bridge.py",
     "class": "OPENDENTAL_OT_bridge_individual",
     "bl_idname": "opendental.bridge_individual",
     "bl_label": "Bridge Individual",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_bridge_modal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/bridge.py",
     "class": "OPENDENTAL_OT_BreakContact",
     "bl_idname": "opendental.break_contact",
     "bl_label": "Break Contact",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_break_contact.py",
+      "tests/test_break_contact_apply.py",
+      "tests/test_break_contact_deform.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/bridge.py",
     "class": "OPENDENTAL_OT_keep_shape",
     "bl_idname": "opendental.keep_shape",
     "bl_label": "Keep Tooth Shape",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_keep_shape.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/bridge.py",
     "class": "OPENDENTAL_OT_ClothFillTray",
     "bl_idname": "opendental.cloth_fill_tray",
     "bl_label": "Cloth Fill Tray",
-    "test_status": "partial_geometry_test_blender_5_1_2",
+    "test_status": "passing_test_references_blender_5_1_2",
     "test_files": [
-      "tests/test_cloth_fill_validation.py",
-      "tests/test_cloth_fill_geometry.py"
+      "tests/test_cloth_fill_failure.py",
+      "tests/test_cloth_fill_geometry.py",
+      "tests/test_cloth_fill_validation.py"
     ],
-    "test_scope": "Invalid boundary rejection; tilted planar mesh/Bezier loops at octree depth 5, connected surface, parenting, original data and temporary-data/settings cleanup"
+    "test_scope": "Invalid boundary rejection; tilted planar mesh/Bezier loops at octree depth 5, connected surface, parenting, original data and temporary-data/settings cleanup",
+    "registration_status": "registered",
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/implant.py",
     "class": "OPENDENTAL_OT_implant_slice_view",
     "bl_idname": "opendental.slice_view",
     "bl_label": "Slice View",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_implant_views.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/implant.py",
     "class": "OPENDENTAL_OT_implant_normal_view",
     "bl_idname": "opendental.normal_view",
     "bl_label": "Normal View",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_implant_views.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/implant.py",
     "class": "OPENDENTAL_OT_implant_from_contour",
     "bl_idname": "opendental.implant_from_crown",
     "bl_label": "Place Implants from Crowns",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_implant_from_crown.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/implant.py",
     "class": "OPENDENTAL_OT_place_implant",
     "bl_idname": "opendental.place_implant",
     "bl_label": "Place Implant",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_place_implant_operator.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/implant.py",
     "class": "OPENDENTAL_OT_place_sleeve",
     "bl_idname": "opendental.place_guide_sleeve",
     "bl_label": "Place Sleeve",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_guide_sleeve.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/implant.py",
     "class": "OPENDENTAL_OT_place_drill",
     "bl_idname": "opendental.place_drill",
     "bl_label": "Place Drill",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_drill_placement.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/implant.py",
     "class": "OPENDENTAL_OT_implant_guide_cylinder",
     "bl_idname": "opendental.implant_guide_cylinder",
     "bl_label": "Guide Cylinder",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_outer_cylinder.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/implant.py",
     "class": "OPENDENTAL_OT_implant_inner_cylinder",
     "bl_idname": "opendental.implant_inner_cylinder",
     "bl_label": "Inner Cylinder",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_inner_cylinder.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/bracket_placement.py",
     "class": "OPENDENTAL_OT_place_bracket",
     "bl_idname": "opendental.place_ortho_bracket",
     "bl_label": "Ortho Bracket Place",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_bracket_modal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/bracket_placement.py",
     "class": "OPENDENTAL_OT_place_bracket_static",
     "bl_idname": "opendental.place_static_bracket",
     "bl_label": "Place Bracket Static",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_static_bracket.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/flexible_tooth.py",
     "class": "OPENDENTAL_OT_hook_deform",
     "bl_idname": "opendental.flexitooth",
     "bl_label": "FlexiTooth",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_flexitooth_create.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/flexible_tooth.py",
     "class": "OPENDENTAL_OT_keep_hook",
     "bl_idname": "opendental.flexitooth_keep",
     "bl_label": "FlexiTooth Keep",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_flexitooth_create.py",
+      "tests/test_flexitooth_keep.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/margin.py",
     "class": "OPENDENTAL_OT_initiate_margin",
     "bl_idname": "opendental.initiate_margin",
     "bl_label": "Initiate Margin",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/margin.py",
     "class": "OPENDENTAL_OT_initiate_auto_margin",
     "bl_idname": "opendental.initiate_auto_margin",
     "bl_label": "Initiate Auto Margin",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/margin.py",
     "class": "OPENDENTAL_OT_walk_around_margin",
     "bl_idname": "opendental.walk_around_margin",
     "bl_label": "Walk Around Margin",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/margin.py",
     "class": "OPENDENTAL_OT_refine_margin",
     "bl_idname": "opendental.refine_margin",
     "bl_label": "Refine Margin",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_refine_margin.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/margin.py",
     "class": "OPENDENTAL_OT_accept_margin",
     "bl_idname": "opendental.accept_margin",
     "bl_label": "Accept Margin",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_accept_margin.py",
+      "tests/test_alternate_intaglio.py",
+      "tests/test_crown_seating.py",
+      "tests/test_intaglio_helper.py",
+      "tests/test_prebridge.py",
+      "tests/test_refine_margin.py",
+      "tests/test_solid_bridge.py",
+      "tests/test_solid_restoration.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/margin.py",
     "class": "OPENDENTAL_OT_place_margin_tracer",
     "bl_idname": "opendental.palce_margin_tracer",
     "bl_label": "Place Margin Tracer",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/margin.py",
     "class": "OPENDENTAL_OT_trace_walking",
     "bl_idname": "opendental.trace_crevice_walking",
     "bl_label": "Trace Crevice",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/margin.py",
     "class": "OPENDENTAL_OT_mark_crown_margin",
     "bl_idname": "opendental.mark_crown_margin",
     "bl_label": "Mark Crown Margin",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_margin_modal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_join_models",
     "bl_idname": "opendental.join_models",
     "bl_label": "Join Models :",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_separate_models",
     "bl_idname": "opendental.separate_models",
     "bl_label": "Separate Models :",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_parent_models",
     "bl_idname": "opendental.parent_models",
     "bl_label": "Link",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_unparent_models",
     "bl_idname": "opendental.unparent_models",
     "bl_label": "UnLink",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_align_to_front",
     "bl_idname": "opendental.align_to_front",
     "bl_label": "Align to Front",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_align_front.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_center_Model",
     "bl_idname": "opendental.center_model",
     "bl_label": "Center Model :",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_center_model.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_center_cursor",
     "bl_idname": "opendental.center_cursor",
     "bl_label": "Center Cursor",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_decimate_model",
     "bl_idname": "opendental.decimate_model",
     "bl_label": "Decimate Model",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_fill",
     "bl_idname": "opendental.fill",
     "bl_label": "Fill Holes",
-    "test_status": "tested_execution_blender_5_1_2",
+    "test_status": "passing_test_references_blender_5_1_2",
     "test_file": "tests/test_fill_holes.py",
-    "test_scope": "Object/Edit Mode selected-boundary filling, closed cube topology/volume, shared mesh isolation, empty selection cancellation and missing/non-mesh polling"
+    "test_scope": "Object/Edit Mode selected-boundary filling, closed cube topology/volume, shared mesh isolation, empty selection cancellation and missing/non-mesh polling",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_fill_holes.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_retopo_smooth",
     "bl_idname": "opendental.retopo_smooth",
     "bl_label": "Retopo Smooth",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_retopo_sculpt.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_clean_model",
     "bl_idname": "opendental.clean_model",
     "bl_label": "Clean Model",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_clean_model.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_make_curve",
     "bl_idname": "opendental.make_curve",
     "bl_label": "Make Curve",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_cutting_curve_modal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_curve_cut",
     "bl_idname": "opendental.curve_cut",
     "bl_label": "Cut Model",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_curve_cut.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_trim_model",
     "bl_idname": "opendental.trim_model",
     "bl_label": "Trim Model",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_curve_cut.py",
+      "tests/test_trim_model.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_square_cut",
     "bl_idname": "opendental.square_cut",
     "bl_label": "Square Cut",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_square_cut_modal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_square_cut_confirm",
     "bl_idname": "opendental.square_cut_confirm",
     "bl_label": "Tirm",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_square_cut.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_square_cut_exit",
     "bl_idname": "opendental.square_cut_exit",
     "bl_label": "Exit",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_square_cut.py",
+      "tests/test_square_cut_modal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_model_base",
     "bl_idname": "opendental.model_base",
     "bl_label": "Create a solid base Dental Model.",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_base.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_hollow_model",
     "bl_idname": "opendental.hollow_model",
     "bl_label": "Hollow Model",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_hollow_model.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_solid_hollow_models",
     "bl_idname": "opendental.solid_hollow_models",
     "bl_label": "Solid Hollow Models",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_solid_hollow_models.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_remesh_model",
     "bl_idname": "opendental.remesh_model",
     "bl_label": "Remesh Model",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_model_color",
     "bl_idname": "opendental.model_color",
     "bl_label": "Model Color",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_model_remove_color",
     "bl_idname": "opendental.remove_model_color",
     "bl_label": "Remove Color",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/model_ops.py",
     "class": "OPENDENTAL_OT_add_offset",
     "bl_idname": "opendental.add_offset",
     "bl_label": "Offset",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/image_object_registration.py",
     "class": "VIEW3D_OT_image_view3d_modal",
     "bl_idname": "view3d.img_obj_register",
     "bl_label": "Register Image to Object",
-    "test_status": "pending"
+    "test_status": "explicit_module_tests_only",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [
+      "tests/test_image_registration_modal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/splint.py",
     "class": "btn_Splint_draw",
     "bl_idname": "object.splint_draw",
     "bl_label": "Draw splint",
-    "test_status": "pending"
+    "test_status": "inactive_upstream_declaration",
+    "registration_status": "not_in_upstream_active_registration",
+    "test_files": [],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/splint.py",
     "class": "OPENDENTAL_OT_splint_outline",
     "bl_idname": "opendental.splint_outline",
     "bl_label": "Outline Area",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_splint_make.py",
+      "tests/test_splint_outline.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/splint.py",
     "class": "OPENDENTAL_OT_splint_make",
     "bl_idname": "opendental.splint_make",
     "bl_label": "Finalize Splint",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_splint_make.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/splint.py",
     "class": "OPENDENTAL_OT_splint_outline_paint",
     "bl_idname": "opendental.splint_outline_paint",
     "bl_label": "Add Area",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_splint_outline.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/splint.py",
     "class": "OPENDENTAL_OT_splint_outline_erase",
     "bl_idname": "opendental.splint_outline_erase",
     "bl_label": "Erase Area",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_splint_outline.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/classes.py",
     "class": "SplintRestorationAdd",
     "bl_idname": "opendental.add_splint",
     "bl_label": "Append Splint",
-    "test_status": "tested_execution_blender_5_1_2",
+    "test_status": "passing_test_references_blender_5_1_2",
     "test_file": "tests/test_splint_plan_add.py",
-    "test_scope": "Active/selected/no-model linking, link disabled, source objects unchanged and save/reopen; dialog invocation not covered"
+    "test_scope": "Active/selected/no-model linking, link disabled, source objects unchanged and save/reopen; dialog invocation not covered",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_splint_plan_add.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/classes.py",
     "class": "OPENDENTAL_OT_add_tooth_restoration",
     "bl_idname": "opendental.add_tooth_restoration",
     "bl_label": "New Tooth Restoration",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/classes.py",
     "class": "ImplantRestorationAdd",
     "bl_idname": "opendental.add_implant_restoration",
     "bl_label": "New Implant Placement",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_implant_plan_add.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/classes.py",
     "class": "ToothRestorationRemove",
     "bl_idname": "opendental.remove_tooth_restoration",
     "bl_label": "Remove Tooth Restoration",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_model_workflows.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/classes.py",
     "class": "SplintRestorationRemove",
     "bl_idname": "opendental.remove_splint",
     "bl_label": "Remove Splint Restoration",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_plan_removal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/classes.py",
     "class": "ImplantRestorationRemove",
     "bl_idname": "opendental.remove_implant_restoration",
     "bl_label": "Remove Implant Restoration",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_plan_removal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/classes.py",
     "class": "BridgeRestorationRemove",
     "bl_idname": "opendental.remove_bridge_restoration",
     "bl_label": "Remove Bridge Restoration",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_plan_removal.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/help.py",
     "class": "OPENDENTAL_OT_help_start_crown",
     "bl_idname": "opendental.start_crown_help",
     "bl_label": "Crown Helper Wizard",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_help_overlays.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/help.py",
     "class": "OPENDENTAL_OT_help_start_implant",
     "bl_idname": "opendental.start_implant_help",
     "bl_label": "Implant Helper Wizard",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_help_overlays.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/help.py",
     "class": "OPENDENTAL_OT_help_start_bridge",
     "bl_idname": "opendental.start_bridge_help",
     "bl_label": "Bridge Helper Wizard",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_help_overlays.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/help.py",
     "class": "OPENDENTAL_OT_help_start_guide",
     "bl_idname": "opendental.start_guide_help",
     "bl_label": "Guide Helper Wizard",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_help_overlays.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/help.py",
     "class": "OPENDENTAL_OT_help_stop",
     "bl_idname": "opendental.stop_help",
     "bl_label": "Open Dental Stop Helper Wizard",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_help_overlays.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/help.py",
     "class": "OPENDENTAL_OT_crown_report",
     "bl_idname": "opendental.crown_report",
     "bl_label": "Crown and Bridge Report",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_crown_report.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/blockout_undercuts.py",
     "class": "OPENDENTAL_OT_survey_model",
     "bl_idname": "opendental.view_silhouette_survey",
     "bl_label": "Survey Model From View",
-    "test_status": "partial_geometry_test_blender_5_1_2",
+    "test_status": "passing_test_references_blender_5_1_2",
     "test_file": "tests/test_survey_model.py",
-    "test_scope": "World-space unsmoothed cube survey, nonuniform transform, repeat from source/preview, foreign-name preservation and per-scene state"
+    "test_scope": "World-space unsmoothed cube survey, nonuniform transform, repeat from source/preview, foreign-name preservation and per-scene state",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_blockout_solid.py",
+      "tests/test_survey_model.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/blockout_undercuts.py",
     "class": "OPENDENTAL_OT_blockout_model",
     "bl_idname": "opendental.blockout_model",
     "bl_label": "Blockout Model From View",
-    "test_status": "partial_geometry_test_blender_5_1_2",
+    "test_status": "passing_test_references_blender_5_1_2",
     "test_files": [
       "tests/test_blockout_dispatch.py",
       "tests/test_blockout_preview.py",
       "tests/test_blockout_solid.py"
     ],
-    "test_scope": "Mode dispatch/status and tested preview/solid geometry; complex scans pending"
+    "test_scope": "Mode dispatch/status and tested preview/solid geometry; complex scans pending",
+    "registration_status": "registered",
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Operators/blockout_undercuts.py",
     "class": "OPENDENTAL_OT_blockout_model_solid",
     "bl_idname": "opendental.view_blockout_undercuts_solid",
     "bl_label": "Blockout Model From Z-axis",
-    "test_status": "partial_geometry_test_blender_5_1_2",
+    "test_status": "passing_test_references_blender_5_1_2",
     "test_file": "tests/test_blockout_solid.py",
-    "test_scope": "Closed transformed cubes, current/stored axis, world-space depth, shared data preservation, survey-to-solid workflow and cancelled-remesh rollback"
+    "test_scope": "Closed transformed cubes, current/stored axis, world-space depth, shared data preservation, survey-to-solid workflow and cancelled-remesh rollback",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_blockout_solid.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Panels/panel.py",
     "class": "OPENDENTAL_PT_ODCSettings",
     "bl_idname": "OPENDENTAL_PT_ODCSettings",
     "bl_label": "ODC Control Panel",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_panel_drawing.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Panels/panel.py",
     "class": "OPENDENTAL_PT_model_operations",
     "bl_idname": "OPENDENTAL_PT_model_operations",
     "bl_label": "Model Operations",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_panel_drawing.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Panels/panel.py",
     "class": "OPENDENTAL_PT_ODCTeeth",
     "bl_idname": "OPENDENTAL_PT_ODCTeeth",
     "bl_label": "Tooth Restorations",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_panel_drawing.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Panels/panel.py",
     "class": "OPENDENTAL_PT_ODCImplants",
     "bl_idname": "OPENDENTAL_PT_ODCImplants",
     "bl_label": "Implant Restorations",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_panel_drawing.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Panels/panel.py",
     "class": "OPENDENTAL_PT_ODCBridges",
-    "bl_idname": "OPENDENTAL_ODCBridges",
+    "bl_idname": "OPENDENTAL_PT_ODCBridges",
     "bl_label": "Bridge Restorations",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_panel_drawing.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Panels/panel.py",
     "class": "OPENDENTAL_PT_ODCSplints",
     "bl_idname": "OPENDENTAL_PT_ODCSplints",
     "bl_label": "Splints",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_panel_drawing.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Panels/panel.py",
     "class": "OPENDENTAL_PT_ODCOrtho",
     "bl_idname": "OPENDENTAL_PT_ODCOrtho",
     "bl_label": "Orthodontics",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_panel_drawing.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   },
   {
     "module": "Panels/panel.py",
     "class": "OPENDENTAL_PT_ODCDentures",
     "bl_idname": "OPENDENTAL_PT_ODCDentures",
     "bl_label": "Dentures",
-    "test_status": "pending"
+    "test_status": "passing_test_references_blender_5_1_2",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_panel_drawing.py"
+    ],
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
+  },
+  {
+    "module": "Operators/bridge.py",
+    "class": "OPENDENTAL_OT_draw_arch_curve",
+    "bl_idname": "opendental.draw_arch_curve",
+    "bl_label": "Draw Arch Curve",
+    "registration_status": "registered",
+    "test_files": [
+      "tests/test_arch_curve_modal.py"
+    ],
+    "test_status": "passing_test_references_blender_5_1_2",
+    "evidence_note": "Passing referenced cases do not establish every option, input geometry or clinical outcome."
   }
 ]
