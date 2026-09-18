@@ -1156,3 +1156,21 @@ mesh in a 3D View, and repeating setup leaves Dyntopo enabled.
 settings, repeat activation and the Multires guard. This verifies sculpt readiness,
 not the geometry produced by an actual sculpt stroke or quality on a repaired scan.
 The test is explicitly excluded from the headless runner.
+
+### Legacy Manufacture Restoration operator
+
+The separately registered `opendental.manufacture_restoration` still used removed
+scene-active/link/selection APIs. It now constructs a world-space BMesh from the
+evaluated restoration (or contour fallback) and intaglio, bridges open boundary
+loops, recalculates normals and requires manifold edges before linking output.
+Source meshes/modifier stacks remain untouched, output names use Blender collision
+handling, and `tooth.solid` references the actual output. Missing inputs and invalid
+loops cancel without linking partial output objects.
+
+`test_manufacture_restoration.py` passes in Blender 5.1.2 for translated cap surfaces,
+a subdivided outer surface, unequal boundary vertex counts, positive-volume closed
+output, source/modifier preservation, a pre-existing output-name collision, missing
+intaglio and closed/unbridgeable inputs with no mesh-datablock leak. This is a
+synthetic geometry test; self-intersections, multiple independent margin loops,
+material-slot preservation and anatomical manufacturing suitability are not yet
+verified. The separate Make Solid Restoration workflow is unchanged.

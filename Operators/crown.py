@@ -1152,95 +1152,61 @@ class OPENDENTAL_OT_manufacture_restoration(bpy.types.Operator):
     bl_label = "Manufacture Restoration"
     
     
-    def execute(self,context):
-        
-        if  bpy.context.mode != 'OBJECT':
-            bpy.ops.object.mode_set(mode='OBJECT')
-            
+    bl_options = {'REGISTER', 'UNDO'}
 
-        
+    @classmethod
+    def poll(cls, context):
+        return context.mode == 'OBJECT' and bool(odcutils.tooth_selection(context))
+
+    def execute(self, context):
+        import bmesh
         teeth = odcutils.tooth_selection(context)
-        
+        pairs = []
         for tooth in teeth:
-            condition_1 = tooth.restoration and tooth.restoration in bpy.data.objects
-            condition_1a = tooth.contour and tooth.contour in bpy.data.objects
-            condition_2 = tooth.intaglio and tooth.intaglio in bpy.data.objects
-            
-            
-            if (condition_1 or condition_1a) and condition_2:
-                
-                if condition_1:
-                    Restoration = bpy.data.objects[tooth.restoration]
-                else:
-                    Restoration = bpy.data.objects[tooth.contour]
-                
-                Inside = bpy.data.objects[tooth.intaglio]
-
-                bpy.ops.object.select_all(action = 'DESELECT')
-                context.scene.objects.active = Restoration
-                Restoration.select=True
-                Restoration.hide=False
-        
-                solid_crown=str(tooth.name + "_Solid Crown")
-                
-                current_objects=list(bpy.data.objects)
-        
-                bpy.ops.object.duplicate()
-        
-                for o in bpy.data.objects:
-                    if o not in current_objects:
-                        context.scene.objects.active=o
-                        o.name=solid_crown
-                        n = len(o.modifiers)
-                        
-                        for i in range(0,n):
-                            name = o.modifiers[0].name
-                            bpy.ops.object.modifier_apply(modifier=name)
-                                        
-                bpy.ops.object.select_all(action='DESELECT')        
-        
-                context.scene.objects.active = Inside
-                Inside.select=True
-                Inside.hide=False
-        
-                solid_inside=(tooth.name + "_Solid Inside")
-        
-                current_objects=list(bpy.data.objects)
-        
-                bpy.ops.object.duplicate()
-        
-                for o in bpy.data.objects:
-                    if o not in current_objects:
-                        context.scene.objects.active=o
-                        o.name=solid_inside
-                        n = len(o.modifiers)
-                
-                
-                        for i in range(0,n):
-                            name = o.modifiers[0].name
-                            bpy.ops.object.modifier_apply(modifier=name)
-        
-                bpy.ops.object.select_all(action='DESELECT')
-                context.scene.objects.active=bpy.data.objects[solid_crown]
-                bpy.data.objects[solid_crown].select = True
-                bpy.data.objects[solid_inside].select = True
-        
-                bpy.ops.object.join()
-        
-        
-                bpy.ops.object.editmode_toggle()
-        
-                me = bpy.data.objects[solid_crown].data
-        
-                ### Weld the Two Parts together ###  (boolean modifier may be better depending on code?)
-        
-                bpy.context.scene.tool_settings.mesh_select_mode = [True, False, False]
-                bpy.ops.mesh.select_all(action='DESELECT')
-                bpy.ops.mesh.select_non_manifold()
-                
-                bpy.ops.mesh.bridge_edge_loops()
-                
-                bpy.ops.object.mode_set(mode = 'OBJECT')
+            shell = context.scene.objects.get(tooth.restoration) or context.scene.objects.get(tooth.contour)
+            inside = context.scene.objects.get(tooth.intaglio)
+            if shell is None or inside is None or shell.type != 'MESH' or inside.type != 'MESH':
+                self.report({'WARNING'}, 'Each selected tooth needs a mesh restoration and intaglio')
+                return {'CANCELLED'}
+            pairs.append((tooth, shell, inside))
+        prepared = []
+        try:
+            for tooth, shell, inside in pairs:
+                bm = bmesh.new()
+                try:
+                    for source in (shell, inside):
+                        evaluated = source.evaluated_get(context.evaluated_depsgraph_get())
+                        mesh = bpy.data.meshes.new_from_object(evaluated)
+                        try:
+                            mesh.transform(source.matrix_world)
+                            bm.from_mesh(mesh)
+                        finally:
+                            bpy.data.meshes.remove(mesh)
+                    boundary = [edge for edge in bm.edges if edge.is_boundary]
+                    if not boundary:
+                        raise ValueError('Restoration and intaglio need open margin loops')
+                    bmesh.ops.bridge_loops(bm, edges=boundary)
+                    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+                    if not bm.faces or not all(edge.is_manifold for edge in bm.edges):
+                        raise ValueError('The margin loops could not be joined into a closed restoration')
+                    mesh = bpy.data.meshes.new(tooth.name + '_Solid Crown')
+                    bm.to_mesh(mesh)
+                    prepared.append((tooth, mesh))
+                finally:
+                    bm.free()
+        except (ValueError, RuntimeError) as error:
+            for _, mesh in prepared:
+                bpy.data.meshes.remove(mesh)
+            self.report({'WARNING'}, str(error))
+            return {'CANCELLED'}
+        for selected in context.selected_objects:
+            selected.select_set(False)
+        for tooth, mesh in prepared:
+            output = bpy.data.objects.new(tooth.name + '_Solid Crown', mesh)
+            context.collection.objects.link(output)
+            tooth.solid = output.name
+            output.select_set(True)
+            context.view_layer.objects.active = output
         return {'FINISHED'}
                 
                
