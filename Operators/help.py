@@ -45,9 +45,8 @@ def update_help_box(help_text):
         help_display_box.raw_text = help_text
         help_display_box.format_and_wrap_text()
         help_display_box.fit_box_width_to_text_lines()
-        help_display_box.snap_to_corner(bpy.context, corner = [0,1])
         
-def crown_help_parser(scene):
+def crown_help_parser(scene, depsgraph=None):
     if not hasattr(scene, 'odc_props'):
         print('no ODC')
         return
@@ -78,7 +77,7 @@ def crown_help_parser(scene):
         
     
 
-def implant_help_parser(scene):
+def implant_help_parser(scene, depsgraph=None):
     if not hasattr(scene, 'odc_props'):
         print('no ODC')
         return
@@ -98,9 +97,8 @@ def implant_help_parser(scene):
         help_display_box.format_and_wrap_text()
         help_display_box.fit_box_width_to_text_lines()
         help_display_box.fit_box_height_to_text_lines()
-        help_display_box.snap_to_corner(bpy.context, corner = [0,1])
 
-def bridge_help_parser(scene):
+def bridge_help_parser(scene, depsgraph=None):
     if not hasattr(scene, 'odc_props'):
         print('no ODC')
         return
@@ -113,7 +111,8 @@ def bridge_help_parser(scene):
         help_text += 'Need to plan a bridge \n'
         help_text += 'Select multiple single units and "Units to Bridge"'
         
-        return help_text
+        update_help_box(help_text)
+        return
     
     bridges = bridge_methods.active_spanning_restoration(bpy.context)
     
@@ -125,9 +124,8 @@ def bridge_help_parser(scene):
         help_display_box.format_and_wrap_text()
         help_display_box.fit_box_width_to_text_lines()
         help_display_box.fit_box_height_to_text_lines()
-        help_display_box.snap_to_corner(bpy.context, corner = [0,1])
         
-def guide_help_parser(scene):
+def guide_help_parser(scene, depsgraph=None):
     if not hasattr(scene, 'odc_props'):
         print('no ODC')
         return
@@ -140,7 +138,7 @@ def guide_help_parser(scene):
         help_display_box.format_and_wrap_text()
         help_display_box.fit_box_width_to_text_lines() 
         
-def splint_help_parser(scene):
+def splint_help_parser(scene, depsgraph=None):
     if not hasattr(scene, 'odc_props'):
         print('no ODC')
         return
@@ -348,7 +346,9 @@ def odc_help_draw(dummy, context):
     same for all the help modules
     '''
     global help_display_box
-    help_display_box.draw()
+    if help_display_box is not None and bpy.context.area and bpy.context.area.type == 'VIEW_3D':
+        help_display_box.snap_to_corner(bpy.context, corner=[0, 1])
+        help_display_box.draw()
 
 
 def clear_help_handlers():
@@ -359,7 +359,8 @@ def clear_help_handlers():
         bpy.types.SpaceView3D.draw_handler_remove(crown_help_draw_handle, 'WINDOW')
         crown_help_draw_handle = None
             
-        bpy.app.handlers.scene_update_pre.remove(crown_help_parser)
+        if crown_help_parser in bpy.app.handlers.depsgraph_update_post:
+            bpy.app.handlers.depsgraph_update_post.remove(crown_help_parser)
         crown_help_app_handle = None
         
     global implant_help_app_handle
@@ -368,7 +369,8 @@ def clear_help_handlers():
         bpy.types.SpaceView3D.draw_handler_remove(implant_help_draw_handle, 'WINDOW')
         implant_help_draw_handle = None
             
-        bpy.app.handlers.scene_update_pre.remove(implant_help_parser)
+        if implant_help_parser in bpy.app.handlers.depsgraph_update_post:
+            bpy.app.handlers.depsgraph_update_post.remove(implant_help_parser)
         implant_help_app_handle = None
     
     global bridge_help_app_handle
@@ -377,7 +379,8 @@ def clear_help_handlers():
         bpy.types.SpaceView3D.draw_handler_remove(bridge_help_draw_handle, 'WINDOW')
         bridge_help_draw_handle = None
             
-        bpy.app.handlers.scene_update_pre.remove(bridge_help_parser)
+        if bridge_help_parser in bpy.app.handlers.depsgraph_update_post:
+            bpy.app.handlers.depsgraph_update_post.remove(bridge_help_parser)
         bridge_help_app_handle = None
 
     global guide_help_app_handle
@@ -386,7 +389,8 @@ def clear_help_handlers():
         bpy.types.SpaceView3D.draw_handler_remove(guide_help_draw_handle, 'WINDOW')
         guide_help_draw_handle = None
             
-        bpy.app.handlers.scene_update_pre.remove(guide_help_parser)
+        if guide_help_parser in bpy.app.handlers.depsgraph_update_post:
+            bpy.app.handlers.depsgraph_update_post.remove(guide_help_parser)
         guide_help_app_handle = None
     
      
@@ -402,7 +406,7 @@ class OPENDENTAL_OT_help_start_crown(bpy.types.Operator):
     def poll(cls, context):
         if not hasattr(context.scene, 'odc_props'):
             return False
-        return True
+        return context.area is not None and context.area.type == 'VIEW_3D'
     
     def execute(self, context):
         #add a textbox to display information.  attach it to this
@@ -412,7 +416,7 @@ class OPENDENTAL_OT_help_start_crown(bpy.types.Operator):
         #clear previous handlers
         clear_help_handlers()
         global crown_help_app_handle
-        crown_help_app_handle = bpy.app.handlers.scene_update_pre.append(crown_help_parser)
+        crown_help_app_handle = bpy.app.handlers.depsgraph_update_post.append(crown_help_parser)
         
         global help_display_box
         if help_display_box != None:
@@ -444,7 +448,7 @@ class OPENDENTAL_OT_help_start_implant(bpy.types.Operator):
     def poll(cls, context):
         if not hasattr(context.scene, 'odc_props'):
             return False
-        return True
+        return context.area is not None and context.area.type == 'VIEW_3D'
     
     def execute(self, context):
         #add a textbox to display information.  attach it to this
@@ -454,7 +458,7 @@ class OPENDENTAL_OT_help_start_implant(bpy.types.Operator):
         #clear previous handlers
         clear_help_handlers()
         global implant_help_app_handle
-        implant_help_app_handle = bpy.app.handlers.scene_update_pre.append(implant_help_parser)
+        implant_help_app_handle = bpy.app.handlers.depsgraph_update_post.append(implant_help_parser)
         
         global help_display_box
         if help_display_box != None:
@@ -484,7 +488,7 @@ class OPENDENTAL_OT_help_start_bridge(bpy.types.Operator):
     def poll(cls, context):
         if not hasattr(context.scene, 'odc_props'):
             return False
-        return True
+        return context.area is not None and context.area.type == 'VIEW_3D'
     
     def execute(self, context):
         #add a textbox to display information.  attach it to this
@@ -494,7 +498,7 @@ class OPENDENTAL_OT_help_start_bridge(bpy.types.Operator):
         #clear previous handlers
         clear_help_handlers()
         global bridge_help_app_handle
-        bridge_help_app_handle = bpy.app.handlers.scene_update_pre.append(bridge_help_parser)
+        bridge_help_app_handle = bpy.app.handlers.depsgraph_update_post.append(bridge_help_parser)
         
         global help_display_box
         if help_display_box != None:
@@ -521,7 +525,7 @@ class OPENDENTAL_OT_help_start_guide(bpy.types.Operator):
     def poll(cls, context):
         if not hasattr(context.scene, 'odc_props'):
             return False
-        return True
+        return context.area is not None and context.area.type == 'VIEW_3D'
     
     def execute(self, context):
         #add a textbox to display information.  attach it to this
@@ -531,7 +535,7 @@ class OPENDENTAL_OT_help_start_guide(bpy.types.Operator):
         #clear previous handlers
         clear_help_handlers()
         global guide_help_app_handle
-        guide_help_app_handle = bpy.app.handlers.scene_update_pre.append(guide_help_parser)
+        guide_help_app_handle = bpy.app.handlers.depsgraph_update_post.append(guide_help_parser)
         
         global help_display_box
         if help_display_box != None:
@@ -605,7 +609,7 @@ class OPENDENTAL_OT_crown_report(bpy.types.Operator):
         Report.write("\n")
     
         for tooth in sce.odc_teeth:
-            Report.write('Tooth #%i' % int(tooth.name))
+            Report.write('Tooth #' + tooth.name)
             Report.write("\n")
             for pair in tooth.items():
                 Report.write(str(pair))

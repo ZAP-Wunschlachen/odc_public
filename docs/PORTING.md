@@ -1372,3 +1372,20 @@ entry removal and unchanged scene objects. The latest isolated headless run comp
 73 cases with 73 passes after the model-cutting changes; this new removal test was
 run separately. Foreground UI tests and the previously documented outstanding
 geometry/physics limitations are not covered by that aggregate pass count.
+
+### Help overlays and crown report
+
+The four help starters now use `depsgraph_update_post` with current callback
+signatures instead of removed scene-update handlers. Overlay positioning occurs in
+the draw callback's current 3D region, and stopping checks handler membership before
+removal. Help startup polls for a 3D View. Empty bridge planning now updates the
+help box instead of returning an unused string. Crown Report accepts custom tooth
+names instead of coercing every name to an integer.
+
+`test_help_overlays.py` passes in foreground Blender 5.1.2 for starting/replacing all
+four help displays, invoking each parser on an empty project, repeated Stop and
+add-on disable with handler cleanup. No draw traceback occurs. The guide help still
+contains the original Coming Soon placeholder; populated-state instructions are not
+yet fully tested. `test_crown_report.py` passes headlessly for numeric/custom names,
+stored contour values and replacement of stale report text. Help UI is excluded from
+the headless runner.
