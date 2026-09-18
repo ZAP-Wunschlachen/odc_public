@@ -1444,6 +1444,51 @@ class OPENDENTAL_OT_grind_contacts(bpy.types.Operator):
             return {'CANCELLED'}
         return {'FINISHED'}
 
+class OPENDENTAL_OT_contact_area_preview(bpy.types.Operator):
+    """Lokale Kontaktfläche als separate, zurücksetzbare Kopie verbreitern"""
+    bl_idname = 'opendental.contact_area_preview'
+    bl_label = 'Kontaktfläche: Vorschau'
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        return (context.mode == 'OBJECT' and len(context.scene.odc_teeth) > 0
+                and context.scene.odc_tooth_index < len(context.scene.odc_teeth))
+
+    def execute(self, context):
+        from .contact_area import preview
+        tooth = context.scene.odc_teeth[context.scene.odc_tooth_index]
+        try:
+            preview(context, tooth)
+        except ValueError as error:
+            self.report({'WARNING'}, str(error))
+            return {'CANCELLED'}
+        self.report({'INFO'}, 'Separate Kontaktvorschau erstellt; Ausgangskrone bleibt unverändert')
+        return {'FINISHED'}
+
+
+class OPENDENTAL_OT_contact_area_reset(bpy.types.Operator):
+    """Kontaktvorschau entfernen und Ausgangskrone wieder anzeigen"""
+    bl_idname = 'opendental.contact_area_reset'
+    bl_label = 'Kontaktfläche: Zurücksetzen'
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        return (context.mode == 'OBJECT' and len(context.scene.odc_teeth) > 0
+                and context.scene.odc_tooth_index < len(context.scene.odc_teeth)
+                and bool(context.scene.odc_teeth[context.scene.odc_tooth_index].contact_area_preview))
+
+    def execute(self, context):
+        from .contact_area import reset
+        try:
+            reset(context, context.scene.odc_teeth[context.scene.odc_tooth_index])
+        except ValueError as error:
+            self.report({'WARNING'}, str(error))
+            return {'CANCELLED'}
+        return {'FINISHED'}
+
+
 class OPENDENTAL_OT_grind_occlusion(bpy.types.Operator):
     ''''''
     bl_idname = 'opendental.grind_occlusion'
@@ -1642,6 +1687,8 @@ def register():
     bpy.utils.register_class(OPENDENTAL_OT_calculate_inside)
     bpy.utils.register_class(OPENDENTAL_OT_prep_from_crown)
     bpy.utils.register_class(OPENDENTAL_OT_grind_contacts)
+    bpy.utils.register_class(OPENDENTAL_OT_contact_area_preview)
+    bpy.utils.register_class(OPENDENTAL_OT_contact_area_reset)
     bpy.utils.register_class(OPENDENTAL_OT_grind_occlusion)
     bpy.utils.register_class(OPENDENTAL_OT_crown_cervical_convergence)
     bpy.utils.register_class(OPENDENTAL_make_solid_restoration)
@@ -1669,6 +1716,8 @@ def unregister():
     bpy.utils.unregister_class(OPENDENTAL_OT_crown_cervical_convergence)
     bpy.utils.unregister_class(OPENDENTAL_OT_grind_occlusion)
     bpy.utils.unregister_class(OPENDENTAL_OT_grind_contacts)
+    bpy.utils.unregister_class(OPENDENTAL_OT_contact_area_reset)
+    bpy.utils.unregister_class(OPENDENTAL_OT_contact_area_preview)
     bpy.utils.unregister_class(OPENDENTAL_OT_prep_from_crown)
     bpy.utils.unregister_class(OPENDENTAL_OT_calculate_inside)
     bpy.utils.unregister_class(OPENDENTAL_OT_seat_to_margin)

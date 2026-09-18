@@ -142,6 +142,10 @@ for fdi in sorted(assets):
  addgroup('CervicalBlend',np.flatnonzero(weights>0),weights,'quintic taper of metric surface distance from CEJ')
  addgroup('AnatomyProtected',np.flatnonzero(weights==0),why='outside prepared cervical deformation band')
  addgroup('Cervical Band',np.flatnonzero(weights>0),why='editable cervical band')
+ addgroup('ODC Exterior',range(len(v)),why='outer library surface for local proximal editing')
+ contact_normals=np.array([tuple(q.normal) for q in me.vertices])
+ contact_protected=(distance<.75)|((v[:,2]>.4*height)&(contact_normals[:,2]>.65))|(v[:,2]>height-.45)
+ addgroup('ODC Contact Protected',np.flatnonzero(contact_protected),why='cervical 0.75mm surface band and occlusal/incisal surfaces preserved during proximal preview')
  pins={}
  for pin in assets[fdi]['annotation_pins']:
   x,y,z=pin['position_gltf_centered'];world=source_center+np.array([x,-z,y]);pins[pin['label']]=world@C.T*scale-origin

@@ -50,6 +50,8 @@ Präparationsgrenze.
 | CEJ | Exakt der einzige offene Halsrand |
 | CervicalBlend | Quintisch auslaufende Gewichte im metrischen zervikalen Band |
 | AnatomyProtected | Unveränderliche obere Anatomie bei der neuen Randanpassung |
+| ODC Exterior | Äußere Bibliotheksoberfläche für die lokale Kontaktvorschau |
+| ODC Contact Protected | Halsband von 0,75 mm sowie okklusale bzw. inzisale Schutzbereiche |
 | Mesial/Distal Contact | Vorschläge für proximale Kontaktbereiche |
 | Mesial/Distal Connector | Größere Bereiche für die Verbinderbearbeitung |
 | Incisal Edge / Palatinal Face | Frontzahnorientierung und ODC-Okklusionshilfen |
@@ -61,6 +63,13 @@ Beschriftungspins der Quelle sind keine exakten CAD-Höckerspitzen. Wo erforderl
 wurden Gruppen auf kontrollierte lokale Spitzen des unveränderten Netzes gelegt.
 Kontakt- und Fissurengruppen enthalten teils geometrisch abgeleitete Vorschläge.
 Die Einzelherkunft jeder Gruppe steht in `Landmark evidence`.
+
+Die beiden Kontakt-Schutzgruppen ergänzen die Bibliothek ohne Änderung ihrer
+Koordinaten. Vor einer Kontaktvorschau müssen die Gruppen nach der fallbezogenen
+Anpassung geprüft werden: Eine erzeugte Innenfläche gehört niemals in
+`ODC Exterior`, der endgültige Kronenrand gehört in `ODC Contact Protected`.
+Die Kontaktpunkte und die separaten Nachbarflächen müssen zum aktuellen Fall
+passen. Die Gruppen sind geometrische Ausgangshilfen, keine klinische Freigabe.
 
 Der neue ODC-Pfad behandelt triangulierte Kronen anhand dieser Gruppen. Er setzt
 keine regelmäßigen Quad-Netzringe voraus. Ungültige Randverformungen werden vor der

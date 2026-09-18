@@ -385,6 +385,31 @@ class OPENDENTAL_PT_ODCTeeth(bpy.types.Panel):
         col.operator("opendental.remove_tooth_restoration", text="Remove a Tooth")
         col.operator("opendental.plan_restorations", text="Plan Multiple")
 
+        if sce.odc_teeth and sce.odc_tooth_index < len(sce.odc_teeth):
+            tooth = sce.odc_teeth[sce.odc_tooth_index]
+            box = layout.box()
+            box.label(text="Kontaktfläche verbreitern")
+            box.label(text="Lokaler Änderungsbereich")
+            box.label(text="Bisheriger Abstand bleibt erhalten")
+            for side in ('mesial', 'distal'):
+                box.prop(tooth, 'contact_area_'+side)
+                column = box.column(align=True)
+                column.enabled = getattr(tooth, 'contact_area_'+side)
+                row = column.row(align=True)
+                row.prop(tooth, 'contact_area_'+side+'_width')
+                row.prop(tooth, 'contact_area_'+side+'_height')
+                gap = getattr(tooth, 'contact_area_'+side+'_gap')
+                if gap >= 0:
+                    column.label(text="Bisheriger Abstand: %.3f mm" % gap)
+            row = box.row(align=True)
+            row.operator('opendental.contact_area_preview', text='Vorschau')
+            row.operator('opendental.contact_area_reset', text='Zurücksetzen')
+            if tooth.contact_area_preview:
+                box.label(text="Separate Vorschau", icon='INFO')
+                box.label(text="Ausgangskrone unverändert")
+            if tooth.contact_area_status:
+                box.label(text=tooth.contact_area_status)
+
         # row = layout.row()
         # row.operator("opendental.implant_inner_cylinder", text = "Implant Inner Cylinders")
 

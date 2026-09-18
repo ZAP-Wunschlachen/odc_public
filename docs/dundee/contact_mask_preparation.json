@@ -1,0 +1,514 @@
+[
+  {
+    "fdi": "11",
+    "protected": 2300,
+    "exterior": 10445,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 17,
+        "editable_seed_vertices": 17
+      },
+      "Distal": {
+        "seed_vertices": 23,
+        "editable_seed_vertices": 23
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "12",
+    "protected": 2579,
+    "exterior": 13210,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 37,
+        "editable_seed_vertices": 37
+      },
+      "Distal": {
+        "seed_vertices": 38,
+        "editable_seed_vertices": 38
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "13",
+    "protected": 4794,
+    "exterior": 21188,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 40,
+        "editable_seed_vertices": 40
+      },
+      "Distal": {
+        "seed_vertices": 54,
+        "editable_seed_vertices": 54
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "14",
+    "protected": 4333,
+    "exterior": 10391,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 22,
+        "editable_seed_vertices": 22
+      },
+      "Distal": {
+        "seed_vertices": 17,
+        "editable_seed_vertices": 17
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "15",
+    "protected": 3433,
+    "exterior": 8601,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 15,
+        "editable_seed_vertices": 15
+      },
+      "Distal": {
+        "seed_vertices": 17,
+        "editable_seed_vertices": 17
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "16",
+    "protected": 9895,
+    "exterior": 19989,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 39,
+        "editable_seed_vertices": 39
+      },
+      "Distal": {
+        "seed_vertices": 23,
+        "editable_seed_vertices": 23
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "17",
+    "protected": 5166,
+    "exterior": 12104,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 19,
+        "editable_seed_vertices": 19
+      },
+      "Distal": {
+        "seed_vertices": 24,
+        "editable_seed_vertices": 24
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "18",
+    "protected": 4861,
+    "exterior": 11644,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 21,
+        "editable_seed_vertices": 21
+      },
+      "Distal": {
+        "seed_vertices": 18,
+        "editable_seed_vertices": 18
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "21",
+    "protected": 2300,
+    "exterior": 10445,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 17,
+        "editable_seed_vertices": 17
+      },
+      "Distal": {
+        "seed_vertices": 23,
+        "editable_seed_vertices": 23
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "22",
+    "protected": 2579,
+    "exterior": 13210,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 37,
+        "editable_seed_vertices": 37
+      },
+      "Distal": {
+        "seed_vertices": 38,
+        "editable_seed_vertices": 38
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "23",
+    "protected": 4794,
+    "exterior": 21188,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 40,
+        "editable_seed_vertices": 40
+      },
+      "Distal": {
+        "seed_vertices": 54,
+        "editable_seed_vertices": 54
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "24",
+    "protected": 4333,
+    "exterior": 10391,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 22,
+        "editable_seed_vertices": 22
+      },
+      "Distal": {
+        "seed_vertices": 17,
+        "editable_seed_vertices": 17
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "25",
+    "protected": 3433,
+    "exterior": 8601,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 15,
+        "editable_seed_vertices": 15
+      },
+      "Distal": {
+        "seed_vertices": 17,
+        "editable_seed_vertices": 17
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "26",
+    "protected": 9895,
+    "exterior": 19989,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 39,
+        "editable_seed_vertices": 39
+      },
+      "Distal": {
+        "seed_vertices": 23,
+        "editable_seed_vertices": 23
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "27",
+    "protected": 5166,
+    "exterior": 12104,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 19,
+        "editable_seed_vertices": 19
+      },
+      "Distal": {
+        "seed_vertices": 24,
+        "editable_seed_vertices": 24
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "28",
+    "protected": 4861,
+    "exterior": 11644,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 21,
+        "editable_seed_vertices": 21
+      },
+      "Distal": {
+        "seed_vertices": 18,
+        "editable_seed_vertices": 18
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "31",
+    "protected": 2452,
+    "exterior": 10661,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 49,
+        "editable_seed_vertices": 49
+      },
+      "Distal": {
+        "seed_vertices": 32,
+        "editable_seed_vertices": 32
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "32",
+    "protected": 2597,
+    "exterior": 10226,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 52,
+        "editable_seed_vertices": 52
+      },
+      "Distal": {
+        "seed_vertices": 29,
+        "editable_seed_vertices": 29
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "33",
+    "protected": 1772,
+    "exterior": 9442,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 25,
+        "editable_seed_vertices": 25
+      },
+      "Distal": {
+        "seed_vertices": 20,
+        "editable_seed_vertices": 20
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "34",
+    "protected": 3322,
+    "exterior": 9607,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 31,
+        "editable_seed_vertices": 31
+      },
+      "Distal": {
+        "seed_vertices": 29,
+        "editable_seed_vertices": 24
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "35",
+    "protected": 3326,
+    "exterior": 8319,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 19,
+        "editable_seed_vertices": 19
+      },
+      "Distal": {
+        "seed_vertices": 19,
+        "editable_seed_vertices": 19
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "36",
+    "protected": 5431,
+    "exterior": 12564,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 11,
+        "editable_seed_vertices": 11
+      },
+      "Distal": {
+        "seed_vertices": 17,
+        "editable_seed_vertices": 17
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "37",
+    "protected": 4969,
+    "exterior": 11576,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 16,
+        "editable_seed_vertices": 16
+      },
+      "Distal": {
+        "seed_vertices": 19,
+        "editable_seed_vertices": 19
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "38",
+    "protected": 5579,
+    "exterior": 11645,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 13,
+        "editable_seed_vertices": 13
+      },
+      "Distal": {
+        "seed_vertices": 14,
+        "editable_seed_vertices": 14
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "41",
+    "protected": 2452,
+    "exterior": 10661,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 49,
+        "editable_seed_vertices": 49
+      },
+      "Distal": {
+        "seed_vertices": 32,
+        "editable_seed_vertices": 32
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "42",
+    "protected": 2597,
+    "exterior": 10226,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 52,
+        "editable_seed_vertices": 52
+      },
+      "Distal": {
+        "seed_vertices": 29,
+        "editable_seed_vertices": 29
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "43",
+    "protected": 1772,
+    "exterior": 9442,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 25,
+        "editable_seed_vertices": 25
+      },
+      "Distal": {
+        "seed_vertices": 20,
+        "editable_seed_vertices": 20
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "44",
+    "protected": 3322,
+    "exterior": 9607,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 31,
+        "editable_seed_vertices": 31
+      },
+      "Distal": {
+        "seed_vertices": 29,
+        "editable_seed_vertices": 24
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "45",
+    "protected": 3326,
+    "exterior": 8319,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 19,
+        "editable_seed_vertices": 19
+      },
+      "Distal": {
+        "seed_vertices": 19,
+        "editable_seed_vertices": 19
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "46",
+    "protected": 5431,
+    "exterior": 12564,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 11,
+        "editable_seed_vertices": 11
+      },
+      "Distal": {
+        "seed_vertices": 17,
+        "editable_seed_vertices": 17
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "47",
+    "protected": 4969,
+    "exterior": 11576,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 16,
+        "editable_seed_vertices": 16
+      },
+      "Distal": {
+        "seed_vertices": 19,
+        "editable_seed_vertices": 19
+      }
+    },
+    "geometry_unchanged": true
+  },
+  {
+    "fdi": "48",
+    "protected": 5579,
+    "exterior": 11645,
+    "seeds": {
+      "Mesial": {
+        "seed_vertices": 13,
+        "editable_seed_vertices": 13
+      },
+      "Distal": {
+        "seed_vertices": 14,
+        "editable_seed_vertices": 14
+      }
+    },
+    "geometry_unchanged": true
+  }
+]

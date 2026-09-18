@@ -3,7 +3,7 @@
   "blender": "5.1.2",
   "date": "2026-09-18",
   "runtime_library": "Resources/data/odc_tooth_library.blend",
-  "runtime_sha256": "610fa7663dcce6d3868a0c3a56014aca755420d06553053d04a6eebaf1e911cb",
+  "runtime_sha256": "60a6f492c2d559d09b4cf43e387abb9a4883912d2cafb13425db412fa0cae6f5",
   "fdi_count": 32,
   "independent_left_models": 16,
   "derived_right_mirrors": 16,
@@ -23,5 +23,6 @@
     42,
     45
   ],
-  "installation_restart_removal_passed": true
+  "installation_restart_removal_passed": true,
+  "contact_mask_geometry_preserved_fdi_count": 32
 }

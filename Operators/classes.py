@@ -238,6 +238,22 @@ class ToothRestoration(bpy.types.PropertyGroup):
         cls.in_bridge = bpy.props.BoolProperty(name="Incude in Bridge", default=False) #may be derprecated now
         cls.solid = bpy.props.StringProperty(name="Final Solid Tooth",default="")
         cls.log = bpy.props.StringProperty(name="Function Log",default="")
+        # Geometric preview settings, not a clinical contact-force prescription.
+        cls.contact_area_mesial = bpy.props.BoolProperty(name="Mesial", default=False)
+        cls.contact_area_distal = bpy.props.BoolProperty(name="Distal", default=False)
+        for side in ('mesial', 'distal'):
+            setattr(cls, 'contact_area_'+side+'_width', bpy.props.FloatProperty(
+                name="Breite (mm)", description="Gesamtbreite des lokalen Änderungsbereichs", default=0., min=0., precision=2))
+            setattr(cls, 'contact_area_'+side+'_height', bpy.props.FloatProperty(
+                name="Höhe (mm)", description="Gesamthöhe des lokalen Änderungsbereichs entlang der Einschubachse", default=0., min=0., precision=2))
+            setattr(cls, 'contact_area_'+side+'_gap', bpy.props.FloatProperty(
+                name="Bisheriger Abstand", description="Gemessener geometrischer Mindestabstand der unveränderten Ausgangskrone", default=-1.))
+        cls.contact_area_preview = bpy.props.StringProperty(name="Contact area preview", default="")
+        cls.contact_area_preview_object = bpy.props.PointerProperty(name="Contact preview object", type=bpy.types.Object)
+        cls.contact_area_source_object = bpy.props.PointerProperty(name="Contact preview source", type=bpy.types.Object)
+        cls.contact_area_source_hidden = bpy.props.BoolProperty(default=False)
+        cls.contact_area_source_render_hidden = bpy.props.BoolProperty(default=False)
+        cls.contact_area_status = bpy.props.StringProperty(name="Contact area status", default="")
     
 
         cls.rest_type = bpy.props.EnumProperty(
