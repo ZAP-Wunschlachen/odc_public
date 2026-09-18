@@ -134,69 +134,46 @@ def rf_rq(P):
 # Run this in Object Mode
 # scale: resolution scale percentage as in GUI, known a priori
 # P: numpy 3x4
-def get_blender_camera_from_3x4_P(P, scale):
-    # get krt
-    K, R_world2cv, T_world2cv = KRT_from_P(np.matrix(P))
-
+def get_blender_camera_from_3x4_P(P, scale, image_size=None):
+    """Create a perspective camera using explicit image dimensions when known."""
+    projection = np.asarray(P, dtype=float)
+    if projection.shape != (3, 4) or not np.isfinite(projection).all() or np.linalg.matrix_rank(projection[:, :3]) < 3:
+        raise ValueError('The projection matrix must define a finite perspective camera')
+    if not math.isfinite(scale) or not 0.01 <= scale <= 1:
+        raise ValueError('Render scale must be between 0.01 and 1')
+    K, R_world2cv, T_world2cv = KRT_from_P(np.matrix(projection))
+    fx, fy, cx, cy = (float(K[0, 0]), float(K[1, 1]), float(K[0, 2]), float(K[1, 2]))
+    if fx <= 0 or fy <= 0 or abs(float(K[0, 1])) > 1e-5 * max(fx, fy):
+        raise ValueError('Blender requires a camera with positive focal lengths and zero skew')
+    width, height = image_size if image_size is not None else (2 * cx, 2 * cy)
+    if not all(math.isfinite(v) and v > 0 for v in (width, height)):
+        raise ValueError('Image dimensions must be positive')
+    resolution = (round(width / scale), round(height / scale))
+    if not all(4 <= v <= 65536 for v in resolution):
+        raise ValueError('Image resolution is outside Blender limits')
+    aspect = fx / fy
+    pixel_x, pixel_y = (1.0, aspect) if aspect >= 1 else (1 / aspect, 1.0)
+    lens = fx * 36 / width
+    if max(pixel_x, pixel_y) > 200 or not 1 <= lens <= 5000:
+        raise ValueError('Camera calibration is outside Blender lens or pixel-aspect limits')
     scene = bpy.context.scene
-    sensor_width_in_mm = K[1,1]*K[0,2] / (K[0,0]*K[1,2])
-    sensor_height_in_mm = 1  # doesn't matter
-    resolution_x_in_px = K[0,2]*2  # principal point assumed at the center
-    resolution_y_in_px = K[1,2]*2  # principal point assumed at the center
-
-    s_u = resolution_x_in_px / sensor_width_in_mm
-    s_v = resolution_y_in_px / sensor_height_in_mm
-    # TODO include aspect ratio
-    f_in_mm = K[0,0] / s_u
-    # recover original resolution
-    scene.render.resolution_x = round(float(resolution_x_in_px / scale))
-    scene.render.resolution_y = round(float(resolution_y_in_px / scale))
+    scene.render.resolution_x, scene.render.resolution_y = resolution
     scene.render.resolution_percentage = round(scale * 100)
-
-    # Use this if the projection matrix follows the convention listed in my answer to
-    # http://blender.stackexchange.com/questions/38009/3x4-camera-matrix-from-blender-camera
-    R_bcam2cv = Matrix(
-        ((1, 0,  0),
-         (0, -1, 0),
-         (0, 0, -1)))
-
-    # Use this if the projection matrix follows the convention from e.g. the matlab calibration toolbox:
-    # R_bcam2cv = Matrix(
-    #     ((-1, 0,  0),
-    #      (0, 1, 0),
-    #      (0, 0, 1)))
-
-    R_cv2world = R_world2cv.T
-    rotation = Matrix(R_cv2world.tolist()) @ R_bcam2cv
-    location = Vector(np.asarray(-R_cv2world * T_world2cv).reshape(3))
-
-    # create a new camera
-    bpy.ops.object.add(
-        type='CAMERA',
-        location=location)
-    ob = bpy.context.object
-    ob.name = 'CamFrom3x4PObj'
-    cam = ob.data
-    cam.name = 'CamFrom3x4P'
-
-    # Lens
-    cam.type = 'PERSP'
-    cam.lens = f_in_mm 
-    cam.lens_unit = 'MILLIMETERS'
-    cam.sensor_width  = sensor_width_in_mm
+    scene.render.pixel_aspect_x, scene.render.pixel_aspect_y = pixel_x, pixel_y
+    cv_to_blender = Matrix(((1, 0, 0), (0, -1, 0), (0, 0, -1)))
+    rotation = Matrix(R_world2cv.T.tolist()) @ cv_to_blender
+    location = Vector(np.asarray(-R_world2cv.T * T_world2cv).reshape(3))
+    camera = bpy.data.cameras.new('CamFrom3x4P')
+    ob = bpy.data.objects.new('CamFrom3x4PObj', camera)
+    bpy.context.collection.objects.link(ob)
+    camera.type = 'PERSP'
+    camera.sensor_fit = 'HORIZONTAL'
+    camera.sensor_width = 36
+    camera.lens = lens
+    camera.shift_x = (width / 2 - cx) / width
+    camera.shift_y = (cy - height / 2) * aspect / width
     ob.matrix_world = Matrix.Translation(location) @ rotation.to_4x4()
-
-    #     cam.shift_x = -0.05
-    #     cam.shift_y = 0.1
-    #     cam.clip_start = 10.0
-    #     cam.clip_end = 250.0
-    #     empty = bpy.data.objects.new('DofEmpty', None)
-    #     empty.location = origin+Vector((0,10,0))
-    #     cam.dof_object = empty
-
-    # Display
     ob.show_name = True
-    # Make this the current camera
     scene.camera = ob
     bpy.context.view_layer.update()
     return ob
@@ -677,10 +654,11 @@ class VIEW3D_OT_image_view3d_modal(bpy.types.Operator):
     def build_matrix(self):
         try:
             projection = projection_from_correspondences(self.points_3d, self.pixel_coords)
+            image = self.imgeditor_area.spaces.active.image
+            return get_blender_camera_from_3x4_P(projection, 1, tuple(image.size))
         except ValueError as error:
             self.report({'WARNING'}, str(error))
             return None
-        return get_blender_camera_from_3x4_P(projection, 1)
 
     def invoke(self, context, event):
        

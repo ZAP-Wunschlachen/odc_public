@@ -40,7 +40,7 @@ for world,image in [(points[:5],pixels[:5]),(points,pixels[:6]),(np.zeros((8,3))
 print('ODC_IMAGE_CORRESPONDENCES_PASSED')
 from types import SimpleNamespace
 warnings=[]
-state=SimpleNamespace(points_3d=list(map(Vector,points)),pixel_coords=list(map(Vector,pixels)),
+state=SimpleNamespace(imgeditor_area=SimpleNamespace(spaces=SimpleNamespace(active=SimpleNamespace(image=SimpleNamespace(size=(800,600))))),points_3d=list(map(Vector,points)),pixel_coords=list(map(Vector,pixels)),
                       report=lambda levels,message:warnings.append(message))
 objects_before=set(bpy.data.objects)
 result=m.VIEW3D_OT_image_view3d_modal.build_matrix(state)

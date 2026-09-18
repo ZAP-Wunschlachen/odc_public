@@ -1108,3 +1108,18 @@ point, an image-center pixel point, insufficient-pair build attempt without outp
 and Escape cleanup. The log contains no draw-callback traceback. Complete interactive
 six-pair fitting, accepted-camera persistence/cancellation and image changes during
 the modal session remain unverified. The test is excluded from the headless runner.
+
+Camera reconstruction now accepts explicit image dimensions and maps the recovered
+principal point and focal-length ratio to Blender camera shifts and render pixel
+aspect. The image-registration build step uses its loaded image size. Camera data
+is created directly without changing the active object/selection. Invalid finite
+matrix/rank, render scale, image size, skew and unsupported lens/aspect ranges are
+checked before render settings or objects are changed.
+
+`test_image_camera.py` now verifies reconstruction as well as projection across
+all three source sensor fits, portrait/landscape formats, nonzero camera shifts,
+three pixel aspects and 75% render scale; every reconstructed point agrees with
+Blender's reference within 0.01 pixels. Invalid matrix/scale/size inputs preserve
+objects and render settings. The correspondence and operator-build tests also
+pass with the explicit image-size path. Nonzero skew is rejected because Blender's
+camera model cannot reproduce it directly; noisy manual fitting remains unverified.

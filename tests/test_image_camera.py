@@ -49,4 +49,24 @@ for fit in ('HORIZONTAL','VERTICAL','AUTO'):
                 pixel=Vector((q.x/q.z,q.y/q.z))
                 actual=m.project_by_object_utils(camera,point)
                 assert (pixel-actual).length<.002,(fit,width,height,aspect,pixel,actual)
+            expected=[m.project_by_object_utils(camera,point) for point in points]
+            restored=m.get_blender_camera_from_3x4_P(P,.75,(width*.75,height*.75))
+            assert scene.render.resolution_x==width and scene.render.resolution_y==height
+            for point,pixel in zip(points,expected):
+                actual=m.project_by_object_utils(restored,point)
+                assert (pixel-actual).length<.01,(fit,aspect,pixel,actual)
 print('ODC_IMAGE_CAMERA_SENSOR_FITS_PASSED')
+# Invalid calibration must not create objects or change render/camera settings.
+import numpy as np
+objects_before=set(bpy.data.objects)
+settings_before=(scene.camera,scene.render.resolution_x,scene.render.resolution_y,
+                 scene.render.resolution_percentage,scene.render.pixel_aspect_x,scene.render.pixel_aspect_y)
+for invalid,scale,size in [(np.zeros((3,4)),1,(800,600)),(P,0,(800,600)),
+                           (P,1,(0,600)),(np.full((3,4),np.nan),1,(800,600))]:
+    try:m.get_blender_camera_from_3x4_P(invalid,scale,size)
+    except ValueError:pass
+    else:raise AssertionError('Invalid calibration accepted')
+    assert set(bpy.data.objects)==objects_before
+    assert settings_before==(scene.camera,scene.render.resolution_x,scene.render.resolution_y,
+                             scene.render.resolution_percentage,scene.render.pixel_aspect_x,scene.render.pixel_aspect_y)
+print('ODC_IMAGE_CAMERA_VALIDATION_PASSED')
