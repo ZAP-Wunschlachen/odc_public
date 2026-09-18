@@ -379,39 +379,22 @@ class BracektSlicer(object):
         if len(self.slice_points_x) == 0 and len(self.slice_points_y) == 0:
             return
         
-        if not self.bracket_data.bracket_obj.grease_pencil:
-            gp = bpy.data.grease_pencil.new('Bracket')
-            self.bracket_data.bracket_obj.grease_pencil = gp
-        else:
-            gp = self.bracket_data.bracket_obj.grease_pencil
-            print(gp.name)
-            #clear existing layers.  Dangerous if bracketing on a non bracket...
-        if gp.layers:
-            layers = [l for l in gp.layers]
-            for l in layers:
-                gp.layers.remove(l)
+        bracket = self.bracket_data.bracket_obj
+        gp = bpy.data.grease_pencils.new('Bracket Slices')
+        obj = bpy.data.objects.new('Bracket Slices', gp)
+        context.collection.objects.link(obj)
+        obj.parent = bracket
+        obj.matrix_world = Matrix.Identity(4)
+        layer = gp.layers.new('Slice', set_active=True)
+        drawing = layer.frames.new(context.scene.frame_current).drawing
+        paths = [points for points in (self.slice_points_x, self.slice_points_y) if points]
+        drawing.add_strokes([len(points) for points in paths])
+        for stroke, points in zip(drawing.strokes, paths):
+            for point, co in zip(stroke.points, points):
+                point.position = co
+                point.radius = 0.02
+                point.opacity = 1.0
         
-        slice_layer = gp.layers.new('Slice')
-        slice_layer.color = Color((.8,.1,.1))
-        if slice_layer.frames:
-            fr = slice_layer.active_frame
-        else:
-            fr = slice_layer.frames.new(1) 
-            
-        # Create a new stroke
-
-        strx, stry = fr.strokes.new(), fr.strokes.new()
-        strx.draw_mode, stry.draw_mode = '3DSPACE' , '3DSPACE'
-        
-        strx.points.add(count = len(self.slice_points_x))
-        stry.points.add(count = len(self.slice_points_y))
-        
-        for i, pt in enumerate(self.slice_points_x):
-            strx.points[i].co = pt
-        for i, pt in enumerate(self.slice_points_y):
-            stry.points[i].co = pt
-            
-        return
     
 def bracket_placement_draw_callback(self, context):  
     
@@ -479,9 +462,6 @@ class OPENDENTAL_OT_place_bracket(bpy.types.Operator):
             return 'finish'
             
         elif event.type == 'ESC' and event.value == 'PRESS':
-            del_obj = self.bracket_manager.bracket_obj
-            context.scene.objects.unlink(del_obj)
-            bpy.data.objects.remove(del_obj)
             return 'cancel' 
 
         return 'main'
@@ -491,7 +471,8 @@ class OPENDENTAL_OT_place_bracket(bpy.types.Operator):
         
         if event.type in {'LEFTMOUSE','RET','ENTER'} and event.value == 'PRESS':
             #confirm location
-            self.bracket_slicer.slice_confirm()
+            if self.bracket_slicer:
+                self.bracket_slicer.slice_confirm()
             return 'main'
         
         elif event.type in {'RIGHTMOUSE', 'ESC'} and event.value == 'PRESS':
@@ -514,7 +495,8 @@ class OPENDENTAL_OT_place_bracket(bpy.types.Operator):
         
         if event.type in {'LEFTMOUSE','RET','ENTER'} and event.value == 'PRESS':
             #confirm location
-            self.bracket_slicer.slice_confirm()
+            if self.bracket_slicer:
+                self.bracket_slicer.slice_confirm()
             return 'main'
         
         elif event.type in {'RIGHTMOUSE', 'ESC'} and event.value == 'PRESS':
@@ -541,7 +523,8 @@ class OPENDENTAL_OT_place_bracket(bpy.types.Operator):
         
         if event.type in {'LEFTMOUSE','RET','ENTER'} and event.value == 'PRESS':
             #confirm location
-            self.bracket_slicer.slice_confirm()
+            if self.bracket_slicer:
+                self.bracket_slicer.slice_confirm()
             return 'main'
         
         elif event.type in {'RIGHTMOUSE', 'ESC'} and event.value == 'PRESS':
@@ -566,24 +549,24 @@ class OPENDENTAL_OT_place_bracket(bpy.types.Operator):
         
         if event.type == 'LEFTMOUSE' and event.value == 'PRESS':
             #confirm location
-            self.bracket_slicer.slice_confirm()
+            if self.bracket_slicer:
+                self.bracket_slicer.slice_confirm()
             return 'main'
         
         elif event.type == 'MOUSEMOVE':
             x, y = event.mouse_region_x, event.mouse_region_y
             self.bracket_manager.place_bracket(context, x,y, normal = True)
-            self.bracket_slicer.slice_mouse_move(context,event.mouse_region_x, event.mouse_region_y)
+            if self.bracket_slicer:
+                self.bracket_slicer.slice()
             return 'start'
         
         elif event.type in {'WHEELUPMOUSE', 'WHEELDOWNMOUSE', 'UP_ARROW','DOWN_ARROW'}:
             self.bracket_manager.spin_event(event.type, event.shift)
-            self.bracket_slicer.slice()
+            if self.bracket_slicer:
+                self.bracket_slicer.slice()
             return 'start'
         
-        elif event.type == "RIGTMOUSE" and event.value == 'PRESS':
-            del_obj = self.bracket_manager.bracket_obj
-            context.scene.objects.unlink(del_obj)
-            bpy.data.objects.remove(del_obj)
+        elif event.type in {'RIGHTMOUSE', 'ESC'} and event.value == 'PRESS':
             return 'cancel'
         
         else:
@@ -595,7 +578,8 @@ class OPENDENTAL_OT_place_bracket(bpy.types.Operator):
         
         if event.type == 'LEFTMOUSE' and event.value == 'PRESS':
             #confirm location
-            self.bracket_slicer.slice_confirm()
+            if self.bracket_slicer:
+                self.bracket_slicer.slice_confirm()
             return 'main'
         
         elif event.type in {'RIGHTMOUSE', 'ESC'} and event.value == 'PRESS':
@@ -633,6 +617,14 @@ class OPENDENTAL_OT_place_bracket(bpy.types.Operator):
         if nmode in {'finish','cancel'}:
             #clean up callbacks
             bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+            if self.bracket_slicer:
+                self.bracket_slicer.bme.free()
+            if nmode == 'cancel':
+                obj = self.bracket_manager.bracket_obj
+                mesh = obj.data
+                bpy.data.objects.remove(obj, do_unlink=True)
+                if isinstance(mesh, bpy.types.Mesh) and mesh.users == 0:
+                    bpy.data.meshes.remove(mesh)
             return {'FINISHED'} if nmode == 'finish' else {'CANCELLED'}
         
         if nmode: self.mode = nmode
@@ -641,19 +633,15 @@ class OPENDENTAL_OT_place_bracket(bpy.types.Operator):
     
     def invoke(self, context, event):
 
+        if not context.area or context.area.type != 'VIEW_3D' or not context.region_data:
+            self.report({'WARNING'}, 'Bracket placement requires a 3D View')
+            return {'CANCELLED'}
         settings = get_settings()
-        libpath = settings.ortho_lib
-        assets = obj_list_from_lib(libpath)
-        
+        assets = obj_list_from_lib(settings.ortho_lib)
         if settings.bracket in assets:
-            current_obs = [ob.name for ob in bpy.data.objects]
-            obj_from_lib(settings.ortho_lib,settings.bracket)
-            for ob in bpy.data.objects:
-                if ob.name not in current_obs:
-                    Bracket = ob
-                    Bracket.hide = False
-                        
-            context.scene.objects.link(Bracket)
+            Bracket = obj_from_lib(settings.ortho_lib, settings.bracket)
+            context.collection.objects.link(Bracket)
+            Bracket.hide_set(False)
         else:
             Bracket = None
             

@@ -997,3 +997,19 @@ Ported fallback bracket creation/display, ray-casting and matrix/quaternion oper
 ### Bracket orthogonal slices
 
 Ported slicer BMesh evaluation, nearest-surface query and matrix/quaternion products. Empty nearest-hit results return without slicing. Extended the bracket manager window test to verify both orthogonal cross-sections of a translated cube, world-space plane positions and five reference points. Blender 5.1.2 passes. Public modal integration, prescription tip variants and dynamic topology changes remain unverified.
+
+### Interactive bracket placement (Blender 5.1)
+
+The public modal operator now imports the returned library object into the current
+collection, rejects contexts without a 3D viewport, and releases its slicer BMesh
+on completion or cancellation. Escape and right-click cancel initial placement;
+Escape in the main mode also removes the newly created bracket. Cross-sections
+are saved as a modern Grease Pencil child object instead of the removed object
+annotation API. Initial placement retains the surface-normal alignment without
+performing a second ray cast through the slicer.
+
+`test_bracket_modal.py` runs in a foreground Blender window with simulated events:
+start, surface placement on a cube, click, Enter, two saved cross-section strokes,
+then a second invocation and Escape with no remaining new objects. This does not
+yet cover all interactive rotation/grab modes, scene-wide snapping, stroke visual
+appearance, or transformed anatomical surfaces.
