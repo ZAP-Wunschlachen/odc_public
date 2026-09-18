@@ -1194,3 +1194,21 @@ empty slots remain empty. The extended manufacture regression passes for distinc
 outer/inner materials, an object-linked inner override, unchanged source material
 links, and an unassigned outer surface. This closes the previously noted material-slot
 preservation gap for these cases; general geometry validity remains as documented.
+
+### Clean Model registered workflow
+
+The direct Clean Model test reproduced a deleted-source-name failure when a small
+loose fragment occupied the original object after Separate Loose. Component removal
+now operates inside the existing mesh and retains the largest component ranked by
+bounding-box volume, surface area and vertex count. It no longer separates/deletes
+scene objects or recenters the source origin; shared mesh data is copied before edits.
+The old external LoopTools call is replaced by the bundled relaxation helper, and
+removed normals_make_consistent is replaced by BMesh normal recalculation.
+
+`test_clean_model.py` passes in Blender 5.1.2 on a cube with a missing face, a small
+fragment created first and an isolated point. It verifies retained object identity
+and location, fragment removal, closed volume 64, and unchanged data of a linked
+mesh sibling. Complex nonmanifold scans, multiple substantial components and open
+boundaries beyond the existing 400-edge fill limit remain unverified. Component
+selection now intentionally keeps one principal component rather than the old
+absolute-volume-within-one threshold.

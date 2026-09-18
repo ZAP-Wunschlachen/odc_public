@@ -413,6 +413,11 @@ class OPENDENTAL_OT_clean_model(bpy.types.Operator):
     bl_label = "Clean Model"
     bl_options = {"REGISTER", "UNDO"}
 
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and context.mode in {'OBJECT', 'EDIT_MESH'})
+
     def execute(self, context):
 
         if bpy.context.selected_objects == []:
@@ -429,8 +434,9 @@ class OPENDENTAL_OT_clean_model(bpy.types.Operator):
             
             ####### Get model to clean ####### 
             bpy.ops.object.mode_set(mode="OBJECT")
-            bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
             Model = bpy.context.view_layer.objects.active
+            if Model.data.users > 1:
+                Model.data = Model.data.copy()
             Model_name = Model.name
             bpy.ops.object.select_all(action="DESELECT")
             Model.select_set(True)
@@ -464,32 +470,38 @@ class OPENDENTAL_OT_clean_model(bpy.types.Operator):
 
             ####### Remove loose geometry #######
             
-            # Separate parts :
-
-            bpy.ops.mesh.select_all(action="SELECT")
-            bpy.ops.mesh.separate(type="LOOSE")
-            bpy.ops.object.mode_set(mode="OBJECT")
-
-            # Calculate parts volumes and deslect the big volume :
-
-            list_vol = []
-            for obj in bpy.context.selected_objects:
-                obj_dim = obj.dimensions
-                obj_vol = obj_dim[0] * obj_dim[1] * obj_dim[2]
-                list_vol.append(obj_vol)
-
-            for obj in bpy.context.selected_objects:
-                obj_dim = obj.dimensions
-                obj_vol = obj_dim[0] * obj_dim[1] * obj_dim[2]
-                if obj_vol > max(list_vol) - 1:
-                    obj.select_set(False)
-
-            # Delete small parts :
-            
-            bpy.ops.object.delete(use_global=False, confirm=False)
-            Model = bpy.data.objects[Model_name]
+            # Keep the largest connected surface without separating/deleting objects.
+            bpy.ops.object.mode_set(mode='OBJECT')
+            bm = bmesh.new()
+            try:
+                bm.from_mesh(Model.data)
+                remaining = set(bm.verts)
+                components = []
+                while remaining:
+                    pending = [remaining.pop()]
+                    component = set(pending)
+                    while pending:
+                        vertex = pending.pop()
+                        for edge in vertex.link_edges:
+                            neighbor = edge.other_vert(vertex)
+                            if neighbor in remaining:
+                                remaining.remove(neighbor)
+                                component.add(neighbor)
+                                pending.append(neighbor)
+                    components.append(component)
+                def size(component):
+                    spans = [max(v.co[i] for v in component) - min(v.co[i] for v in component) for i in range(3)]
+                    faces = {face for vertex in component for face in vertex.link_faces}
+                    return (math.prod(spans), sum(face.calc_area() for face in faces), len(component))
+                if components:
+                    principal = max(components, key=size)
+                    bmesh.ops.delete(bm, geom=[v for v in bm.verts if v not in principal], context='VERTS')
+                bm.to_mesh(Model.data)
+            finally:
+                bm.free()
+            context.view_layer.objects.active = Model
             Model.select_set(True)
-            
+
             t3 = time.perf_counter()
             print(f"step 3 Done in {t3-t2}")
 
@@ -509,9 +521,8 @@ class OPENDENTAL_OT_clean_model(bpy.types.Operator):
             bpy.ops.object.mode_set(mode="EDIT")
             bpy.ops.mesh.select_all(action="DESELECT")
             bpy.ops.mesh.select_non_manifold()
-            bpy.ops.mesh.looptools_relax(
-                input="selected", interpolation="cubic", iterations="3", regular=True
-            )
+            from .mesh_loop_tools import relax_selected
+            relax_selected(Model.data, iterations=3)
 
             t5 = time.perf_counter()
             print(f"step 5 Done in {t5-t4}")
@@ -521,7 +532,9 @@ class OPENDENTAL_OT_clean_model(bpy.types.Operator):
             
             bpy.ops.object.mode_set(mode="EDIT")
             bpy.ops.mesh.select_all(action="SELECT")
-            bpy.ops.mesh.normals_make_consistent(inside=False)
+            bm = bmesh.from_edit_mesh(Model.data)
+            bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+            bmesh.update_edit_mesh(Model.data)
             bpy.ops.mesh.select_all(action="DESELECT")
             bpy.ops.object.mode_set(mode="OBJECT")
 
