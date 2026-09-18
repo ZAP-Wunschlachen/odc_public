@@ -940,6 +940,9 @@ class OPENDENTAL_OT_curve_cut(bpy.types.Operator):
         Model_name = context.scene.ODC_modops_props.cutting_target
         Model = bpy.data.objects[Model_name]
         cutting_tool = get_cutting_curve()
+        import uuid
+        Model['odc_curve_cut_session'] = uuid.uuid4().hex
+        Model['odc_curve_cut_original_name'] = Model.name
 
         bpy.context.tool_settings.mesh_select_mode = (True, False, False)
         bpy.context.scene.tool_settings.use_snap = False
@@ -1068,36 +1071,46 @@ class OPENDENTAL_OT_curve_cut(bpy.types.Operator):
 ####################################################################################### 
 #Trim model operator :
 
-class OPENDENTAL_OT_trim_model(bpy.types.Operator): 
-    " keep selected part and remove inselected"
+class OPENDENTAL_OT_trim_model(bpy.types.Operator):
+    """Keep selected curve-cut pieces and remove only their unselected siblings."""
+    bl_idname = 'opendental.trim_model'
+    bl_label = 'Trim Model'
+    bl_options = {'REGISTER', 'UNDO'}
 
-    bl_idname = "opendental.trim_model"
-    bl_label = "Trim Model"
+    @classmethod
+    def poll(cls, context):
+        return context.mode == 'OBJECT' and context.object is not None
 
     def execute(self, context):
-
-        if bpy.context.selected_objects == []:
-
-            message = " Please select Model !"
-            ShowMessageBox(message=message, icon="COLORSET_02_VEC")
-
-            return {"CANCELLED"}
-
-        else:
-            bpy.ops.object.mode_set(mode = 'OBJECT')
-            Model = bpy.context.view_layer.objects.active
-            Model_name = context.scene.ODC_modops_props.cutting_target
-            Model.name = Model_name
-            Model.data.name = f'{Model_name}_mesh'
-            bpy.ops.object.select_all(action='INVERT')
-            bpy.ops.object.delete(use_global=False, confirm=False)
-            Model.select_set(True)
-            bpy.context.view_layer.objects.active = Model
-            bpy.ops.object.mode_set(mode = 'EDIT')
-            bpy.ops.mesh.select_all(action="DESELECT")
-            bpy.ops.object.mode_set(mode = 'OBJECT')
-
-            return {"FINISHED"}
+        model = context.object
+        session = model.get('odc_curve_cut_session')
+        if not session or not model.select_get():
+            self.report({'WARNING'}, 'Select a part from a curve-cut operation')
+            return {'CANCELLED'}
+        parts = [obj for obj in context.scene.objects if obj.get('odc_curve_cut_session') == session]
+        keep = [obj for obj in parts if obj.select_get()]
+        original_name = model.get('odc_curve_cut_original_name', model.name)
+        for obj in parts:
+            if obj not in keep:
+                mesh = obj.data
+                bpy.data.objects.remove(obj, do_unlink=True)
+                if mesh.users == 0:
+                    bpy.data.meshes.remove(mesh)
+        model.name = original_name
+        model.data.name = original_name + '_mesh'
+        context.scene.ODC_modops_props.cutting_target = model.name
+        for obj in keep:
+            del obj['odc_curve_cut_session']
+            if 'odc_curve_cut_original_name' in obj:
+                del obj['odc_curve_cut_original_name']
+            for vertex in obj.data.vertices:
+                vertex.select = False
+            for edge in obj.data.edges:
+                edge.select = False
+            for face in obj.data.polygons:
+                face.select = False
+        context.view_layer.objects.active = model
+        return {'FINISHED'}
 
 #######################################################################################
 

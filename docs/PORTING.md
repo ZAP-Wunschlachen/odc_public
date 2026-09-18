@@ -1345,3 +1345,17 @@ triangle mesh survive unchanged. This fixture constructs the input curve directl
 full click-to-cut flow, exact cut-boundary accuracy, fallback-method behavior,
 source vertex-group preservation and the subsequent Trim Model step remain open.
 The test is excluded from the headless runner.
+
+### Trim Model after curve cutting
+
+Each curve-cut operation now marks its output pieces with a distinct session ID and
+original model name. Trim retains all selected pieces in the active piece's session
+and removes only unselected siblings, including unused mesh datablocks. It no longer
+inverts selection and deletes unrelated visible objects. Untagged objects are rejected.
+
+The foreground curve-cut test now completes trimming to one cap, verifies its geometry
+is unchanged, restores the original model name and preserves unrelated objects.
+`test_trim_model.py` also passes headlessly for two retained pieces, deletion of a third,
+and preservation of a fourth piece from a different cut session. Session tags are
+cleared on retained pieces. Migrating pre-existing untagged cut pieces and recovery
+from failures during the upstream cut operation remain unverified.

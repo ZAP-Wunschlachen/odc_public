@@ -27,7 +27,20 @@ def run():
         assert other.name in bpy.data.objects
         assert foreign.name in bpy.data.objects and foreign.data==foreign_mesh
         assert len(foreign_mesh.vertices)==3 and len(foreign_mesh.polygons)==1
-        print('ODC_CURVE_CUT_PASSED',[(o.name,len(o.data.vertices)) for o in outputs],flush=True)
+        session=outputs[0].get('odc_curve_cut_session')
+        assert session and all(o.get('odc_curve_cut_session')==session for o in outputs)
+        bpy.ops.object.select_all(action='DESELECT')
+        retained=max(outputs,key=lambda o:sum(v.co.z for v in o.data.vertices)/len(o.data.vertices))
+        retained.select_set(True);bpy.context.view_layer.objects.active=retained
+        before_coords=[v.co.copy() for v in retained.data.vertices]
+        assert bpy.ops.opendental.trim_model()=={'FINISHED'}
+        assert [o for o in bpy.context.scene.objects if o.type=='MESH' and o!=foreign]==[retained]
+        assert retained.name=='Sphere'
+        assert before_coords==[v.co for v in retained.data.vertices]
+        assert foreign.name in bpy.data.objects and other.name in bpy.data.objects
+        assert retained.get('odc_curve_cut_session') is None
+        assert bpy.ops.opendental.trim_model()=={'CANCELLED'}
+        print('ODC_CURVE_CUT_PASSED' ,retained.name,flush=True)
         bpy.ops.wm.quit_blender()
     except Exception:
         traceback.print_exc();os._exit(1)
