@@ -29,3 +29,22 @@ def relax_selected(mesh, iterations=3):
                 bm, 'cubic', tknots, knots, tpoints, points, splines):
             bm.verts[index].co = location
     bmesh.update_edit_mesh(mesh)
+
+
+def space_selected(mesh):
+    """Space selected boundary vertices with the bundled cubic spline algorithm."""
+    bm = bmesh.from_edit_mesh(mesh)
+    bm.verts.ensure_lookup_table()
+    bm.edges.ensure_lookup_table()
+    loops = loops_tools.get_connected_selections([
+        loops_tools.edgekey(edge) for edge in bm.edges if edge.select and not edge.hide])
+    for indices, circular in loops_tools.check_loops(loops, False, bm):
+        knots = indices + [indices[0]] if circular else indices[:]
+        tknots, tpoints = loops_tools.space_calculate_t(bm, knots)
+        if not tknots[-1]:
+            continue
+        splines = loops_tools.calculate_splines('cubic', bm, tknots, knots)
+        for index, location in loops_tools.space_calculate_verts(
+                bm, 'cubic', tknots, tpoints, indices, splines):
+            bm.verts[index].co = location
+    bmesh.update_edit_mesh(mesh)

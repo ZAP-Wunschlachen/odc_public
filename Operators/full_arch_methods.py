@@ -20,6 +20,7 @@ from ..Addon_utils import odcutils
 from ..Addon_utils.odcutils import get_com
 
 from ..Operators import crown_methods
+from .mesh_loop_tools import space_selected
 from ..Operators.mesh_cut import cross_section_seed_ver1, bound_box
 
 #enums?
@@ -763,7 +764,22 @@ def keep_arch_plan(context, curve, debug=False):
     context.view_layer.update()
 
 
-def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
+def cloth_fill_main(context, loop_obj, oct, smooth, debug=False):
+    settings = context.tool_settings
+    cursor = context.scene.cursor.location.copy()
+    selection_mode = tuple(settings.mesh_select_mode)
+    pivot = settings.transform_pivot_point
+    orientation = context.scene.transform_orientation_slots[0].type
+    try:
+        return _cloth_fill_main(context, loop_obj, oct, smooth, debug)
+    finally:
+        context.scene.cursor.location = cursor
+        settings.mesh_select_mode = selection_mode
+        settings.transform_pivot_point = pivot
+        context.scene.transform_orientation_slots[0].type = orientation
+
+
+def _cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
     '''
     notes:
        make sure the user view is such that you can see the entire ring with
@@ -786,8 +802,8 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
     
     #get the space data
     v3d = bpy.context.space_data
-    v3d.transform_orientation = 'GLOBAL'
-    v3d.pivot_point = 'MEDIAN_POINT'
+    sce.transform_orientation_slots[0].type = 'GLOBAL'
+    context.tool_settings.transform_pivot_point = 'MEDIAN_POINT'
     
     region = v3d.region_3d        
     vrot = region.view_rotation #this is a quat
@@ -797,12 +813,16 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
         bpy.ops.object.mode_set(mode='OBJECT')
     
     bpy.ops.object.select_all(action='DESELECT')
-    context.scene.objects.active = loop_obj
-    loop_obj.select = True
+    source = loop_obj
+    loop_obj = source.copy()
+    loop_obj.data = source.data.copy()
+    context.collection.objects.link(loop_obj)
+    context.view_layer.objects.active = loop_obj
+    loop_obj.select_set(True)
     
     #change the mesh orientation to align with view..for blockout
     odcutils.reorient_object(loop_obj, vrot) #TODO test this
-    sce.update()
+    context.view_layer.update()
         
     if loop_obj.type in {'CURVE','MESH'}:
         if loop_obj.type == 'CURVE':
@@ -811,8 +831,10 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
                 loop_obj.data.splines[0].use_cyclic_u = True #TODO: add this over to margin
 
             #convert the curve to a mesh...so we can use it.
-            bpy.ops.object.duplicate()
+            curve_data = loop_obj.data
             bpy.ops.object.convert(target='MESH', keep_original = False)
+            if curve_data.users == 0:
+                bpy.data.curves.remove(curve_data)
             #active object is now the mesh version of the curve
             
         else:
@@ -821,8 +843,7 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
                 print('this is not a loop')
                 return
             else:
-                bpy.ops.object.duplicate()
-                #active object is now the mesh duplicate
+                pass  # The working mesh is already an independent copy.
     
     #this will become our final cloth filled objec
     CurveMesh = context.object
@@ -854,7 +875,7 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
     bpy.ops.object.editmode_toggle()
     
     eds = [ed for ed in Temp.data.edges if ed.select]
-    barrier = .05 * min(Temp.dimensions)
+    barrier = max(.05 * size, grid_predict)
     odcutils.extrude_edges_out_view(Temp.data, eds, Temp.matrix_world, barrier/5, debug = debug)
     bpy.ops.object.editmode_toggle()
     
@@ -871,12 +892,12 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
     bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.select_all(action='DESELECT')
     
-    CurveMesh.select = True
-    sce.objects.active = CurveMesh
+    CurveMesh.select_set(True)
+    context.view_layer.objects.active = CurveMesh
     CurveMesh.rotation_mode = 'QUATERNION'
     
     #make the origin the same as the bez curve?
-    sce.cursor_location = loop_obj.location
+    sce.cursor.location = loop_obj.location
     bpy.ops.object.origin_set(type = 'ORIGIN_CURSOR')
     
     if CurveMesh.parent:
@@ -886,7 +907,7 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
         CurveMesh.parent = None
         CurveMesh.matrix_world = wmx
     else:
-        wmx = Matrix.Identity(4)
+        wmx = CurveMesh.matrix_world.copy()
         reparent = False
     #unrotate it so we can make a nice remesh surface
     #although why this doesn't work with local coords I dunno
@@ -898,10 +919,10 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
     bpy.ops.mesh.select_all(action='SELECT')
     #get the space data
     v3d = bpy.context.space_data
-    v3d.transform_orientation = 'LOCAL'
-    v3d.pivot_point = 'MEDIAN_POINT'
-    bpy.ops.transform.resize(value=(1, 1, 0), constraint_orientation='LOCAL')
-    bpy.ops.mesh.looptools_space()
+    sce.transform_orientation_slots[0].type = 'LOCAL'
+    context.tool_settings.transform_pivot_point = 'MEDIAN_POINT'
+    bpy.ops.transform.resize(value=(1, 1, 0), orient_type='LOCAL')
+    space_selected(CurveMesh.data)
     bpy.ops.mesh.fill()
 
     #add modifiers
@@ -913,6 +934,7 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
     solmod.thickness = grid_predict * .75
     
     remod = CurveMesh.modifiers["Remesh"]
+    remod.mode = 'SHARP'
     remod.octree_depth = oct
     remod.scale = .9
     
@@ -922,20 +944,23 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
     
 
     #problem with applying modifiers...new method.
-    mesh = CurveMesh.to_mesh(bpy.context.scene, True, 'RENDER')
+    mesh = bpy.data.meshes.new_from_object(CurveMesh.evaluated_get(context.evaluated_depsgraph_get()))
     new_obj = bpy.data.objects.new(CurveMesh.name, mesh)
-    bpy.context.scene.objects.link(new_obj)
+    context.collection.objects.link(new_obj)
     new_obj.matrix_world = wmx
     
-    bpy.context.scene.objects.active = new_obj
+    context.view_layer.objects.active = new_obj
     
-    CurveMesh.select = True
-    bpy.context.scene.objects.active = CurveMesh
+    CurveMesh.select_set(True)
+    context.view_layer.objects.active = CurveMesh
+    obsolete_mesh = CurveMesh.data
     bpy.ops.object.delete()
+    if obsolete_mesh.users == 0:
+        bpy.data.meshes.remove(obsolete_mesh)
     
-    new_obj.select = True
+    new_obj.select_set(True)
     CurveMesh = new_obj
-    bpy.context.scene.objects.active = CurveMesh
+    context.view_layer.objects.active = CurveMesh
     '''
     bpy.ops.object.modifier_apply(modifier="Solidify")
     
@@ -996,19 +1021,22 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
     
     if reparent:
         CurveMesh.update_tag()
-        sce.update()
+        context.view_layer.update()
         odcutils.parent_in_place(CurveMesh, Parent)
         
     
     bpy.ops.object.select_all(action='DESELECT')
 
     if debug < 3:
-        Temp.select = True
-        sce.objects.active=Temp
+        Temp.select_set(True)
+        context.view_layer.objects.active=Temp
+        obsolete_mesh = Temp.data
         bpy.ops.object.delete()
+        if obsolete_mesh.users == 0:
+            bpy.data.meshes.remove(obsolete_mesh)
 
-    CurveMesh.select = True
-    sce.objects.active = CurveMesh
+    CurveMesh.select_set(True)
+    context.view_layer.objects.active = CurveMesh
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='DESELECT')
     
@@ -1024,7 +1052,7 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
         for ed in CurveMesh.data.edges:
             v0 = CurveMesh.data.vertices[ed.vertices[0]]
             v1 = CurveMesh.data.vertices[ed.vertices[1]]
-            V = mx*v1.co - mx*v0.co
+            V = mx @ v1.co - mx @ v0.co
             sum_edges += V.length
             
         avg_edge = sum_edges/len(CurveMesh.data.edges)

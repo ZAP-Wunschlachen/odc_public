@@ -463,7 +463,12 @@
     "class": "OPENDENTAL_OT_ClothFillTray",
     "bl_idname": "opendental.cloth_fill_tray",
     "bl_label": "Cloth Fill Tray",
-    "test_status": "pending"
+    "test_status": "partial_geometry_test_blender_5_1_2",
+    "test_files": [
+      "tests/test_cloth_fill_validation.py",
+      "tests/test_cloth_fill_geometry.py"
+    ],
+    "test_scope": "Invalid boundary rejection; tilted planar mesh/Bezier loops at octree depth 5, connected surface, parenting, original data and temporary-data/settings cleanup"
   },
   {
     "module": "Operators/implant.py",

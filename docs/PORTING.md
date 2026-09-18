@@ -1477,3 +1477,25 @@ This is not a completed tray-fill port: `cloth_fill_main` still contains removed
 SpaceView3D transform settings, old object selection/linking/to_mesh calls and
 an external LoopTools operator call. Its valid-input geometry pipeline remains
 to be ported and tested. Do not treat the new validation test as geometry proof.
+
+### Cloth Fill Tray API port and planar geometry
+
+Ported `cloth_fill_main` to current selection, active-object, scene linking,
+transform settings, evaluated-mesh and matrix APIs. Vertex spacing uses the
+bundled LoopTools cubic spline algorithm through `space_selected`, without an
+external addon operator. Remesh is explicitly SHARP/Octree; Blender 5's default
+VOXEL mode otherwise ignores the requested octree resolution. The projection
+helper must extend beyond the boundary even when input Z thickness is zero.
+An independent working copy protects the source, and unparented output now keeps
+its original world transform. Temporary mesh/curve data and cursor, pivot,
+orientation and mesh selection mode are cleaned/restored on the successful path.
+
+`test_cloth_fill_geometry.py` passes in the foreground on Blender 5.1.2 for a
+translated, tilted mesh circle and a parented Bézier circle at octree depth 5.
+It verifies nonempty connected disk topology, plane/radius bounds, source mesh
+or curve data and transform preservation, output parenting, no extra objects or
+mesh/curve datablocks, and restoration of tool settings. No draw tracebacks.
+This supersedes the earlier note that the primary helper still uses removed APIs.
+Nonplanar/concave boundaries, the full resolution range and cleanup after an
+intermediate geometry failure still need verification. The separate legacy
+`cloth_fill_main2` has not been ported by this change.

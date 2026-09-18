@@ -1069,7 +1069,7 @@ def extrude_edges_out_view(me, edges, mx, res, debug = False):
     region = space.region_3d        
     vrot = region.view_rotation
     align = vrot.inverted()   
-    z = vrot * Vector((0,0,1))
+    z = vrot @ Vector((0,0,1))
     
     extrude_edges_in(me, edges, mx, z, -1*res, debug)
    
