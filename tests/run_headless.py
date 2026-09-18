@@ -34,9 +34,11 @@ for path, extra in cases:
             timed_out = True
             returncode = None
     text = log_path.read_text(errors='replace')
-    failed = timed_out or returncode != 0 or 'Traceback (most recent call last)' in text
+    dependency_cycle = 'Dependency cycle detected' in text
+    failed = (timed_out or returncode != 0 or dependency_cycle
+              or 'Traceback (most recent call last)' in text)
     result = {'test': name, 'passed': not failed, 'returncode': returncode,
-              'timeout': timed_out, 'shutdown_allocation_warning': 'Not freed memory blocks' in text,
+              'timeout': timed_out, 'dependency_cycle': dependency_cycle, 'shutdown_allocation_warning': 'Not freed memory blocks' in text,
               'log': str(log_path.relative_to(ROOT))}
     results.append(result)
     print(name, 'FAIL' if failed else 'PASS', flush=True)

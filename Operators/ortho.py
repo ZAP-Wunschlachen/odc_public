@@ -872,10 +872,12 @@ class OPENDENTAL_OT_physics_scene(bpy.types.Operator):
         sources = [(obj, obj.matrix_world.copy()) for obj in context.selected_objects if obj.type == 'MESH']
         scene = bpy.data.scenes.get('Physics Sim') or bpy.data.scenes.new('Physics Sim')
         # Remove only our previous copies; unrelated scene objects are preserved.
-        for obj in list(scene.objects):
+        physics_collection = scene.rigidbody_world.collection if scene.rigidbody_world else None
+        for obj in sorted(scene.objects, key=lambda item: item.type == 'MESH'):
             if obj.get('odc_physics_copy'):
                 for collection in list(obj.users_collection):
-                    if collection == scene.collection or collection in scene.collection.children_recursive:
+                    if (collection == scene.collection or collection == physics_collection
+                            or collection in scene.collection.children_recursive):
                         collection.objects.unlink(obj)
                 if obj.users == 0:
                     bpy.data.objects.remove(obj)
@@ -961,6 +963,29 @@ class OPENDENTAL_OT_physics_setup(bpy.types.Operator):
 
         return {'FINISHED'}
 
+@bpy.app.handlers.persistent
+def update_tooth_forcefields(scene, depsgraph=None):
+    """Use the preceding evaluated pose without a dependency on the rigid-body solve.
+
+    Parenting an effector to its own simulated body introduces a depsgraph cycle.
+    Update before each frame instead; rewinding to the cache start restores the
+    body's input transform. Sequential playback supplies the previous frame pose.
+    """
+    if not scene.rigidbody_world:
+        return
+    start = scene.rigidbody_world.point_cache.frame_start
+    graph = scene.view_layers[0].depsgraph
+    for field in scene.objects:
+        if not field.get('odc_tooth_forcefield'):
+            continue
+        body = field.get('odc_forcefield_body')
+        if not isinstance(body, bpy.types.Object) or body.name not in scene.objects:
+            continue
+        world = (body.matrix_world if scene.frame_current <= start
+                 else body.evaluated_get(graph).matrix_world)
+        field.matrix_world = world.copy()
+
+
 class OPENDENTAL_OT_add_forcefields(bpy.types.Operator):
     '''Add forcefields to selected objects'''
     bl_idname = "opendental.add_forcefields"
@@ -979,15 +1004,18 @@ class OPENDENTAL_OT_add_forcefields(bpy.types.Operator):
 
         for ob in obs:
             if ob.type != 'MESH': continue
-            empty = next((child for child in ob.children if child.get('odc_tooth_forcefield')), None)
+            empty = next((item for item in context.scene.objects
+                          if item.get('odc_tooth_forcefield')
+                          and (item.get('odc_forcefield_body') == ob or item.parent == ob)), None)
             if empty is None:
                 empty = bpy.data.objects.new(ob.name[0:2] + 'force', None)
                 context.scene.collection.objects.link(empty)
                 empty['odc_tooth_forcefield'] = True
                 empty['odc_physics_copy'] = True
             context.view_layer.objects.active = empty
-            empty.parent = ob
-            empty.matrix_world = ob.matrix_world
+            empty.parent = None
+            empty['odc_forcefield_body'] = ob
+            empty.matrix_world = ob.matrix_world.copy()
             empty.select_set(True)
             if empty.field is None or empty.field.type == 'NONE':
                 bpy.ops.object.forcefield_toggle()
@@ -997,8 +1025,11 @@ class OPENDENTAL_OT_add_forcefields(bpy.types.Operator):
             empty.field.use_radial_max = True
             empty.field.radial_min = ob.dimensions[0]/1.8
             empty.field.radial_max = 10
+            # Tag effector relations after forcefield_toggle creates the settings.
+            empty.field.type = 'FORCE'
             empty.select_set(False)
 
+        context.view_layer.update()
         return {'FINISHED'}
 
 class OPENDENTAL_OT_limit_movements(bpy.types.Operator):
@@ -1180,6 +1211,8 @@ class OPENDENTAL_OT_keep_simulation_result(bpy.types.Operator):
 
 
 def register():
+    if update_tooth_forcefields not in bpy.app.handlers.frame_change_pre:
+        bpy.app.handlers.frame_change_pre.append(update_tooth_forcefields)
     bpy.utils.register_class(OPENDENTAL_OT_mandibular_view)
     bpy.utils.register_class(OPENDENTAL_OT_maxillary_view)
     bpy.utils.register_class(OPENDENTAL_OT_left_view)
@@ -1202,6 +1235,8 @@ def register():
     
     
 def unregister():
+    if update_tooth_forcefields in bpy.app.handlers.frame_change_pre:
+        bpy.app.handlers.frame_change_pre.remove(update_tooth_forcefields)
     bpy.utils.unregister_class(OPENDENTAL_OT_simple_ortho_base)
     bpy.utils.unregister_class(OPENDENTAL_OT_physics_scene)
     bpy.utils.unregister_class(OPENDENTAL_OT_physics_setup)

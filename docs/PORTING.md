@@ -1399,3 +1399,32 @@ targeting the margin, excludes pontics from margin acceptance requirements,
 and reports missing/empty plan members instead of raising a handler exception.
 This validates help status reporting, not clinical geometry or the unfinished
 surgical-guide help content.
+
+### Forcefield dynamics and dependency cycles
+
+Replaced rigid-body-parented effectors with tagged body references and a
+persistent pre-frame updater. Fields follow the preceding evaluated body pose;
+rewinding to the rigid-body cache start restores input transforms. This avoids
+the graph cycle between a parented field and the simulation it influences.
+Explicitly setting the FORCE type after creating its settings is also required:
+without this relation update, the two-body test moved only one body even with
+no reported cycle. Rebuilding removes field references before their body copies.
+
+`test_physics_dynamics.py` passes in Blender 5.1.2: two equal bodies attract
+symmetrically over 30 sequential frames, field positions follow the preceding
+poses, rewind/replay reproduces the trajectory, originals remain unchanged until
+Keep Results, evaluated results transfer correctly, and disabling the addon
+removes the frame handler. The existing scene, lock and limits tests also pass
+without cycle warnings. The headless runner now rejects dependency-cycle logs.
+
+This supersedes the earlier unresolved-cycle notes for freshly created fields.
+Old parented fields are migrated when Add Forcefields is run again. Arbitrary
+frame jumps, baked-cache/file reload behavior, collision settling on real tooth
+meshes and movement-limit enforcement during simulation still need verification.
+
+The subsequent full headless run passed 76/77 cases with zero dependency-cycle
+reports. The stricter scene test exposed an old copy retained by the rigid-body
+world collection on rebuild. Cleanup now also unlinks our copies from that
+collection; the formerly failing scene test passes separately, including a
+check across all object datablocks for leftover tagged copies. The aggregate
+results JSON is from before this final cleanup correction.

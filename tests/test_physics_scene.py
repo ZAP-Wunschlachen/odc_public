@@ -18,6 +18,7 @@ for attempt in range(2):
     assert scene.name == 'Physics Sim'
     copies = [o for o in scene.objects if o.get('odc_physics_copy') and o.type == 'MESH']
     assert len(copies) == 1
+    assert sum(bool(o.get('odc_physics_copy')) for o in bpy.data.objects) == 1, [(o.name, o.users, [c.name for c in o.users_collection]) for o in bpy.data.objects if o.get('odc_physics_copy')]
     copy = copies[0]
     assert copy != source and copy.data == source.data
     assert copy.matrix_world == source.matrix_world
@@ -28,7 +29,7 @@ for attempt in range(2):
         copy.select_set(True)
         bpy.context.view_layer.objects.active = copy
         assert bpy.ops.opendental.add_forcefields() == {'FINISHED'}
-        fields = [child for child in copy.children if child.get('odc_tooth_forcefield')]
+        fields = [item for item in scene.objects if item.get('odc_forcefield_body') == copy]
         assert len(fields) == 1
         field = fields[0]
         bpy.context.view_layer.update()
