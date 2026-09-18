@@ -15,6 +15,12 @@ def cap(name,radius,height):
     obj=bpy.data.objects.new(name,mesh);bpy.context.collection.objects.link(obj)
     obj.matrix_world=Matrix.Translation((3,4,5));return obj
 outer=cap('Outer',2,4);inner=cap('Inner',1.5,3.5)
+outer_material=bpy.data.materials.new('Outer material')
+inner_material=bpy.data.materials.new('Inner material')
+outer.data.materials.append(outer_material)
+inner.data.materials.append(outer_material)
+inner.material_slots[0].link='OBJECT'
+inner.material_slots[0].material=inner_material
 tooth.contour=outer.name;tooth.intaglio=inner.name
 outer.select_set(True);bpy.context.view_layer.objects.active=outer
 original=[v.co.copy() for v in outer.data.vertices]
@@ -31,6 +37,17 @@ assert [v.co for v in outer.data.vertices]==original
 assert outer.modifiers.get('Subdivision')==mod
 assert inner.name in bpy.data.objects and collision.name in bpy.data.objects
 assert min(v.co.x for v in result.data.vertices)>0
+assert list(result.data.materials)==[outer_material,inner_material], [m.name if m else None for m in result.data.materials]
+inner_faces=[p for p in result.data.polygons if p.material_index==1]
+assert len(inner_faces)>=len(inner.data.polygons)
+assert outer.data.materials[0]==outer_material and inner.data.materials[0]==outer_material
+assert inner.material_slots[0].material==inner_material
+# Empty material slots remain empty rather than inheriting the other surface material.
+outer.data.materials.clear()
+outer.select_set(True);result.select_set(False)
+bpy.context.view_layer.objects.active=outer
+assert bpy.ops.opendental.manufacture_restoration()=={'FINISHED'}
+assert list(bpy.data.objects[tooth.solid].data.materials)==[None,inner_material]
 # Missing input must not produce a partial object.
 objects_before=set(bpy.data.objects)
 tooth.intaglio='Missing'

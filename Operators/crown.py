@@ -1180,12 +1180,21 @@ class OPENDENTAL_OT_manufacture_restoration(bpy.types.Operator):
         try:
             for tooth, shell, inside in pairs:
                 bm = bmesh.new()
+                materials = []
                 try:
                     for source in (shell, inside):
                         evaluated = source.evaluated_get(context.evaluated_depsgraph_get())
                         mesh = bpy.data.meshes.new_from_object(evaluated)
                         try:
                             mesh.transform(source.matrix_world)
+                            mapping = []
+                            for material in [slot.material for slot in evaluated.material_slots] or [None]:
+                                material = material.original if material is not None else None
+                                if material not in materials:
+                                    materials.append(material)
+                                mapping.append(materials.index(material))
+                            for polygon in mesh.polygons:
+                                polygon.material_index = mapping[min(polygon.material_index, len(mapping) - 1)]
                             bm.from_mesh(mesh)
                         finally:
                             bpy.data.meshes.remove(mesh)
@@ -1198,6 +1207,8 @@ class OPENDENTAL_OT_manufacture_restoration(bpy.types.Operator):
                         raise ValueError('The margin loops could not be joined into a closed restoration')
                     mesh = bpy.data.meshes.new(tooth.name + '_Solid Crown')
                     bm.to_mesh(mesh)
+                    for material in materials:
+                        mesh.materials.append(material)
                     prepared.append((tooth, mesh))
                 finally:
                     bm.free()

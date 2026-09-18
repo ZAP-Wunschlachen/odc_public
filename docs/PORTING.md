@@ -1186,3 +1186,11 @@ and finite coordinates; its additional transform application/rotation is retaine
 and its geometric semantics remain unresolved. It must not be treated as verified
 world-geometry preservation for that option. This foreground test is excluded from
 the headless runner.
+
+Manufacture Restoration now also retains material slots and remaps each evaluated
+surface's polygon indices to the combined slot list. Object-level material overrides
+are read from evaluated slots and resolved to their original material datablocks;
+empty slots remain empty. The extended manufacture regression passes for distinct
+outer/inner materials, an object-linked inner override, unchanged source material
+links, and an unassigned outer surface. This closes the previously noted material-slot
+preservation gap for these cases; general geometry validity remains as documented.
