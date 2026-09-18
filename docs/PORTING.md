@@ -1056,3 +1056,23 @@ The base variant is included in the isolated headless runner. These tests verify
 execution/topology only: anatomical validity, shell thickness/clearance accuracy,
 flat or sparse painted patches, and failure rollback later in finalization are
 still unverified. The legacy remeshing and smoothing pipeline is retained.
+
+### Camera projection helpers and regression run
+
+Updated image-registration helpers for matrix multiplication, integer render
+resolution, flattened camera translation, object name display and view-layer
+updates. The intrinsic calibration now respects sensor fit, render aspect and
+camera shifts. The previous horizontal-fit formula produced a vertical projection
+error against Blender's own `world_to_camera_view`; the regression reproduces and
+now prevents that error. The interactive scene ray cast accepts the dependency graph.
+
+`test_image_camera.py` passes: four world points match Blender projection, a centered
+camera reconstructs from its projection matrix, and projection matches for all
+three sensor-fit modes, portrait/landscape resolutions, three pixel aspects,
+75% render scale and nonzero shifts. Reconstruction of shifted/asymmetric cameras,
+DLT point fitting and the full interactive image-registration workflow remain open.
+
+The isolated headless suite ran 67 cases with 67 passes after the splint changes;
+the new camera test was run separately afterward. This excludes foreground UI
+regressions and does not resolve previously documented physics dependency-cycle
+or native allocation warnings.

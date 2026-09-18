@@ -148,9 +148,9 @@ def get_blender_camera_from_3x4_P(P, scale):
     # TODO include aspect ratio
     f_in_mm = K[0,0] / s_u
     # recover original resolution
-    scene.render.resolution_x = resolution_x_in_px / scale
-    scene.render.resolution_y = resolution_y_in_px / scale
-    scene.render.resolution_percentage = scale * 100
+    scene.render.resolution_x = round(float(resolution_x_in_px / scale))
+    scene.render.resolution_y = round(float(resolution_y_in_px / scale))
+    scene.render.resolution_percentage = round(scale * 100)
 
     # Use this if the projection matrix follows the convention listed in my answer to
     # http://blender.stackexchange.com/questions/38009/3x4-camera-matrix-from-blender-camera
@@ -166,8 +166,8 @@ def get_blender_camera_from_3x4_P(P, scale):
     #      (0, 0, 1)))
 
     R_cv2world = R_world2cv.T
-    rotation =  Matrix(R_cv2world.tolist()) * R_bcam2cv
-    location = -R_cv2world * T_world2cv
+    rotation = Matrix(R_cv2world.tolist()) @ R_bcam2cv
+    location = Vector(np.asarray(-R_cv2world * T_world2cv).reshape(3))
 
     # create a new camera
     bpy.ops.object.add(
@@ -183,7 +183,7 @@ def get_blender_camera_from_3x4_P(P, scale):
     cam.lens = f_in_mm 
     cam.lens_unit = 'MILLIMETERS'
     cam.sensor_width  = sensor_width_in_mm
-    ob.matrix_world = Matrix.Translation(location)*rotation.to_4x4()
+    ob.matrix_world = Matrix.Translation(location) @ rotation.to_4x4()
 
     #     cam.shift_x = -0.05
     #     cam.shift_y = 0.1
@@ -194,10 +194,11 @@ def get_blender_camera_from_3x4_P(P, scale):
     #     cam.dof_object = empty
 
     # Display
-    cam.show_name = True
+    ob.show_name = True
     # Make this the current camera
     scene.camera = ob
-    bpy.context.scene.update()
+    bpy.context.view_layer.update()
+    return ob
 
 def test2():
     P = Matrix([
@@ -223,39 +224,21 @@ def test2():
 # See notes on this in 
 # blender.stackexchange.com/questions/15102/what-is-blenders-camera-projection-matrix-model
 def get_calibration_matrix_K_from_blender(camd):
-    f_in_mm = camd.lens
     scene = bpy.context.scene
-    resolution_x_in_px = scene.render.resolution_x
-    resolution_y_in_px = scene.render.resolution_y
     scale = scene.render.resolution_percentage / 100
-    sensor_width_in_mm = camd.sensor_width
-    sensor_height_in_mm = camd.sensor_height
-    pixel_aspect_ratio = scene.render.pixel_aspect_x / scene.render.pixel_aspect_y
-    if (camd.sensor_fit == 'VERTICAL'):
-        # the sensor height is fixed (sensor fit is horizontal), 
-        # the sensor width is effectively changed with the pixel aspect ratio
-        s_u = resolution_x_in_px * scale / sensor_width_in_mm / pixel_aspect_ratio 
-        s_v = resolution_y_in_px * scale / sensor_height_in_mm
-    else: # 'HORIZONTAL' and 'AUTO'
-        # the sensor width is fixed (sensor fit is horizontal), 
-        # the sensor height is effectively changed with the pixel aspect ratio
-        pixel_aspect_ratio = scene.render.pixel_aspect_x / scene.render.pixel_aspect_y
-        s_u = resolution_x_in_px * scale / sensor_width_in_mm
-        s_v = resolution_y_in_px * scale * pixel_aspect_ratio / sensor_height_in_mm
-
-
-    # Parameters of intrinsic calibration matrix K
-    alpha_u = f_in_mm * s_u
-    alpha_v = f_in_mm * s_v
-    u_0 = resolution_x_in_px * scale / 2
-    v_0 = resolution_y_in_px * scale / 2
-    skew = 0 # only use rectangular pixels
-
-    K = Matrix(
-        ((alpha_u, skew,    u_0),
-        (    0  , alpha_v, v_0),
-        (    0  , 0,        1 )))
-    return K
+    width = scene.render.resolution_x * scale
+    height = scene.render.resolution_y * scale
+    aspect = scene.render.pixel_aspect_y / scene.render.pixel_aspect_x
+    fit = camd.sensor_fit
+    if fit == 'AUTO':
+        fit = 'HORIZONTAL' if width >= aspect * height else 'VERTICAL'
+    sensor = camd.sensor_height if camd.sensor_fit == 'VERTICAL' else camd.sensor_width
+    view_factor = width if fit == 'HORIZONTAL' else aspect * height
+    fx = camd.lens * view_factor / sensor
+    fy = fx / aspect
+    cx = width / 2 - camd.shift_x * view_factor
+    cy = height / 2 + camd.shift_y * view_factor / aspect
+    return Matrix(((fx, 0, cx), (0, fy, cy), (0, 0, 1)))
 
 # Returns camera rotation and translation matrices from Blender.
 # 
@@ -282,7 +265,7 @@ def get_3x4_RT_matrix_from_blender(cam):
     # Transpose since the rotation is object rotation, 
     # and we want coordinate rotation
     # R_world2bcam = cam.rotation_euler.to_matrix().transposed()
-    # T_world2bcam = -1*R_world2bcam * location
+    # T_world2bcam = -(R_world2bcam @ location)
     #
     # Use matrix_world instead to account for all constraints
     location, rotation = cam.matrix_world.decompose()[0:2]
@@ -291,11 +274,11 @@ def get_3x4_RT_matrix_from_blender(cam):
     # Convert camera location to translation vector used in coordinate changes
     # T_world2bcam = -1*R_world2bcam*cam.location
     # Use location from matrix_world to account for constraints:     
-    T_world2bcam = -1*R_world2bcam * location
+    T_world2bcam = -(R_world2bcam @ location)
 
     # Build the coordinate transform matrix from world to computer vision camera
-    R_world2cv = R_bcam2cv*R_world2bcam
-    T_world2cv = R_bcam2cv*T_world2bcam
+    R_world2cv = R_bcam2cv @ R_world2bcam
+    T_world2cv = R_bcam2cv @ T_world2bcam
 
     # put into 3x4 matrix
     RT = Matrix((
@@ -308,7 +291,7 @@ def get_3x4_RT_matrix_from_blender(cam):
 def get_3x4_P_matrix_from_blender(cam):
     K = get_calibration_matrix_K_from_blender(cam.data)
     RT = get_3x4_RT_matrix_from_blender(cam)
-    return K*RT, K, RT
+    return K @ RT, K, RT
 
 # ----------------------------------------------------------
 # Alternate 3D coordinates to 2D pixel coordinate projection code
@@ -586,7 +569,7 @@ class VIEW3D_OT_image_view3d_modal(bpy.types.Operator):
                 ray_origin = region_2d_to_origin_3d(region, rv3d, coord_region)
                 ray_target = ray_origin + (view_vector * 10000)
 
-                res, loc, no, ind, obj, mx = context.scene.ray_cast(ray_origin, view_vector)
+                res, loc, no, ind, obj, mx = context.scene.ray_cast(context.evaluated_depsgraph_get(), ray_origin, view_vector)
                 if res:
                     self.points_3d += [loc]
                     cam = bpy.data.objects.get('Test Camera')
