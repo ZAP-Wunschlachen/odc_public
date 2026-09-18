@@ -1738,3 +1738,34 @@ Fresh-process loading and repeating Physics Setup after limits exist remain
 separate integration cases; this test does not establish those behaviors.
 
 Current aggregate verification: `python3 tests/run_headless.py --blender /Applications/Blender.app/Contents/MacOS/Blender` completed with 92/92 passing isolated cases under Blender 5.1.2, no Python tracebacks or dependency cycles. Fourteen cases still report shutdown allocation warnings; this is not a leak-free claim. Foreground/modal tests are excluded by this runner.
+
+### Foreground suite and panel integration (Blender 5.1.2)
+
+All 24 previously existing foreground cases passed in separate Blender processes,
+with success markers, no tracebacks/dependency cycles and no shutdown allocation
+warnings. `tests/run_foreground.py` now provides a reproducible runner; its case
+catalog is shared with the headless runner so UI cases are not accidentally run
+without a window. The newly added panel and arch-curve cases passed separately.
+
+Real UILayout drawing of all eight ODC panels exposed a removed BRUSH_SMOOTH icon,
+legacy positional text arguments in the orthodontic panel, and an empty first
+material-slot crash. These are corrected. The panel regression covers empty and
+populated restoration lists, both cutting-tool branches, splint painting mode,
+frame zero/nonzero, deformation-modifier branches, and no active object. It also
+checks RNA availability for all 107 distinct operator IDs referenced by panels.
+It draws the actual methods in a verification popup; it is not a screenshot/layout
+quality check or a test that every panel button executes a complete workflow.
+
+The Draw Arch Curve button referenced an absent operator. A modal open Bezier arch
+creator now uses the existing CurveDataManager with scene snapping/fallback plane,
+click-to-add points, Backspace, Enter (minimum two points), and Escape cleanup.
+`test_arch_curve_modal.py` sends actual window events to verify insertion, removal,
+completion, active curve selection and downstream Teeth to Arch polling, plus
+cancel restoring the previous active selection without leaked objects/curve data.
+Navigation is passed through. Interactive point repositioning uses Blender's
+normal curve editing after completion; undo/redo and complete tooth placement
+from this specific output remain additional integration checks.
+
+Strict registration passes with 142 classes and 118 operators, including disable
+and re-enable. The earlier 92/92 headless result predates these panel/arch changes;
+only registration and the relevant new foreground cases were rerun afterward.

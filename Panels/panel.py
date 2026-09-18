@@ -234,7 +234,7 @@ class OPENDENTAL_PT_model_operations(bpy.types.Panel):
         row.prop(modops_props, "decimate_ratio", text="")
         row = col.row()
         row.operator("opendental.fill", text="Fill", icon="OUTLINER_OB_LIGHTPROBE")
-        row.operator("opendental.retopo_smooth", text="Retopo Smooth", icon="BRUSH_SMOOTH")
+        row.operator("opendental.retopo_smooth", text="Retopo Smooth", icon="MOD_SMOOTH")
         try :
             bpy.context.view_layer.objects.active
             if bpy.context.view_layer.objects.active.mode == "SCULPT" :
@@ -306,8 +306,8 @@ class OPENDENTAL_PT_model_operations(bpy.types.Panel):
         row.operator("opendental.model_color", text="Add Color", icon="MATERIAL")
         if bpy.context.active_object is not None :
             ob = bpy.context.active_object
-            if ob.material_slots :
-                row.prop(ob.material_slots[0].material, "diffuse_color", text= "" )
+            if ob.material_slots and ob.material_slots[0].material is not None:
+                row.prop(ob.material_slots[0].material, "diffuse_color", text="")
         else :
             row.prop(modops_props, "no_material_prop", text="")
 
@@ -753,24 +753,24 @@ class OPENDENTAL_PT_ODCOrtho(bpy.types.Panel):
 
         row = layout.row()
         col = row.column(align=True)
-        col.operator("opendental.add_bone_roots", "Add roots")
+        col.operator("opendental.add_bone_roots", text="Add roots")
         if context.mode == "OBJECT":
-            col.operator("opendental.adjust_bone_roots", "Adjust Roots")
+            col.operator("opendental.adjust_bone_roots", text="Adjust Roots")
         elif context.mode == "EDIT_ARMATURE" and context.object.type == "ARMATURE":
-            col.operator("object.mode_set", "Finish Roots").mode = "OBJECT"
+            col.operator("object.mode_set", text="Finish Roots").mode = "OBJECT"
 
-        col.operator("opendental.set_roots_parents", "Set Root Parents")
+        col.operator("opendental.set_roots_parents", text="Set Root Parents")
 
         if context.scene.frame_current != 0 and not any(
             [ob.animation_data for ob in context.scene.objects]
         ):
             row = layout.row()
-            row.label("Initial position not captured!", icon="ERROR")
+            row.label(text="Initial position not captured!", icon="ERROR")
             row = layout.row()
-            row.label("Set Frame to 0 and record initial position")
+            row.label(text="Set Frame to 0 and record initial position")
         else:
             row = layout.row()
-            row.operator("opendental.set_treatment_keyframe", "Capture Positions")
+            row.operator("opendental.set_treatment_keyframe", text="Capture Positions")
 
         row = layout.row()
         row.prop(context.scene, "frame_current", text="")
@@ -779,14 +779,14 @@ class OPENDENTAL_PT_ODCOrtho(bpy.types.Panel):
 
         row = layout.row()
         col = row.column(align=True)
-        col.operator("opendental.add_physics_scene", "Add Physics Scene")
-        col.operator("opendental.physics_sim_setup", "Setup Physics Simulation")
-        col.operator("opendental.add_forcefields", "Add Forcefields")
+        col.operator("opendental.add_physics_scene", text="Add Physics Scene")
+        col.operator("opendental.physics_sim_setup", text="Setup Physics Simulation")
+        col.operator("opendental.add_forcefields", text="Add Forcefields")
 
-        col.operator("opendental.limit_physics_movements", "Limit Movement")
-        col.operator("opendental.unlimit_physics_movements", "Unlimit Movement")
-        col.operator("opendental.lock_physics_movements", "Lock Tooth")
-        col.operator("opendental.unlock_physics_movements", "Unlock Tooth")
+        col.operator("opendental.limit_physics_movements", text="Limit Movement")
+        col.operator("opendental.unlimit_physics_movements", text="Unlimit Movement")
+        col.operator("opendental.lock_physics_movements", text="Lock Tooth")
+        col.operator("opendental.unlock_physics_movements", text="Unlock Tooth")
 
         layout.label(text="Simulation Timeline")
         row = layout.row()
@@ -797,7 +797,7 @@ class OPENDENTAL_PT_ODCOrtho(bpy.types.Panel):
         # Big render button
         row = layout.row()
         row.scale_y = 1.5
-        row.operator("opendental.keep_simulation_results", "Keep Simulation")
+        row.operator("opendental.keep_simulation_results", text="Keep Simulation")
 
 
 class OPENDENTAL_PT_ODCDentures(bpy.types.Panel):

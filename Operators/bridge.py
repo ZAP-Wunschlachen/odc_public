@@ -21,6 +21,73 @@ from ..Operators import mesh_cut, bridge_methods, bgl_utils, full_arch_methods
 
 
 
+class OPENDENTAL_OT_draw_arch_curve(bpy.types.Operator):
+    """Draw an open dental arch: click points, Backspace removes the last point,
+    Enter finishes and Escape cancels"""
+    bl_idname = 'opendental.draw_arch_curve'
+    bl_label = 'Draw Arch Curve'
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        return (context.mode == 'OBJECT' and context.area is not None
+                and context.area.type == 'VIEW_3D' and context.region_data is not None)
+
+    def invoke(self, context, event):
+        from .curve import CurveDataManager
+        self._selected = list(context.selected_objects)
+        self._active = context.view_layer.objects.active
+        self._area = context.area
+        self.manager = CurveDataManager(context, name='Dental Arch')
+        self._handle = bpy.types.SpaceView3D.draw_handler_add(
+            self.manager.draw, (context,), 'WINDOW', 'POST_PIXEL')
+        self._area.header_text_set('Arch: Click points | Backspace: remove last | Enter: finish | Esc: cancel')
+        context.window_manager.modal_handler_add(self)
+        return {'RUNNING_MODAL'}
+
+    def finish(self, context, cancel):
+        bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+        self._area.header_text_set(None)
+        if cancel:
+            data = self.manager.crv_obj.data
+            bpy.data.objects.remove(self.manager.crv_obj, do_unlink=True)
+            if data.users == 0:
+                bpy.data.curves.remove(data)
+            for obj in self._selected:
+                obj.select_set(True)
+            context.view_layer.objects.active = self._active
+        else:
+            bpy.ops.object.select_all(action='DESELECT')
+            self.manager.crv_obj.select_set(True)
+            context.view_layer.objects.active = self.manager.crv_obj
+        self._area.tag_redraw()
+
+    def modal(self, context, event):
+        self._area.tag_redraw()
+        if event.type in {'MIDDLEMOUSE', 'WHEELUPMOUSE', 'WHEELDOWNMOUSE',
+                          'TRACKPADPAN', 'TRACKPADZOOM'}:
+            return {'PASS_THROUGH'}
+        if event.value != 'PRESS':
+            return {'RUNNING_MODAL'}
+        if event.type == 'ESC':
+            self.finish(context, True)
+            return {'CANCELLED'}
+        if event.type in {'RET', 'NUMPAD_ENTER'}:
+            if len(self.manager.b_pts) < 2:
+                self.report({'WARNING'}, 'Place at least two arch points')
+                return {'RUNNING_MODAL'}
+            self.finish(context, False)
+            return {'FINISHED'}
+        if event.type == 'BACK_SPACE':
+            self.manager.selected = len(self.manager.b_pts) - 1
+            self.manager.click_delete_point(mode='selected')
+        elif event.type == 'LEFTMOUSE':
+            self.manager.hovered = [None, -1]
+            self.manager.click_add_point(context, event.mouse_region_x, event.mouse_region_y)
+            self.manager.crv_data.splines[0].use_cyclic_u = False
+        return {'RUNNING_MODAL'}
+
+
 class OPENDENTAL_OT_bridge_from_selected(bpy.types.Operator):
     ''''''
     bl_idname='opendental.define_bridge'
@@ -725,6 +792,7 @@ class OPENDENTAL_OT_ClothFillTray(bpy.types.Operator):
         return {'FINISHED'}
     
 def register():
+    bpy.utils.register_class(OPENDENTAL_OT_draw_arch_curve)
     
     bpy.utils.register_class(OPENDENTAL_OT_bridge_from_selected)
     bpy.utils.register_class(OPENDENTAL_OT_bridge_keep_arch_plan)
@@ -746,6 +814,7 @@ def register():
 
     
 def unregister():
+    bpy.utils.unregister_class(OPENDENTAL_OT_draw_arch_curve)
     bpy.utils.unregister_class(OPENDENTAL_OT_solid_bridge)
     bpy.utils.unregister_class(OPENDENTAL_OT_bridge_boolean)
     bpy.utils.unregister_class(OPENDENTAL_OT_keep_shape)

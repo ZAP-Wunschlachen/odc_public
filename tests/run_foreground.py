@@ -1,4 +1,4 @@
-"""Run the headless integration suite in isolated Blender processes."""
+"""Run the foreground integration suite in isolated Blender processes."""
 import argparse
 import json
 from pathlib import Path
@@ -10,19 +10,13 @@ from case_catalog import UI_TESTS
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--blender', required=True)
 args = parser.parse_args()
-output = ROOT / 'tests' / 'artifacts' / 'headless'
+output = ROOT / 'tests' / 'artifacts' / 'foreground'
 output.mkdir(parents=True, exist_ok=True)
 results = []
-cases = [(path, []) for path in sorted((ROOT / 'tests').glob('test_*.py'))
-         if path.stem not in UI_TESTS]
-cases.append((ROOT / 'tests/test_solid_restoration.py', ['25', '0']))
-cases.append((ROOT / 'tests/test_splint_make.py', ['--with-base']))
-for path, extra in cases:
-    name = path.stem + ('_with_base' if '--with-base' in extra else '_merge' if extra else '')
-    command = [args.blender, '--background', '--factory-startup', '--disable-autoexec',
+for name in sorted(UI_TESTS):
+    path = ROOT / 'tests' / (name + '.py')
+    command = [args.blender, '--factory-startup', '--enable-event-simulate', '--disable-autoexec',
                '--python-exit-code', '1', '--python', str(path)]
-    if extra:
-        command += ['--', *extra]
     log_path = output / (name + '.log')
     timed_out = False
     with log_path.open('w') as log:
@@ -35,10 +29,11 @@ for path, extra in cases:
             returncode = None
     text = log_path.read_text(errors='replace')
     dependency_cycle = 'Dependency cycle detected' in text
-    failed = (timed_out or returncode != 0 or dependency_cycle
+    marker = 'ODC_' + path.stem.removeprefix('test_').upper() + '_PASSED'
+    failed = (marker not in text or timed_out or returncode != 0 or dependency_cycle
               or 'Traceback (most recent call last)' in text)
     result = {'test': name, 'passed': not failed, 'returncode': returncode,
-              'timeout': timed_out, 'dependency_cycle': dependency_cycle, 'shutdown_allocation_warning': 'Not freed memory blocks' in text,
+              'timeout': timed_out, 'success_marker': marker in text, 'dependency_cycle': dependency_cycle, 'shutdown_allocation_warning': 'Not freed memory blocks' in text,
               'log': str(log_path.relative_to(ROOT))}
     results.append(result)
     print(name, 'FAIL' if failed else 'PASS', flush=True)
