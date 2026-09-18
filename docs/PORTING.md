@@ -1462,3 +1462,18 @@ while excluded, preserved selection/active object/visibility, and a second
 centering with no further movement. All world matrices are checked against one
 common translation and local vertex data remains unchanged. Animated or
 constraint-driven roots and linked read-only scenes are not covered by this test.
+
+### Cloth Fill Tray input guard — geometry port still pending
+
+The registered tray-fill operator now requires an Object Mode mesh/curve in a
+3D viewport and validates its boundary before the legacy algorithm can alter
+selection, origins or curve settings. Meshes must be one connected, closed,
+unfilled loop; curves must have one spline with at least three control points.
+`test_cloth_fill_validation.py` passes in Blender 5.1.2 for empty, open, filled
+and disconnected mesh rejection without object/mesh mutation, plus curve spline
+counts. Self-intersections and coincident/degenerate points are not checked yet.
+
+This is not a completed tray-fill port: `cloth_fill_main` still contains removed
+SpaceView3D transform settings, old object selection/linking/to_mesh calls and
+an external LoopTools operator call. Its valid-input geometry pipeline remains
+to be ported and tested. Do not treat the new validation test as geometry proof.

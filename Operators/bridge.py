@@ -651,6 +651,40 @@ class OPENDENTAL_OT_keep_shape(bpy.types.Operator):
         context.view_layer.objects.active = active
         return {'FINISHED'}
 
+def cloth_loop_error(obj):
+    """Validate the single boundary expected by the cloth-fill algorithm."""
+    if obj.type == 'CURVE':
+        if len(obj.data.splines) != 1:
+            return 'Use one curve spline for the tray boundary'
+        spline = obj.data.splines[0]
+        points = spline.bezier_points if spline.type == 'BEZIER' else spline.points
+        if len(points) < 3:
+            return 'The tray boundary needs at least three points'
+        return None
+    if obj.type != 'MESH':
+        return 'Use a mesh loop or curve as the tray boundary'
+    mesh = obj.data
+    if mesh.polygons or len(mesh.vertices) < 3:
+        return 'Use an unfilled mesh loop with at least three vertices'
+    neighbors = [set() for vertex in mesh.vertices]
+    for edge in mesh.edges:
+        first, second = edge.vertices
+        neighbors[first].add(second)
+        neighbors[second].add(first)
+    if any(len(linked) != 2 for linked in neighbors):
+        return 'The tray boundary must be a closed loop without branches'
+    reached = set()
+    pending = [0]
+    while pending:
+        vertex = pending.pop()
+        if vertex not in reached:
+            reached.add(vertex)
+            pending.extend(neighbors[vertex] - reached)
+    if len(reached) != len(neighbors):
+        return 'Use one connected loop for the tray boundary'
+    return None
+
+
 class OPENDENTAL_OT_ClothFillTray(bpy.types.Operator):
     '''Fill a bez loop or mesh loop with remesh'''
     bl_idname = "opendental.cloth_fill_tray"
@@ -665,16 +699,19 @@ class OPENDENTAL_OT_ClothFillTray(bpy.types.Operator):
 
     smooth: bpy.props.IntProperty(name="smooth", description="# of smooth iterations", default=5, min=1, max=20, options={'ANIMATABLE'})
     
-    '''
     @classmethod
     def poll(cls, context):
-        cond_1 = context.object.type == 'CURVE'
-        cond_2 = context.object.type == 'MESH' and (len(context.object.data.vertices) == len(context.object.data.edges))
-        
-        return cond_1 or cond_2
-    '''
+        return (context.mode == 'OBJECT' and context.object is not None
+                and context.object.type in {'CURVE', 'MESH'}
+                and context.area is not None and context.area.type == 'VIEW_3D'
+                and context.region_data is not None)
+
     def execute(self, context):
         loop_obj = context.object
+        error = cloth_loop_error(loop_obj)
+        if error:
+            self.report({'WARNING'}, error)
+            return {'CANCELLED'}
         oct = self.oct
         smooth = self.smooth
         settings = get_settings()
