@@ -1174,3 +1174,15 @@ intaglio and closed/unbridgeable inputs with no mesh-datablock leak. This is a
 synthetic geometry test; self-intersections, multiple independent margin loops,
 material-slot preservation and anatomical manufacturing suitability are not yet
 verified. The separate Make Solid Restoration workflow is unchanged.
+
+### View to Z execution
+
+The registered View to Z operator now uses current object selection and only polls
+for transformable objects in Object Mode with a 3D region. `test_view_to_z.py` passes
+in a foreground Blender 5.1.2 window: default local axes match the view rotation,
+world-space base geometry is unchanged, and a shared mesh receives an independent
+copy. The legacy `keep_orientation=True` branch is only smoke-tested for execution
+and finite coordinates; its additional transform application/rotation is retained
+and its geometric semantics remain unresolved. It must not be treated as verified
+world-geometry preservation for that option. This foreground test is excluded from
+the headless runner.

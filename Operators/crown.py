@@ -256,10 +256,17 @@ class ViewToZ(bpy.types.Operator):
 
     keep_orientation: bpy.props.BoolProperty(default = False, name = "Keep Orientation")
     
+    @classmethod
+    def poll(cls, context):
+        return (context.mode == 'OBJECT' and context.object is not None
+                and context.object.type in {'MESH', 'CURVE', 'SURFACE', 'FONT'}
+                and context.area is not None and context.area.type == 'VIEW_3D'
+                and context.region_data is not None)
+
     def execute(self, context):
         bpy.ops.object.select_all(action = 'DESELECT')
         ob = bpy.context.object
-        ob.select = True
+        ob.select_set(True)
         
         #necessary because I don't want to have to wory
         #about what the transform orientation might be
