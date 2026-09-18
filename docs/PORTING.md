@@ -989,3 +989,7 @@ The unchanged strict creation/deformation/bake test now passes teeth 11, 16, 25 
 ### Static bracket placement
 
 Ported static bracket placement to retained dynamic library enums, returned library object identity, current collection/cursor APIs and matrix multiplication. Object-mode polling and selection validation added; non-view contexts use identity orientation. `test_static_bracket.py` passes with two bundled library assets at cursor (3,4,5) and preservation of a preexisting same-name object. View orientation, search popup and interactive surface placement remain unverified.
+
+### Bracket manager surface placement
+
+Ported fallback bracket creation/display, ray-casting and matrix/quaternion operations in BracketDataManager. Scene hits remain in world coordinates; object hits are transformed from local coordinates. Spin cancellation now restores its saved transform. `test_bracket_manager.py` passes in a real Blender window after allowing view matrices to update: translated cube surface hit at (3,4,6), spin changes orientation, cancel restores the matrix. Added the window test to headless exclusions. Public modal startup/slicer and scene-snap self-intersection remain open.

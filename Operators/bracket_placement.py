@@ -41,9 +41,10 @@ class BracketDataManager(object):
             bme = bmesh.new()
             bmesh.ops.create_cube(bme, size = 2, matrix = Matrix.Identity(4))
             bme.to_mesh(self.bracket_data)
+            bme.free()
             self.bracket_obj = bpy.data.objects.new(name,self.bracket_data)
-            context.scene.objects.link(self.bracket_obj)
-            self.bracket_obj.draw_type = 'WIRE'  #important to prevent scene ray_cast
+            context.collection.objects.link(self.bracket_obj)
+            self.bracket_obj.display_type = 'WIRE'  #important to prevent scene ray_cast
         else:
             self.bracket_obj = bracket
             
@@ -73,42 +74,32 @@ class BracketDataManager(object):
         
         hit = False
         if self.snap_type == 'SCENE':
-            
-            if bversion() < '002.077.000':
-                res, obj, mx, loc, no = context.scene.ray_cast(ray_origin, ray_target)
-            else:
-                res, loc, no, ind, obj, mx = context.scene.ray_cast(ray_origin, view_vector)
-            if res:
-                hit = True
-        
+            hit, loc, no, ind, obj, mx = context.scene.ray_cast(
+                context.evaluated_depsgraph_get(), ray_origin, view_vector)
+            # Scene ray hits are already in world coordinates.
+            mx = Matrix.Identity(4)
         elif self.snap_type == 'OBJECT':
             mx = self.snap_ob.matrix_world
             imx = mx.inverted()
-            
-            if bversion() < '002.077.000':
-                loc, no, face_ind = self.snap_ob.ray_cast(imx * ray_origin, imx * ray_target)
-                if face_ind != -1:
-                    hit = True
-            else:
-                ok, loc, no, face_ind = self.snap_ob.ray_cast(imx * ray_origin, imx * ray_target - imx*ray_origin)
-                if ok:
-                    hit = True
-   
+            hit, loc, no, face_ind = self.snap_ob.ray_cast(
+                imx @ ray_origin, imx.to_3x3() @ view_vector,
+                depsgraph=context.evaluated_depsgraph_get())
+
         if not hit:
             self.grab_cancel()
             
         else:
-            world_location = mx * loc
+            world_location = mx @ loc
             imx = mx.inverted()
             
             #this will be the object Z axis
-            world_normal = imx.transposed().to_3x3() * no
+            world_normal = imx.transposed().to_3x3() @ no
 
             if normal:
                 ob_Z = world_normal
                 ob_Z.normalize()
                 
-                view_Y = rv3d.view_rotation * Vector((0,1,0))
+                view_Y = rv3d.view_rotation @ Vector((0,1,0))
                 if self.bracket_obj.name.startswith("U") or self.bracket_obj.name.startswith("u"):
                     view_Y *= -1
                 
@@ -131,7 +122,7 @@ class BracketDataManager(object):
                 rot = self.bracket_obj.matrix_world.to_3x3().to_4x4()
                 
             loc = Matrix.Translation(world_location)    
-            self.bracket_obj.matrix_world = loc * rot
+            self.bracket_obj.matrix_world = loc @ rot
     
     def grab_cancel(self):
         self.bracket_obj.matrix_world = self.grab_undo_mx
@@ -146,7 +137,7 @@ class BracketDataManager(object):
         return
     
     def spin_cancel(self):
-        self.grab_undo_mx = self.bracket_obj.matrix_world.copy()
+        self.bracket_obj.matrix_world = self.grab_undo_mx
         return
     
     def spin_confirm(self):
@@ -157,7 +148,7 @@ class BracketDataManager(object):
         
         loc = Matrix.Translation(self.bracket_obj.matrix_world.to_translation())
         rot_base = self.bracket_obj.matrix_world.to_3x3()
-        Z = rot_base * Vector((0,0,1))
+        Z = rot_base @ Vector((0,0,1))
         
         if shift:
             ang = .5 * math.pi/180
@@ -168,11 +159,11 @@ class BracketDataManager(object):
             
             print(rot)
             print(rot_base)
-            print(rot * rot_base)
-            self.bracket_obj.matrix_world = loc * (rot * rot_base).to_4x4()
+            print(rot @ rot_base)
+            self.bracket_obj.matrix_world = loc @ (rot @ rot_base).to_4x4()
         elif event in {'WHEELDOWNMOUSE', 'DOWN_ARROW'}:
             rot = Matrix.Rotation(-ang, 3, Z)
-            self.bracket_obj.matrix_world = loc * (rot * rot_base).to_4x4()
+            self.bracket_obj.matrix_world = loc @ (rot @ rot_base).to_4x4()
         
         else:
             return
@@ -181,7 +172,7 @@ class BracketDataManager(object):
         
         loc = Matrix.Translation(self.bracket_obj.matrix_world.to_translation())
         rot_base = self.bracket_obj.matrix_world.to_3x3()
-        Y = rot_base * Vector((0,1,0))
+        Y = rot_base @ Vector((0,1,0))
         
         if shift:
             ang = .5 * math.pi/180
@@ -192,11 +183,11 @@ class BracketDataManager(object):
             
             print(rot)
             print(rot_base)
-            print(rot * rot_base)
-            self.bracket_obj.matrix_world = loc * (rot * rot_base).to_4x4()
+            print(rot @ rot_base)
+            self.bracket_obj.matrix_world = loc @ (rot @ rot_base).to_4x4()
         elif event in {'WHEELDOWNMOUSE', 'LEFT_ARROW'}:
             rot = Matrix.Rotation(-ang, 3, Y)
-            self.bracket_obj.matrix_world = loc * (rot * rot_base).to_4x4()
+            self.bracket_obj.matrix_world = loc @ (rot @ rot_base).to_4x4()
         
         else:
             return
@@ -205,7 +196,7 @@ class BracketDataManager(object):
         
         loc = Matrix.Translation(self.bracket_obj.matrix_world.to_translation())
         rot_base = self.bracket_obj.matrix_world.to_3x3()
-        X = rot_base * Vector((1,0,0))
+        X = rot_base @ Vector((1,0,0))
         
         if shift:
             ang = .5 * math.pi/180
@@ -213,10 +204,10 @@ class BracketDataManager(object):
             ang = 2.5*math.pi/180
         if event in {'WHEELUPMOUSE', 'UP_ARROW'}:
             rot = Matrix.Rotation(ang, 3, X)
-            self.bracket_obj.matrix_world = loc * (rot * rot_base).to_4x4()
+            self.bracket_obj.matrix_world = loc @ (rot @ rot_base).to_4x4()
         elif event in {'WHEELDOWNMOUSE', 'DOWN_ARROW'}:
             rot = Matrix.Rotation(-ang, 3, X)
-            self.bracket_obj.matrix_world = loc * (rot * rot_base).to_4x4()
+            self.bracket_obj.matrix_world = loc @ (rot @ rot_base).to_4x4()
         
         else:
             return           
