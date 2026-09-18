@@ -845,9 +845,19 @@ class OPENDENTAL_OT_plan_restorations(bpy.types.Operator):
     '''Select Multiple Interestingly Shaped Buttons'''
     bl_idname = "opendental.plan_restorations"
     bl_label = "Plan Restorations"
+    bl_options = {'UNDO'}
+
+    def finish_overlay(self):
+        if getattr(self, '_handle', None) is not None:
+            bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+            self._handle = None
 
     def modal(self, context, event):
         context.area.tag_redraw()
+
+        if event.type == 'ESC' and event.value == 'PRESS':
+            self.finish_overlay()
+            return {'CANCELLED'}
 
         if event.type == 'MOUSEMOVE':
             #check to see what button the mouse is over if any
@@ -866,7 +876,10 @@ class OPENDENTAL_OT_plan_restorations(bpy.types.Operator):
                 #if we have clicked on it, add it to the current restoration type list
                 if self.tooth_button_hover[i]:
                     if button_data.tooth_button_names[i] not in self.rest_lists[self.rest_index]:
-                        print(self.rest_lists[self.rest_index])      
+                        if self.rest_index < 4:
+                            for planned in self.rest_lists[:4]:
+                                if button_data.tooth_button_names[i] in planned:
+                                    planned.remove(button_data.tooth_button_names[i])
                         self.rest_lists[self.rest_index].append(button_data.tooth_button_names[i])
                     else:
                         self.rest_lists[self.rest_index].remove(button_data.tooth_button_names[i])
@@ -880,26 +893,29 @@ class OPENDENTAL_OT_plan_restorations(bpy.types.Operator):
                         self.rest_index = i 
                 
                 if True not in self.rest_button_select:
-                    bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+                    self.finish_overlay()
                     self.ret_selected = [button_data.tooth_button_names[i] for i in range(0,len(button_data.tooth_button_data)) if self.tooth_button_select[i]]
                     self.execute(context)
                     return {'FINISHED'}
             
 
-        elif event.type in {'RIGHTMOUSE', 'ESC'}:
+        elif event.type == 'RIGHTMOUSE' and event.value == 'PRESS':
             self.mouse = (event.mouse_region_x, event.mouse_region_y)
             for i in range(0,len(button_data.tooth_button_data)):
                 self.tooth_button_hover[i] = bgl_utils.point_inside_loop(button_data.tooth_button_data[i],self.mouse,self.menu_width, self.menu_loc)
                 if self.tooth_button_hover[i]:
-                    self.tooth_button_select[i] = False
+                    name = button_data.tooth_button_names[i]
+                    for planned in self.rest_lists:
+                        if name in planned:
+                            planned.remove(name)
 
             #no buttons are hovered, this is equiv to quiting...
             if True not in self.tooth_button_hover:
-                bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+                self.finish_overlay()
                 return {'CANCELLED'}
             
         elif event.type == 'RET' and event.value == 'PRESS':
-            bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+            self.finish_overlay()
             self.ret_selected = [button_data.tooth_button_names[i] for i in range(0,len(button_data.tooth_button_data)) if self.tooth_button_select[i]]
             self.execute(context)
             return {'FINISHED'}
@@ -907,7 +923,7 @@ class OPENDENTAL_OT_plan_restorations(bpy.types.Operator):
         return {'RUNNING_MODAL'}
 
     def invoke(self, context, event):
-        if context.area.type == 'VIEW_3D':
+        if context.area and context.area.type == 'VIEW_3D' and context.region and context.region.type == 'WINDOW':
             context.window_manager.modal_handler_add(self)
 
             # Add the region OpenGL drawing callback
@@ -957,13 +973,20 @@ class OPENDENTAL_OT_plan_restorations(bpy.types.Operator):
             self.report({'WARNING'}, "View3D not found, cannot run operator")
             return {'CANCELLED'}
         
-    def execute(self,context):
-        for i in range (0,4):
-            for tooth_name in self.rest_lists[i]:
-                bpy.ops.opendental.add_tooth_restoration('EXEC_DEFAULT',name = str(tooth_name), rest_type = str(i))
-        for tooth_name in self.rest_lists[4]:
-            print('adding an implant at %s' % tooth_name)
-            bpy.ops.opendental.add_implant_restoration('EXEC_DEFAULT',name = str(tooth_name))  
+    def execute(self, context):
+        if not hasattr(self, 'rest_lists'):
+            self.report({'WARNING'}, 'Open Plan Restorations in the 3D View to choose units')
+            return {'CANCELLED'}
+        for index, names in enumerate(self.rest_lists):
+            plans = context.scene.odc_implants if index == 4 else context.scene.odc_teeth
+            for name in names:
+                item = plans.get(str(name))
+                if item is None:
+                    item = plans.add()
+                    item.name = str(name)
+                if index < 4:
+                    item.rest_type = str(index)
+        return {'FINISHED'}
 
 class OPENDENTAL_OT_prep_from_crown(bpy.types.Operator):
     '''

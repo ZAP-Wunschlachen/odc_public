@@ -102,7 +102,9 @@
     "class": "OPENDENTAL_OT_plan_restorations",
     "bl_idname": "opendental.plan_restorations",
     "bl_label": "Plan Restorations",
-    "test_status": "pending"
+    "test_status": "tested_interactive_blender_5_1_2",
+    "test_file": "tests/test_plan_restorations_modal.py",
+    "test_scope": "Selection, type reassignment, implants, Enter/outside-click commit, Escape/right-click removal, existing references, undo/redo"
   },
   {
     "module": "Operators/crown.py",

@@ -1428,3 +1428,19 @@ world collection on rebuild. Cleanup now also unlinks our copies from that
 collection; the formerly failing scene test passes separately, including a
 check across all object datablocks for leftover tagged copies. The aggregate
 results JSON is from before this final cleanup correction.
+
+### Interactive restoration planning
+
+`test_plan_restorations_modal.py` passes in the Blender 5.1.2 foreground with
+simulated mouse/key events and actual GPU overlay redraws. It checks a contour
+changed to a pontic before commit, implant selection, Enter and outside-click
+commit, Escape while hovering a tooth, right-click removal of pending choices,
+existing plan type updates without duplicate units or lost contour references,
+and undo/redo of the complete planning transaction. No draw tracebacks occurred.
+
+The operator now returns a valid execute result, handles direct execution
+without an interactive selection safely, and records the transaction for Undo.
+A tooth can have one pending crown type and an independent implant plan. Choosing
+an existing unit updates its type in place; unselected existing plans remain.
+Cancellation changes no plan data. Multi-window/area closure and addon disable
+while the modal is running remain untested.
