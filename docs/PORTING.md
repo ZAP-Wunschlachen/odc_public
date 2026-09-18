@@ -1320,3 +1320,12 @@ object. The original named object survives and the model is reactivated. Complet
 point entry, baking shrinkwrap, the downstream mesh-intersection/separation workflow,
 material cleanup and full scene-settings restoration remain unverified. The test
 is excluded from the headless runner.
+
+The cutting-curve foreground test now continues through cursor-coordinate point
+entry and Enter confirmation. It verifies four Bezier points, a cyclic spline,
+applied shrinkwrap, surface-aligned control points and preservation of the name
+collision object. The cursor coordinates are set programmatically before simulated
+mouse-release events, so cursor-tool ray placement itself is not tested. Deleting
+the last remaining point is ignored, and Enter requires at least three points;
+the test exercises these premature actions before building the valid curve.
+The downstream model-intersection and separation operation is still unverified.

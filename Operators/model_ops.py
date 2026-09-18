@@ -646,6 +646,8 @@ def delete_last_point():
 
     cutting_tool = get_cutting_curve()
     curve = cutting_tool.data
+    if not curve.splines or len(curve.splines[0].bezier_points) <= 1:
+        return
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.curve.dissolve_verts()
     curve.splines[0].bezier_points[0].select_control_point = True
@@ -834,6 +836,9 @@ class OPENDENTAL_OT_make_curve(bpy.types.Operator):
             if event.value == ("PRESS"):
 
                 cutting_tool = get_cutting_curve()
+                if not cutting_tool.data.splines or len(cutting_tool.data.splines[0].bezier_points) < 3:
+                    self.report({'WARNING'}, 'Place at least three curve points before confirming')
+                    return {'RUNNING_MODAL'}
                 bpy.ops.object.mode_set(mode="OBJECT")
 
                 bpy.ops.object.select_all(action="DESELECT")
