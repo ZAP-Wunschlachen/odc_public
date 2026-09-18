@@ -155,6 +155,12 @@ class OPENDENTAL_OT_align_to_front(bpy.types.Operator):
     bl_label = "Align to Front"
     bl_options = {"REGISTER", "UNDO"}
 
+    @classmethod
+    def poll(cls, context):
+        return (context.mode == 'OBJECT' and context.object is not None
+                and context.object.select_get() and context.area is not None
+                and context.area.type == 'VIEW_3D' and context.region_data is not None)
+
     def execute(self, context):
 
         if not bpy.context.selected_objects :
@@ -168,16 +174,12 @@ class OPENDENTAL_OT_align_to_front(bpy.types.Operator):
 
             Model = bpy.context.view_layer.objects.active
 
-            # get object rotation mode and invert it :
-
-            rot_mod = Model.rotation_mode  
-
             # Get VIEW_rotation matrix  :
 
             view3d_rot_matrix = context.space_data.region_3d.view_rotation.to_matrix().to_4x4()
 
             # create a 90 degrees arround X_axis Euler :
-            Eul_90x = Euler((radians(90), 0, 0), rot_mod)
+            Eul_90x = Euler((radians(90), 0, 0), 'XYZ')
 
             # Euler to mattrix 4x4 :
             Eul_90x_matrix = Eul_90x.to_matrix().to_4x4()

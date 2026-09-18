@@ -1212,3 +1212,19 @@ mesh sibling. Complex nonmanifold scans, multiple substantial components and ope
 boundaries beyond the existing 400-edge fill limit remain unverified. Component
 selection now intentionally keeps one principal component rather than the old
 absolute-volume-within-one threshold.
+
+### Model front alignment and cursor centering
+
+Align to Front now constructs its fixed 90-degree X rotation with an explicit XYZ
+Euler order instead of the object's possibly QUATERNION/AXIS_ANGLE rotation mode.
+It only polls in Object Mode with an active selected object and a 3D view region.
+`test_align_front.py` passes in a foreground Blender 5.1.2 window for XYZ, quaternion
+and axis-angle objects: the expected world transform is applied, rotation mode and
+local mesh coordinates are retained, and another object sharing the mesh is unmoved.
+
+`test_center_model.py` verifies the existing modal centering workflow without code
+changes: Enter translates the active model by the negative cursor landmark, another
+initially selected object is unchanged, and Escape on a subsequent session leaves
+world geometry unchanged and exits the modal operator. The informational popup is
+suppressed in this automated test; popup interaction, cursor/tool restoration,
+parented models and constraints are not covered. Both tests are foreground-only.
