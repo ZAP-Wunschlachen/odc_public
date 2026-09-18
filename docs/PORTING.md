@@ -1514,3 +1514,20 @@ All original objects, meshes/curves, coordinates, selection and tool state are
 verified unchanged. `test_cloth_fill_geometry.py` was rerun and still passes.
 This establishes cleanup at these stages, not support for every malformed
 boundary or resolution setting.
+
+### Current regression and strict registration audit
+
+The full headless suite completed with 80/80 cases passing on Blender 5.1.2
+and no dependency-cycle reports. Fourteen logs still contain the previously
+noted shutdown allocation warnings; those are recorded separately by the runner.
+This aggregate does not include the foreground-only geometry and modal tests.
+
+The registration test previously skipped missing RNA operators and merely
+required a nonzero registered count. It now derives expected classes from the
+active module register functions, their class lists and nested registrations,
+then verifies every class and operator RNA entry. It checks all are removed on
+disable and verifies a second enable/disable cycle. The stricter test passes
+separately with 141 classes, including 117 operators. The aggregate JSON above
+predates this test strengthening. Registration success is not behavioral
+coverage for all 117 operators; remaining geometry/workflow limitations still
+apply.
