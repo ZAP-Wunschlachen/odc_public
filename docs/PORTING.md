@@ -1685,3 +1685,20 @@ Survey and injects a cancelled remesh after extrusion to verify rollback without
 leaked meshes. The existing 0.1 local-unit voxel resolution is retained; complex
 concave scans, modifier/shape-key inputs and broad dimensional accuracy remain
 outside these tests.
+
+### Splint planning and preferences display
+
+`test_splint_plan_add.py` passes in Blender 5.1.2 without a production-code
+change: active-model linking, selected-model fallback with no active object,
+explicitly unlinked plans and plans awaiting a model all retain the expected
+names/references after save/reopen. Scene objects remain unchanged. The dialog
+itself is not exercised by this headless execution test.
+
+The preferences information operator still referenced nonexistent template
+properties `filepath`, `number` and `boolean`. It now reports the five actual
+library paths and the configured selection/workflow modes.
+`test_preferences_report.py` reproduced the AttributeError before the fix and
+now passes with non-default settings, checking report content and no scene
+mutation. These tests close the remaining entry-point gaps identified by the
+previous text-reference audit; text references still do not prove complete
+behavioral or UI coverage.

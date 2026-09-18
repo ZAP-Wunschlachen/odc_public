@@ -194,11 +194,15 @@ class OPENDENTAL_OT_addon_prefs_odc(Operator):
         preferences = context.preferences
         addon_prefs = preferences.addons[__name__].preferences
 
-        info = "Path: %s, Number: %d, Boolean %r" % (
-            addon_prefs.filepath,
-            addon_prefs.number,
-            addon_prefs.boolean,
-        )
+        info = "\n".join([
+            "Tooth library: " + addon_prefs.tooth_lib,
+            "Implant library: " + addon_prefs.imp_lib,
+            "Material library: " + addon_prefs.mat_lib,
+            "Drill library: " + addon_prefs.drill_lib,
+            "Bracket library: " + addon_prefs.ortho_lib,
+            "Selection: " + addon_prefs.behavior_modes[int(addon_prefs.behavior)],
+            "Workflow: " + addon_prefs.workflow_modes[int(addon_prefs.workflow)],
+        ])
 
         self.report({"INFO"}, info)
         print(info)
