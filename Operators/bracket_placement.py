@@ -154,14 +154,14 @@ class BracketDataManager(object):
             ang = .5 * math.pi/180
         else:
             ang = 2.5*math.pi/180
-        if event in {'WHEELUPMOUSE', 'UP_ARROW'}:
+        if event in {'WHEELUPMOUSE', 'UP_ARROW', 'RIGHT_ARROW'}:
             rot = Matrix.Rotation(ang, 3, Z)
             
             print(rot)
             print(rot_base)
             print(rot @ rot_base)
             self.bracket_obj.matrix_world = loc @ (rot @ rot_base).to_4x4()
-        elif event in {'WHEELDOWNMOUSE', 'DOWN_ARROW'}:
+        elif event in {'WHEELDOWNMOUSE', 'DOWN_ARROW', 'LEFT_ARROW'}:
             rot = Matrix.Rotation(-ang, 3, Z)
             self.bracket_obj.matrix_world = loc @ (rot @ rot_base).to_4x4()
         

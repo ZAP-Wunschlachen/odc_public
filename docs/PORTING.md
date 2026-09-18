@@ -1013,3 +1013,11 @@ start, surface placement on a cube, click, Enter, two saved cross-section stroke
 then a second invocation and Escape with no remaining new objects. This does not
 yet cover all interactive rotation/grab modes, scene-wide snapping, stroke visual
 appearance, or transformed anatomical surfaces.
+
+The foreground bracket regression additionally exercises S/right-arrow, R/right-arrow,
+T/up-arrow and G/mouse-move. Each changes the bracket transform and Escape restores
+the exact saved matrix. Torque/Enter and grab/click retain the changed transforms
+before the final Enter saves both section strokes. The test first exposed that
+S-mode accepted horizontal arrow events while its spin helper ignored them; the
+helper now handles right/left arrows alongside up/down and wheel events. All these
+cases pass in Blender 5.1.2. Scene snapping and stroke appearance remain unverified.
