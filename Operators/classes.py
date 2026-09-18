@@ -516,53 +516,55 @@ class ImplantRestorationAdd(bpy.types.Operator):
             #odc.odc_restricted_registration = True
         return {'FINISHED'}
     
+def remove_plan_entry(context, collection_name, index_name):
+    items = getattr(context.scene, collection_name)
+    index = getattr(context.scene, index_name)
+    if not 0 <= index < len(items):
+        return {'CANCELLED'}
+    items.remove(index)
+    setattr(context.scene, index_name, min(index, max(0, len(items) - 1)))
+    return {'FINISHED'}
+
+
 class ToothRestorationRemove(bpy.types.Operator):
     ''''''
     bl_idname = 'opendental.remove_tooth_restoration'
     bl_label = "Remove Tooth Restoration"
     
-    def execute(self, context):
+    bl_options = {'REGISTER', 'UNDO'}
 
-        j = bpy.context.scene.odc_tooth_index
-        bpy.context.scene.odc_teeth.remove(j)
-            
-        return {'FINISHED'}
+    def execute(self, context):
+        return remove_plan_entry(context, 'odc_teeth', 'odc_tooth_index')
     
 class SplintRestorationRemove(bpy.types.Operator):
     ''''''
     bl_idname = 'opendental.remove_splint'
     bl_label = "Remove Splint Restoration"
     
-    def execute(self, context):
+    bl_options = {'REGISTER', 'UNDO'}
 
-        j = bpy.context.scene.odc_splint_index
-        bpy.context.scene.odc_splints.remove(j)
-            
-        return {'FINISHED'}
+    def execute(self, context):
+        return remove_plan_entry(context, 'odc_splints', 'odc_splint_index')
     
 class ImplantRestorationRemove(bpy.types.Operator):
     ''''''
     bl_idname = 'opendental.remove_implant_restoration'
     bl_label = "Remove Implant Restoration"
     
-    def execute(self, context):
+    bl_options = {'REGISTER', 'UNDO'}
 
-        j = bpy.context.scene.odc_implant_index
-        bpy.context.scene.odc_implants.remove(j)
-            
-        return {'FINISHED'}
+    def execute(self, context):
+        return remove_plan_entry(context, 'odc_implants', 'odc_implant_index')
     
 class BridgeRestorationRemove(bpy.types.Operator):
     ''''''
     bl_idname = 'opendental.remove_bridge_restoration'
     bl_label = "Remove Bridge Restoration"
     
-    def execute(self, context):
+    bl_options = {'REGISTER', 'UNDO'}
 
-        j = bpy.context.scene.odc_bridge_index
-        bpy.context.scene.odc_bridges.remove(j)
-            
-        return {'FINISHED'}
+    def execute(self, context):
+        return remove_plan_entry(context, 'odc_bridges', 'odc_bridge_index')
     
 #class OPENDENTAL_OT_activate(bpy.types.Operator):
 #    '''Adds a new tooth to the scene'''

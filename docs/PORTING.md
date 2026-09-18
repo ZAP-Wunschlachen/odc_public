@@ -1359,3 +1359,16 @@ is unchanged, restores the original model name and preserves unrelated objects.
 and preservation of a fourth piece from a different cut session. Session tags are
 cleared on retained pieces. Migrating pre-existing untagged cut pieces and recovery
 from failures during the upstream cut operation remain unverified.
+
+### Planning-list removal and regression run
+
+Tooth, implant, splint and bridge removal now validate the current list index,
+cancel empty/stale requests, and clamp the active index after removing an entry.
+The operators support undo. They only remove planning entries, not scene objects.
+
+`test_plan_removal.py` passes in Blender 5.1.2 for all four lists: empty removal,
+last-entry removal with index update, stale indices, first-entry removal, final
+entry removal and unchanged scene objects. The latest isolated headless run completed
+73 cases with 73 passes after the model-cutting changes; this new removal test was
+run separately. Foreground UI tests and the previously documented outstanding
+geometry/physics limitations are not covered by that aggregate pass count.
