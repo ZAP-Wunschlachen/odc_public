@@ -1329,3 +1329,19 @@ mouse-release events, so cursor-tool ray placement itself is not tested. Deletin
 the last remaining point is ignored, and Enter requires at least three points;
 the test exercises these premature actions before building the valid curve.
 The downstream model-intersection and separation operation is still unverified.
+
+### Curve cut intersection/separation execution
+
+The curve-cut operator now recalculates normals with BMesh and tolerates absent
+active materials during final cleanup. Loose-part filtering is restricted to the
+selected output meshes and explicitly reselects survivors, instead of selecting
+all visible scene objects. The fallback separation helper also starts from its
+selected inputs rather than the entire visible scene.
+
+`test_curve_cut.py` passes in a foreground Blender 5.1.2 window for a sphere and a
+closed extruded circular cutting curve. The first separation method produces three
+nonempty surface pieces, while a visible unrelated empty and an unrelated open
+triangle mesh survive unchanged. This fixture constructs the input curve directly;
+full click-to-cut flow, exact cut-boundary accuracy, fallback-method behavior,
+source vertex-group preservation and the subsequent Trim Model step remain open.
+The test is excluded from the headless runner.

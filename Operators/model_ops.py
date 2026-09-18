@@ -692,8 +692,7 @@ def first_separate_method() :
 def Second_separate_method() :
 
     bpy.ops.object.mode_set(mode="OBJECT")
-    bpy.ops.object.select_all(action="SELECT")
-    selected_initial = bpy.context.selected_objects
+    selected_initial = list(bpy.context.selected_objects)
     bpy.ops.object.select_all(action="DESELECT")
 
     for obj in selected_initial :
@@ -752,8 +751,8 @@ def Second_separate_method() :
 def filter_loose_parts() :
 
     bpy.ops.object.mode_set(mode="OBJECT")
-    bpy.ops.object.select_all(action="SELECT")
-    selected_parts = bpy.context.selected_objects
+    selected_parts = [obj for obj in bpy.context.selected_objects if obj.type == 'MESH']
+    surviving_parts = []
     bpy.ops.object.select_all(action="DESELECT")
 
     for obj in selected_parts :
@@ -776,14 +775,16 @@ def filter_loose_parts() :
             if len(verts) < len(non_manifold_verts) * 2 :
                 bpy.ops.object.delete(use_global=False, confirm=False)
             else :
+                surviving_parts.append(obj)
                 obj.select_set(False) 
             
         else :
             bpy.ops.object.delete(use_global=False, confirm=False)
 
     
-    bpy.ops.object.select_all(action="SELECT")
-    resulting_parts = len(bpy.context.selected_objects)
+    for obj in surviving_parts:
+        obj.select_set(True)
+    resulting_parts = len(surviving_parts)
 
     return resulting_parts
 
@@ -983,7 +984,9 @@ class OPENDENTAL_OT_curve_cut(bpy.types.Operator):
 
         bpy.ops.object.mode_set(mode="EDIT")
         bpy.ops.mesh.select_all(action="SELECT")
-        bpy.ops.mesh.normals_make_consistent(inside=False)
+        bm = bmesh.from_edit_mesh(Model.data)
+        bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+        bmesh.update_edit_mesh(Model.data)
         bpy.ops.mesh.select_all(action="DESELECT")
         bpy.ops.object.mode_set(mode="OBJECT")
 
@@ -1054,7 +1057,7 @@ class OPENDENTAL_OT_curve_cut(bpy.types.Operator):
 
         for obj in bpy.context.selected_objects:
             bpy.context.view_layer.objects.active = obj
-            if 'Blue_Metalica' in obj.active_material.name :
+            if obj.active_material and 'Blue_Metalica' in obj.active_material.name:
                 bpy.ops.object.material_slot_remove()
 
         bpy.ops.object.select_all(action="DESELECT")
