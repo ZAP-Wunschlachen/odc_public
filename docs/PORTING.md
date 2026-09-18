@@ -1912,3 +1912,21 @@ mode and linked-restoration test passes, as does the real-window drawn-arch
 Undo/Redo/setup/keep workflow. The prior headless tooth test retains its 64-block
 shutdown allocation warning. Other mirror axes/modifier combinations and repeated
 mirroring of already linked restorations remain separate cases.
+
+### Repeated mirrored linked setup
+
+`test_mirrored_arch_repeat.py` reproduced new mirrored path objects on every call,
+which also accumulated FOLLOW_PATH constraints on linked restorations. Mirrored
+paths now retain an ID reference to their half-arch source. Setup rebuilds the
+owned result's curve data in place, preserving its object identity, whether the
+caller selects the original source or the previous mirrored result. Unused old
+result data is removed; linked restorations keep a single constraint to that path.
+
+The repeated test also exposed unreferenced curve datablocks created by converting
+a duplicate arch to a mesh solely for length measurement. That measurement now
+uses an evaluated mesh directly and removes it afterward. Three repeated linked
+setups preserve the two restoration objects, a single path constraint per tooth,
+one 65-point result spline and exactly two curve objects/datablocks (source and
+result). The normal placement, mirror/reverse variants and real-window drawn-arch
+workflow all pass after the change. The existing 64-block shutdown warning in the
+normal placement test remains distinct from these removed curve datablocks.

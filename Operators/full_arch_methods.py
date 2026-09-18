@@ -92,6 +92,9 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
     if debug:
         start = time.time()
         
+    source = arch.get('odc_mirrored_arch_source') if mirror else None
+    if isinstance(source, bpy.types.Object) and source.type == 'CURVE':
+        arch = source
     # FOLLOW_PATH constraints need path evaluation enabled on hand-drawn curves.
     arch.data.use_path = True
     orig_arch_name = arch.name
@@ -105,6 +108,8 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
         # Build the mirrored path independently; do not add modifiers or change
         # resolution on the user's original half-arch.
         source_arch = arch
+        previous_arch = next((obj for obj in context.scene.objects
+                              if obj.type == 'CURVE' and obj.get('odc_mirrored_arch_source') == source_arch), None)
         arch = source_arch.copy()
         arch.data = source_arch.data.copy()
         context.collection.objects.link(arch)
@@ -134,6 +139,18 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
             bpy.data.meshes.remove(mirrored_mesh)
         arch.data.use_path = True
         arch.name = orig_arch_name + '_Mirrored'
+        if previous_arch is not None:
+            old_data = previous_arch.data
+            previous_arch.data = arch.data
+            previous_arch.matrix_world = arch.matrix_world.copy()
+            bpy.data.objects.remove(arch, do_unlink=True)
+            if old_data.users == 0:
+                bpy.data.curves.remove(old_data)
+            arch = previous_arch
+            arch.hide_set(False)
+            arch.select_set(True)
+            context.view_layer.objects.active = arch
+        arch['odc_mirrored_arch_source'] = source_arch
 
     #we may want to switch the direction of the curve :-)
     #we may also want to handle this outside of this function
@@ -145,23 +162,22 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
         bpy.ops.curve.switch_direction()
         bpy.ops.object.mode_set(mode='OBJECT')
         
-    bpy.ops.object.convert(target='MESH', keep_original = True)
-    arch_mesh = context.object #now the mesh conversion
+    arch_mesh = bpy.data.meshes.new_from_object(arch.evaluated_get(context.evaluated_depsgraph_get()))
     arch_len = 0
-    mx = arch_mesh.matrix_world
+    mx = arch.matrix_world.copy()
     
     #do some calcs to the curve
     #TODO:  split this method off.  It may already
     #be in odcutils.
     occ_dir = Vector((0,0,0))  #this will end  be a normalized, global direction
-    for i in range(0,len(arch_mesh.data.vertices)-1):
-        v0 = arch_mesh.data.vertices[i]
-        v1 = arch_mesh.data.vertices[i+1]
+    for i in range(0,len(arch_mesh.vertices)-1):
+        v0 = arch_mesh.vertices[i]
+        v1 = arch_mesh.vertices[i+1]
         V0 = mx @ v1.co - mx @ v0.co
         arch_len += V0.length
     
-        if i < len(arch_mesh.data.vertices)-2:
-            v2 = arch_mesh.data.vertices[i+2]
+        if i < len(arch_mesh.vertices)-2:
+            v2 = arch_mesh.vertices[i+2]
             V1 = mx @ v2.co - mx @ v1.co
             
             occ_dir += V0.cross(V1)
@@ -183,11 +199,13 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
             #else..leave quadrant alone
             
     curve_teeth = quadrant_dict[sextant]
-    occ_dir *= occ_direct_dict[sextant] * 1/(len(arch_mesh.data.vertices)-2)
+    occ_dir *= occ_direct_dict[sextant] * 1/(len(arch_mesh.vertices)-2)
     occ_dir.normalize()
     
-    #this deletes the arch mesh...not the arch curve
-    bpy.ops.object.delete()
+    # Dispose of the evaluated measurement mesh without creating an object or
+    # orphaned curve copies through object.convert(keep_original=True).
+    bpy.data.meshes.remove(arch_mesh)
+    arch.select_set(False)
     
     if reorient:
         arch_z = mx.to_quaternion() @ Vector((0,0,1))
