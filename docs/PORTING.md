@@ -1860,3 +1860,31 @@ selected boundary; it does not automatically close every hole in a mesh.
 volume 8, unchanged shared sibling geometry, no-selection cancellation, missing
 and non-mesh context rejection, and a live Edit-mode boundary producing area 4.
 `test_poll_contexts.py` and `test_model_workflows.py` also pass after the change.
+
+### Full suites against the installed ZIP
+
+`tests/run_installation.py --blender /Applications/Blender.app/Contents/MacOS/Blender
+--suites headless foreground` now copies only the test harness into the isolated
+installed add-on and executes the normal suite runners there. Tests resolve their
+package root from that installed location. Suite logs/results are copied back
+before the temporary profile and installed add-on are removed.
+
+For runtime revision f61a20d, the installed package passed 93/94 headless cases on
+the aggregate run and 26/26 foreground cases, plus installation, fresh-process
+auto-enable and removal. The sole headless failure was a harness dependency on
+`docs/operator_inventory.json`, which is intentionally excluded from the runtime
+ZIP. The poll test now discovers the actual registered package classes and asserts
+their RNA identities rather than reading/skipping entries in a stale inventory.
+The corrected test was copied into the same still-live installation and passed a
+separate rerun: all 118 operators across empty, selected-mesh and planned-restoration
+contexts. Thus all 94 headless cases have passing evidence, but the original
+aggregate JSON deliberately retains its initial 93/94 result. Fourteen headless
+cases retain shutdown allocation warnings; none of the foreground cases do.
+
+The tested ZIP has 68 files and SHA-256
+`0fa33b8176d1377207402342289e23041b314b9aeef3dd6cedf96500e0f10e96`.
+Every archived file was compared byte-for-byte with the runtime worktree before
+recording `verification_metadata.json`. Artifacts reside under
+`tests/artifacts/installation/`, including the separate poll rerun log. The source
+API audit also found old calls in disabled margin-tracing and splint experiments;
+those inactive routines are not proven Blender-5.1 workflows by these tests.

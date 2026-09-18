@@ -1,22 +1,25 @@
 """Every exposed operator poll must tolerate normal empty/partial scene states."""
-import sys,json,traceback,importlib
+import sys,json
 from pathlib import Path
 import bpy,addon_utils
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT.parent))
 module=addon_utils.enable(ROOT.name,default_set=True,persistent=False)
 assert module
-inventory=json.loads((ROOT/'docs/operator_inventory.json').read_text())
+# Inspect the enabled package, not a potentially stale development inventory.
 operators={}
-for item in inventory:
-    name=item['bl_idname']
-    if '.' not in name:continue
-    category,identifier=name.split('.',1)
-    op=getattr(getattr(bpy.ops,category),identifier)
-    try:op.get_rna_type()
-    except Exception:continue
-    module_name=ROOT.name+'.'+item['module'].removesuffix('.py').replace('/','.')
-    klass=getattr(importlib.import_module(module_name),item['class'])
-    operators[name]=(op,klass)
+for owner_name, owner in list(sys.modules.items()):
+    if owner_name != ROOT.name and not owner_name.startswith(ROOT.name+'.'):
+        continue
+    for klass in vars(owner).values():
+        if (not isinstance(klass,type) or not issubclass(klass,bpy.types.Operator)
+                or not klass.__module__.startswith(ROOT.name) or not klass.is_registered):
+            continue
+        name=klass.bl_idname
+        category,identifier=name.split('.',1)
+        op=getattr(getattr(bpy.ops,category),identifier)
+        assert op.get_rna_type().identifier == klass.bl_rna.identifier
+        operators[name]=(op,klass)
+assert len(operators)>=118, len(operators)
 for obj in list(bpy.data.objects):bpy.data.objects.remove(obj,do_unlink=True)
 results=[]
 for context in ['empty','mesh_selected','restoration_planned']:

@@ -1,9 +1,11 @@
 """Build/install/restart/remove the add-on without touching the user's profile."""
-import argparse, json, os, subprocess, sys, tempfile
+import argparse, json, os, shutil, subprocess, sys, tempfile
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--blender', required=True)
+parser.add_argument('--suites', nargs='*', choices=('headless', 'foreground'), default=[],
+                    help='Also run these suites against the installed add-on copy')
 args = parser.parse_args()
 output = ROOT / 'tests' / 'artifacts' / 'installation'
 output.mkdir(parents=True, exist_ok=True)
@@ -36,5 +38,29 @@ with tempfile.TemporaryDirectory(prefix='odc-install-') as temporary:
         if not passed:
             print(text[-4000:])
             break
+        if stage == 'restart' and args.suites:
+            installed = profile / 'scripts' / 'addons' / 'odc_public'
+            installed_tests = installed / 'tests'
+            installed_tests.mkdir()
+            # Tests resolve ROOT from __file__, so this runs the ZIP's modules
+            # and resources; the development checkout is not on their path.
+            for test in (ROOT/'tests').glob('*.py'):
+                shutil.copy2(test, installed_tests/test.name)
+            for suite in dict.fromkeys(args.suites):
+                suite_log = output / (suite + '-suite.log')
+                with suite_log.open('w') as handle:
+                    suite_result = subprocess.run(
+                        [sys.executable, str(installed_tests/('run_'+suite+'.py')),
+                         '--blender', args.blender], cwd=profile, env=env,
+                        stdout=handle, stderr=subprocess.STDOUT, timeout=3600)
+                artifacts = installed_tests / 'artifacts' / suite
+                destination = output / ('installed_' + suite)
+                shutil.copytree(artifacts, destination, dirs_exist_ok=True)
+                cases = json.loads((destination/'results.json').read_text())
+                suite_passed = suite_result.returncode == 0 and bool(cases) and all(case['passed'] for case in cases)
+                results.append({'stage':'installed_'+suite, 'passed':suite_passed,
+                                'cases':len(cases), 'passed_cases':sum(case['passed'] for case in cases),
+                                'shutdown_allocation_warnings':sum(case['shutdown_allocation_warning'] for case in cases)})
+                print('installed_'+suite, 'PASS' if suite_passed else 'FAIL', len(cases), flush=True)
 (output/'results.json').write_text(json.dumps(results, indent=2)+'\n')
-sys.exit(len(results) != 3 or not all(item['passed'] for item in results))
+sys.exit(len(results) != 3 + len(set(args.suites)) or not all(item['passed'] for item in results))
