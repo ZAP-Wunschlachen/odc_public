@@ -1140,3 +1140,19 @@ confirmation. The point-pair build test also passes. The fit portion injects exa
 synthetic correspondences into the running operator; only the earlier single-point
 picks use simulated clicks. Full manually clicked fitting, noisy correspondences,
 changing/closing editors mid-session and deletion of referenced objects remain open.
+
+### Retopo Smooth sculpt setup
+
+The registered model tool now activates Blender 5.1's Essentials Density asset
+(the SIMPLIFY sculpt brush), enables dynamic topology, and uses sculpt-specific
+unified paint settings. It retains radius 50, strength/auto-smooth 0.5, front-face
+and topology automasking, disabled X symmetry and constant detail resolution 16.
+The old contextless detail-sampling call is omitted so setup retains its declared
+constant resolution instead of attempting to sample an unspecified screen point.
+Multires meshes cancel before changing mode or geometry; invocation requires a
+mesh in a 3D View, and repeating setup leaves Dyntopo enabled.
+
+`test_retopo_sculpt.py` passes in a foreground Blender 5.1.2 window for brush/setup
+settings, repeat activation and the Multires guard. This verifies sculpt readiness,
+not the geometry produced by an actual sculpt stroke or quality on a repaired scan.
+The test is explicitly excluded from the headless runner.

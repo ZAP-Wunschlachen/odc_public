@@ -369,43 +369,39 @@ class OPENDENTAL_OT_retopo_smooth(bpy.types.Operator):
     bl_label = "Retopo Smooth"
     bl_options = {"REGISTER", "UNDO"}
 
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and context.mode in {'OBJECT', 'SCULPT', 'EDIT_MESH'}
+                and context.area is not None and context.area.type == 'VIEW_3D')
+
     def execute(self, context):
-
-        if bpy.context.selected_objects == []:
-
-            message = " Please select Model !"
-            ShowMessageBox(message=message, icon="COLORSET_02_VEC")
-
-            return {"CANCELLED"}
-
-        else:
-            
-            # Prepare scene settings : 
-            bpy.context.tool_settings.mesh_select_mode = (True , False , False)
-
-            bpy.ops.object.mode_set(mode="SCULPT")
-
-            Model = bpy.context.view_layer.objects.active  
-
-            bpy.context.scene.tool_settings.sculpt.use_symmetry_x = False
-            bpy.context.scene.tool_settings.unified_paint_settings.size = 50  
-            
-            bpy.ops.wm.tool_set_by_id(name="builtin_brush.Simplify")
-            bpy.data.brushes["Simplify"].cursor_color_add = (0.3, 0.0, 0.7, 0.4) 
-            bpy.data.brushes["Simplify"].strength = 0.5
-            bpy.data.brushes["Simplify"].auto_smooth_factor = 0.5
-            bpy.data.brushes["Simplify"].use_automasking_topology = True
-            bpy.data.brushes["Simplify"].use_frontface = True
-
-            if Model.use_dynamic_topology_sculpting == False :
-                bpy.ops.sculpt.dynamic_topology_toggle()
-            
-            bpy.context.scene.tool_settings.sculpt.detail_type_method = 'CONSTANT'
-            bpy.context.scene.tool_settings.sculpt.constant_detail_resolution = 16
-            bpy.ops.sculpt.sample_detail_size(mode='DYNTOPO')
-
-
-            return {"FINISHED"}
+        model = context.object
+        if any(mod.type == 'MULTIRES' for mod in model.modifiers):
+            self.report({'WARNING'}, 'Dynamic topology cannot be used with a Multires modifier')
+            return {'CANCELLED'}
+        if context.mode != 'SCULPT':
+            if context.mode != 'OBJECT':
+                bpy.ops.object.mode_set(mode='OBJECT')
+            bpy.ops.object.mode_set(mode='SCULPT')
+        if not model.use_dynamic_topology_sculpting:
+            bpy.ops.sculpt.dynamic_topology_toggle()
+        bpy.ops.brush.asset_activate(
+            asset_library_type='ESSENTIALS',
+            relative_asset_identifier='brushes/essentials_brushes-mesh_sculpt.blend/Brush/Density')
+        sculpt = context.tool_settings.sculpt
+        sculpt.use_symmetry_x = False
+        sculpt.unified_paint_settings.use_unified_size = True
+        sculpt.unified_paint_settings.size = 50
+        brush = sculpt.brush
+        brush.cursor_color_add = (0.3, 0.0, 0.7, 0.4)
+        brush.strength = 0.5
+        brush.auto_smooth_factor = 0.5
+        brush.use_automasking_topology = True
+        brush.use_frontface = True
+        sculpt.detail_type_method = 'CONSTANT'
+        sculpt.constant_detail_resolution = 16
+        return {'FINISHED'}
 
 #######################################################################################
 #clean model operator :
