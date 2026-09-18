@@ -993,3 +993,7 @@ Ported static bracket placement to retained dynamic library enums, returned libr
 ### Bracket manager surface placement
 
 Ported fallback bracket creation/display, ray-casting and matrix/quaternion operations in BracketDataManager. Scene hits remain in world coordinates; object hits are transformed from local coordinates. Spin cancellation now restores its saved transform. `test_bracket_manager.py` passes in a real Blender window after allowing view matrices to update: translated cube surface hit at (3,4,6), spin changes orientation, cancel restores the matrix. Added the window test to headless exclusions. Public modal startup/slicer and scene-snap self-intersection remain open.
+
+### Bracket orthogonal slices
+
+Ported slicer BMesh evaluation, nearest-surface query and matrix/quaternion products. Empty nearest-hit results return without slicing. Extended the bracket manager window test to verify both orthogonal cross-sections of a translated cube, world-space plane positions and five reference points. Blender 5.1.2 passes. Public modal integration, prescription tip variants and dynamic topology changes remain unverified.

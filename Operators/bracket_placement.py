@@ -231,7 +231,7 @@ class BracektSlicer(object):
         self.bracket_data = bracket_data_manager
         ob = self.bracket_data.snap_ob
         bme = bmesh.new()
-        bme.from_object(ob, context.scene)
+        bme.from_object(ob, context.evaluated_depsgraph_get())
         self.snap_ob = ob
         self.bme = bme
         self.bvh = BVHTree.FromBMesh(self.bme)
@@ -259,10 +259,10 @@ class BracektSlicer(object):
     def get_pt_and_no(self):
         mx = self.bracket_data.bracket_obj.matrix_world
         self.cut_pt = mx.to_translation()
-        self.cut_no_x = mx.to_3x3()*Vector((1,0,0))
-        self.cut_no_y = mx.to_3x3()*Vector((0,1,0))
+        self.cut_no_x = mx.to_3x3() @ Vector((1,0,0))
+        self.cut_no_y = mx.to_3x3() @ Vector((0,1,0))
         
-        z = mx.to_3x3()*Vector((0,0,1))
+        z = mx.to_3x3() @ Vector((0,0,1))
         
         tip =  self.bracket_data.bracket_obj.get('tip')
         quad = self.bracket_data.bracket_obj.get('quadrant')    
@@ -278,7 +278,7 @@ class BracektSlicer(object):
             
             
             tip_quat = Quaternion(z, tip_rad)
-            self.cut_no_x = tip_quat * self.cut_no_x
+            self.cut_no_x = tip_quat @ self.cut_no_x
         
         
     def slice(self):
@@ -288,27 +288,26 @@ class BracektSlicer(object):
         
         mx = self.snap_ob.matrix_world
         imx = mx.inverted()
-        if bversion() < '002.077.000':
-            pt, no, seed, dist = self.bvh.find(imx * self.cut_pt)
-        else:
-            pt, no, seed, dist = self.bvh.find_nearest(imx * self.cut_pt)
-        
+        pt, no, seed, dist = self.bvh.find_nearest(imx @ self.cut_pt)
+        if seed is None:
+            return
+
         verts_x, eds = cross_section_seed_ver1(self.bme, mx, self.cut_pt, self.cut_no_x, seed, max_tests = 100)
         verts_y, eds = cross_section_seed_ver1(self.bme, mx, self.cut_pt, self.cut_no_y, seed, max_tests = 100)
         #put them in world space
         
         if verts_x != None:
-            self.slice_points_x = [mx*v for v in verts_x]
+            self.slice_points_x = [mx @ v for v in verts_x]
         else:
             self.slice_points_x = []
         if verts_y != None:
-            self.slice_points_y = [mx*v for v in verts_y]
+            self.slice_points_y = [mx @ v for v in verts_y]
         else:
             self.slice_points_y = []
             
         bmx = self.bracket_data.bracket_obj.matrix_world
-        bracket_x = bmx.to_3x3()*Vector((1,0,0))
-        bracket_z = bmx.to_3x3()*Vector((0,0,1))
+        bracket_x = bmx.to_3x3() @ Vector((1,0,0))
+        bracket_z = bmx.to_3x3() @ Vector((0,0,1))
         bracket_y = bracket_z.cross(self.cut_no_x)
         
         v0 = self.cut_pt
