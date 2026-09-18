@@ -1783,3 +1783,22 @@ clinical arch or an occlusal acceptance test. The existing upper/lower arch,
 BUCCAL/FOSSA/BODY and linked-restoration tests pass with the fixture now starting
 with path evaluation disabled. That headless case still emits its shutdown
 allocation warning (64 blocks); the foreground integration run does not.
+
+### Isolated ZIP installation and fresh-process startup
+
+`tools/build_addon.py` creates a deterministic legacy add-on ZIP containing the
+68 tracked runtime/resource/README files under `odc_public/`. Tests, Git metadata
+and untracked files are excluded. `tests/run_installation.py` executes Blender
+with temporary script/config/datafile/extension directories and a temporary CWD.
+The probe checks the effective Blender resource paths before installation, checks
+the imported module is the installed copy, verifies all five default libraries
+are inside that copy and can be read, and appends actual tooth 11 from its library.
+
+Install/enable/save preferences, a fresh Blender process that automatically enables
+the installed add-on, and a further process that removes the add-on all pass under
+5.1.2. Uninstall verifies the installed directory and Scene.odc_teeth are gone.
+Blender's native addon_remove operator needs an area for tag_redraw even when
+running headless; the probe supplies an existing screen area. These three stages
+have no tracebacks, dependency cycles or shutdown allocation warnings. This is an
+installation/lifecycle check, not a rerun of all geometry or UI tests against the
+installed copy. The user's normal Blender profile is not modified by the runner.
