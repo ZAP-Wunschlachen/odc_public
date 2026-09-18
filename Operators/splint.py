@@ -207,124 +207,71 @@ def clean_object():
 class OPENDENTAL_OT_splint_outline(bpy.types.Operator):
     bl_idname = "opendental.splint_outline"
     bl_label = "Outline Area"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and context.object.mode in {'OBJECT', 'WEIGHT_PAINT'})
 
     def execute(self, context):
-        if bpy.context.active_object.mode == "OBJECT":
-            context.scene.splint_mode = "PAINT"
-            # First rename de model to 'model'
-            ob = bpy.context.selected_objects[0]
-            bpy.context.view_layer.objects.active = ob
-            #ob.name = "model"
+        source = context.object
+        if source.mode == 'OBJECT':
+            group = source.vertex_groups.get('ODC Splint Area')
+            if group is None:
+                group = source.vertex_groups.new(name='ODC Splint Area')
+            source.vertex_groups.active_index = group.index
+            bpy.ops.object.mode_set(mode='WEIGHT_PAINT')
+            bpy.ops.brush.asset_activate(
+                asset_library_type='ESSENTIALS',
+                relative_asset_identifier='brushes/essentials_brushes-mesh_weight.blend/Brush/Paint')
+            brush = context.tool_settings.weight_paint.brush
+            brush.use_frontface = False
+            brush.curve_distance_falloff_preset = 'CONSTANT'
+            context.tool_settings.weight_paint.unified_paint_settings.use_unified_weight = True
+            context.tool_settings.weight_paint.unified_paint_settings.weight = 1.0
+            context.scene.splint_mode = 'PAINT'
+            return {'FINISHED'}
 
-            # # Check if there's already a metaball in the scene
-            # foundmeta = 'Mball' in bpy.data.objects
-
-            # #If there's not a metaball create the meta and setup resolution and material
-            # if foundmeta == False:
-            #     bpy.ops.object.metaball_add(type='BALL', enter_editmode=False, align='WORLD', location=(0, 0, 100))
-            #     ob = bpy.context.selected_objects[0]
-            #     bpy.context.view_layer.objects.active = ob
-            #     bpy.context.object.data.resolution = 1
-            #     bpy.context.object.data.threshold = 0.01
-            #     create_material('splintmat')
-            # #If its already created setup resolution and material
-            # else:
-            #     bpy.ops.object.select_all(action='DESELECT')
-            #     bpy.data.objects['Mball'].select_set(True)
-            #     ob = bpy.context.selected_objects[0]
-            #     bpy.context.view_layer.objects.active = ob
-            #     bpy.context.object.data.resolution = 1
-            #     bpy.context.object.data.threshold = 0.01
-            #     create_material('splintmat')
-
-            # bpy.ops.object.select_all(action='DESELECT')
-            # bpy.data.objects['model'].select_set(True)
-            # ob = bpy.context.selected_objects[0]
-            # bpy.context.view_layer.objects.active = ob #Set the model as active object
-
-            # #We check if the model already has a vertex group and rename it as VG_Influence, we create if it doesnt exist
-
-            # if len(ob.vertex_groups) == 0:
-            #     bpy.ops.object.vertex_group_add()
-            #     ob.vertex_groups[0].name = 'VG_Influence'
-            # else:
-            #     ob.vertex_groups[0].name = 'VG_Influence'
-
-            # #We finally create the particle system on the model and point to the metaball
-            # create_particles('particulas', 'VG_Influence')
-            # bpy.data.particles['particulas'].instance_object = bpy.data.objects['Mball']
-
-            # Go to weight paint mode and setup the brush
-
-            bpy.ops.object.mode_set(mode="WEIGHT_PAINT")
-            bpy.ops.brush.curve_preset(shape="MAX")
-            bpy.data.brushes["Draw"].use_frontface = False
-
-        elif bpy.context.active_object.mode == "WEIGHT_PAINT":
-            context.scene.splint_mode = "OBJECT"
-            ob = bpy.context.selected_objects[0]
-            model_name = ob.name
-            #if we are still in weight paint edit mode, exit!
-            if bpy.context.active_object.mode == "WEIGHT_PAINT":
-                bpy.ops.object.mode_set(mode="OBJECT")
-            #removing prev. generated outline, as not we have updated our outline
-            if bpy.data.objects.get(model_name + "_splint_outline") is not None:
-                bpy.ops.object.select_all(action="DESELECT")
-                bpy.data.objects[model_name + "_splint_outline"].select_set(True)
-                bpy.context.view_layer.objects.active = bpy.data.objects[model_name + "_splint_outline"]
-                bpy.ops.object.delete()
-                bpy.data.objects[model_name].select_set(True)
-                bpy.context.view_layer.objects.active = bpy.data.objects[model_name]
-
-            # We first limit the limits of the wieghts to consider for the generated vertex group
-
-            bpy.ops.object.vertex_group_limit_total(group_select_mode="ALL", limit=1)
-            bpy.ops.object.vertex_group_clean()
-
-            # Let's go to edit mode, then deselect everything, select the vertex group, duplicate and separate vertex.
-            # Select new object and set as active object.
-
-            bpy.ops.object.mode_set(mode="EDIT")
-            bpy.ops.mesh.select_all(action="DESELECT")
-            bpy.ops.object.vertex_group_select()
-            bpy.ops.mesh.duplicate_move(
-                MESH_OT_duplicate={"mode": 1},
-                TRANSFORM_OT_translate={
-                    "value": (0, 0, 0),
-                    "orient_type": "GLOBAL",
-                    "orient_matrix": ((1, 0, 0), (0, 1, 0), (0, 0, 1)),
-                    "orient_matrix_type": "GLOBAL",
-                    "constraint_axis": (False, False, False),
-                    "mirror": False,
-                    "use_proportional_edit": False,
-                    "proportional_edit_falloff": "SMOOTH",
-                    "proportional_size": 1,
-                    "use_proportional_connected": False,
-                    "use_proportional_projected": False,
-                    "snap": False,
-                    "snap_target": "CLOSEST",
-                    "snap_point": (0, 0, 0),
-                    "snap_align": False,
-                    "snap_normal": (0, 0, 0),
-                    "gpencil_strokes": False,
-                    "cursor_transform": False,
-                    "texture_space": False,
-                    "remove_on_cancel": False,
-                    "release_confirm": False,
-                    "use_accurate": False,
-                },
-            )
-            bpy.ops.mesh.separate(type="SELECTED")
-            bpy.ops.object.mode_set(mode="OBJECT")
-            
-            bpy.ops.object.select_all(action="DESELECT")
-            bpy.ops.object.select_pattern(pattern=ob.name+".001")
-            ob_outline = bpy.context.selected_objects[0]
-            ob_outline.name = ob.name + "_splint_outline"
-            bpy.context.view_layer.objects.active = ob_outline
-            
-
-        return {"FINISHED"}
+        group = source.vertex_groups.get('ODC Splint Area') or source.vertex_groups.active
+        if group is None:
+            self.report({'WARNING'}, 'Paint a splint area first')
+            return {'CANCELLED'}
+        indices = {vertex.index for vertex in source.data.vertices
+                   if any(item.group == group.index and item.weight > 0
+                          for item in vertex.groups)}
+        if not any(all(index in indices for index in face.vertices)
+                   for face in source.data.polygons):
+            self.report({'WARNING'}, 'The painted area must contain at least one complete face')
+            return {'CANCELLED'}
+        bpy.ops.object.mode_set(mode='OBJECT')
+        bm = bmesh.new()
+        try:
+            bm.from_mesh(source.data)
+            bm.verts.ensure_lookup_table()
+            bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.index not in indices], context='VERTS')
+            mesh = bpy.data.meshes.new(source.name + '_splint_outline')
+            bm.to_mesh(mesh)
+        finally:
+            bm.free()
+        # Only replace outlines generated for this source; preserve name collisions.
+        for old in list(context.scene.objects):
+            if old.get('odc_splint_source') == source and old.get('odc_splint_outline'):
+                old_mesh = old.data
+                bpy.data.objects.remove(old, do_unlink=True)
+                if old_mesh.users == 0:
+                    bpy.data.meshes.remove(old_mesh)
+        outline = bpy.data.objects.new(source.name + '_splint_outline', mesh)
+        outline['odc_splint_source'] = source
+        outline['odc_splint_outline'] = True
+        context.collection.objects.link(outline)
+        outline.matrix_world = source.matrix_world.copy()
+        for ob in context.selected_objects:
+            ob.select_set(False)
+        outline.select_set(True)
+        context.view_layer.objects.active = outline
+        context.scene.splint_mode = 'OBJECT'
+        return {'FINISHED'}
 
 class OPENDENTAL_OT_splint_make(bpy.types.Operator):
     bl_idname = "opendental.splint_make"
@@ -339,6 +286,7 @@ class OPENDENTAL_OT_splint_make(bpy.types.Operator):
             bpy.ops.opendental.splint_outline("INVOKE_DEFAULT")
         if "_splint_outline" in bpy.context.selected_objects[0].name:
             bpy.context.selected_objects[0].name = bpy.context.selected_objects[0].name.replace("_splint_outline", "_splint")
+            bpy.context.selected_objects[0]['odc_splint_outline'] = False
 
         ob = bpy.context.selected_objects[0]
         bpy.context.view_layer.objects.active = ob
@@ -421,26 +369,28 @@ class OPENDENTAL_OT_splint_outline_paint(bpy.types.Operator):
     bl_idname = "opendental.splint_outline_paint"
     bl_label = "Add Area"
 
+    @classmethod
+    def poll(cls, context):
+        return context.object is not None and context.object.mode == 'WEIGHT_PAINT'
+
     def execute(self, context):
-        context.scene.tool_settings.unified_paint_settings.weight = 1.0
-        return {"FINISHED"}
+        context.tool_settings.weight_paint.unified_paint_settings.use_unified_weight = True
+        context.tool_settings.weight_paint.unified_paint_settings.weight = 1.0
+        return {'FINISHED'}
+
 
 class OPENDENTAL_OT_splint_outline_erase(bpy.types.Operator):
     bl_idname = "opendental.splint_outline_erase"
     bl_label = "Erase Area"
 
+    @classmethod
+    def poll(cls, context):
+        return context.object is not None and context.object.mode == 'WEIGHT_PAINT'
+
     def execute(self, context):
-        context.scene.tool_settings.unified_paint_settings.weight = 0.0
-
-        bpy.ops.object.modifier_apply(modifier="Smooth")
-        objs = [ob for ob in bpy.context.scene.objects if ob.type in ('METABALL')]
-        for ob in objs:
-            ob.select_set(True)
-            bpy.ops.object.delete(True)
-
-    
-        return {"FINISHED"}
-
+        context.tool_settings.weight_paint.unified_paint_settings.use_unified_weight = True
+        context.tool_settings.weight_paint.unified_paint_settings.weight = 0.0
+        return {'FINISHED'}
 
 
 def register():

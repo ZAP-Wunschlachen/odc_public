@@ -1021,3 +1021,21 @@ before the final Enter saves both section strokes. The test first exposed that
 S-mode accepted horizontal arrow events while its spin helper ignored them; the
 helper now handles right/left arrows alongside up/down and wheel events. All these
 cases pass in Blender 5.1.2. Scene snapping and stroke appearance remain unverified.
+
+### Splint painted-area setup and extraction
+
+The outline workflow activates Blender 5.1's Essentials `Paint` weight brush,
+uses `curve_distance_falloff_preset` and the weight-paint-specific unified settings,
+and creates an `ODC Splint Area` vertex group. Exiting paint mode copies the marked
+mesh region directly, preserving the source mesh, other weights and modifiers.
+Generated outlines carry a source reference so repeat extraction only replaces its
+own prior outline, preserving unrelated objects with colliding names. Finalizing
+an outline clears its outline tag. Empty selections cancel before creating output.
+The Erase Area button no longer applies a Smooth modifier or deletes scene metaballs.
+
+`test_splint_outline.py` passes in Blender 5.1.2: brush activation, Add/Erase settings,
+empty-area cancellation, extraction of one cube face, world transform, untouched
+source coordinates/weights/modifiers, repeat replacement and unrelated-object
+preservation. Weight values are assigned programmatically in this test; actual
+paint strokes, complete splint finalization, wall thickness and offset accuracy
+remain to be verified.
