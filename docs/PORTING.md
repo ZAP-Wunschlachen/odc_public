@@ -1531,3 +1531,18 @@ separately with 141 classes, including 117 operators. The aggregate JSON above
 predates this test strengthening. Registration success is not behavioral
 coverage for all 117 operators; remaining geometry/workflow limitations still
 apply.
+
+### Physics scene save/reopen
+
+`test_physics_roundtrip.py` reuses the real two-body dynamics checks, saving at
+frame 30 and reopening the temporary `.blend` in the same Blender process
+before rewinding/replaying. On Blender 5.1.2 it passes: source scene/object and
+field/body ID references survive, the persistent frame handler exists exactly
+once, the repeated trajectory matches within 1e-6, and Keep Results still updates
+the original scene correctly. No dependency cycles were logged. The original
+without-reload dynamics test was rerun and also passes.
+
+This closes same-process save/reopen coverage for the new field design. It does
+not cover launching a fresh Blender process, baked caches or arbitrary frame
+jumps. The full headless aggregate remains the earlier 80-case run; this added
+case has been run separately.
