@@ -1039,3 +1039,20 @@ source coordinates/weights/modifiers, repeat replacement and unrelated-object
 preservation. Weight values are assigned programmatically in this test; actual
 paint strokes, complete splint finalization, wall thickness and offset accuracy
 remain to be verified.
+
+### Splint finalization execution
+
+Replaced removed `Mesh.use_remesh_smooth_normals` with smooth shading on the
+remeshed polygons. Finalization validates finite positive thickness, nonnegative
+offset and an existing mesh base before mutating output. It propagates failed
+outline extraction instead of continuing on the source model, and isolates the
+outline selection before applying transforms/modifiers.
+
+`test_splint_make.py` passes for a painted hemisphere from a radius-10 sphere,
+with and without a base-model Boolean. Both results have faces, positive volume
+and exclusively manifold edges; the source vertex coordinates remain unchanged.
+Invalid numeric settings, a missing base and an unpainted source cancel safely.
+The base variant is included in the isolated headless runner. These tests verify
+execution/topology only: anatomical validity, shell thickness/clearance accuracy,
+flat or sparse painted patches, and failure rollback later in finalization are
+still unverified. The legacy remeshing and smoothing pipeline is retained.

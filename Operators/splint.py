@@ -277,13 +277,45 @@ class OPENDENTAL_OT_splint_make(bpy.types.Operator):
     bl_idname = "opendental.splint_make"
     bl_label = "Finalize Splint"
 
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and context.object.mode in {'OBJECT', 'WEIGHT_PAINT'})
+
     def execute(self, context):
-        #t1_start = process_time()
-        if bpy.context.active_object.mode == "WEIGHT_PAINT":
-            bpy.ops.opendental.splint_outline("INVOKE_DEFAULT")
-        elif bpy.context.active_object.mode == "OBJECT" and "_splint_outline" not in bpy.context.selected_objects[0].name:
-            bpy.ops.object.mode_set(mode="WEIGHT_PAINT")
-            bpy.ops.opendental.splint_outline("INVOKE_DEFAULT")
+        import math
+        try:
+            thickness = float(context.scene.splint_shell_thickness)
+            offset = float(context.scene.splint_shell_offset)
+        except ValueError:
+            self.report({'WARNING'}, 'Thickness and offset must be numbers')
+            return {'CANCELLED'}
+        if not math.isfinite(thickness) or not math.isfinite(offset) or thickness <= 0 or offset < 0:
+            self.report({'WARNING'}, 'Thickness must be positive and offset non-negative')
+            return {'CANCELLED'}
+        base_name = context.scene.splint_base_model
+        base = context.scene.objects.get(base_name) if base_name else None
+        if base_name and (base is None or base.type != 'MESH'):
+            self.report({'WARNING'}, 'Select an existing mesh as the base model')
+            return {'CANCELLED'}
+        source = context.object
+        if source.mode == 'WEIGHT_PAINT' or not source.get('odc_splint_outline'):
+            if source.mode == 'OBJECT':
+                bpy.ops.object.mode_set(mode='WEIGHT_PAINT')
+            if bpy.ops.opendental.splint_outline() != {'FINISHED'}:
+                if source.mode != 'OBJECT':
+                    bpy.ops.object.mode_set(mode='OBJECT')
+                context.scene.splint_mode = 'OBJECT'
+                return {'CANCELLED'}
+        ob = context.object
+        if ob == base:
+            self.report({'WARNING'}, 'The outline and base model must be different objects')
+            return {'CANCELLED'}
+        for selected in context.selected_objects:
+            selected.select_set(False)
+        ob.select_set(True)
         if "_splint_outline" in bpy.context.selected_objects[0].name:
             bpy.context.selected_objects[0].name = bpy.context.selected_objects[0].name.replace("_splint_outline", "_splint")
             bpy.context.selected_objects[0]['odc_splint_outline'] = False
@@ -318,9 +350,10 @@ class OPENDENTAL_OT_splint_make(bpy.types.Operator):
 
         bpy.context.object.data.remesh_voxel_size = 0.5
         bpy.context.object.data.use_remesh_fix_poles = True
-        bpy.context.object.data.use_remesh_smooth_normals = True
         bpy.context.object.data.use_remesh_preserve_volume = True
         bpy.ops.object.voxel_remesh()
+        for polygon in bpy.context.object.data.polygons:
+            polygon.use_smooth = True
 
         bpy.ops.object.modifier_add(type="SMOOTH")
         bpy.context.object.modifiers["Smooth"].factor = 1

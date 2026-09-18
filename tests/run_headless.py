@@ -16,8 +16,9 @@ results = []
 cases = [(path, []) for path in sorted((ROOT / 'tests').glob('test_*.py'))
          if path.stem not in UI_TESTS]
 cases.append((ROOT / 'tests/test_solid_restoration.py', ['25', '0']))
+cases.append((ROOT / 'tests/test_splint_make.py', ['--with-base']))
 for path, extra in cases:
-    name = path.stem + ('_merge' if extra else '')
+    name = path.stem + ('_with_base' if '--with-base' in extra else '_merge' if extra else '')
     command = [args.blender, '--background', '--factory-startup', '--disable-autoexec',
                '--python-exit-code', '1', '--python', str(path)]
     if extra:
