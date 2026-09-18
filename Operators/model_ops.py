@@ -1732,7 +1732,22 @@ class OPENDENTAL_OT_solid_hollow_models(bpy.types.Operator):
     bl_label = "Solid Hollow Models"
     bl_options = {"REGISTER", "UNDO"}
 
-    def execute(self, context) :
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and context.mode == 'OBJECT' and context.area is not None
+                and context.area.type == 'VIEW_3D' and context.region_data is not None)
+
+    def execute(self, context):
+        props = context.scene.ODC_modops_props
+        height, show_box = props.base_height, props.show_box
+        try:
+            return self.build_models(context)
+        finally:
+            props.base_height = height
+            props.show_box = show_box
+
+    def build_models(self, context):
 
         if bpy.context.selected_objects == []:
 
@@ -1748,11 +1763,13 @@ class OPENDENTAL_OT_solid_hollow_models(bpy.types.Operator):
             bpy.context.scene.ODC_modops_props.show_box = False
             context.scene.ODC_modops_props.base_height += 3
             
-            bpy.ops.opendental.model_base()
+            if bpy.ops.opendental.model_base() != {'FINISHED'}:
+                return {'CANCELLED'}
             bpy.context.object.show_name = True
             Model_solid_base = bpy.context.active_object
 
-            bpy.ops.opendental.hollow_model()
+            if bpy.ops.opendental.hollow_model() != {'FINISHED'}:
+                return {'CANCELLED'}
             bpy.context.object.show_name = True
             Model_hollow = bpy.context.active_object
 

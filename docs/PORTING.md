@@ -1260,3 +1260,17 @@ Source world geometry and the unrelated named object remain, with no temporary
 objects left. The legacy approximate metaball wall construction remains unchanged;
 wall-thickness accuracy, nonuniform scale, existing modifier stacks, metadata cleanup
 and open-input/failure recovery require further checks. This is a foreground test.
+
+### Combined solid/hollow base workflow
+
+Solid Hollow Models now checks cancellation from each dependent operator and
+restores the user's base-height and show-box settings in a finally block, including
+exceptions. Previously show-box remained disabled after a successful run.
+
+`test_solid_hollow_models.py` passes in foreground Blender 5.1.2 for both identity
+and tilted model/view orientation. It verifies exactly two output objects, manifold
+solid and hollow meshes, their common cut plane 3 units below the original minimum,
+unchanged source world geometry, and restored height/show-box settings. The popup
+is suppressed in the test. Failure cleanup of partial output objects, arbitrary
+scan boundaries, actual wall thickness and exceptional-path setting restoration
+have not been separately exercised. This test is excluded from the headless runner.
