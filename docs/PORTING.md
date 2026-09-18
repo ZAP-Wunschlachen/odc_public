@@ -1546,3 +1546,15 @@ This closes same-process save/reopen coverage for the new field design. It does
 not cover launching a fresh Blender process, baked caches or arbitrary frame
 jumps. The full headless aggregate remains the earlier 80-case run; this added
 case has been run separately.
+
+### Deleted physics bodies
+
+The pre-frame updater now disables a tagged forcefield whose body reference is
+missing or no longer belongs to the simulation scene. Previously the stale
+field remained active at the deleted body's last position. The new
+`test_physics_deleted_body.py` failed before the correction and now passes in
+Blender 5.1.2: after removing one of two simulation bodies, its field is NONE,
+the surviving body's field remains FORCE, the survivor stays stationary across
+30 frames and source objects remain intact. The original two-body dynamics test
+also passes again. This check covers deletion before replay, not undoing a
+mid-playback deletion or restoring an unlinked body.

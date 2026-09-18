@@ -980,6 +980,9 @@ def update_tooth_forcefields(scene, depsgraph=None):
             continue
         body = field.get('odc_forcefield_body')
         if not isinstance(body, bpy.types.Object) or body.name not in scene.objects:
+            # An orphan must not attract the surviving teeth from its last pose.
+            if field.field is not None and field.field.type != 'NONE':
+                field.field.type = 'NONE'
             continue
         world = (body.matrix_world if scene.frame_current <= start
                  else body.evaluated_get(graph).matrix_world)
