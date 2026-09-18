@@ -22,9 +22,13 @@ def remove_undercuts(context, ob, view, world = True, smooth = True, epsilon = .
     
         
     #careful, this can get expensive with multires
-    me = ob.to_mesh()    #2.79 ob.to_mesh(context.scene, True, 'RENDER')
+    evaluated = ob.evaluated_get(context.evaluated_depsgraph_get())
+    me = evaluated.to_mesh()
     bme = bmesh.new()
-    bme.from_mesh(me)
+    try:
+        bme.from_mesh(me)
+    finally:
+        evaluated.to_mesh_clear()
     bme.normal_update()
     bme.verts.ensure_lookup_table()
     bme.edges.ensure_lookup_table()
@@ -40,7 +44,7 @@ def remove_undercuts(context, ob, view, world = True, smooth = True, epsilon = .
         #meaning the vector is in world coords
         #we need to take it back into local
         i_mx = mx.inverted()
-        view = i_mx.to_quaternion() @ view
+        view = i_mx.to_3x3() @ view
             
     face_directions = [[0]] * len(bme.faces)
     
@@ -180,7 +184,8 @@ def remove_undercuts(context, ob, view, world = True, smooth = True, epsilon = .
         for ed in ed_loop:
             ed.select_set(True)
     
-    loops_tools.relax_loops_util(bme, loop_edges, 5)
+    if smooth:
+        loops_tools.relax_loops_util(bme, loop_edges, 5)
     
     for ed in bme.edges:
         ed.select_set(False)
@@ -233,6 +238,10 @@ def remove_undercuts(context, ob, view, world = True, smooth = True, epsilon = .
     obj.select_set(state=True)
     context.view_layer.objects.active = obj
     
+    for face in bme.faces:
+        face.material_index = 0
+    for face in new_fs:
+        face.material_index = 1
     bme.to_mesh(obj.data)
     # Get material
     mat = bpy.data.materials.get("Model Material")
@@ -257,8 +266,6 @@ def remove_undercuts(context, ob, view, world = True, smooth = True, epsilon = .
     mat_ind = obj.data.materials.find("Undercut Material")
     print('Undercut material is %i' % mat_ind)
     
-    for f in new_faces:
-        obj.data.polygons[f.index].material_index = mat_ind
             
     if world:
         obj.matrix_world = mx
@@ -266,7 +273,7 @@ def remove_undercuts(context, ob, view, world = True, smooth = True, epsilon = .
     bme.free()
     del bvh
         
-    return
+    return obj
 
 
 def join_bmesh_map(source, target, src_trg_map = None, src_mx = None, trg_mx = None):

@@ -1642,3 +1642,26 @@ independent state in another scene. These cases use `world=True, smooth=False`;
 smoothed results, concave/deformed inputs, singular transforms and the two public
 blockout operators still need further verification. Untagged legacy survey
 objects are deliberately not removed based only on their names.
+
+### Blockout entry point and preview
+
+The public dispatcher now imports its preview helper, provides declared world/
+smooth settings and defined model/view arguments, uses the stored survey axis
+when present, and returns the Solid operator's actual result. Both blockout
+operators require an active selected mesh in an Object Mode 3D viewport. Solid's
+survey flag accesses were changed to scene instances and its stored quaternion
+is explicitly converted to mathutils; its geometry workflow is still pending.
+
+`test_blockout_dispatch.py` passes in Blender 5.1.2 with mocked geometry: it checks
+current/stored view axes, parameter forwarding, cancellation propagation and
+poll guards. This test alone is not geometry evidence.
+
+`test_blockout_preview.py` additionally invokes the real preview helper on a
+translated, nonuniformly scaled sphere. It verifies retained original data,
+connected disk topology, exactly one 32-edge open lower boundary, retained top
+height and a 10-world-unit skirt, with exactly 32 correctly marked new faces.
+The helper now uses/clears evaluated meshes, respects smooth=False and uses the
+full inverse transform for extrusion. Material assignment uses the actual new
+faces instead of a stale flood-fill variable. Both tests pass. Small-component
+thresholds, concave/noisy scans, preview failure cleanup and Solid generation
+still need further work; the preview is intentionally an open surface.

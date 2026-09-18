@@ -4,10 +4,11 @@ from math import degrees, radians, pi
 
 #Blender Imports
 import bpy
-from mathutils import Vector
+from mathutils import Vector, Quaternion
 
 #Addon Imports
 from ..Addon_utils import odcutils
+from . import bmesh_fns
 
 #Popup message box function :
 
@@ -121,46 +122,36 @@ class OPENDENTAL_OT_survey_model(bpy.types.Operator):
         return {'FINISHED'}
 
 class OPENDENTAL_OT_blockout_model(bpy.types.Operator):
-    """Calculates silhouette of object which surveys convexities AND concavities from the current view axis"""
-
+    """Run preview or solid undercut removal using the selected insertion axis."""
     bl_idname = "opendental.blockout_model"
     bl_label = "Blockout Model From View"
     bl_options = {"REGISTER", "UNDO"}
-    """
-    world = bpy.props.BoolProperty(
-        default=True,
-        name="Use world coordinate for calculation...almost always should be true.",
-    )
-    smooth = bpy.props.BoolProperty(
-        default=True,
-        name="Smooth the outline.  Slightly less acuurate in some situations but more accurate in others.  Default True for best results",
-    )
-    
+
+    world: bpy.props.BoolProperty(name="World coordinates", default=True)
+    smooth: bpy.props.BoolProperty(name="Smooth boundary", default=True)
+
     @classmethod
     def poll(cls, context):
-        # restoration exists and is in scene
-        C0 = context.space_data is not None and context.space_data.type == "VIEW_3D"
-        C1 = context.object != None
-        if C1:
-            C2 = context.object.type == "MESH"
-        else:
-            C2 = False
-        return C0 and C1 and C2
-    """
+        return OPENDENTAL_OT_survey_model.poll(context)
+
     def execute(self, context):
-        
-        Modelsprop = bpy.context.scene.UNDERCUTS_props.Modelsprop
-        if "Preview" in Modelsprop:
-            bmesh_fns.remove_undercuts(context, ob, view, self.world, self.smooth)
-        elif "Solid" in Modelsprop:
-            bpy.ops.opendental.view_blockout_undercuts_solid()
-        return {"FINISHED"}
+        if context.scene.UNDERCUTS_props.Modelsprop == 'Solid':
+            return bpy.ops.opendental.view_blockout_undercuts_solid()
+        rotation = (Quaternion(context.scene.UNDERCUTS_view_props.survey_quaternion)
+                    if context.scene.pre_surveyed else context.region_data.view_rotation)
+        view = rotation @ Vector((0, 0, 1))
+        bmesh_fns.remove_undercuts(context, context.object, view, self.world, self.smooth)
+        return {'FINISHED'}
 
 
 class OPENDENTAL_OT_blockout_model_solid(bpy.types.Operator): #produces watertight blockout mesh when supplied watertight mesh
     bl_idname = 'opendental.view_blockout_undercuts_solid'
     bl_label = "Blockout Model From Z-axis"
     bl_options = {'REGISTER','UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        return OPENDENTAL_OT_survey_model.poll(context)
 
     def execute(self, context):
 
@@ -197,8 +188,8 @@ class OPENDENTAL_OT_blockout_model_solid(bpy.types.Operator): #produces watertig
 
                 ###  PATRICKS TEST ###############################
                 ##################################################
-                if bpy.types.Scene.pre_surveyed == True:
-                    world_view = context.scene.UNDERCUTS_view_props.survey_quaternion @ Vector((0,0,1))
+                if context.scene.pre_surveyed:
+                    world_view = Quaternion(context.scene.UNDERCUTS_view_props.survey_quaternion) @ Vector((0,0,1))
                 else:
                     world_view = context.space_data.region_3d.view_rotation @ Vector((0,0,1))
 
@@ -228,7 +219,7 @@ class OPENDENTAL_OT_blockout_model_solid(bpy.types.Operator): #produces watertig
                 bpy.ops.object.mode_set(mode = 'OBJECT')
                 bpy.ops.opendental.remesh_model("INVOKE_DEFAULT")
 
-                bpy.types.Scene.pre_surveyed = False
+                context.scene.pre_surveyed = False
 
                 # Rename Model_blocked :
                 
