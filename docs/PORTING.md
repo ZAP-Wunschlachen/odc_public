@@ -1702,3 +1702,23 @@ now passes with non-default settings, checking report content and no scene
 mutation. These tests close the remaining entry-point gaps identified by the
 previous text-reference audit; text references still do not prove complete
 behavioral or UI coverage.
+
+### Rigid-body movement limits (Blender 5.1.2)
+
+A real 60-frame gravity test exposed that LIMIT_LOCATION alone did not constrain
+Bullet motion: the body fell from z=10 to z=-18.73 despite a 0.5-unit limit.
+Rigid bodies now also receive a GENERIC joint against a stationary, collision-free
+passive mesh at the existing movement reference axes. Blender requires both joint
+bodies; an empty second body does not create a simulation constraint. Non-rigid
+objects retain their transform constraint. Existing empty references are migrated
+when a rigid body is added. Physics setup, force fields, lock/unlock and limit
+operators ignore these owned anchors. Removing limits disables the joint and
+removes unused owned anchor objects and meshes.
+
+`test_physics_limit_dynamics.py` passes sequential 60-frame simulation with normal
+and 90-degree-rotated local axes, repeated application, preservation of selection,
+upgrade from a non-rigid reference, bounds within 0.01 units, and free motion after
+removal with object/mesh counts restored. Six existing physics tests (transform
+limits, locking, scene setup, dynamics, roundtrip, deleted body) also pass without
+tracebacks or dependency cycles. This does not yet verify constrained multi-tooth
+contacts, save/reload of these new joints, or scene rebuild while anchors exist.

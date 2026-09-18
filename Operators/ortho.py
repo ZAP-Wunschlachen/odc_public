@@ -931,7 +931,7 @@ class OPENDENTAL_OT_physics_setup(bpy.types.Operator):
         context.scene.frame_end = 500
         context.scene.frame_set(0)
 
-        obs = [ob for ob in context.selected_objects if ob.type == 'MESH']
+        obs = [ob for ob in context.selected_objects if ob.type == 'MESH' and not ob.get('odc_movement_reference')]
         bpy.ops.object.select_all(action = 'DESELECT')
 
         for ob in obs:
@@ -1006,7 +1006,7 @@ class OPENDENTAL_OT_add_forcefields(bpy.types.Operator):
         bpy.ops.object.select_all(action = 'DESELECT')
 
         for ob in obs:
-            if ob.type != 'MESH': continue
+            if ob.type != 'MESH' or ob.get('odc_movement_reference'): continue
             empty = next((item for item in context.scene.objects
                           if item.get('odc_tooth_forcefield')
                           and (item.get('odc_forcefield_body') == ob or item.parent == ob)), None)
@@ -1063,15 +1063,23 @@ class OPENDENTAL_OT_limit_movements(bpy.types.Operator):
         #bpy.ops.object.select_all(action = 'DESELECT')
 
         for ob in obs:
-            if ob.type != 'MESH': continue
+            if ob.type != 'MESH' or ob.get('odc_movement_reference'): continue
 
             limit = ob.constraints.get('Limit Location')
             if limit is None:
                 limit = ob.constraints.new('LIMIT_LOCATION')
             reference = limit.space_object if limit.owner_space == 'CUSTOM' else None
-            if reference is None or not reference.get('odc_movement_reference'):
-                world = ob.matrix_world.copy()
-                reference = bpy.data.objects.new(ob.name + ' Movement Axes', None)
+            previous_reference = reference
+            upgrade = (reference is not None and reference.get('odc_movement_reference')
+                       and reference.type == 'EMPTY' and ob.rigid_body is not None)
+            if reference is None or not reference.get('odc_movement_reference') or upgrade:
+                world = reference.matrix_world.copy() if upgrade else ob.matrix_world.copy()
+                reference_mesh = None
+                if ob.rigid_body is not None:
+                    reference_mesh = bpy.data.meshes.new(ob.name + ' Movement Anchor')
+                    reference_mesh.from_pydata([(0, 0, 0), (.001, 0, 0), (0, .001, 0), (0, 0, .001)],
+                                              [], [(0, 2, 1), (0, 1, 3), (0, 3, 2), (1, 2, 3)])
+                reference = bpy.data.objects.new(ob.name + ' Movement Axes', reference_mesh)
                 reference['odc_movement_reference'] = True
                 reference['odc_physics_copy'] = True
                 context.scene.collection.objects.link(reference)
@@ -1079,6 +1087,10 @@ class OPENDENTAL_OT_limit_movements(bpy.types.Operator):
                 reference.hide_render = True
                 reference.hide_set(True)
             limit.space_object = reference
+            if upgrade:
+                users = bpy.data.user_map(subset={previous_reference}).get(previous_reference, set())
+                if all(isinstance(user, (bpy.types.Collection, bpy.types.Scene)) for user in users):
+                    bpy.data.objects.remove(previous_reference, do_unlink=True)
 
             limit.use_min_x = True
             limit.use_min_y = True
@@ -1092,6 +1104,38 @@ class OPENDENTAL_OT_limit_movements(bpy.types.Operator):
             limit.min_x, limit.max_x = -self.mes_dis, self.mes_dis
             limit.min_y, limit.max_y = -self.buc_ling, self.buc_ling
             limit.min_z, limit.max_z = -self.occlusal, self.occlusal
+
+            # Bullet ignores object transform constraints on active bodies.
+            # Use the same stationary local axes as a world-anchored joint.
+            if ob.rigid_body is not None:
+                if reference.rigid_body_constraint is None:
+                    active = context.view_layer.objects.active
+                    selected = list(context.selected_objects)
+                    for selected_object in selected:
+                        selected_object.select_set(False)
+                    reference.hide_set(False)
+                    reference.select_set(True)
+                    context.view_layer.objects.active = reference
+                    try:
+                        bpy.ops.rigidbody.object_add(type='PASSIVE')
+                        reference.rigid_body.collision_collections = (False,) * 20
+                        bpy.ops.rigidbody.constraint_add(type='GENERIC')
+                    finally:
+                        reference.select_set(False)
+                        reference.hide_set(True)
+                        for selected_object in selected:
+                            selected_object.select_set(True)
+                        context.view_layer.objects.active = active
+                reference.hide_set(False)
+                reference.display_type = 'WIRE'
+                joint = reference.rigid_body_constraint
+                joint.object1 = ob
+                joint.object2 = reference
+                joint.enabled = True
+                for axis, distance in (('x', self.mes_dis), ('y', self.buc_ling), ('z', self.occlusal)):
+                    setattr(joint, 'use_limit_lin_' + axis, True)
+                    setattr(joint, 'limit_lin_' + axis + '_lower', -distance)
+                    setattr(joint, 'limit_lin_' + axis + '_upper', distance)
         return {'FINISHED'}
 
 class OPENDENTAL_OT_unlimit_movements(bpy.types.Operator):
@@ -1123,16 +1167,22 @@ class OPENDENTAL_OT_unlimit_movements(bpy.types.Operator):
 
         for ob in obs:
 
-            if ob.type != 'MESH': continue
+            if ob.type != 'MESH' or ob.get('odc_movement_reference'): continue
 
             if 'Limit Location' in ob.constraints:
                 limit = ob.constraints['Limit Location']
                 reference = limit.space_object
                 ob.constraints.remove(limit)
                 if reference and reference.get('odc_movement_reference'):
+                    if reference.rigid_body_constraint is not None:
+                        reference.rigid_body_constraint.enabled = False
+                        reference.rigid_body_constraint.object2 = None
                     users = bpy.data.user_map(subset={reference}).get(reference, set())
                     if all(isinstance(user, (bpy.types.Collection, bpy.types.Scene)) for user in users):
+                        mesh = reference.data
                         bpy.data.objects.remove(reference, do_unlink=True)
+                        if mesh is not None and mesh.users == 0:
+                            bpy.data.meshes.remove(mesh)
         return {'FINISHED'}
 
 class OPENDENTAL_OT_lock_movements(bpy.types.Operator):
@@ -1152,7 +1202,7 @@ class OPENDENTAL_OT_lock_movements(bpy.types.Operator):
         obs = [ob for ob in context.selected_objects]
         
         for ob in obs:
-            if ob.type != 'MESH': continue
+            if ob.type != 'MESH' or ob.get('odc_movement_reference'): continue
             ob.lock_location[0], ob.lock_location[1], ob.lock_location[2] = True, True, True
 
         return {'FINISHED'}    
@@ -1174,7 +1224,7 @@ class OPENDENTAL_OT_unlock_movements(bpy.types.Operator):
         obs = [ob for ob in context.selected_objects]
         
         for ob in obs:
-            if ob.type != 'MESH': continue
+            if ob.type != 'MESH' or ob.get('odc_movement_reference'): continue
             ob.lock_location[0], ob.lock_location[1], ob.lock_location[2] = False, False, False
 
         return {'FINISHED'} 
