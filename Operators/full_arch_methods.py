@@ -770,8 +770,33 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug=False):
     selection_mode = tuple(settings.mesh_select_mode)
     pivot = settings.transform_pivot_point
     orientation = context.scene.transform_orientation_slots[0].type
+    selected = list(context.selected_objects)
+    active = context.view_layer.objects.active
+    created, created_data = [], []
     try:
-        return _cloth_fill_main(context, loop_obj, oct, smooth, debug)
+        return _cloth_fill_main(context, loop_obj, oct, smooth, debug, created, created_data)
+    except Exception:
+        if context.object and context.object.mode != 'OBJECT':
+            bpy.ops.object.mode_set(mode='OBJECT')
+        for obj in reversed(created):
+            try:
+                obj.name
+            except ReferenceError:
+                continue
+            bpy.data.objects.remove(obj, do_unlink=True)
+        for data in reversed(created_data):
+            try:
+                users = data.users
+            except ReferenceError:
+                continue
+            if users == 0:
+                collection = bpy.data.meshes if isinstance(data, bpy.types.Mesh) else bpy.data.curves
+                collection.remove(data)
+        bpy.ops.object.select_all(action='DESELECT')
+        for obj in selected:
+            obj.select_set(True)
+        context.view_layer.objects.active = active
+        raise
     finally:
         context.scene.cursor.location = cursor
         settings.mesh_select_mode = selection_mode
@@ -779,7 +804,7 @@ def cloth_fill_main(context, loop_obj, oct, smooth, debug=False):
         context.scene.transform_orientation_slots[0].type = orientation
 
 
-def _cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
+def _cloth_fill_main(context, loop_obj, oct, smooth, debug, created, created_data):
     '''
     notes:
        make sure the user view is such that you can see the entire ring with
@@ -815,7 +840,9 @@ def _cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
     bpy.ops.object.select_all(action='DESELECT')
     source = loop_obj
     loop_obj = source.copy()
+    created.append(loop_obj)
     loop_obj.data = source.data.copy()
+    created_data.append(loop_obj.data)
     context.collection.objects.link(loop_obj)
     context.view_layer.objects.active = loop_obj
     loop_obj.select_set(True)
@@ -833,6 +860,7 @@ def _cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
             #convert the curve to a mesh...so we can use it.
             curve_data = loop_obj.data
             bpy.ops.object.convert(target='MESH', keep_original = False)
+            created_data.append(context.object.data)
             if curve_data.users == 0:
                 bpy.data.curves.remove(curve_data)
             #active object is now the mesh version of the curve
@@ -862,6 +890,8 @@ def _cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
         if obj not in current_objects:
             obj.name = "cloth_temp"
             Temp = obj
+            created.append(Temp)
+            created_data.append(Temp.data)
     
     #fill the the surface of the temp
     bpy.ops.object.mode_set(mode='EDIT')
@@ -945,7 +975,9 @@ def _cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
 
     #problem with applying modifiers...new method.
     mesh = bpy.data.meshes.new_from_object(CurveMesh.evaluated_get(context.evaluated_depsgraph_get()))
+    created_data.append(mesh)
     new_obj = bpy.data.objects.new(CurveMesh.name, mesh)
+    created.append(new_obj)
     context.collection.objects.link(new_obj)
     new_obj.matrix_world = wmx
     
@@ -979,7 +1011,7 @@ def _cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
     bpy.context.tool_settings.mesh_select_mode = [False,False,True]
     flat = False
     n = 0
-    while not flat:
+    while not flat and n < min(101, len(CurveMesh.data.polygons)):
         
         #hope to select a polygon not on the border
         CurveMesh.data.polygons[n].select = True
@@ -994,6 +1026,8 @@ def _cloth_fill_main(context, loop_obj, oct, smooth, debug = False):
         if n > 100:
             break
         n+= 1
+    if not flat:
+        raise ValueError('Remeshing did not produce a usable tray surface; adjust resolution or boundary')
     bpy.ops.object.mode_set(mode='EDIT')       
     bpy.ops.mesh.delete()
     bpy.context.tool_settings.mesh_select_mode = [False,True,False]

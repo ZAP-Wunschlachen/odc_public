@@ -716,7 +716,11 @@ class OPENDENTAL_OT_ClothFillTray(bpy.types.Operator):
         smooth = self.smooth
         settings = get_settings()
         dbg = settings.debug
-        full_arch_methods.cloth_fill_main(context, loop_obj, oct, smooth, debug = dbg)
+        try:
+            full_arch_methods.cloth_fill_main(context, loop_obj, oct, smooth, debug=dbg)
+        except (ValueError, RuntimeError) as error:
+            self.report({'WARNING'}, str(error))
+            return {'CANCELLED'}
            
         return {'FINISHED'}
     

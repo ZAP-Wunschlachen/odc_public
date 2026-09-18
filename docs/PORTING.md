@@ -1499,3 +1499,18 @@ This supersedes the earlier note that the primary helper still uses removed APIs
 Nonplanar/concave boundaries, the full resolution range and cleanup after an
 intermediate geometry failure still need verification. The separate legacy
 `cloth_fill_main2` has not been ported by this change.
+
+### Tray-fill failure cleanup
+
+The wrapper now tracks its own temporary objects and data blocks and removes
+surviving work products on exceptions, restoring selection, active object and
+Object Mode as well as tool settings. The public operator reports expected
+runtime/geometry errors as cancellation. The flat-face search is bounded by the
+actual remesh polygon count and raises a useful error if no surface is found.
+
+`test_cloth_fill_failure.py` passes for mesh and Bézier contours, injecting
+failures during reorientation, vertex spacing in Edit Mode and final parenting.
+All original objects, meshes/curves, coordinates, selection and tool state are
+verified unchanged. `test_cloth_fill_geometry.py` was rerun and still passes.
+This establishes cleanup at these stages, not support for every malformed
+boundary or resolution setting.
