@@ -1820,3 +1820,22 @@ dependency cycles, including prior field dynamics, save/reopen and rebuild tests
 This resolves the earlier repeat-setup gap; complex multi-tooth contact behavior
 and fresh-process persistence of the complete constrained simulation remain
 separate verification cases.
+
+### View to Z explicit Keep Orientation
+
+The former finite-coordinate smoke check was replaced with a world-coordinate
+invariant. It reproduced an extra rotation in `keep_orientation=True`: the helper
+had already aligned local axes while preserving world geometry, but the operator
+then applied rotation and assigned the view quaternion again. The redundant step
+is removed. The legacy parameter remains accepted; both values now use the
+geometry-preserving local-axis alignment described by the operator. The active
+region's view rotation is used rather than an arbitrary main space region.
+
+The foreground regression passes for both flag values with a rotated parent,
+nonuniform object and parent scales, shared mesh data, and a shape key. It checks
+world vertices and shape-key positions (1e-4 tolerance), parent retention, aligned
+world axes, a private edited mesh, and unchanged sibling mesh coordinates. It also
+checks explicitly requesting Keep Orientation after the default operation causes
+no additional movement. This supersedes the earlier unresolved Keep Orientation
+note. Child-object world positions, constraints and all supported non-mesh data
+types are not established by this mesh regression.

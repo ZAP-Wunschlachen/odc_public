@@ -295,37 +295,15 @@ class ViewToZ(bpy.types.Operator):
                 and context.region_data is not None)
 
     def execute(self, context):
-        bpy.ops.object.select_all(action = 'DESELECT')
-        ob = bpy.context.object
+        ob = context.object
+        bpy.ops.object.select_all(action='DESELECT')
         ob.select_set(True)
-        
-        #necessary because I don't want to have to wory
-        #about what the transform orientation might be
-       # bpy.ops.object.transform_apply(rotation = True)
-        
-        #this is what the view rotation is reported as
-        #so for convenience I will just make the object
-        #use it
-        #ob.rotation_mode = 'QUATERNION'
-        
-        #gather info
-        space = bpy.context.space_data
-        region = space.region_3d        
-        vrot = region.view_rotation       
-        #align = vrot.inverted()
-        
-        odcutils.reorient_object(ob,vrot)    
-        #rotate the object the inverse of the view rotation
-        #ob.rotation_quaternion = align
-        
-        #if we want to keep the rotatio nof the object in
-        #the scene and essentially just set the object's
-        #local coordinates to the view...then do this.      
-        if self.keep_orientation:
-            bpy.ops.object.transform_apply(rotation = True)
-            ob.rotation_quaternion = vrot   
-                
+        # Reorienting local axes already preserves world geometry. Keep the
+        # legacy keep_orientation argument compatible without applying the view
+        # rotation a second time when callers explicitly request preservation.
+        odcutils.reorient_object(ob, context.region_data.view_rotation)
         return {'FINISHED'}
+
 def insertion_axis_draw_callback(self, context):
     self.help_box.draw()
     self.target_box.draw()
