@@ -1508,12 +1508,15 @@ class OPENDENTAL_OT_teeth_arch(bpy.types.Operator):
         
         ob = context.object
         quad = self.arch_types[int(self.arch_type)]
+        if self.mirror and quad not in {'UR', 'UL', 'LR', 'LL', 'MAX', 'MAND'}:
+            self.report({'WARNING'}, 'Mirroring requires a full arch or left/right quadrant')
+            return {'CANCELLED'}
         shift = self.shifts[int(self.shift)]
         settings = get_settings()
         dbg = settings.debug
         
         
-        full_arch_methods.teeth_to_curve(context, ob, quad,settings.tooth_lib, 
+        ob = full_arch_methods.teeth_to_curve(context, ob, quad,settings.tooth_lib,
                                     shift = shift,
                                     limit = self.limit,
                                     link = self.link,

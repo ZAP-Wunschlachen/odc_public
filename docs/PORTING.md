@@ -1888,3 +1888,27 @@ recording `verification_metadata.json`. Artifacts reside under
 `tests/artifacts/installation/`, including the separate poll rerun log. The source
 API audit also found old calls in disabled margin-tracing and splint experiments;
 those inactive routines are not proven Blender-5.1 workflows by these tests.
+
+### Teeth to Arch: Mirror and Reverse integration
+
+`test_arch_variants.py` exposed three errors outside the default path: the caller
+reactivated the original half-arch instead of the mirrored target (so Keep Arch
+Plan affected no new teeth), mirrored curve conversion left two disconnected
+splines and an incorrect measured path length, and Reverse did nothing when its
+control points were not selected.
+
+The helper now returns its actual path to the caller. Mirroring uses an independent
+curve copy, preserving the original points, resolution and modifiers, and welds
+coincident mesh endpoints at 1e-5 before converting back to one curve. Reverse
+explicitly selects all control points and separates shared curve data before
+editing. Unsupported anterior mirroring is rejected before geometry is changed.
+
+The regression passes reversed full arcs and mirrored quarter arcs with and
+without reversal. It checks a single 65-point semicircle of radius 25, untouched
+source geometry/settings, actual reversed endpoint ordering from an unselected
+input, 14 distributed teeth on the active path, and world-transform preservation
+when Keep Arch Plan removes their constraints. The prior upper/lower, placement
+mode and linked-restoration test passes, as does the real-window drawn-arch
+Undo/Redo/setup/keep workflow. The prior headless tooth test retains its 64-block
+shutdown allocation warning. Other mirror axes/modifier combinations and repeated
+mirroring of already linked restorations remain separate cases.

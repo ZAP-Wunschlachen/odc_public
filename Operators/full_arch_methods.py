@@ -102,26 +102,46 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
     arch.select_set(True)
     
     if mirror:
-        #This should help with the mirroring?
-        arch.data.resolution_u = 5 
-        
-        #if it doesn't have a mirror, we need to mirror it
-        if "Mirror" not in arch.modifiers:
-            bpy.ops.object.modifier_add(type='MIRROR')
-        #non mirrored curve needed for appropriate constraining..
-        #convert to mesh applies mirror, reconvert to curve gives us a full length curve
-        arch.modifiers["Mirror"].merge_threshold = 5
-        bpy.ops.object.convert(target='MESH',keep_original = True)
-        bpy.ops.object.convert(target='CURVE', keep_original = False) #this will be the new full arch        
+        # Build the mirrored path independently; do not add modifiers or change
+        # resolution on the user's original half-arch.
+        source_arch = arch
+        arch = source_arch.copy()
+        arch.data = source_arch.data.copy()
+        context.collection.objects.link(arch)
+        source_arch.select_set(False)
+        arch.select_set(True)
+        context.view_layer.objects.active = arch
+        mirror_modifier = next((modifier for modifier in arch.modifiers if modifier.type == 'MIRROR'), None)
+        if mirror_modifier is None:
+            mirror_modifier = arch.modifiers.new('Arch Mirror', 'MIRROR')
+            mirror_modifier.merge_threshold = 1e-5
+        old_curve = arch.data
+        bpy.ops.object.convert(target='MESH', keep_original=False)
         arch = context.object
-        arch.name = orig_arch_name + "_Mirrored"
-    
+        if old_curve.users == 0:
+            bpy.data.curves.remove(old_curve)
+        # Curve modifiers leave two coincident endpoints after conversion. Weld
+        # them before rebuilding a curve so FOLLOW_PATH sees one connected arch.
+        bm = bmesh.new()
+        bm.from_mesh(arch.data)
+        bmesh.ops.remove_doubles(bm, verts=list(bm.verts), dist=1e-5)
+        bm.to_mesh(arch.data)
+        bm.free()
+        mirrored_mesh = arch.data
+        bpy.ops.object.convert(target='CURVE', keep_original=False)
+        arch = context.object
+        if mirrored_mesh.users == 0:
+            bpy.data.meshes.remove(mirrored_mesh)
+        arch.data.use_path = True
+        arch.name = orig_arch_name + '_Mirrored'
 
-    
     #we may want to switch the direction of the curve :-)
     #we may also want to handle this outside of this function
     if reverse:
+        if arch.data.users > 1:
+            arch.data = arch.data.copy()
         bpy.ops.object.mode_set(mode='EDIT')
+        bpy.ops.curve.select_all(action='SELECT')
         bpy.ops.curve.switch_direction()
         bpy.ops.object.mode_set(mode='OBJECT')
         
@@ -403,6 +423,8 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
             
         context.view_layer.objects.active = ob
         bpy.ops.object.delete()        
+
+    return arch
 
 def occlusal_scheme_to_curve(context, arch, tooth_library, teeth = [], link = False, flip = False, reorient = True):
     '''
