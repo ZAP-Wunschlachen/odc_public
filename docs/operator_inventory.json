@@ -928,16 +928,19 @@
     "test_status": "partial_geometry_test_blender_5_1_2",
     "test_files": [
       "tests/test_blockout_dispatch.py",
-      "tests/test_blockout_preview.py"
+      "tests/test_blockout_preview.py",
+      "tests/test_blockout_solid.py"
     ],
-    "test_scope": "Mode dispatch/status, current/stored axis, preview sphere topology, material assignment and world-space extrusion under nonuniform scale; solid geometry pending"
+    "test_scope": "Mode dispatch/status and tested preview/solid geometry; complex scans pending"
   },
   {
     "module": "Operators/blockout_undercuts.py",
     "class": "OPENDENTAL_OT_blockout_model_solid",
     "bl_idname": "opendental.view_blockout_undercuts_solid",
     "bl_label": "Blockout Model From Z-axis",
-    "test_status": "pending"
+    "test_status": "partial_geometry_test_blender_5_1_2",
+    "test_file": "tests/test_blockout_solid.py",
+    "test_scope": "Closed transformed cubes, current/stored axis, world-space depth, shared data preservation, survey-to-solid workflow and cancelled-remesh rollback"
   },
   {
     "module": "Panels/panel.py",

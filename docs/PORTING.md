@@ -1665,3 +1665,23 @@ full inverse transform for extrusion. Material assignment uses the actual new
 faces instead of a stale flood-fill variable. Both tests pass. Small-component
 thresholds, concave/noisy scans, preview failure cleanup and Solid generation
 still need further work; the preview is intentionally an open surface.
+
+### Solid blockout geometry and rollback
+
+Solid blockout now validates a closed input, classifies faces using the full
+inverse linear transform and extrudes 10 units along the negative world-space
+view/stored survey axis. It remeshes synchronously and checks for a closed result.
+The edit is performed on a working mesh: shared original data is preserved and
+remesh failures restore the original mesh, selection and tool state. Completion
+clears the current scene's survey flag, retires owned silhouette helpers and
+removes preview ownership from the finished blockout, so later surveys cannot
+delete a completed result as an obsolete preview.
+
+`test_blockout_solid.py` passes in Blender 5.1.2 for rotated/nonuniformly scaled
+closed cubes, current and stored insertion axes, closed positive-volume output,
+world-axis extents within voxel tolerance, shared-mesh preservation, tool-state
+restoration and independent scene flags. It also exercises Survey → Solid →
+Survey and injects a cancelled remesh after extrusion to verify rollback without
+leaked meshes. The existing 0.1 local-unit voxel resolution is retained; complex
+concave scans, modifier/shape-key inputs and broad dimensional accuracy remain
+outside these tests.

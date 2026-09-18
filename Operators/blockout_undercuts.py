@@ -4,6 +4,7 @@ from math import degrees, radians, pi
 
 #Blender Imports
 import bpy
+import bmesh
 from mathutils import Vector, Quaternion
 
 #Addon Imports
@@ -154,92 +155,98 @@ class OPENDENTAL_OT_blockout_model_solid(bpy.types.Operator): #produces watertig
         return OPENDENTAL_OT_survey_model.poll(context)
 
     def execute(self, context):
-
-        extrude_z = -10
-        
-        if bpy.context.selected_objects == []:
-
-            message = " Please select the Model to Blockout !"
-            ShowMessageBox(message=message, icon="COLORSET_02_VEC")
-
-            return {"CANCELLED"}
-
-        else:
-
-            if context.object.type != "MESH" :
-
-                message = " Please select a valid Model (mesh object) !"
-                ShowMessageBox(message=message, icon="COLORSET_02_VEC")
-
-                return {"CANCELLED"}
-
-            else :
-
-                # ...........................Prepare scene settings : ..............................................
-
-                # bpy.ops.view3d.snap_cursor_to_center()
-                bpy.context.scene.transform_orientation_slots[0].type = "GLOBAL"
-                bpy.context.scene.tool_settings.transform_pivot_point = "ACTIVE_ELEMENT"
-                bpy.context.scene.tool_settings.use_snap = False
-
-                # Get active Object :..........................................................
-
-                ob = bpy.context.view_layer.objects.active
-
-                ###  PATRICKS TEST ###############################
-                ##################################################
-                if context.scene.pre_surveyed:
-                    world_view = Quaternion(context.scene.UNDERCUTS_view_props.survey_quaternion) @ Vector((0,0,1))
-                else:
-                    world_view = context.space_data.region_3d.view_rotation @ Vector((0,0,1))
-
-                local_view = ob.matrix_world.inverted().to_quaternion() @ world_view
-                
-                bpy.context.tool_settings.mesh_select_mode = (False, False, True)
-                for v in ob.data.vertices:
-                    v.select = False
-                for ed in ob.data.edges:
-                    ed.select = False
-                    
-                for f in ob.data.polygons:
-                    if f.normal.dot(local_view) < -0.000001:
-                        f.select = True
-                    else:
-                        f.select = False
-                
-                bpy.ops.object.mode_set(mode = 'EDIT')
-                
-                bpy.context.scene.transform_orientation_slots[0].type = "LOCAL"
-                extrude_vec = extrude_z * local_view
-                bpy.ops.mesh.extrude_region_move()
-                bpy.ops.transform.translate(
-                    value=(extrude_vec[0], extrude_vec[1], extrude_vec[2]), constraint_axis=(False, False, False)
-                )
-                bpy.context.tool_settings.mesh_select_mode = (True, False, False)
-                bpy.ops.object.mode_set(mode = 'OBJECT')
-                bpy.ops.opendental.remesh_model("INVOKE_DEFAULT")
-
-                context.scene.pre_surveyed = False
-
-                # Rename Model_blocked :
-                
-                colorprop = context.scene.UNDERCUTS_view_props.colorprop
-
-                if "_solid_base" in ob.name :
-                    ob_name = ob.name
-                    ob.name = ob_name.replace("_solid_base", "_")
-
-                if f"_survey({colorprop})" in ob.name :
-                    ob_name = ob.name
-                    ob.name = ob_name.replace(f"_survey({colorprop})", "_")
-
-                ob.name += "blocked"
-                ob.data.name = f"{ob.name}_mesh"
-
+        ob = context.object
+        bm = bmesh.new()
+        try:
+            bm.from_mesh(ob.data)
+            if not bm.faces or any(not edge.is_manifold for edge in bm.edges):
+                self.report({'WARNING'}, 'Solid blockout requires a closed mesh')
+                return {'CANCELLED'}
+        finally:
+            bm.free()
+        rotation = (Quaternion(context.scene.UNDERCUTS_view_props.survey_quaternion)
+                    if context.scene.pre_surveyed else context.region_data.view_rotation)
+        direction = rotation @ Vector((0, 0, 1))
+        if direction.length_squared < 1e-12 or abs(ob.matrix_world.determinant()) < 1e-12:
+            self.report({'WARNING'}, 'Use a valid survey axis and nonzero object scale')
+            return {'CANCELLED'}
+        direction.normalize()
+        local = (ob.matrix_world.inverted().to_3x3() @ direction).normalized()
+        faces = [face.index for face in ob.data.polygons if face.normal.dot(local) < -1e-6]
+        if not faces:
+            self.report({'WARNING'}, 'No backward-facing faces found')
+            return {'CANCELLED'}
+        original = ob.data
+        working = original.copy()
+        selected = list(context.selected_objects)
+        settings = context.tool_settings
+        tool_state = (context.scene.transform_orientation_slots[0].type,
+                      settings.transform_pivot_point, settings.use_snap,
+                      tuple(settings.mesh_select_mode))
+        ob.data = working
+        try:
+            bpy.ops.object.select_all(action='DESELECT')
+            ob.select_set(True)
+            settings.use_snap = False
+            settings.mesh_select_mode = (False, False, True)
+            for vertex in working.vertices:
+                vertex.select = False
+            for edge in working.edges:
+                edge.select = False
+            chosen = set(faces)
+            for face in working.polygons:
+                face.select = face.index in chosen
+            bpy.ops.object.mode_set(mode='EDIT')
+            bpy.ops.mesh.extrude_region_move(TRANSFORM_OT_translate={
+                'value': tuple(-10 * direction), 'orient_type': 'GLOBAL'})
+            bpy.ops.object.mode_set(mode='OBJECT')
+            if bpy.ops.opendental.remesh_model('EXEC_DEFAULT') != {'FINISHED'}:
+                raise RuntimeError('Remeshing was cancelled')
+            bm = bmesh.new()
+            try:
+                bm.from_mesh(ob.data)
+                if not bm.faces or any(not edge.is_manifold for edge in bm.edges):
+                    raise ValueError('Remeshing did not produce a closed blockout')
+            finally:
+                bm.free()
+        except Exception as error:
+            if ob.mode != 'OBJECT':
+                bpy.ops.object.mode_set(mode='OBJECT')
+            failed = ob.data
+            ob.data = original
+            for mesh in {failed, working}:
+                if mesh.users == 0:
+                    bpy.data.meshes.remove(mesh)
+            bpy.ops.object.select_all(action='DESELECT')
+            for item in selected:
+                item.select_set(True)
+            self.report({'WARNING'}, str(error))
+            return {'CANCELLED'}
+        finally:
+            context.scene.transform_orientation_slots[0].type = tool_state[0]
+            settings.transform_pivot_point = tool_state[1]
+            settings.use_snap = tool_state[2]
+            settings.mesh_select_mode = tool_state[3]
+        if original.users == 0:
+            bpy.data.meshes.remove(original)
+        if working != ob.data and working.users == 0:
+            bpy.data.meshes.remove(working)
+        # A finished blockout is no longer a replaceable survey preview.
+        owned = [item for item in context.scene.objects if item.get('odc_survey_owner') == ob]
+        for item in owned:
+            mesh = item.data
+            bpy.data.objects.remove(item, do_unlink=True)
+            if isinstance(mesh, bpy.types.Mesh) and mesh.users == 0:
+                bpy.data.meshes.remove(mesh)
+        for key in ('odc_survey_source', 'odc_survey_color'):
+            if key in ob:
+                del ob[key]
+        ob.name += '_blocked'
+        ob.data.name = ob.name + '_mesh'
+        context.scene.pre_surveyed = False
         return {'FINISHED'}
-        ### END PATRICK"S TEST   #########################
-        ###################################################
-    
+
+
 def register():
     bpy.utils.register_class(OPENDENTAL_OT_survey_model)
     bpy.utils.register_class(OPENDENTAL_OT_blockout_model)
