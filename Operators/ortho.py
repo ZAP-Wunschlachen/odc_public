@@ -872,15 +872,30 @@ class OPENDENTAL_OT_physics_scene(bpy.types.Operator):
         sources = [(obj, obj.matrix_world.copy()) for obj in context.selected_objects if obj.type == 'MESH']
         scene = bpy.data.scenes.get('Physics Sim') or bpy.data.scenes.new('Physics Sim')
         # Remove only our previous copies; unrelated scene objects are preserved.
-        physics_collection = scene.rigidbody_world.collection if scene.rigidbody_world else None
-        for obj in sorted(scene.objects, key=lambda item: item.type == 'MESH'):
-            if obj.get('odc_physics_copy'):
-                for collection in list(obj.users_collection):
-                    if (collection == scene.collection or collection == physics_collection
-                            or collection in scene.collection.children_recursive):
-                        collection.objects.unlink(obj)
-                if obj.users == 0:
-                    bpy.data.objects.remove(obj)
+        world = scene.rigidbody_world
+        physics_collections = {world.collection, world.constraints} if world else set()
+        owned = [obj for obj in scene.objects if obj.get('odc_physics_copy')]
+        for obj in owned:
+            for collection in list(obj.users_collection):
+                if (collection == scene.collection or collection in physics_collections
+                        or collection in scene.collection.children_recursive):
+                    collection.objects.unlink(obj)
+        # Joints and transform constraints can refer back to one another. Remove
+        # the unused owned group together, retaining anything used outside it.
+        unused = {obj for obj in owned if not obj.users_collection and not obj.use_fake_user}
+        users = bpy.data.user_map(subset=unused)
+        while True:
+            retained = {obj for obj in unused if users.get(obj, set()) - unused}
+            if not retained:
+                break
+            unused.difference_update(retained)
+        anchor_meshes = {obj.data for obj in unused
+                         if obj.get('odc_movement_reference') and obj.type == 'MESH'}
+        if unused:
+            bpy.data.batch_remove(ids=unused)
+        for mesh in anchor_meshes:
+            if mesh.users == 0:
+                bpy.data.meshes.remove(mesh)
         scene['odc_source_scene'] = source_scene
         copies = []
         for source, world in sources:

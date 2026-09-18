@@ -1722,3 +1722,19 @@ removal with object/mesh counts restored. Six existing physics tests (transform
 limits, locking, scene setup, dynamics, roundtrip, deleted body) also pass without
 tracebacks or dependency cycles. This does not yet verify constrained multi-tooth
 contacts, save/reload of these new joints, or scene rebuild while anchors exist.
+
+### Joint persistence and physics-scene rebuild
+
+`test_physics_limit_lifecycle.py` now verifies same-process save/reopen of a
+limited body followed by 60 actual gravity frames. Joint body IDs and the custom
+space reference survive and the 0.5-unit bound remains effective. Rebuilding the
+physics scene exposed orphaned joints and anchor meshes because body and anchor
+references formed a cycle. Scene rebuild now unlinks owned objects from both
+rigid-body collections, determines the group without external users, and removes
+that group together. Only unused owned anchor meshes are also removed. An anchor
+linked to another scene, its dependent body, their joint and transform references,
+and the original shared source mesh are preserved in an explicit regression.
+Fresh-process loading and repeating Physics Setup after limits exist remain
+separate integration cases; this test does not establish those behaviors.
+
+Current aggregate verification: `python3 tests/run_headless.py --blender /Applications/Blender.app/Contents/MacOS/Blender` completed with 92/92 passing isolated cases under Blender 5.1.2, no Python tracebacks or dependency cycles. Fourteen cases still report shutdown allocation warnings; this is not a leak-free claim. Foreground/modal tests are excluded by this runner.
