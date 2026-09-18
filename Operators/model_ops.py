@@ -1546,6 +1546,12 @@ class OPENDENTAL_OT_hollow_model(bpy.types.Operator):
     bl_label = "Hollow Model"
     bl_options = {"REGISTER", "UNDO"}
 
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None and context.object.type == 'MESH'
+                and context.mode == 'OBJECT' and context.area is not None
+                and context.area.type == 'VIEW_3D')
+
     def execute(self, context) :
 
         show_box = bpy.context.scene.ODC_modops_props.show_box
@@ -1647,7 +1653,7 @@ class OPENDENTAL_OT_hollow_model(bpy.types.Operator):
                 loc, rot, scale = obj.matrix_world.decompose()
 
                 verts = obj.data.vertices
-                vcords = [ rot  @ v.co + loc for v in verts]
+                vcords = [obj.matrix_world @ v.co for v in verts]
                 mball_elements_cords = [ vco - vcords[0] for vco in vcords[1:]]
 
                 bpy.ops.object.mode_set(mode="OBJECT")
@@ -1659,7 +1665,10 @@ class OPENDENTAL_OT_hollow_model(bpy.types.Operator):
                 bpy.ops.object.metaball_add(type='BALL', radius=radius, enter_editmode=False, location= vcords[0])
 
                 Mball_object = bpy.context.view_layer.objects.active
-                Mball_object.name = "Mball_object"
+                index = 1
+                while bpy.data.objects.get(f'ODC Hollow Envelope {index}'):
+                    index += 1
+                Mball_object.name = f'ODC Hollow Envelope {index}'
                 mball = Mball_object.data
                 mball.resolution = 0.6
                 bpy.context.object.data.update_method = 'FAST'
@@ -1682,11 +1691,11 @@ class OPENDENTAL_OT_hollow_model(bpy.types.Operator):
                 Model_hollow.select_set(True)
                 bpy.context.view_layer.objects.active = Model_hollow
 
-                bpy.ops.object.modifier_add(type='BOOLEAN')
-                bpy.context.object.modifiers["Boolean"].show_viewport = False
-                bpy.context.object.modifiers["Boolean"].operation = 'INTERSECT'
-                bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Mball_object"]
-                bpy.ops.object.modifier_apply(modifier="Boolean")
+                modifier = Model_hollow.modifiers.new('Hollow Envelope', 'BOOLEAN')
+                modifier.operation = 'INTERSECT'
+                modifier.solver = 'EXACT'
+                modifier.object = Mball_object
+                bpy.ops.object.modifier_apply(modifier=modifier.name)
 
                 # Delet Model_lowres and Mball_object:
 

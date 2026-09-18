@@ -1243,3 +1243,20 @@ exactly 3 units below its original minimum in view coordinates. The original wor
 geometry and the top extent remain unchanged. This test does not cover arbitrary
 scan boundaries, scale-dependent relaxation, multiple holes, source-origin/settings
 restoration or the failure path. It is excluded from the headless runner.
+
+### Hollow Model execution
+
+The registered hollowing workflow no longer disables the Boolean immediately
+before applying it (Blender 5.1 rejects that operation). It uses the actual newly
+created envelope object and modifier references instead of fixed names, selects
+Exact Boolean intersection, gives temporary metaballs independent family names,
+and includes object scale when transforming their source positions.
+
+`test_hollow_model.py` passes in a foreground Blender 5.1.2 window for a translated
+closed cube and a pre-existing `Mball_object` name collision. The separate output
+is manifold with material volume about 854.73 versus the original 1000; a ray from
+the center hits an inward-facing cavity wall before reaching the original exterior.
+Source world geometry and the unrelated named object remain, with no temporary
+objects left. The legacy approximate metaball wall construction remains unchanged;
+wall-thickness accuracy, nonuniform scale, existing modifier stacks, metadata cleanup
+and open-input/failure recovery require further checks. This is a foreground test.
