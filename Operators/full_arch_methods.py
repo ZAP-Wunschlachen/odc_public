@@ -92,6 +92,8 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
     if debug:
         start = time.time()
         
+    # FOLLOW_PATH constraints need path evaluation enabled on hand-drawn curves.
+    arch.data.use_path = True
     orig_arch_name = arch.name
     
     bpy.ops.object.select_all(action='DESELECT')

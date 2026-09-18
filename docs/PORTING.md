@@ -1769,3 +1769,17 @@ from this specific output remain additional integration checks.
 Strict registration passes with 142 classes and 118 operators, including disable
 and re-enable. The earlier 92/92 headless result predates these panel/arch changes;
 only registration and the relevant new foreground cases were rerun afterward.
+
+### Drawn arch to retained tooth setup
+
+The foreground arch regression now also verifies Undo/Redo restores the created
+curve and its points, then executes Teeth to Arch and Keep Arch Plan. This exposed
+that hand-drawn curves have path evaluation disabled, leaving all FOLLOW_PATH
+objects at the same position. `teeth_to_curve` now enables `arch.data.use_path`
+before creating its layout. The regression verifies 14 nondegenerate teeth with
+finite, distinct transforms and retention of their world matrices within 1e-4
+when path constraints are removed. It uses a synthetic two-point curve, not a
+clinical arch or an occlusal acceptance test. The existing upper/lower arch,
+BUCCAL/FOSSA/BODY and linked-restoration tests pass with the fixture now starting
+with path evaluation disabled. That headless case still emits its shutdown
+allocation warning (64 blocks); the foreground integration run does not.

@@ -11,7 +11,7 @@ m = importlib.import_module(f'{ROOT.name}.Operators.full_arch_methods')
 u = importlib.import_module(f'{ROOT.name}.Addon_utils.odcutils')
 curve = bpy.data.curves.new('Arch test', 'CURVE')
 curve.dimensions = '3D'
-curve.use_path = True
+curve.use_path = False
 spline = curve.splines.new('POLY')
 spline.points.add(32)
 for i, point in enumerate(spline.points):
@@ -25,6 +25,7 @@ for arch_type in ('0', '1'):
     bpy.context.view_layer.objects.active = arch
     arch.select_set(True)
     assert bpy.ops.opendental.teeth_to_arch(arch_type=arch_type, shift=shift) == {'FINISHED'}
+    assert arch.data.use_path
     assert bpy.context.object == arch
     bpy.context.view_layer.update()
     objects = [o for o in bpy.context.scene.objects if any(c.type == 'FOLLOW_PATH' and c.target == arch for c in o.constraints)]
