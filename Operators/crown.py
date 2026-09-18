@@ -1574,6 +1574,8 @@ class OPENDENTAL_OT_occlusal_scheme_to_curve(bpy.types.Operator):
         ob = context.object
         settings = get_settings()
 
+        ob = full_arch_methods.prepare_arch_curve(context, ob, mirror=self.mirror, reverse=self.reverse)
+
         full_arch_methods.occlusal_scheme_to_curve(context,
                                                    ob, 
                                                    settings.tooth_lib, 

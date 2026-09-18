@@ -76,34 +76,20 @@ for i in range(0,7):
     norm_dict[str(41 + i)] = man_norm_pos[i]
 
 
-def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'BUCCAL', limit = False, link = False, reverse = False, mirror = False, debug = False, reorient = True):
-    '''
-    puts teeth along a curve for full arch planning
-    args:
-       curve - blender Curve object
-       sextant - the quadrant or sextant that the curve corresponds to. enum in 'MAX', 'MAND', 'UR' 'LR' 'LR' 'LL' 'UA' 'LA' '
-       teeth - list of odc_teeth, to link to or from.  eg, if tooth already
-         a restoration it will use that object, if not, it will link a new
-         blender object to that tooth as the restoration or contour.
-       shift = whether to use buccal cusps, center of mass or, center of fossa to align onto cirve.  enum in 'BUCCAL', 'COM', 'FOSSA'
-       limit - only link teeth for each tooth in teeth
-       link - Bool, whether or not to link to/from the teeth list
-    '''
-    if debug:
-        start = time.time()
-        
+def prepare_arch_curve(context, arch, mirror=False, reverse=False):
+    """Prepare one active path shared by single- and dual-arch planning."""
     source = arch.get('odc_mirrored_arch_source') if mirror else None
     if isinstance(source, bpy.types.Object) and source.type == 'CURVE':
         arch = source
     # FOLLOW_PATH constraints need path evaluation enabled on hand-drawn curves.
     arch.data.use_path = True
     orig_arch_name = arch.name
-    
+
     bpy.ops.object.select_all(action='DESELECT')
     context.view_layer.objects.active = arch
     arch.hide_set(False)
     arch.select_set(True)
-    
+
     if mirror:
         # Build the mirrored path independently; do not add modifiers or change
         # resolution on the user's original half-arch.
@@ -161,7 +147,28 @@ def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'B
         bpy.ops.curve.select_all(action='SELECT')
         bpy.ops.curve.switch_direction()
         bpy.ops.object.mode_set(mode='OBJECT')
+
+    return arch
+
+
+def teeth_to_curve(context, arch, sextant, tooth_library, teeth = [], shift = 'BUCCAL', limit = False, link = False, reverse = False, mirror = False, debug = False, reorient = True):
+    '''
+    puts teeth along a curve for full arch planning
+    args:
+       curve - blender Curve object
+       sextant - the quadrant or sextant that the curve corresponds to. enum in 'MAX', 'MAND', 'UR' 'LR' 'LR' 'LL' 'UA' 'LA' '
+       teeth - list of odc_teeth, to link to or from.  eg, if tooth already
+         a restoration it will use that object, if not, it will link a new
+         blender object to that tooth as the restoration or contour.
+       shift = whether to use buccal cusps, center of mass or, center of fossa to align onto cirve.  enum in 'BUCCAL', 'COM', 'FOSSA'
+       limit - only link teeth for each tooth in teeth
+       link - Bool, whether or not to link to/from the teeth list
+    '''
+    if debug:
+        start = time.time()
         
+    arch = prepare_arch_curve(context, arch, mirror=mirror, reverse=reverse)
+
     arch_mesh = bpy.data.meshes.new_from_object(arch.evaluated_get(context.evaluated_depsgraph_get()))
     arch_len = 0
     mx = arch.matrix_world.copy()

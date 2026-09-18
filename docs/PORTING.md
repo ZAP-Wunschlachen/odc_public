@@ -1930,3 +1930,21 @@ one 65-point result spline and exactly two curve objects/datablocks (source and
 result). The normal placement, mirror/reverse variants and real-window drawn-arch
 workflow all pass after the change. The existing 64-block shutdown warning in the
 normal placement test remains distinct from these removed curve datablocks.
+
+### Arch Plan Occlusion option wiring
+
+The public occlusal-scheme operator exposed Mirror and Reverse properties but did
+not use either. `test_occlusal_variants.py` reproduced the ignored Reverse option.
+The tested path preparation (owned mirrored result, welded midpoint, source
+preservation and complete control-point reversal) is now shared by Teeth to Arch
+and Arch Plan Occlusion through `prepare_arch_curve`. The occlusal operator passes
+its actual options and keeps the prepared curve active after generating both jaws.
+
+The new regression passes reversed full arcs, mirrored half arcs, and combined
+mirror/reverse cases with 28 finite-position teeth distributed over both sides of
+the completed arch. It checks the reversed endpoint, one 65-point mirrored spline
+and unchanged source points. Existing occlusal-scheme linked/empty/stale contour
+cases, Teeth to Arch variants, repeated mirrored links and normal upper/lower
+placement all pass after extraction. The new multi-case occlusal test reports a
+96-block shutdown allocation warning; it is not claimed allocation-warning-free.
+These are geometric/API checks, not a clinical intercuspation assessment.
