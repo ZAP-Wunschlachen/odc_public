@@ -591,6 +591,7 @@ def add_curve():
 
     cutting_tool = bpy.context.view_layer.objects.active
     cutting_tool.name = "Cutting_curve"
+    bpy.context.scene['odc_cutting_curve'] = cutting_tool
     curve = cutting_tool.data
     curve.name = "Cutting_curve"
 
@@ -634,9 +635,16 @@ def add_curve():
 #######################################################################################
 #Delete last point function :
 
+def get_cutting_curve():
+    curve = bpy.context.scene.get('odc_cutting_curve')
+    if curve is None or curve.name not in bpy.context.scene.objects:
+        raise RuntimeError('Create a cutting curve first')
+    return curve
+
+
 def delete_last_point():
 
-    cutting_tool = bpy.data.objects["Cutting_curve"]
+    cutting_tool = get_cutting_curve()
     curve = cutting_tool.data
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.curve.dissolve_verts()
@@ -647,7 +655,7 @@ def delete_last_point():
 #Extrude to cursor function :
 def extrude_to_cursor(context, event):
         
-    cutting_tool = bpy.data.objects["Cutting_curve"]
+    cutting_tool = get_cutting_curve()
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.curve.extrude(mode="INIT")
     bpy.ops.view3d.snap_selected_to_cursor(use_offset=False)
@@ -825,7 +833,7 @@ class OPENDENTAL_OT_make_curve(bpy.types.Operator):
 
             if event.value == ("PRESS"):
 
-                cutting_tool = bpy.data.objects["Cutting_curve"]
+                cutting_tool = get_cutting_curve()
                 bpy.ops.object.mode_set(mode="OBJECT")
 
                 bpy.ops.object.select_all(action="DESELECT")
@@ -857,13 +865,17 @@ class OPENDENTAL_OT_make_curve(bpy.types.Operator):
 
             if event.value == ("PRESS"):
 
-                cutting_tool = bpy.data.objects["Cutting_curve"]
+                cutting_tool = get_cutting_curve()
                 bpy.ops.object.mode_set(mode="OBJECT")
 
                 bpy.ops.object.select_all(action="DESELECT")
                 cutting_tool.select_set(True)
                 bpy.context.view_layer.objects.active = cutting_tool
-                bpy.ops.object.delete(use_global=False, confirm=False)
+                curve_data = cutting_tool.data
+                del context.scene['odc_cutting_curve']
+                bpy.data.objects.remove(cutting_tool, do_unlink=True)
+                if curve_data.users == 0:
+                    bpy.data.curves.remove(curve_data)
 
                 Model_name = context.scene.ODC_modops_props.cutting_target
                 Model = bpy.data.objects[Model_name]
@@ -921,7 +933,7 @@ class OPENDENTAL_OT_curve_cut(bpy.types.Operator):
             
         Model_name = context.scene.ODC_modops_props.cutting_target
         Model = bpy.data.objects[Model_name]
-        cutting_tool = bpy.data.objects["Cutting_curve"]
+        cutting_tool = get_cutting_curve()
 
         bpy.context.tool_settings.mesh_select_mode = (True, False, False)
         bpy.context.scene.tool_settings.use_snap = False
@@ -974,6 +986,8 @@ class OPENDENTAL_OT_curve_cut(bpy.types.Operator):
         Model.vertex_groups.clear()
 
         # Join curve to Model :
+        if 'odc_cutting_curve' in context.scene:
+            del context.scene['odc_cutting_curve']
         cutting_tool.select_set(True)
         bpy.ops.object.join()
 

@@ -1306,3 +1306,17 @@ collision, and subsequent Exit cleanup. The informational popup is suppressed in
 the automated test. Editing/deforming the generated cutter and restoring visibility
 or snapping after an accepted cutting session remain unverified. The test is
 excluded from the headless runner.
+
+### Cutting-curve startup and cancellation
+
+Curve-cutter helpers and operators now resolve the generated curve through a scene
+object reference instead of the literal `Cutting_curve` name. Cancellation clears
+that reference and removes the created object and unused curve datablock explicitly.
+The reference is also cleared before the downstream join consumes the curve.
+
+`test_cutting_curve_modal.py` passes in foreground Blender 5.1.2 for startup,
+shrinkwrap-target assignment and Escape cleanup with a pre-existing same-name
+object. The original named object survives and the model is reactivated. Completing
+point entry, baking shrinkwrap, the downstream mesh-intersection/separation workflow,
+material cleanup and full scene-settings restoration remain unverified. The test
+is excluded from the headless runner.
