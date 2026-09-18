@@ -62,11 +62,12 @@ def draw_line_3d(color, start, end, width=1):
 def draw_points_3d(points, color, size, far=0.997):
     bgl.glColor4f(*color)
     bgl.glPointSize(size)
-    bgl.glDepthRange(0.0, far)
+    bgl.glDisable(bgl.GL_DEPTH_TEST)
     bgl.glBegin(bgl.GL_POINTS)
     for coord in points: bgl.glVertex3f(*coord)
     bgl.glEnd()
     bgl.glPointSize(1.0)
+    bgl.glEnable(bgl.GL_DEPTH_TEST)
     
 def draw_typo_2d(color, text):
     font_id = 0  # XXX, need to find out how best to get this.
@@ -362,6 +363,9 @@ def project_by_object_utils(cam, point):
         
 ##CALLBACKS TO BE ADDED TO EACH SPACE TYPE ##
 def view3d_draw_callback_3d(self, context):
+    context = bpy.context
+    if context.area != self.view3d_area:
+        return
     #do 3d and geometry drawing here
     bgl.glEnable(bgl.GL_BLEND)
 
@@ -369,20 +373,21 @@ def view3d_draw_callback_3d(self, context):
         draw_points_3d(self.points_3d, (1,1,0,1), 10, far = 0.9)
 
     #TODO maybe draw some integers with points
-    bgl.glEnd()
     # restore opengl defaults
     bgl.glLineWidth(1)
     bgl.glDisable(bgl.GL_BLEND)
     bgl.glColor4f(0.0, 0.0, 0.0, 1.0)
 
 def view3d_draw_callback_2d(self, context):
+    context = bpy.context
+    if context.area != self.view3d_area:
+        return
     #do text and pixel drawing here
     bgl.glEnable(bgl.GL_BLEND)
 
     # draw text
     draw_typo_2d((1.0, 1.0, 1.0, 1), "3D View Window")
 
-    bgl.glEnd()
     # restore opengl defaults
     bgl.glLineWidth(1)
     bgl.glDisable(bgl.GL_BLEND)
@@ -391,6 +396,9 @@ def view3d_draw_callback_2d(self, context):
 
 
 def img_editor_draw_callback_px(self, context):
+    context = bpy.context
+    if context.area != self.imgeditor_area:
+        return
 
     # draw text
     draw_typo_2d((1.0, 1.0, 1.0, 1), "Image Editor Window")
@@ -691,28 +699,19 @@ class VIEW3D_OT_image_view3d_modal(bpy.types.Operator):
         
         #TODO, check that only one of each area is open
         #TODO, manufacture one or 2 areas?
-        for window in context.window_manager.windows:
-            for area in window.screen.areas:
-                if area.type == 'VIEW_3D':
-                    self.view3d_area = area
-                    for region in area.regions:
-                        if region.type == 'WINDOW': #ignore the tool-bar, header etc
-                            self.view3d_region = region
-                            
-                elif area.type == 'IMAGE_EDITOR':
+        for area in context.window.screen.areas:
+            if area.type == 'VIEW_3D' and self.view3d_area is None:
+                self.view3d_area = area
+                self.view3d_region = next((r for r in area.regions if r.type == 'WINDOW'), None)
+            elif area.type == 'IMAGE_EDITOR' and self.imgeditor_area is None:
+                image = area.spaces.active.image
+                if image is not None and all(size > 0 for size in image.size):
                     self.imgeditor_area = area
-                    for region in area.regions:
-                        if region.type == 'WINDOW': #ignore the tool-bar, header etc
-                            self.imgeditor_region = region
-        
-        if self.view3d_area == None:
-            #error message
+                    self.imgeditor_region = next((r for r in area.regions if r.type == 'WINDOW'), None)
+        if self.view3d_region is None or self.imgeditor_region is None:
+            self.report({'WARNING'}, 'Open a 3D View and an Image Editor with a loaded image in this window')
             return {'CANCELLED'}
-    
-        if self.imgeditor_area == None:
-            
-            return {'CANCELLED'}
-        
+
         self.mouse_screen_coord = (0,0)
         context.window_manager.modal_handler_add(self)
         

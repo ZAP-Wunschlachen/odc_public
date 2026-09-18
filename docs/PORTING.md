@@ -1092,3 +1092,19 @@ match Blender's reference projection, and coordinates scaled by 1000 and transla
 by millions remain stable. Degenerate input cases and the operator build-method
 entry point are covered. This does not yet test interactive clicks, noisy manual
 correspondences, or camera reconstruction with off-center principal points/skew.
+
+### Image registration foreground point-picking test
+
+The image-registration module is present in the repository but is not currently
+included in the add-on's normal `addon_modules` registration list. Its foreground
+test explicitly registers the module; it is not yet exposed as a completed feature.
+Invocation now finds both editors in the current window and requires a loaded
+nonempty image. Draw callbacks use their actual drawing context, filter to the
+selected editor, and avoid removed depth-range calls and unmatched batch endings.
+
+`test_image_registration_modal.py` passes in a foreground Blender 5.1.2 window:
+missing-image cancellation, startup with generated image, a ray-picked cube-surface
+point, an image-center pixel point, insufficient-pair build attempt without output,
+and Escape cleanup. The log contains no draw-callback traceback. Complete interactive
+six-pair fitting, accepted-camera persistence/cancellation and image changes during
+the modal session remain unverified. The test is excluded from the headless runner.
